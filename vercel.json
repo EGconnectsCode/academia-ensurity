@@ -1,41 +1,26 @@
-﻿{
+{
   "version": 2,
   "name": "academia-ensurity",
-  "builds": [
-    { "src": "**/*.html", "use": "@vercel/static" },
-    { "src": "shared/**",  "use": "@vercel/static" },
-    { "src": "assets/**",  "use": "@vercel/static" },
-    { "src": "modules/**", "use": "@vercel/static" },
-    { "src": "admin/**",   "use": "@vercel/static" }
-  ],
-  "routes": [
-    { "src": "/",                    "dest": "/academia-ensurity.html" },
-    { "src": "/allstate",            "dest": "/modules/allstate/allstate-academy.html" },
-    { "src": "/american-amicable",   "dest": "/modules/american-amicable/american-amicable.html" },
-    { "src": "/cica",                "dest": "/modules/cica/cica-citizens-v2.html" },
-    { "src": "/admin",               "dest": "/admin/admin-panel.html" },
-    { "src": "/(.*)",                "dest": "/$1" }
+  "rewrites": [
+    { "source": "/",                  "destination": "/academia-ensurity.html" },
+    { "source": "/allstate",          "destination": "/modules/allstate/allstate-academy.html" },
+    { "source": "/american-amicable", "destination": "/modules/american-amicable/american-amicable.html" },
+    { "source": "/cica",              "destination": "/modules/cica/cica-citizens-v2.html" },
+    { "source": "/admin",             "destination": "/admin/admin-panel.html" }
   ],
   "headers": [
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "X-Frame-Options",       "value": "SAMEORIGIN" },
-        { "key": "X-Content-Type-Options","value": "nosniff" },
-        { "key": "Referrer-Policy",       "value": "strict-origin-when-cross-origin" },
-        { "key": "Permissions-Policy",    "value": "camera=(), microphone=(), geolocation=()" }
+        { "key": "X-Frame-Options",        "value": "SAMEORIGIN" },
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Referrer-Policy",        "value": "strict-origin-when-cross-origin" }
       ]
     },
     {
       "source": "/shared/supabase-config.js",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=300" }
-      ]
-    },
-    {
-      "source": "/modules/**/*.html",
-      "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=86400" }
       ]
     }
   ]
