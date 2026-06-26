@@ -50,7 +50,7 @@ const Auth = {
    * Register new account.
    * Returns { user, profile } or throws.
    */
-  async signUp(email, password, fullName, phone = '') {
+  async signUp(email, password, fullName, phone = '', courseInterest = '') {
     const { data, error } = await db.auth.signUp({
       email,
       password,
@@ -59,7 +59,7 @@ const Auth = {
     if (error) throw error;
     // Profile auto-created by DB trigger; update with extra fields
     if (data.user) {
-      await db.from('profiles').update({ full_name: fullName, phone }).eq('id', data.user.id);
+      await db.from('profiles').update({ full_name: fullName, phone, course_interest: courseInterest }).eq('id', data.user.id);
     }
     return { user: data.user };
   },

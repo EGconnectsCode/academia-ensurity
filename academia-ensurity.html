@@ -249,8 +249,19 @@ body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', syste
         <input type="email" id="reg-email" required placeholder="you@example.com"/>
       </div>
       <div class="form-group">
-        <label data-en="Phone (optional)" data-es="Teléfono (opcional)" id="lbl-phone">Phone (optional)</label>
-        <input type="tel" id="reg-phone" placeholder="+1 555 000 0000"/>
+        <label data-en="Phone" data-es="Teléfono" id="lbl-phone">Phone</label>
+        <input type="tel" id="reg-phone" required placeholder="+1 555 000 0000"/>
+        <small class="field-hint" data-en="By providing your phone number you agree to receive training-related messages." data-es="Al proporcionar tu teléfono aceptas recibir mensajes relacionados con el entrenamiento.">By providing your phone number you agree to receive training-related messages.</small>
+      </div>
+      <div class="form-group">
+        <label data-en="Course of interest" data-es="Curso de interés" id="lbl-course">Course of interest</label>
+        <select id="reg-course">
+          <option value="" data-en="-- Select a course --" data-es="-- Selecciona un curso --">-- Select a course --</option>
+          <option value="allstate">Allstate Health Solutions</option>
+          <option value="american-amicable">American Amicable</option>
+          <option value="cica">CICA Citizens</option>
+          <option value="undecided" data-en="Not sure yet" data-es="No estoy seguro/a">Not sure yet</option>
+        </select>
       </div>
       <div class="form-group">
         <label data-en="Password (min 8 chars)" data-es="Contraseña (mín. 8 caracteres)" id="lbl-pass-reg">Password (min 8 chars)</label>
@@ -391,18 +402,20 @@ async function doSignIn(e) {
 
 async function doRegister(e) {
   e.preventDefault();
-  const name  = document.getElementById('reg-name').value.trim();
-  const email = document.getElementById('reg-email').value.trim();
-  const phone = document.getElementById('reg-phone').value.trim();
-  const pass  = document.getElementById('reg-password').value;
+  const name   = document.getElementById('reg-name').value.trim();
+  const email  = document.getElementById('reg-email').value.trim();
+  const phone  = document.getElementById('reg-phone').value.trim();
+  const pass   = document.getElementById('reg-password').value;
+  const course = document.getElementById('reg-course').value;
   clearMessages();
   setLoading('btn-register', true, 'register-label');
   try {
-    await AZ.Auth.signUp(email, pass, name, phone);
+    await AZ.Auth.signUp(email, pass, name, phone, course);
+    sendToBitrix({ name, email, phone, course });
     showMsg('msg-register',
       currentLang === 'es'
-        ? '¡Cuenta creada! Revisa tu email para confirmar.'
-        : 'Account created! Check your email to confirm.',
+        ? '¡Cuenta creada! Tu solicitud está pendiente de aprobación. Te notificaremos pronto.'
+        : 'Account created! Your request is pending approval. We will notify you soon.',
       'success'
     );
   } catch (err) {
@@ -537,10 +550,43 @@ async function showModules(profile) {
   }
 }
 
+// ===== BITRIX INTEGRATION =====
+const BITRIX_WEBHOOK_URL = ''; // TODO: paste your Bitrix inbound webhook URL here
+
+async function sendToBitrix(data) {
+  if (!BITRIX_WEBHOOK_URL) return;
+  try {
+    await fetch(BITRIX_WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        fields: {
+          NAME:     data.name,
+          EMAIL:    [{ VALUE: data.email, VALUE_TYPE: 'WORK' }],
+          PHONE:    [{ VALUE: data.phone, VALUE_TYPE: 'MOBILE' }],
+          COMMENTS: 'Course interest: ' + (data.course || 'not specified'),
+          SOURCE_ID: 'ACADEMIA',
+        }
+      })
+    });
+  } catch(e) {
+    console.warn('Bitrix sync failed:', e.message);
+  }
+}
+
 // ===== INIT =====
 (async () => {
   applyLang();
   applyTheme();
+
+  // Pre-fill form from URL params (Bitrix link: ?name=...&email=...&phone=...)
+  const params = new URLSearchParams(location.search);
+  if (params.get('name') || params.get('email') || params.get('phone')) {
+    if (params.get('name'))  document.getElementById('reg-name').value  = params.get('name');
+    if (params.get('email')) document.getElementById('reg-email').value = params.get('email');
+    if (params.get('phone')) document.getElementById('reg-phone').value = params.get('phone');
+    switchTab('register');
+  }
 
   // Check for existing session
   try {
