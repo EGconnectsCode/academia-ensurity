@@ -1,0 +1,1186 @@
+﻿<!DOCTYPE html>
+<html lang-en="" data-lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CICA Citizens — Agent Portal</title>
+<style>
+:root{
+  --cl-navy:#003D6B;--cl-blue:#0098CC;--cl-sky:#00B4E5;--cl-light:#E5F6FD;
+  --bg:#f0f7fc;--sur:#ffffff;--sur2:#f5fafd;--bdr:#cce6f4;
+  --txt:#1a2a3a;--txt2:#4a6a80;--cica-blue:#0098CC;
+  --tx:#1a2a3a;--tx2:#4a6a80;--tx3:#6a9ab8;
+  --sb-bg:var(--cl-navy);--sb-txt:#c8e6f7;--sb-act:#fff;--sb-ico:#80c8e8;
+  --r:10px;--rad:12px;--sha:0 2px 12px rgba(0,61,107,.10);
+}
+body.dark{--bg:#0a1520;--sur:#0f1f2e;--sur2:#142030;--bdr:#1a3a50;
+  --txt:#d0eaf8;--tx:#d0eaf8;--tx2:#7aaac8;--tx3:#5a8aa8;--sb-bg:#020d18;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--txt);display:flex;height:100vh;overflow:hidden;font-size:14px}
+/* ── Login ── */
+#login-screen{position:fixed;inset:0;background:linear-gradient(150deg,#003D6B 0%,#0076B6 40%,#0098CC 70%,#29B9E7 100%);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;z-index:1000;overflow-y:auto;padding-bottom:30px}
+#login-screen.hidden{display:none!important}
+.pre-login-bar{width:100%;max-width:460px;display:flex;align-items:center;justify-content:space-between;padding:14px 10px}
+.pre-notice{font-size:11px;color:rgba(255,255,255,.85);display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.13);border-radius:20px;padding:5px 12px}
+.pre-notice-dot{width:6px;height:6px;border-radius:50%;background:#ffe066;flex-shrink:0}
+.pre-lang-pill{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);color:#fff;border-radius:20px;padding:5px 14px;font-size:12px;font-weight:700;cursor:pointer;transition:background .15s;display:flex;align-items:center;gap:6px;letter-spacing:.3px}
+.pre-lang-pill:hover{background:rgba(255,255,255,.3)}
+.auth-card{background:linear-gradient(160deg,#fff 0%,#e6f4fc 55%,#cce7f8 100%);border-radius:22px;padding:30px 36px 32px;width:420px;max-width:94vw;box-shadow:0 24px 60px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.7)}
+.auth-logo{text-align:center;margin-bottom:20px}
+.auth-logo-svg{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:4px}
+.auth-brand-block{text-align:left}
+.auth-brand-name{font-size:22px;font-weight:900;color:#003D6B;letter-spacing:.5px;line-height:1.1}
+.auth-brand-name em{color:#0098CC;font-style:normal}
+.auth-brand-sub{font-size:10px;font-weight:600;color:#4a7a9a;letter-spacing:2px;text-transform:uppercase;margin-top:2px}
+#auth-tabs{display:flex;background:rgba(0,152,204,.1);border-radius:10px;padding:3px;margin-bottom:18px;border:1px solid rgba(0,152,204,.18)}
+.auth-tab{flex:1;padding:8px;text-align:center;font-size:13px;font-weight:600;border-radius:8px;cursor:pointer;color:#4a7080;transition:all .15s;border:none;background:transparent}
+.auth-tab.active{background:#fff;color:#003D6B;box-shadow:0 1px 6px rgba(0,61,107,.18)}
+.auth-form{display:none}
+#form-login{display:block}
+.auth-field{margin-bottom:12px}
+.auth-label{font-size:11px;font-weight:700;color:#4a6a80;margin-bottom:4px;display:block;text-transform:uppercase;letter-spacing:.3px}
+.auth-input{width:100%;padding:10px 14px;border:1.5px solid #b8d9ef;border-radius:9px;font-size:14px;color:#1a2a3a;outline:none;transition:border .15s;background:rgba(255,255,255,.85)}
+.auth-input:focus{border-color:#0098CC;background:#fff}
+.auth-submit{width:100%;padding:12px;background:linear-gradient(90deg,#0076B6,#29B9E7);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;transition:opacity .15s,transform .1s;margin-top:5px;letter-spacing:.3px}
+.auth-submit:hover{opacity:.92;transform:translateY(-1px)}
+.auth-err{font-size:11px;color:#e05050;min-height:13px}
+.auth-success-msg{font-size:12px;margin-top:5px;min-height:15px;text-align:center}
+.auth-link{font-size:12px;color:#0098CC;cursor:pointer;display:inline-block;margin-top:4px}
+/* App */
+#app{display:none;width:100%;height:100vh;overflow:hidden;flex-direction:row}
+#app.visible{display:flex!important}
+/* Sidebar */
+#sidebar{width:236px;min-width:236px;background:var(--sb-bg);display:flex;flex-direction:column;height:100vh;overflow:hidden}
+.sb-brand{padding:14px 14px 10px;border-bottom:1px solid rgba(255,255,255,.1)}
+.sb-logo-wrap{display:flex;align-items:center;gap:9px}
+.sb-logo-text{line-height:1.2}
+.sb-logo-main{font-size:12px;font-weight:700;color:#fff}
+.sb-logo-sub{font-size:9px;color:var(--sb-txt);letter-spacing:.5px}
+.sb-user-row{display:flex;align-items:center;gap:9px;padding:8px 13px;border-bottom:1px solid rgba(255,255,255,.08)}
+.sb-avatar-wrap{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--cl-blue),var(--cl-sky));display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:700;flex-shrink:0}
+.sb-user-info{min-width:0}
+.sb-user-name{font-size:12px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb-user-level{font-size:9px;color:var(--sb-txt)}
+.sb-section{padding:5px 0;flex:1;overflow-y:auto;overflow-x:hidden}
+.sb-label{font-size:9px;font-weight:600;color:var(--sb-ico);letter-spacing:1px;padding:4px 13px 1px;text-transform:uppercase}
+.sb-item{display:flex;align-items:center;gap:8px;padding:7px 13px;cursor:pointer;color:var(--sb-txt);transition:background .15s,color .15s;font-size:12px;border:none;background:transparent;width:100%;text-align:left}
+.sb-item:hover{background:rgba(0,180,229,.15);color:#fff}
+.sb-item.active{background:transparent;color:var(--sb-act);font-weight:600;border-left:3px solid #fb8500}
+.sb-ico{font-size:14px;width:17px;text-align:center;flex-shrink:0}
+.sb-bottom{border-top:1px solid rgba(255,255,255,.08);padding:6px 0;flex-shrink:0}
+/* Main */
+#main{flex:1;overflow-y:auto;background:var(--bg);display:flex;flex-direction:column}
+.topbar{background:var(--sur);border-bottom:1px solid var(--bdr);padding:8px 15px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;box-shadow:0 1px 4px rgba(0,61,107,.06);flex-shrink:0}
+.topbar-logo{font-size:13px;font-weight:700;color:var(--cl-navy)}
+.topbar-right{display:flex;align-items:center;gap:7px}
+.tb-lang-btn{background:var(--cl-light);border:1px solid var(--bdr);color:var(--cl-navy);border-radius:20px;padding:4px 11px;font-size:11px;font-weight:700;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:5px}
+.tb-lang-btn:hover{background:var(--cl-blue);color:#fff;border-color:var(--cl-blue)}
+.tb-dark-btn{width:29px;height:29px;border-radius:8px;border:1px solid var(--bdr);background:var(--sur2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;transition:all .15s}
+.tb-dark-btn:hover{background:var(--cl-light);border-color:var(--cl-blue)}
+.tb-user{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--txt);padding-left:8px;border-left:1px solid var(--bdr);margin-left:2px}
+.tb-avatar{width:27px;height:27px;border-radius:50%;background:linear-gradient(135deg,var(--cl-blue),var(--cl-sky));display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700}
+#content{padding:15px;flex:1;overflow-y:auto}
+.page{display:none}.page.active{display:block}
+.ph{background:linear-gradient(135deg,var(--cl-navy) 0%,var(--cl-blue) 60%,var(--cl-sky) 100%);border-radius:var(--rad);padding:16px 20px;margin-bottom:15px;color:#fff}
+.ph-row{display:flex;align-items:center;gap:12px}
+.ph-ico{font-size:28px}
+.ph h1{font-size:18px;font-weight:700;margin-bottom:2px}
+.ph p{font-size:11px;opacity:.85}
+.section-wrap{background:var(--sur);border:1px solid var(--bdr);border-radius:var(--rad);padding:15px;margin-bottom:12px;box-shadow:var(--sha)}
+.section-title{font-size:12px;font-weight:700;color:var(--cl-navy);margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid var(--cl-light)}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px}
+.fcard{background:var(--sur2);border:1px solid var(--bdr);border-radius:9px;padding:12px;display:flex;flex-direction:column;gap:6px;transition:box-shadow .15s,transform .15s}
+.fcard:hover{box-shadow:0 4px 12px rgba(0,152,204,.15);transform:translateY(-2px)}
+.fcard-ico{font-size:20px;text-align:center}
+.fname{font-size:11px;font-weight:600;color:var(--txt);text-align:center;line-height:1.3}
+.fmeta{font-size:10px;color:var(--txt2);text-align:center}
+.fbtn{background:var(--cl-blue);color:#fff;border:none;border-radius:6px;padding:6px 0;width:100%;font-size:11px;font-weight:600;cursor:pointer;transition:background .15s}
+.fbtn:hover{background:var(--cl-navy)}
+/* Home */
+.hero-banner{background:linear-gradient(135deg,#003D6B 0%,#0076B6 55%,#0098CC 85%,#29B9E7 100%);border-radius:var(--rad);padding:20px 22px;margin-bottom:14px;color:#fff;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.hero-left{flex:1;min-width:200px}
+.hero-greeting{font-size:20px;font-weight:800;margin-bottom:4px}
+.hero-sub{font-size:12px;opacity:.8;margin-bottom:2px}
+.hero-btn{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);color:#fff;border-radius:8px;padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:5px;transition:background .15s}
+.hero-btn:hover{background:rgba(255,255,255,.32)}
+.hero-btn-2{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.3);color:#fff;border-radius:8px;padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer;transition:background .15s}
+.hero-btn-2:hover{background:rgba(255,255,255,.22)}
+.hero-stats{display:flex;gap:10px;flex-shrink:0}
+.hero-stat{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:10px;padding:10px 14px;text-align:center;min-width:68px}
+.hero-stat-val{font-size:22px;font-weight:800;line-height:1}
+.hero-stat-lbl{font-size:9px;opacity:.75;font-weight:600;letter-spacing:.5px;margin-top:3px}
+.home-2col{display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap}
+.sec-row{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;cursor:pointer;transition:background .15s;border-bottom:1px solid var(--bdr)}
+.sec-row:last-child{border-bottom:none}
+.sec-row:hover{background:var(--cl-light)}
+.sec-ico{font-size:17px;flex-shrink:0;width:22px;text-align:center}
+.sec-name{flex:1;font-size:13px;font-weight:600;color:var(--txt)}
+.sec-count{font-size:11px;color:var(--txt2);margin-right:4px}
+.sec-arrow{color:var(--cl-blue);font-size:14px}
+/* Portal links */
+.pl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(235px,1fr));gap:10px}
+.pl-card{background:var(--sur2);border:1px solid var(--bdr);border-radius:var(--rad);padding:14px;display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--txt);transition:all .15s}
+.pl-card:hover{background:var(--cl-light);border-color:var(--cl-blue);box-shadow:0 3px 12px rgba(0,152,204,.12)}
+.pl-ico{font-size:22px;flex-shrink:0}
+.pl-title{font-size:12px;font-weight:700;color:var(--cl-navy);margin-bottom:1px}
+.pl-url{font-size:10px;color:var(--txt2)}
+.pl-arrow{margin-left:auto;font-size:15px;color:var(--cl-blue)}
+/* Admin */
+.adm-stat{background:var(--sur);border:1px solid var(--bdr);border-radius:var(--r);padding:12px;text-align:center}
+.adm-stat .val{font-size:20px;font-weight:700;color:var(--cl-navy)}
+.stat-lbl{font-size:10px;color:var(--tx3);font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.admin-form{background:var(--sur2);border:1px solid var(--bdr);border-radius:9px;padding:12px;margin-bottom:12px}
+.admin-form label{font-size:11px;font-weight:600;color:var(--tx2);display:block;margin-bottom:3px;margin-top:7px}
+.admin-form input{width:100%;padding:7px 10px;border:1px solid var(--bdr);border-radius:6px;font-size:12px;background:var(--sur);color:var(--tx)}
+.create-btn,.adm-btn{background:var(--cl-blue);color:#fff;border:none;border-radius:7px;padding:6px 13px;font-size:12px;cursor:pointer;transition:background .15s;margin-top:5px}
+.create-btn:hover,.adm-btn:hover{background:var(--cl-navy)}
+.adm-btn.del{background:#e53e3e}
+.admin-badge{background:var(--cl-sky);color:#fff;font-size:9px;font-weight:700;padding:1px 5px;border-radius:8px;margin-left:3px}
+table{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px}
+th{background:var(--cl-light);color:var(--cl-navy);padding:7px 9px;text-align:left;font-weight:600}
+td{padding:7px 9px;border-bottom:1px solid var(--bdr)}
+/* Metrics */
+.stat-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:9px;margin-bottom:14px}
+.stat-box{background:var(--sur);border:1px solid var(--bdr);border-radius:var(--r);padding:12px;text-align:center}
+.stat-val{font-size:22px;font-weight:800;color:var(--cica-blue)}
+.met-hero{background:linear-gradient(135deg,var(--cl-navy),var(--cl-blue));color:#fff;border-radius:var(--rad);padding:16px 18px;margin-bottom:12px;display:flex;align-items:center;gap:14px}
+.met-level-badge{font-size:36px;flex-shrink:0}
+.met-level-name{font-size:17px;font-weight:800;margin-bottom:2px}
+.met-user-name{font-size:14px;opacity:.85;margin-bottom:2px}
+.met-sub{font-size:11px;opacity:.7}
+.met-section{background:var(--sur);border:1px solid var(--bdr);border-radius:var(--rad);padding:14px;margin-bottom:11px}
+.met-section-title{font-size:12px;font-weight:700;color:var(--cl-navy);margin-bottom:12px;padding-bottom:6px;border-bottom:2px solid var(--cl-light)}
+.met-bar-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.met-bar-label{font-size:12px;color:var(--txt2);width:160px;flex-shrink:0}
+.met-bar-track{flex:1;height:10px;background:var(--sur2);border-radius:10px;overflow:hidden;border:1px solid var(--bdr)}
+.met-bar-fill{height:100%;border-radius:10px;transition:width .6s ease}
+.met-bar-pct{font-size:11px;font-weight:600;color:var(--txt2);width:36px;text-align:right}
+.met-level-row{display:flex;align-items:center;gap:10px;padding:8px 6px;border-radius:8px;transition:background .15s}
+.met-level-row:hover{background:var(--sur2)}
+.met-level-current{background:var(--cl-light)!important;border:1px solid var(--cl-blue);border-radius:8px}
+.met-level-info{flex:1}
+.met-level-rname{font-size:13px;font-weight:600;color:var(--txt)}
+.met-level-req{font-size:10px;color:var(--txt2)}
+.met-current-badge{font-size:9px;font-weight:700;color:var(--cl-blue);background:rgba(0,152,204,.12);border-radius:10px;padding:1px 6px;margin-left:5px}
+/* e-Training */
+.os-tabs-bar{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px}
+.os-tab{background:var(--sur2);border:1px solid var(--bdr);border-radius:7px;padding:6px 12px;font-size:12px;cursor:pointer;color:var(--tx2);transition:all .15s}
+.os-tab.active{background:var(--cl-blue);color:#fff;border-color:var(--cl-blue)}
+.os-panel{display:none}.os-panel.active{display:block}
+.quiz-box{background:var(--sur);border:1px solid var(--bdr);border-radius:var(--r);padding:17px;max-width:720px}
+.quiz-q{font-size:14px;font-weight:700;color:var(--tx);margin-bottom:12px;line-height:1.4}
+.quiz-opts{display:flex;flex-direction:column;gap:7px}
+.quiz-opt{display:flex;align-items:center;gap:9px;padding:9px 13px;background:var(--sur2);border:2px solid var(--bdr);border-radius:8px;cursor:pointer;font-size:13px;transition:.15s}
+.quiz-opt:hover{border-color:var(--cl-blue);background:var(--cl-light)}
+.quiz-opt.correct{border-color:#10b981;background:#ecfdf5;color:#065f46}
+.quiz-opt.wrong{border-color:#ef4444;background:#fef2f2;color:#991b1b}
+.quiz-nav{display:flex;align-items:center;justify-content:space-between;margin-top:13px;flex-wrap:wrap;gap:6px}
+.vm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px;margin-bottom:6px}
+.vm-card{border-radius:12px;overflow:hidden;cursor:pointer;box-shadow:0 2px 8px rgba(0,61,107,.12);transition:transform .2s,box-shadow .2s;background:var(--sur2);border:1px solid var(--bdr)}
+.vm-card:hover{transform:translateY(-3px);box-shadow:0 7px 24px rgba(0,152,204,.18)}
+.vm-thumb{position:relative;padding-bottom:56.25%;background:linear-gradient(135deg,#001835 0%,var(--cl-navy) 55%,var(--cl-blue) 100%);overflow:hidden}
+.vm-stars{position:absolute;inset:0;background:radial-gradient(circle at 20% 30%,rgba(0,180,229,.12) 0%,transparent 60%)}
+.vm-play{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:56px;height:56px;background:rgba(255,255,255,.95);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 13px rgba(0,61,107,.28);transition:transform .2s}
+.vm-card:hover .vm-play{transform:translate(-50%,-50%) scale(1.1)}
+.vm-play::after{content:"\25B6";color:var(--cl-blue);font-size:18px;margin-left:4px}
+.vm-badge{position:absolute;top:8px;left:8px;background:rgba(0,180,229,.9);color:#fff;font-size:9px;font-weight:700;padding:2px 7px;border-radius:17px}
+.vm-brand{position:absolute;bottom:6px;right:8px;color:rgba(255,255,255,.55);font-size:8px;font-weight:600;letter-spacing:.8px}
+.vm-info{padding:11px 13px 13px}
+.vm-title{font-size:12px;font-weight:700;color:var(--cl-navy);margin-bottom:5px;line-height:1.3}
+.vm-desc{font-size:11px;color:var(--tx2);margin-bottom:9px;line-height:1.5}
+.vm-btn{display:flex;align-items:center;justify-content:center;width:100%;padding:6px;background:var(--cl-blue);color:#fff;border:none;border-radius:7px;font-size:11px;font-weight:600;cursor:pointer;transition:background .15s}
+.vm-btn:hover{background:var(--cl-navy)}
+.rank-card{display:flex;align-items:center;gap:10px;background:var(--sur2);border:1px solid var(--bdr);border-radius:9px;padding:9px 12px;margin-bottom:6px}
+.rank-pos{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;flex-shrink:0;background:var(--bdr);color:var(--tx)}
+.rank-pos.gold{background:#f6c90e;color:#7a5900}
+.rank-pos.silver{background:#b0b0b0;color:#fff}
+.rank-pos.bronze{background:#cd7f32;color:#fff}
+.rank-name{font-size:12px;font-weight:600;color:var(--tx)}
+.rank-xp{font-size:12px;font-weight:700;color:var(--cl-blue)}
+/* lang handled by data-lang attribute */
+.admin-only{display:none!important}
+body.is-admin .admin-only{display:flex!important}
+body.is-admin div.admin-only{display:block!important}
+body.is-admin .admin-only.sb-section{display:block!important}
+/* Pages are ALWAYS controlled by navTo - never bleed */
+.page{display:none!important}
+.page.active{display:block!important}
+
+/* admin items inside sb-section, controlled by .admin-only class */
+/* sidebar bg: original (no admin override) */
+.sb-section .sb-item{padding-left:28px}
+
+/* ── Language switch via data-lang (bulletproof) ── */
+html[data-lang="en"] .es{display:none!important}
+html[data-lang="es"] .en{display:none!important}
+html[data-lang="en"] .en{display:inline}
+html[data-lang="es"] .es{display:inline}
+
+/* lang: data-lang CSS (single rule set above) */
+
+/* ── State Availability ── */
+.sm-cell{display:flex;align-items:center;justify-content:center;border-radius:4px;font-size:10px;font-weight:700;cursor:pointer;transition:opacity .15s;user-select:none}
+.sm-cell:hover{opacity:.82;outline:2px solid #fb8500}
+.sm-cell span{display:block!important;direction:ltr!important;unicode-bidi:normal!important;text-align:center}
+.sa-regs{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:0}
+@media(max-width:600px){.sa-regs{grid-template-columns:1fr}}
+.sa-reg-card{background:var(--sur2);border:1px solid var(--bdr);border-radius:10px;padding:14px;position:relative;overflow:hidden}
+.sa-reg-state{font-size:14px;font-weight:700;color:var(--cl-navy);margin-bottom:2px}
+.sa-reg-flag{position:absolute;top:10px;right:12px;font-size:28px;font-weight:900;color:rgba(0,0,0,.06);line-height:1}
+.sa-reg-list{margin:8px 0 0 16px;font-size:12px;color:var(--txt2);line-height:1.6}
+.sa-reg-list li{margin-bottom:6px}
+.sa-table thead tr{background:linear-gradient(90deg,#0B2545,#219ebc)}
+.sa-table thead th{color:#fff;padding:8px 10px;font-size:11px;font-weight:600;text-align:center;border:none}
+.sa-table thead th:first-child{text-align:left}
+.sa-table tbody tr:nth-child(even){background:var(--sur2)}
+.sa-table tbody td{padding:6px 10px;font-size:12px;text-align:center;border-bottom:1px solid var(--bdr)}
+.sa-table tbody td:first-child{text-align:left;font-weight:500}
+
+
+/* ── Palette divider bar between sidebar and main ── */
+#palette-divider-left{
+  width:5px;
+  flex-shrink:0;
+  height:100vh;
+  background:linear-gradient(180deg,
+    #390099 0%,
+    #9e0059 22%,
+    #ff5400 42%,
+    #fb8500 58%,
+    #ffbd00 76%,
+    #219ebc 100%);
+  position:sticky;
+  top:0;
+  z-index:20;
+}
+#palette-divider{
+  width:5px;
+  flex-shrink:0;
+  height:100vh;
+  background:linear-gradient(180deg,
+    #390099 0%,
+    #9e0059 22%,
+    #ff5400 42%,
+    #fb8500 58%,
+    #ffbd00 76%,
+    #219ebc 100%);
+  position:sticky;
+  top:0;
+  z-index:20;
+}
+/* Remove left-edge bar from sidebar (no longer needed) */
+#sidebar::before{display:none}
+
+/* ── Video card titles — white in dark mode ── */
+.vm-title{color:var(--txt)!important}
+body.dark .vm-title{color:#ffffff!important}
+body.dark .vm-info{background:var(--sur2)}
+
+/* ── No-license table rows — always dark text (light bg) ── */
+tr.sa-no-lic td{
+  color:#3a5068!important;
+  font-style:italic;
+}
+tr.sa-no-lic{background:#dde4ea!important}
+
+/* ── Login screen: light mode = sky blue from image1, dark = navy gradient ── */
+#login-screen{
+  background:linear-gradient(180deg,#1B9EC5 0%,#29C4E8 55%,#22B8DE 100%)!important;
+}
+body.dark #login-screen{
+  background:linear-gradient(150deg,#0B2545 0%,#0B6E9E 45%,#219ebc 75%,#48CAE4 100%)!important;
+}
+
+/* ── Product Availability table — clean for both modes ── */
+
+/* Remove white/light section-wrap background inside page-states */
+#page-states .section-wrap{
+  background:transparent!important;
+  border:1px solid var(--bdr)!important;
+  box-shadow:none!important;
+}
+
+/* Table base */
+.sa-table{
+  background:transparent!important;
+  border-collapse:collapse;
+  width:100%;
+}
+
+/* Header — solid, works in both modes */
+.sa-table thead tr{
+  background:linear-gradient(90deg,#0B3D6B,#219ebc)!important;
+}
+.sa-table thead th{
+  color:#ffffff!important;
+  font-weight:700!important;
+  padding:9px 12px!important;
+  font-size:12px!important;
+}
+
+/* Body rows */
+.sa-table tbody tr{background:transparent!important}
+.sa-table tbody tr:nth-child(even){background:rgba(0,152,204,.06)!important}
+.sa-table tbody td{
+  color:var(--txt)!important;
+  border-bottom:1px solid var(--bdr)!important;
+  padding:7px 12px!important;
+  font-size:12px!important;
+}
+
+/* Light mode: ensure dark text */
+body:not(.dark) .sa-table tbody td{color:#1a2a3a!important}
+
+/* Dark mode: light text */
+body.dark .sa-table tbody td{color:#c8e6f8!important}
+
+/* No-license rows — always light bg + dark text */
+tr.sa-no-lic{background:#dde4ea!important}
+tr.sa-no-lic td{color:#3a5068!important;font-style:italic}
+
+/* Footer note */
+#page-states .section-wrap p{color:var(--txt2)!important}
+
+/* ── TABLE HEADER — forced readability both modes ── */
+#page-states table thead,
+#page-states table thead tr,
+#page-states table thead th{
+  background:#0B3D6B!important;
+  color:#ffffff!important;
+  border:none!important;
+}
+#page-states table thead th{
+  font-size:12px!important;
+  font-weight:700!important;
+  padding:10px 12px!important;
+  letter-spacing:.3px!important;
+}
+
+/* Light mode: header slightly brighter blue */
+body:not(.dark) #page-states table thead,
+body:not(.dark) #page-states table thead tr,
+body:not(.dark) #page-states table thead th{
+  background:#0B3D6B!important;
+  color:#ffffff!important;
+}
+
+/* Dark mode: slightly lighter so it contrasts the dark page */
+body.dark #page-states table thead,
+body.dark #page-states table thead tr,
+body.dark #page-states table thead th{
+  background:#0d4d85!important;
+  color:#ffffff!important;
+}
+
+/* Body: light mode = dark text, dark mode = light text */
+body:not(.dark) #page-states table tbody td{color:#0B2545!important;font-size:12px!important}
+body.dark       #page-states table tbody td{color:#d0eaf8!important;font-size:12px!important}
+
+/* Alternating rows subtle tint */
+body:not(.dark) #page-states table tbody tr:nth-child(even){background:rgba(0,152,204,.07)!important}
+body.dark       #page-states table tbody tr:nth-child(even){background:rgba(255,255,255,.04)!important}
+body:not(.dark) #page-states table tbody tr:nth-child(odd){background:#ffffff!important}
+body.dark       #page-states table tbody tr:nth-child(odd){background:transparent!important}
+
+/* Section wrap needs a subtle visible bg in light mode */
+body:not(.dark) #page-states .section-wrap{background:#f5fafd!important;border:1px solid #cce6f4!important}
+body.dark       #page-states .section-wrap{background:transparent!important;border:1px solid var(--bdr)!important}
+
+/* ── Portal Links cards — legible both modes ── */
+.pl-card{
+  background:var(--sur)!important;
+  border:1px solid var(--bdr)!important;
+}
+.pl-title{
+  color:var(--txt)!important;
+  font-size:13px!important;
+  font-weight:700!important;
+}
+.pl-url{
+  color:var(--txt2)!important;
+  font-size:11px!important;
+}
+.pl-arrow{color:#fb8500!important}
+.pl-ico{font-size:24px}
+
+/* Light mode */
+body:not(.dark) .pl-card{background:#ffffff!important;border-color:#cce6f4!important}
+body:not(.dark) .pl-title{color:#0B2545!important}
+body:not(.dark) .pl-url{color:#4a6a80!important}
+
+/* Dark mode */
+body.dark .pl-card{background:#0f1e30!important;border-color:#1a3a55!important}
+body.dark .pl-title{color:#d0eaf8!important}
+body.dark .pl-url{color:#7aaac8!important}
+
+.pl-card:hover .pl-title{color:var(--cl-blue)!important}
+
+/* ── Auth card dark mode ── */
+body.dark .auth-card{
+  background:linear-gradient(160deg,#071526 0%,#0B2545 50%,#0d3560 100%)!important;
+  border:1px solid rgba(33,158,188,.25)!important;
+  box-shadow:0 24px 60px rgba(0,0,0,.55),inset 0 1px 0 rgba(72,202,228,.12)!important;
+}
+body.dark .auth-brand-name{color:#d0eaf8!important}
+body.dark .auth-brand-name em{color:#48CAE4!important}
+body.dark .auth-brand-sub{color:#7aaac8!important;letter-spacing:2.5px}
+body.dark .auth-label{color:#7aaac8!important}
+body.dark .auth-input{
+  background:rgba(255,255,255,.06)!important;
+  border-color:#1a3a55!important;
+  color:#d0eaf8!important;
+}
+body.dark .auth-input::placeholder{color:#4a7a9a!important}
+body.dark .auth-input:focus{border-color:#219ebc!important;background:rgba(255,255,255,.1)!important}
+body.dark #auth-tabs{background:rgba(33,158,188,.12)!important;border-color:rgba(33,158,188,.2)!important}
+body.dark .auth-tab{color:#7aaac8!important}
+body.dark .auth-tab.active{background:rgba(72,202,228,.15)!important;color:#d0eaf8!important}
+body.dark .auth-link{color:#48CAE4!important}
+body.dark .auth-submit{background:linear-gradient(90deg,#0B6E9E,#219ebc)!important}
+
+/* Brand block bigger now logo removed */
+.auth-brand-name{font-size:26px!important}
+.auth-brand-sub{font-size:11px!important;letter-spacing:3px}
+.auth-logo-svg{gap:0!important}
+</style>
+
+<style id="theme-override">
+/* ── COLOR PALETTE ── */
+:root{
+  --cl-navy:#0B2545;
+  --cl-blue:#219ebc;
+  --cl-sky:#48CAE4;
+  --cl-orange:#fb8500;
+  --cl-purple:#390099;
+  --cl-magenta:#9e0059;
+  --cl-red:#ff5400;
+  --cl-gold:#ffbd00;
+  --cl-light:#e6f7fb;
+  --bg:#f0f8fc;
+  --sur:#ffffff;
+  --sur2:#f5fafd;
+  --bdr:#cce6f4;
+  --txt:#1a2a3a;
+  --txt2:#4a6a80;
+  --cica-blue:#219ebc;
+  --tx:#1a2a3a;--tx2:#4a6a80;--tx3:#6a9ab8;
+  --sha:0 2px 12px rgba(0,30,70,.10);
+}
+body.dark{
+  --bg:#080f1a;--sur:#0d1c2e;--sur2:#101e30;--bdr:#1a3a55;
+  --txt:#c8e6f8;--tx:#c8e6f8;--tx2:#6aaac8;--tx3:#4a8aa8;
+}
+
+/* ── LOGIN SCREEN — image-1 two-tone blue ── */
+#login-screen{
+  background:linear-gradient(150deg,#0B2545 0%,#0B6E9E 45%,#219ebc 75%,#48CAE4 100%)!important;
+}
+
+/* ── AUTH CARD ── */
+.auth-card{
+  background:linear-gradient(160deg,#fff 0%,#e6f7fb 55%,#c8eef8 100%)!important;
+}
+.auth-tab.active{color:#0B2545!important}
+.auth-submit{background:linear-gradient(90deg,#219ebc,#48CAE4)!important}
+
+/* ── SIDEBAR — image-1 wave gradient ── */
+#sidebar{
+  background:linear-gradient(165deg,#0B2545 0%,#0B3D6B 30%,#0B6E9E 65%,#219ebc 100%)!important;
+  position:relative;overflow:hidden;
+}
+/* Decorative colorful vertical bar on left edge of sidebar */
+#sidebar::before{
+  content:'';
+  position:absolute;
+  left:0;top:0;bottom:0;width:4px;
+  background:linear-gradient(180deg,
+    #390099 0%,
+    #9e0059 20%,
+    #ff5400 38%,
+    #fb8500 54%,
+    #ffbd00 72%,
+    #219ebc 100%);
+  z-index:2;flex-shrink:0;
+}
+.sb-brand,.sb-user-row,.sb-section,.sb-bottom,.sb-item{position:relative;z-index:3;}
+
+/* ── TOPBAR ── */
+.topbar{
+  border-bottom:3px solid transparent!important;
+  border-image:linear-gradient(90deg,#390099,#9e0059,#ff5400,#fb8500,#ffbd00,#219ebc) 1!important;
+}
+.tb-lang-btn{background:#e6f7fb!important;color:#0B2545!important;border-color:#219ebc!important}
+.tb-lang-btn:hover{background:#219ebc!important;color:#fff!important}
+
+/* ── PAGE HEADERS ── */
+.ph{background:linear-gradient(135deg,#0B2545 0%,#219ebc 60%,#48CAE4 100%)!important}
+
+/* ── HERO BANNER ── */
+.hero-banner{background:linear-gradient(135deg,#0B2545 0%,#219ebc 60%,#48CAE4 100%)!important}
+
+/* ── BUTTONS ── */
+.fbtn{background:#fb8500!important}
+.fbtn:hover{background:#ff5400!important}
+.create-btn,.adm-btn{background:#fb8500!important}
+.create-btn:hover,.adm-btn:hover{background:#ff5400!important}
+.vm-btn{background:#fb8500!important}
+.vm-btn:hover{background:#ff5400!important}
+.hero-btn{border-color:rgba(255,255,255,.5)!important}
+.hero-btn:hover{background:rgba(255,255,255,.28)!important}
+
+/* ── ACTIVE SIDEBAR ITEM ── */
+.sb-item.active{
+  background:transparent!important;
+  border-left:3px solid #fb8500!important;
+  color:#fff!important;
+  font-weight:700!important;
+}
+.sb-item:hover{background:rgba(255,255,255,.07)!important}
+
+/* ── STAT VALUES & LINKS ── */
+.stat-val,.hero-stat-val{color:#fb8500!important}
+a,.auth-link,.pl-card:hover .pl-title{color:#219ebc}
+.sec-arrow,.pl-arrow{color:#fb8500!important}
+
+/* ── METRICS ── */
+.met-hero{background:linear-gradient(135deg,#0B2545,#219ebc)!important}
+.met-section-title{color:#0B2545!important;border-color:#e6f7fb!important}
+.met-current-badge{color:#fb8500!important;background:rgba(251,133,0,.12)!important}
+.met-level-current{background:rgba(251,133,0,.08)!important;border-color:#fb8500!important}
+
+/* ── SCROLLBAR — colorful vertical bar ── */
+#main::-webkit-scrollbar,#content::-webkit-scrollbar{width:6px}
+#main::-webkit-scrollbar-track,#content::-webkit-scrollbar-track{background:transparent}
+#main::-webkit-scrollbar-thumb,#content::-webkit-scrollbar-thumb{
+  background:linear-gradient(180deg,#390099,#9e0059,#ff5400,#fb8500,#ffbd00,#219ebc);
+  border-radius:10px;
+}
+/* Sidebar scrollbar — transparent track, palette thumb */
+.sb-section::-webkit-scrollbar{width:4px}
+.sb-section::-webkit-scrollbar-track{background:transparent}
+.sb-section::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#390099,#9e0059,#ff5400,#fb8500,#ffbd00,#219ebc);border-radius:4px}
+/* Eliminate ALL gray scrollbar tracks globally */
+::-webkit-scrollbar-track{background:transparent!important}
+
+/* ── SECTION TITLE ACCENT ── */
+.section-title{border-color:#fb8500!important;color:#0B2545!important}
+
+/* ── QUIZ ACTIVE ── */
+.os-tab.active{background:#fb8500!important;border-color:#fb8500!important}
+
+/* ── PRE-LOGIN BAR ── */
+.pre-lang-pill{background:rgba(255,255,255,.2)!important;border-color:rgba(255,255,255,.4)!important}
+</style>
+
+<style id="fix-v2">
+/* ── Animated palette divider bar ── */
+@keyframes barFlow{0%{background-position:0 0%}100%{background-position:0 200%}}
+#palette-divider{
+  background:linear-gradient(180deg,
+    #390099 0%,#9e0059 17%,#ff5400 34%,
+    #fb8500 50%,#ffbd00 67%,#219ebc 84%,
+    #390099 100%)!important;
+  background-size:100% 200%!important;
+  animation:barFlow 5s linear infinite!important;
+}
+
+/* ── Topbar text always visible ── */
+.topbar-logo{color:var(--cl-blue)!important;font-weight:700}
+.tb-user span{color:var(--txt)!important}
+
+/* ── State Availability — dark mode fixes ── */
+.sa-reg-card{color:var(--txt)!important}
+.sa-reg-state{color:var(--cl-blue)!important;font-weight:700}
+.sa-reg-flag{color:rgba(128,180,220,.12)!important}
+.sa-reg-list{color:var(--txt2)!important}
+
+/* ── Product table — always readable ── */
+.sa-table tbody td{color:var(--txt)!important}
+.sa-table tbody tr:nth-child(even){background:var(--sur2)!important}
+
+/* ── Section title always readable ── */
+.section-title{color:var(--cl-blue)!important}
+.met-section-title{color:var(--cl-blue)!important}
+
+/* ── State map cells ── */
+.sm-cell{color:#ffffff!important;font-size:10px;font-weight:700;border-radius:5px;
+         display:flex;align-items:center;justify-content:center;cursor:pointer;
+         transition:opacity .15s,outline .1s;user-select:none}
+.sm-cell:hover{opacity:.8;outline:2px solid #fb8500;outline-offset:1px}
+</style>
+<script>
+// Supabase Storage PDF download
+function dlFromUrl(url, fname) {
+  fetch(url).then(function(r){ return r.arrayBuffer(); }).then(function(buf){
+    var blob = new Blob([buf], {type:'application/pdf'});
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = fname + '.pdf';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  }).catch(function(){ window.open(url,'_blank'); });
+}
+</script>
+</head>
+<body>
+<div id="login-screen">
+<div class="pre-login-bar"><div class="pre-notice"><span class="pre-notice-dot"></span><span class="en">Training portal — not a substitute for the Agent Portal</span><span class="es">Portal de entrenamiento — no sustituye al Portal del Agente</span></div><button class="pre-lang-pill" onclick="toggleLang()">&#127760; <span id="pre-lang-lbl">ES</span></button></div>
+<div class="auth-card">
+<div class="auth-logo"><div class="auth-logo-svg" style="justify-content:center"><div class="auth-brand-block"><div class="auth-brand-name">CICA <em>LIFE</em></div><div class="auth-brand-sub">of America</div></div></div></div>
+<div id="auth-success-msg" class="auth-success-msg"></div>
+<div id="auth-tabs"><button class="auth-tab active" id="tab-login" onclick="switchTab('login')"><span class="en">Sign In</span><span class="es">Iniciar Sesion</span></button><button class="auth-tab" id="tab-register" onclick="switchTab('register')"><span class="en">Register</span><span class="es">Registrarse</span></button></div>
+<div id="form-login"><div class="auth-field"><label class="auth-label">Email</label><input class="auth-input" id="li-email" type="email" placeholder="agent@email.com"><div class="auth-err" id="li-err-email"></div></div><div class="auth-field"><label class="auth-label"><span class="en">Password</span><span class="es">Contrasena</span></label><input class="auth-input" id="li-pass" type="password"><div class="auth-err" id="li-err-pass"></div></div><span class="auth-link" onclick="showForgot()"><span class="en">Forgot password?</span><span class="es">Olvidaste tu contrasena?</span></span><button class="auth-submit" onclick="doSignIn()"><span class="en">Sign In</span><span class="es">Entrar</span></button></div>
+<div id="form-register" style="display:none"><div class="auth-field"><label class="auth-label"><span class="en">Full Name</span><span class="es">Nombre Completo</span></label><input class="auth-input" id="re-name" type="text"><div class="auth-err" id="re-err-name"></div></div><div class="auth-field"><label class="auth-label">Email</label><input class="auth-input" id="re-email" type="email"><div class="auth-err" id="re-err-email"></div></div><div class="auth-field"><label class="auth-label"><span class="en">Password</span><span class="es">Contrasena</span></label><input class="auth-input" id="re-pass" type="password"><div class="auth-err" id="re-err-pass"></div></div><div class="auth-field"><label class="auth-label"><span class="en">Confirm Password</span><span class="es">Confirmar</span></label><input class="auth-input" id="re-pass2" type="password"><div class="auth-err" id="re-err-pass2"></div></div><button class="auth-submit" onclick="doRegister()"><span class="en">Create Account</span><span class="es">Crear Cuenta</span></button></div>
+<div id="form-forgot" style="display:none"><div class="auth-field"><label class="auth-label">Email</label><input class="auth-input" id="fr-email" type="email"></div><div class="auth-err" id="fr-msg" style="margin-bottom:8px"></div><button class="auth-submit" onclick="sendResetCode()"><span class="en">Send Reset Code</span><span class="es">Enviar Codigo</span></button><div style="text-align:center;margin-top:10px"><span class="auth-link" onclick="backToLogin()"><span class="en">Back to Sign In</span><span class="es">Volver</span></span></div></div>
+<div id="form-verify" style="display:none"><input type="hidden" id="frv-pending-email"><div id="frv-fallback-box" style="display:none;background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:9px 13px;margin-bottom:10px;font-size:12px"><span class="en">Your reset code: <strong id="frv-code-show"></strong></span><span class="es">Tu codigo: <strong id="frv-code-show-es"></strong></span></div><div class="auth-field"><label class="auth-label"><span class="en">6-digit code</span><span class="es">Codigo de 6 digitos</span></label><input class="auth-input" id="frv-code" type="text" maxlength="6"><div class="auth-err" id="frv-msg"></div></div><button class="auth-submit" onclick="verifyResetCode()"><span class="en">Verify</span><span class="es">Verificar</span></button><div style="text-align:center;margin-top:9px"><span class="auth-link" onclick="backToLogin()"><span class="en">Back</span><span class="es">Volver</span></span></div></div>
+<div id="form-reset-pw" style="display:none"><input type="hidden" id="frp-pending-email"><div class="auth-field"><label class="auth-label"><span class="en">New Password</span><span class="es">Nueva Contrasena</span></label><input class="auth-input" id="frp-pass" type="password"><div class="auth-err" id="frp-msg"></div></div><div class="auth-field"><label class="auth-label"><span class="en">Confirm</span><span class="es">Confirmar</span></label><input class="auth-input" id="frp-pass2" type="password"></div><button class="auth-submit" onclick="doResetPassword()"><span class="en">Set New Password</span><span class="es">Guardar Contrasena</span></button></div>
+</div></div>
+<div id="app">
+<div id="palette-divider-left"></div>
+<div id="sidebar"><div class="sb-brand"><div class="sb-logo-wrap"><svg width="32" height="32" viewBox="0 0 76 76" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="lgSm" cx="38%" cy="35%" r="62%"><stop offset="0%" stop-color="#4DD4F5"/><stop offset="100%" stop-color="#0B97CE"/></radialGradient></defs><circle cx="38" cy="38" r="37" fill="url(#lgSm)"/><path d="M55,16 A24,24,0,1,0,55,60" stroke="white" stroke-width="11" fill="none" stroke-linecap="round"/><circle cx="57" cy="38" r="7.5" fill="white"/></svg><div class="sb-logo-text"><div class="sb-logo-main">CICA LIFE</div><div class="sb-logo-sub">OF AMERICA</div></div></div></div><div class="sb-user-row"><div class="sb-avatar-wrap" id="sb-avatar">AG</div><div class="sb-user-info"><div class="sb-user-name" id="sb-name">Agent</div><div class="sb-user-level" id="sb-level"></div></div></div><div class="sb-section"><div class="sb-label">Navigation</div><button class="sb-item  active" data-page="home"><span class="sb-ico">&#127968;</span><span class="en">Home</span><span class="es">Inicio</span></button><button class="sb-item" data-page="etraining"><span class="sb-ico">&#127891;</span><span class="en">e-Training</span><span class="es">e-Training</span></button><button class="sb-item" data-page="metrics"><span class="sb-ico">&#128202;</span><span class="en">My Metrics</span><span class="es">Mis Metricas</span></button><button class="sb-item" data-page="claim"><span class="sb-ico">&#128196;</span><span class="en">Claim Forms</span><span class="es">Formularios de Reclamo</span></button><button class="sb-item" data-page="contracts"><span class="sb-ico">&#128179;</span><span class="en">Contracts &amp; Commissions</span><span class="es">Contratos y Comisiones</span></button><button class="sb-item" data-page="guidelines"><span class="sb-ico">&#128218;</span><span class="en">Department Guidelines</span><span class="es">Guias del Departamento</span></button><button class="sb-item" data-page="helpful"><span class="sb-ico">&#128279;</span><span class="en">Helpful Links</span><span class="es">Recursos Utiles</span></button><button class="sb-item" data-page="marketing"><span class="sb-ico">&#128203;</span><span class="en">Marketing Forms</span><span class="es">Formularios de Marketing</span></button><button class="sb-item" data-page="policyholder"><span class="sb-ico">&#128101;</span><span class="en">Policyholder Services</span><span class="es">Servicios al Asegurado</span></button><button class="sb-item" data-page="portal"><span class="sb-ico">&#128279;</span><span class="en">Portal Links</span><span class="es">Portal Links</span></button><button class="sb-item" data-page="states"><span class="sb-ico">&#127760;</span><span class="en">State Availability</span><span class="es">Disponibilidad Estatal</span></button><div class="admin-only" style="margin-top:4px"><div class="sb-label"><span class="en">Administration</span><span class="es">Administración</span> <span style="font-size:9px;background:#f59e0b;color:#000;padding:1px 5px;border-radius:3px;font-weight:900;vertical-align:middle">ADMIN</span></div><button class="sb-item" data-page="admin-users"><span class="sb-ico">&#128101;</span><span class="en">Users</span><span class="es">Usuarios</span></button><button class="sb-item" data-page="admin-activity"><span class="sb-ico">&#9989;</span><span class="en">Activity</span><span class="es">Actividad</span></button><button class="sb-item" data-page="admin-ranking"><span class="sb-ico">&#127942;</span><span class="en">Ranking</span><span class="es">Ranking</span></button></div></div><div class="sb-bottom"><button class="sb-item" onclick="doLogout()"><span class="sb-ico">&#128682;</span><span class="en">Sign Out</span><span class="es">Cerrar Sesion</span></button></div></div>
+<div id="palette-divider"></div>
+<div id="main"><div class="topbar"><div class="topbar-logo">CICA Citizens Portal</div><div class="topbar-right"><button class="tb-lang-btn" id="tb-lang-btn" onclick="toggleLang()">&#127760; <span id="tb-lang-lbl">ES</span></button><button class="tb-dark-btn" onclick="toggleDark()" title="Dark/Light">&#127763;</button><div class="tb-user"><div class="tb-avatar" id="tb-avatar">A</div><span id="tb-name"></span></div></div></div><div id="content"><div class="page active" id="page-home"><div class="hero-banner"><div class="hero-left"><div class="hero-greeting"><span class="en">Welcome,</span><span class="es">Bienvenido,</span> <strong id="home-username">Agent</strong> &#128075;</div><div class="hero-sub"><span class="en">CICA Life of America &middot; Agent Training Portal</span><span class="es">CICA Life of America &middot; Portal de Entrenamiento</span></div><div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap"><a href="https://cicaamerica.citizensinc.com/login" target="_blank" class="hero-btn">&#128274; <span class="en">Agent Portal</span><span class="es">Portal del Agente</span></a><button class="hero-btn-2" onclick="navTo('etraining')">&#127891; e-Training</button></div></div><div class="hero-stats"><div class="hero-stat"><div class="hero-stat-val" id="hero-mods">0</div><div class="hero-stat-lbl"><span class="en">MODULES</span><span class="es">MODULOS</span></div></div><div class="hero-stat"><div class="hero-stat-val" id="hero-dl">0</div><div class="hero-stat-lbl"><span class="en">DOWNLOADS</span><span class="es">DESCARGAS</span></div></div><div class="hero-stat"><div class="hero-stat-val" id="hero-xp">0</div><div class="hero-stat-lbl">XP</div></div></div></div><div id="training-banner" style="background:rgba(0,152,204,.12);border:1px solid rgba(0,152,204,.3);border-radius:9px;padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;gap:10px;font-size:12px"><span style="font-size:16px;flex-shrink:0">&#9888;</span><span style="flex:1;color:var(--txt2)"><span class="en"><b>Training Resource Only.</b> For live data visit the <a href="https://cicaamerica.citizensinc.com/login" target="_blank" style="color:var(--cl-blue);font-weight:700">Agent Portal</a>.</span><span class="es"><b>Solo para entrenamiento.</b> Para datos actualizados visita el <a href="https://cicaamerica.citizensinc.com/login" target="_blank" style="color:var(--cl-blue);font-weight:700">Portal del Agente</a>.</span></span><button onclick="document.getElementById('training-banner').style.display='none';document.getElementById('banner-show-again').style.display='block'" style="background:none;border:none;cursor:pointer;color:var(--txt2);font-size:16px;flex-shrink:0">&#10005;</button></div><div id="banner-show-again" style="display:none;font-size:11px;color:var(--cl-blue);margin-bottom:10px;cursor:pointer" onclick="document.getElementById('training-banner').style.display='flex';document.getElementById('banner-show-again').style.display='none'">&#9432; <span class="en">Show training notice</span><span class="es">Mostrar aviso</span></div><div class="home-2col"><div class="section-wrap" style="flex:1;min-width:0"><div class="section-title">&#128196; <span class="en">Material Sections</span><span class="es">Secciones de Materiales</span></div><div class="sec-row" onclick="navTo('etraining')"><span class="sec-ico">&#127891;</span><span class="sec-name"><span class="en">e-Training</span><span class="es">e-Training</span></span><span class="sec-count">3 videos + quizzes</span><span class="sec-arrow">&#8594;</span></div><div class="sec-row" onclick="navTo('claim')"><span class="sec-ico">&#128196;</span><span class="sec-name"><span class="en">Claim Forms</span><span class="es">Formularios de Reclamo</span></span><span class="sec-count">2 files</span><span class="sec-arrow">&#8594;</span></div><div class="sec-row" onclick="navTo('contracts')"><span class="sec-ico">&#128179;</span><span class="sec-name"><span class="en">Contracts &amp; Commissions</span><span class="es">Contratos y Comisiones</span></span><span class="sec-count">5 files</span><span class="sec-arrow">&#8594;</span></div><div class="sec-row" onclick="navTo('guidelines')"><span class="sec-ico">&#128218;</span><span class="sec-name"><span class="en">Department Guidelines</span><span class="es">Guias del Departamento</span></span><span class="sec-count">10 files</span><span class="sec-arrow">&#8594;</span></div><div class="sec-row" onclick="navTo('helpful')"><span class="sec-ico">&#128279;</span><span class="sec-name"><span class="en">Helpful Links</span><span class="es">Recursos Utiles</span></span><span class="sec-count">12 files</span><span class="sec-arrow">&#8594;</span></div><div class="sec-row" onclick="navTo('marketing')"><span class="sec-ico">&#128203;</span><span class="sec-name"><span class="en">Marketing Forms</span><span class="es">Formularios de Marketing</span></span><span class="sec-count">3 files</span><span class="sec-arrow">&#8594;</span></div><div class="sec-row" onclick="navTo('policyholder')"><span class="sec-ico">&#128101;</span><span class="sec-name"><span class="en">Policyholder Services</span><span class="es">Servicios al Asegurado</span></span><span class="sec-count">4 files</span><span class="sec-arrow">&#8594;</span></div></div><div style="width:320px;flex-shrink:0;display:flex;flex-direction:column;gap:12px"><div class="section-wrap"><div class="section-title">&#128279; <span class="en">Quick Links</span><span class="es">Accesos Rapidos</span></div><div class="sec-row" onclick="window.open('https://cicaamerica.citizensinc.com/login','_blank')"><span class="sec-ico">&#128274;</span><span class="sec-name"><span class="en">Agent Portal Login</span><span class="es">Portal del Agente</span></span><span class="sec-arrow">&#8599;</span></div><div class="sec-row" onclick="navTo('etraining')"><span class="sec-ico">&#127891;</span><span class="sec-name"><span class="en">e-Training &amp; Quizzes</span><span class="es">e-Training y Quizzes</span></span><span class="sec-arrow">&#8594;</span></div><div class="sec-row" onclick="navTo('metrics')"><span class="sec-ico">&#128202;</span><span class="sec-name"><span class="en">My Metrics</span><span class="es">Mis Metricas</span></span><span class="sec-arrow">&#8594;</span></div><div class="sec-row" onclick="navTo('states')"><span class="sec-ico">&#127760;</span><span class="sec-name"><span class="en">State Availability</span><span class="es">Disponibilidad Estatal</span></span><span class="sec-count">44 states</span><span class="sec-arrow">&#8594;</span></div><div class="sec-row" onclick="window.open('https://www.citizensinc.com/about/','_blank')"><span class="sec-ico">&#128226;</span><span class="sec-name"><span class="en">About Citizens Inc.</span><span class="es">About Citizens Inc.</span></span><span class="sec-arrow">&#8599;</span></div></div><div style="display:none"><span id="d-reg"></span><span id="d-sess"></span><span id="d-dl"></span><span id="d-xp"></span></div></div></div></div><div class="page" id="page-metrics"><div class="ph"><div class="ph-row"><div class="ph-ico">&#128202;</div><div><h1><span class="en">My Metrics</span><span class="es">Mis Metricas</span></h1><p><span class="en">Your training activity and progress</span><span class="es">Tu actividad y progreso de entrenamiento</span></p></div></div></div><div id="metrics-body"></div></div><div class="page" id="page-claim"><div class="ph"><div class="ph-row"><div class="ph-ico">&#128196;</div><div><h1><span class="en">Claim Forms</span><span class="es">Formularios de Reclamo</span></h1><p><span class="en">Life claim forms for policyholders and beneficiaries.</span><span class="es">Formularios de reclamo de vida.</span></p></div></div></div><div class="section-wrap"><div class="fgrid"><div class="fcard"><div class="fcard-ico">&#128196;</div><div class="fname"><span class="en">Life Claim Form</span><span class="es">Formulario de Reclamo de Vida</span></div><div class="fmeta">PDF · EN</div><button class="fbtn" onclick="dl('Life Claim Form','cf_life_claim','cf_life_claim')"><span class="en">Download</span><span class="es">Descargar</span></button></div><div class="fcard"><div class="fcard-ico">&#128196;</div><div class="fname"><span class="en">Life Claim Kit — CICA</span><span class="es">Kit de Reclamo de Vida CICA</span></div><div class="fmeta">PDF · EN</div><button class="fbtn" onclick="dl('Life Claim Kit — CICA','cf_life_kit','cf_life_kit')"><span class="en">Download</span><span class="es">Descargar</span></button></div></div></div></div><div class="page" id="page-contracts"><div class="ph"><div class="ph-row"><div class="ph-ico">&#128179;</div><div><h1><span class="en">Contracts &amp; Commissions</span><span class="es">Contratos y Comisiones</span></h1><p><span class="en">Commission schedules, ACH authorization, and advance requests.</span><span class="es">Tablas de comisiones y formularios de anticipo.</span></p></div></div></div><div class="section-wrap"><div class="fgrid"><div class="fcard"><div class="fcard-ico">&#128196;</div><div class="fname"><span class="en">Commissions Overview</span><span class="es">Resumen de Comisiones</span></div><div class="fmeta">PDF · EN</div><button class="fbtn" onclick="dl('Commissions Overview','cc_comm_over','cc_comm_over')"><span class="en">Download</span><span class="es">Descargar</span></button></div><div class="fcard"><div class="fcard-ico">&#128196;</div><div class="fname"><span class="en">Commission One-Pager</span><span class="es">Resumen de Comisión (1 pág.)</span></div><div class="fmeta">PDF · EN</div><button class="fbtn" onclick="dl('Commission One-Pager','cc_comm_one','cc_comm_one')"><span class="en">Download</span><span class="es">Descargar</span></button></div><div class="fcard"><div class="fcard-ico">&#128196;</div><div class="fname"><span class="en">ACH Authorization Form</span><span class="es">Formulario ACH</span></div><div class="fmeta">PDF · EN</div><button class="fbtn" onclick="dl('ACH Authorization Form','cc_ach','cc_ach')"><span class="en">Download</span><span class="es">Descargar</span></button></div><div class="fcard"><div class="fcard-ico">&#128196;</div><div class="fname"><span class="en">Advance to As-Earned Request</span><span class="es">Solicitud de Adelanto</span></div><div class="fmeta">PDF · EN</div><button class="fbtn" onclick="dl('Advance to As-Earned Request','cc_advance','cc_advance')"><span class="en">Download</span><span class="es">Descargar</span></button></div><div class="fcard"><div class="fcard-ico">&#128196;</div><div class="fname"><span class="en">State Breakdown — Overrides</span><span class="es">Desglose por Estado — Overrides</span></div><div class="fmeta">PDF · EN</div><button class="fbtn" onclick="dl('State Breakdown — Overrides','cc_state_break','cc_state_break')"><span class="en">Download</span><span class="es">Descargar</span></button></div></div></div></div><div class="page" id="page-guidelines"><div class="ph"><div class="ph-row"><div class="ph-ico">&#128218;</div><div><h1><span class="en">Department Guidelines</span><span class="es">Guias del Departamento</span></h1><p><span class="en">Agent guides, FAQs, advertising, market conduct, and risk.</span><span class="es">Guias del agente, FAQ, publicidad y conducta de mercado.</span></p></div></div></div><div class="section-wrap"><div class="fgrid"><div class="fcard"><div class="fcard-ico">&#128196;</div><div class="fname"><span class="en">Agent Guide & Resources</span><span class="es">Guía y Recursos del Agente</span></div><div class="fmeta">PDF · EN</div><button class="fbtn" onclick="dl('Agent Guide & Resources','dg_agent_guide','dg_agent_guide')"><span class="en">Download</span><span class="es">Descargar</span></button></div><div class="fcard"><div class="fcard-ico">&#128196;</div><div class="fname"><span class="en">Agent Guide (Español)</span><span class="es">Guía y Recursos (Español)</span></div><div class="fmeta">PDF · ES</div><button class="fbtn" onclick="dl('Agent Guide (Español)','dg_agent_guide_es','dg_agent_guide_es')"><span class="en">Download</span><span class="es">Descargar</span></button></div><div class="fcard"><div class="fcard-ico">&#128196;</div><div class="fname"><span class="en">Agent FAQ</span><span class="es">Preguntas Frecuentes</span></div><div class="fmeta">PDF · EN</div><button class="fbtn" onclick="dl('Agent FAQ','dg_agent_faq','dg_agent_faq')"><span class="en">Download</span><span class="es">Descargar</span></button></div><div class="fcard"><div class="fcard-ico">&#128196;</div><div class="fname"><span class="en">Agent FAQ (Español)</span><span class="es">Preguntas Frecuentes (ES)</span></div><div class="fmeta">PDF · ES</div><button class="fbtn" onclick="dl('Agent FAQ (Español)','dg_faq_es','dg_faq_es')"><span class="en">Download</span><span class="es">Descargar</span></button></div><div class="fcard"><div class="fcard-ico">&#128196;</div><div class="fname"><span class="en">Advertising Guidelines</span><span class="es">Guía de Publicidad</span></div><div class="fmeta">PDF · EN</div><button class="fbtn" onclick="dl('Advertising Guidelines','dg_advertising','dg_advertising')"><span class="en">Download</span><span class="es">Descargar</span></button></div><div class="fcard"><div class="fcard-ico">&#128196;</div><div class="fname"><span class="en">Market Conduct Guide</span><span class="es">Guía de Conducta de Mercado</span></div><div class="fmeta">PDF · EN</div><button class="fbtn" onclick="dl('Market Conduct Guide','dg_market_conduct','dg_market_conduct')"><span class="en">Download</span><span class="es">Descargar</span></button></div><div class="fcard"><div class="fcard-ico">&#128196;</div><div class="fname"><span class="en">Market Conduct (Español)</span><span class="es">Conducta del Mercado (ES)</span></div><div class="fmeta">PDF · ES</div><button class="fbtn" onclick="dl('Market Conduct (Español)','dg_market_conduct_es','dg_market_conduct_es')"><span class="en">Download</span><span class="es">Descargar</span></button></div><div class="fcard"><div class="fcard-ico">&#128196;</div><div class="fname"><span class="en">Risk Assessment Guide</span><span class="es">Guía de Evaluación de Riesgo</span></div><div class="fmeta">PDF · EN</div><button class="fbtn" onclick="dl('Risk Assessment Guide','dg_risk_assess','dg_risk_assess')"><span class="en">Download</span><span class="es">Descargar</span></button></div><div class="fcard"><div class="fcard-ico">&#128196;</div><div class="fname"><span class="en">Risk Assessment (EN)</span><span class="es">Evaluación de Riesgo (EN)</span></div><div class="fmeta">PDF · EN</div><button class="fbtn" onclick="dl('Risk Assessment (EN)','dg_risk_en','dg_risk_en')"><span class="en">Download</span><span class="es">Descargar</span></button></div><div class="fcard"><div class="fcard-ico">&#128196;</div><div class="fname"><span class="en">Risk Assessment (Español)</span><span class="es">Evaluación de Riesgo (ES)</span></div><div class="fmeta">PDF · ES</div><button class="fbtn" onclick="dl('Risk Assessment (Español)','dg_risk_es','dg_risk_es')"><span class="en">Download</span><span class="es">Descargar</span></button></div></div></div></div><div class="page" id="page-helpful"><div class="ph"><div class="ph-row"><div class="ph-ico">&#128279;</div><div><h1><span class="en">Helpful Links</span><span class="es">Recursos Utiles</span></h1><p><span class="en">Portal guides, SS billing, eligibility and HIPAA resources.</span><span class="es">Guias del portal, SS Billing, elegibilidad y HIPAA.</span></p></div></div></div><div class="section-wrap"><div class="fgrid"><div class="fcard"><div class="fcard-ico">&#128196;</div><div class="fname"><span class="en">Portal Introduction Video</span><span class="es">Video Introductorio del Portal</span></div><div class="fmeta">PDF · EN</div><button class="fbtn" onclick="dl('Portal Introduction Video','hl_portal_intro','hl_portal_intro')"><span class="en">Download</span><span class="es">Descargar</span></button></div><div class="fcard"><div class="fcard-ico">&#128196;</div><div class="fname"><span class="en">Portal Video (Español)</span><span class="es">Video Introductorio (Español)</span></div><div class="fmeta">PDF · ES</div><button class="fbtn" onclick="dl('Portal Video (Español)','hl_portal_intro_es','hl_portal_intro_es')"><span class="en">Download</span><span class="es">Descargar</span></button></div><div class="fcard"><div class="fcard-ico">&#128196;</div><div class="fname"><span class="en">Application Video — SS Billing</span><span class="es">Video de Solicitud — SS Billing</span></div><div class="fmeta">PDF · EN</div><button class="fbtn" onclick="dl('Application Video — SS Billing','hl_app_video','hl_app_video')"><span class="en">Download</span><span class="es">Descargar</span></button></div><div class="fcard"><div class="fcard-ico">&#128196;</div><div class="fname"><span class="en">Customer View — SS Billing</span><span class="es">Vista del Cliente — SS Billing</span></div><div class="fmeta">PDF · EN</div><button class="fbtn" onclick="dl('Customer View — SS Billing','hl_customer_view','hl_customer_view')"><span class="en">Download</span><span class="es">Descargar</span></button></div><div class="fcard"><div class="fcard-ico">&#128196;</div><div class="fname"><span class="en">Customer View SSB (Español)</span><span class="es">Experiencia del Cliente SSB (ES)</span></div><div class="fmeta">PDF · ES</div><button class="fbtn" onclick="dl('Customer View SSB (Español)','hl_customer_view_es','hl_customer_view_es')"><span class="en">Download</span><span class="es">Descargar</span></button></div><div class="fcard"><div class="fcard-ico">&#128196;</div><div class="fname"><span class="en">SS Billing Quick Reference</span><span class="es">Referencia Rápida SS Billing</span></div><div class="fmeta">PDF · EN</div><button class="fbtn" onclick="dl('SS Billing Quick Reference','hl_ssb_quick_ref','hl_ssb_quick_ref')"><span class="en">Download</span><span class="es">Descargar</span></button></div><div class="fcard"><div class="fcard-ico">&#128196;</div><div class="fname"><span class="en">Social Security Guide</span><span class="es">Guía de Seguro Social</span></div><div class="fmeta">PDF · EN</div><button class="fbtn" onclick="dl('Social Security Guide','hl_ss_guide','hl_ss_guide')"><span class="en">Download</span><span class="es">Descargar</span></button></div><div class="fcard"><div class="fcard-ico">&#128196;</div><div class="fname"><span class="en">Autorización de Pago — SS</span><span class="es">Autorización de Pago — SS</span></div><div class="fmeta">PDF · ES</div><button class="fbtn" onclick="dl('Autorización de Pago — SS','hl_auth_pago_es','hl_auth_pago_es')"><span class="en">Download</span><span class="es">Descargar</span></button></div><div class="fcard"><div class="fcard-ico">&#128196;</div><div class="fname"><span class="en">Formulario Autorización de Pago</span><span class="es">Formulario Autorización de Pago</span></div><div class="fmeta">PDF · ES</div><button class="fbtn" onclick="dl('Formulario Autorización de Pago','hl_form_auth_es','hl_form_auth_es')"><span class="en">Download</span><span class="es">Descargar</span></button></div><div class="fcard"><div class="fcard-ico">&#128196;</div><div class="fname"><span class="en">Eligibility & HIPAA Guide</span><span class="es">Guía de Elegibilidad e HIPAA</span></div><div class="fmeta">PDF · EN</div><button class="fbtn" onclick="dl('Eligibility & HIPAA Guide','hl_eligibility_hipaa','hl_eligibility_hipaa')"><span class="en">Download</span><span class="es">Descargar</span></button></div><div class="fcard"><div class="fcard-ico">&#128196;</div><div class="fname"><span class="en">Eligibility Verification (ES)</span><span class="es">Verificación de Elegibilidad (ES)</span></div><div class="fmeta">PDF · ES</div><button class="fbtn" onclick="dl('Eligibility Verification (ES)','hl_verif_elig','hl_verif_elig')"><span class="en">Download</span><span class="es">Descargar</span></button></div><div class="fcard"><div class="fcard-ico">&#128196;</div><div class="fname"><span class="en">Voice Recording Quick Guide</span><span class="es">Grabaciones de Voz — Guía</span></div><div class="fmeta">PDF · ES</div><button class="fbtn" onclick="dl('Voice Recording Quick Guide','hl_grabaciones','hl_grabaciones')"><span class="en">Download</span><span class="es">Descargar</span></button></div></div></div></div><div class="page" id="page-marketing"><div class="ph"><div class="ph-row"><div class="ph-ico">&#128203;</div><div><h1><span class="en">Marketing Forms</span><span class="es">Formularios de Marketing</span></h1><p><span class="en">Brochures and corporate marketing materials.</span><span class="es">Folletos y materiales de marketing.</span></p></div></div></div><div class="section-wrap"><div class="fgrid"><div class="fcard"><div class="fcard-ico">&#128196;</div><div class="fname"><span class="en">Brochure</span><span class="es">Folleto</span></div><div class="fmeta">PDF · EN</div><button class="fbtn" onclick="dl('Brochure','mkt_brochure','mkt_brochure')"><span class="en">Download</span><span class="es">Descargar</span></button></div><div class="fcard"><div class="fcard-ico">&#128196;</div><div class="fname"><span class="en">Corporate Brochure</span><span class="es">Folleto Corporativo</span></div><div class="fmeta">PDF · EN</div><button class="fbtn" onclick="dl('Corporate Brochure','mkt_corp_brochure','mkt_corp_brochure')"><span class="en">Download</span><span class="es">Descargar</span></button></div><div class="fcard"><div class="fcard-ico">&#128196;</div><div class="fname"><span class="en">CICA Life of America Corporate</span><span class="es">CICA Life — Corporativo</span></div><div class="fmeta">PDF · EN</div><button class="fbtn" onclick="dl('CICA Life of America Corporate','mkt_corporate_life','mkt_corporate_life')"><span class="en">Download</span><span class="es">Descargar</span></button></div></div></div></div><div class="page" id="page-policyholder"><div class="ph"><div class="ph-row"><div class="ph-ico">&#128101;</div><div><h1><span class="en">Policyholder Services Forms</span><span class="es">Formularios de Servicios al Asegurado</span></h1><p><span class="en">Reinstatement, change requests, and service forms.</span><span class="es">Reinstalacion, cambios y formularios de servicio.</span></p></div></div></div><div class="section-wrap"><div class="fgrid"><div class="fcard"><div class="fcard-ico">&#128196;</div><div class="fname"><span class="en">CICA Reinstatement Form</span><span class="es">Formulario de Reinstalación</span></div><div class="fmeta">PDF · EN</div><button class="fbtn" onclick="dl('CICA Reinstatement Form','ps_reinstatement','ps_reinstatement')"><span class="en">Download</span><span class="es">Descargar</span></button></div><div class="fcard"><div class="fcard-ico">&#128196;</div><div class="fname"><span class="en">CLOA Change Request Form</span><span class="es">Formulario de Cambio CLOA</span></div><div class="fmeta">PDF · EN</div><button class="fbtn" onclick="dl('CLOA Change Request Form','ps_change_req','ps_change_req')"><span class="en">Download</span><span class="es">Descargar</span></button></div><div class="fcard"><div class="fcard-ico">&#128196;</div><div class="fname"><span class="en">CLOA Endorsable Policy Changes</span><span class="es">Cambios Endosables de Póliza</span></div><div class="fmeta">PDF · EN</div><button class="fbtn" onclick="dl('CLOA Endorsable Policy Changes','ps_policy_changes','ps_policy_changes')"><span class="en">Download</span><span class="es">Descargar</span></button></div><div class="fcard"><div class="fcard-ico">&#128196;</div><div class="fname"><span class="en">CLOA Reinstatement Application</span><span class="es">Solicitud de Reinstalación CLOA</span></div><div class="fmeta">PDF · EN</div><button class="fbtn" onclick="dl('CLOA Reinstatement Application','ps_rein_app','ps_rein_app')"><span class="en">Download</span><span class="es">Descargar</span></button></div></div></div></div><div class="page" id="page-etraining">
+  <div class="ph"><div class="ph-row"><div class="ph-ico">&#127891;</div><div><h1>e-Training</h1><p><span class="en">Portal training, quizzes and eligibility resources</span><span class="es">Entrenamiento del portal, quizzes y recursos de elegibilidad</span></p></div></div></div>
+  <div class="os-tabs-bar" id="et-tabs">
+    <button class="os-tab active" onclick="etTab('portal')"><span class="en">&#127760; Portal Training</span><span class="es">&#127760; Entrenamiento del Portal</span></button>
+    <button class="os-tab" onclick="etTab('eligibility')"><span class="en">&#9989; Eligibility</span><span class="es">&#9989; Elegibilidad</span></button>
+    <button class="os-tab" onclick="etTab('quizzes')"><span class="en">&#128221; Quizzes</span><span class="es">&#128221; Quizzes</span></button>
+  </div>
+  <div class="os-panel active" id="et-portal">
+<div class="section-wrap"><div class="section-title"><span class="en">&#127916; Portal Training Videos</span><span class="es">&#127916; Videos de Entrenamiento del Portal</span></div><div class="vm-grid"><div class="vm-card" onclick="window.open('https://vimeo.com/1162214738/804dd856e0','_blank')"><div class="vm-thumb"><div class="vm-stars"></div><div class="vm-play"></div><div class="vm-badge">EN</div><div class="vm-brand">CICA · VIMEO</div></div><div class="vm-info"><div class="vm-title"><span class="en">Agent Portal Introduction</span><span class="es">Introducción al Portal de Agente</span></div><div class="vm-desc"><span class="en">Quick reference for agents: applications, dashboard, reports, and commissions.</span><span class="es">Referencia rápida: solicitudes, dashboard, reportes y comisiones.</span></div><button class="vm-btn"><span class="en">Watch on Vimeo</span><span class="es">Ver en Vimeo</span></button></div></div><div class="vm-card" onclick="window.open('https://vimeo.com/1162213706/8f1c7ef4fe','_blank')"><div class="vm-thumb"><div class="vm-stars"></div><div class="vm-play"></div><div class="vm-badge">ES</div><div class="vm-brand">CICA · VIMEO</div></div><div class="vm-info"><div class="vm-title"><span class="en">Introductorio del Portal para Agentes</span><span class="es">Introductorio del Portal para Agentes</span></div><div class="vm-desc"><span class="en">Versión en español del video de introducción al Portal de Agente.</span><span class="es">Versión en español del video de introducción al Portal de Agente.</span></div><button class="vm-btn"><span class="en">Watch on Vimeo</span><span class="es">Ver en Vimeo</span></button></div></div><div class="vm-card" onclick="window.open('https://vimeo.com/1162294725/82c8ec5d27','_blank')"><div class="vm-thumb"><div class="vm-stars"></div><div class="vm-play"></div><div class="vm-badge">EN/ES</div><div class="vm-brand">CICA · VIMEO</div></div><div class="vm-info"><div class="vm-title"><span class="en">Application Guide — CICA LIFE OF AMERICA</span><span class="es">Guía de Solicitud — CICA LIFE OF AMERICA</span></div><div class="vm-desc"><span class="en">Social Security Billing: schedule payments on Social Security benefit days.</span><span class="es">Facturación SS: programa pagos el día de beneficios del Seguro Social.</span></div><button class="vm-btn"><span class="en">Watch on Vimeo</span><span class="es">Ver en Vimeo</span></button></div></div></div></div></div>
+<div class="os-panel" id="et-eligibility">
+<div class="section-wrap"><div class="section-title"><span class="en">Eligibility Resources (PDF)</span><span class="es">Recursos de Elegibilidad (PDF)</span></div><div class="fgrid"><div class="fcard"><div class="fcard-ico">&#128196;</div><div class="fname"><span class="en">Eligibility &amp; HIPAA Guide</span><span class="es">Guía de Elegibilidad e HIPAA</span></div><div class="fmeta">PDF</div><button class="fbtn" onclick="dl('Eligibility &amp; HIPAA Guide','hl_eligibility_hipaa','hl_eligibility_hipaa')"><span class="en">Download</span><span class="es">Descargar</span></button></div><div class="fcard"><div class="fcard-ico">&#128196;</div><div class="fname"><span class="en">Elegibilidad (Español)</span><span class="es">Elegibilidad (Español)</span></div><div class="fmeta">PDF · ES</div><button class="fbtn" onclick="dl('Elegibilidad (Español)','hl_verif_elig','hl_verif_elig')"><span class="en">Download</span><span class="es">Descargar</span></button></div><div class="fcard"><div class="fcard-ico">&#128196;</div><div class="fname"><span class="en">Eligibility Verification &amp; HIPAA Auth.</span><span class="es">Verificación de Elegibilidad y HIPAA</span></div><div class="fmeta">PDF · ES</div><button class="fbtn" onclick="dl('Eligibility Verification &amp; HIPAA Auth.','hl_verif_elig','hl_verif_elig')"><span class="en">Download</span><span class="es">Descargar</span></button></div></div></div></div>
+
+  <div class="os-panel" id="et-quizzes">
+    <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:10px 16px;font-size:12px;color:var(--cica-blue);margin-bottom:14px;text-align:center">
+      &#128221; <span class="en">Select a quiz. You earn 50 XP for a perfect score!</span>
+      <span class="es">Selecciona un quiz. Ganas 50 XP con puntaje perfecto!</span>
+    </div>
+    <div class="os-tabs-bar" style="margin-bottom:14px">
+      <button class="os-tab active" onclick="loadQuiz('portal')"><span class="en">Portal Training</span><span class="es">Entrenamiento Portal</span></button>
+      <button class="os-tab" onclick="loadQuiz('product')"><span class="en">CLOA Product</span><span class="es">Producto CLOA</span></button>
+      <button class="os-tab" onclick="loadQuiz('eligibility')"><span class="en">Eligibility</span><span class="es">Elegibilidad</span></button>
+    </div>
+    <div class="quiz-box" id="quiz-container"></div>
+  </div>
+</div><div class="page" id="page-states">
+<div class="ph">
+  <div class="ph-row">
+    <div class="ph-ico">&#127760;</div>
+    <div>
+      <h1><span class="en">State Availability</span><span class="es">Disponibilidad por Estado</span></h1>
+      <p><span class="en">Licensed states, product availability &amp; appointment guidelines</span>
+         <span class="es">Estados licenciados, disponibilidad de productos y guias de nombramiento</span></p>
+    </div>
+  </div>
+</div>
+
+<!-- MAP -->
+<div class="section-wrap">
+  <div class="section-title">&#128205; <span class="en">Coverage Map</span><span class="es">Mapa de Cobertura</span></div>
+  <div class="sm-grid" style="display:grid;grid-template-columns:repeat(12,1fr);grid-template-rows:repeat(8,38px);gap:3px;max-width:720px;margin:0 auto 12px">
+    <div class="sm-cell" style="grid-column:12;grid-row:1;background:#8a9ba8" title="ME: No license"><span>ME</span></div><div class="sm-cell" style="grid-column:1;grid-row:2;background:#0B3D6B" title="WA: Available"><span>WA</span></div><div class="sm-cell" style="grid-column:3;grid-row:2;background:#0B3D6B" title="MT: Available"><span>MT</span></div><div class="sm-cell" style="grid-column:4;grid-row:2;background:#0B3D6B" title="ND: Available"><span>ND</span></div><div class="sm-cell" style="grid-column:5;grid-row:2;background:#0B3D6B" title="MN: Available"><span>MN</span></div><div class="sm-cell" style="grid-column:6;grid-row:2;background:#0B3D6B" title="WI: Available"><span>WI</span></div><div class="sm-cell" style="grid-column:10;grid-row:2;background:#0B3D6B" title="VT: Available"><span>VT</span></div><div class="sm-cell" style="grid-column:11;grid-row:2;background:#0B3D6B" title="NH: Available"><span>NH</span></div><div class="sm-cell" style="grid-column:1;grid-row:3;background:#0B3D6B" title="OR: Available"><span>OR</span></div><div class="sm-cell" style="grid-column:2;grid-row:3;background:#0B3D6B" title="ID: Available"><span>ID</span></div><div class="sm-cell" style="grid-column:3;grid-row:3;background:#0B3D6B" title="WY: Available"><span>WY</span></div><div class="sm-cell" style="grid-column:4;grid-row:3;background:#0B3D6B" title="SD: Available"><span>SD</span></div><div class="sm-cell" style="grid-column:5;grid-row:3;background:#0B3D6B" title="IA: Available"><span>IA</span></div><div class="sm-cell" style="grid-column:7;grid-row:3;background:#0B3D6B" title="MI: Available"><span>MI</span></div><div class="sm-cell" style="grid-column:8;grid-row:3;background:#8a9ba8" title="NY: No license"><span>NY</span></div><div class="sm-cell" style="grid-column:11;grid-row:3;background:#8a9ba8" title="MA: No license"><span>MA</span></div><div class="sm-cell" style="grid-column:12;grid-row:3;background:#0B3D6B" title="RI: Available"><span>RI</span></div><div class="sm-cell" style="grid-column:1;grid-row:4;background:#8a9ba8" title="CA: No license"><span>CA</span></div><div class="sm-cell" style="grid-column:2;grid-row:4;background:#0B3D6B" title="NV: Available"><span>NV</span></div><div class="sm-cell" style="grid-column:3;grid-row:4;background:#0B3D6B" title="UT: Available"><span>UT</span></div><div class="sm-cell" style="grid-column:4;grid-row:4;background:#0B3D6B" title="CO: Available"><span>CO</span></div><div class="sm-cell" style="grid-column:5;grid-row:4;background:#0B3D6B" title="NE: Available"><span>NE</span></div><div class="sm-cell" style="grid-column:6;grid-row:4;background:#0B3D6B" title="IL: Available"><span>IL</span></div><div class="sm-cell" style="grid-column:7;grid-row:4;background:#0B3D6B" title="IN: Available"><span>IN</span></div><div class="sm-cell" style="grid-column:8;grid-row:4;background:#0B3D6B" title="OH: Available"><span>OH</span></div><div class="sm-cell" style="grid-column:9;grid-row:4;background:#0B3D6B" title="PA: Available"><span>PA</span></div><div class="sm-cell" style="grid-column:10;grid-row:4;background:#8a9ba8" title="NJ: No license"><span>NJ</span></div><div class="sm-cell" style="grid-column:11;grid-row:4;background:#0B3D6B" title="CT: Available"><span>CT</span></div><div class="sm-cell" style="grid-column:2;grid-row:5;background:#0B3D6B" title="AZ: Available"><span>AZ</span></div><div class="sm-cell" style="grid-column:3;grid-row:5;background:#0B3D6B" title="NM: Available"><span>NM</span></div><div class="sm-cell" style="grid-column:4;grid-row:5;background:#0B3D6B" title="KS: Available"><span>KS</span></div><div class="sm-cell" style="grid-column:5;grid-row:5;background:#0B3D6B" title="MO: Available"><span>MO</span></div><div class="sm-cell" style="grid-column:6;grid-row:5;background:#0B3D6B" title="KY: Available"><span>KY</span></div><div class="sm-cell" style="grid-column:7;grid-row:5;background:#0B3D6B" title="WV: Available"><span>WV</span></div><div class="sm-cell" style="grid-column:8;grid-row:5;background:#8a9ba8" title="VA: No license"><span>VA</span></div><div class="sm-cell" style="grid-column:9;grid-row:5;background:#0B3D6B" title="MD: Available"><span>MD</span></div><div class="sm-cell" style="grid-column:10;grid-row:5;background:#8a9ba8" title="DE: No license"><span>DE</span></div><div class="sm-cell" style="grid-column:3;grid-row:6;background:#0B3D6B" title="TX: Available"><span>TX</span></div><div class="sm-cell" style="grid-column:4;grid-row:6;background:#0B3D6B" title="OK: Available"><span>OK</span></div><div class="sm-cell" style="grid-column:5;grid-row:6;background:#0B3D6B" title="AR: Available"><span>AR</span></div><div class="sm-cell" style="grid-column:6;grid-row:6;background:#0B3D6B" title="TN: Available"><span>TN</span></div><div class="sm-cell" style="grid-column:7;grid-row:6;background:#0B3D6B" title="NC: Available"><span>NC</span></div><div class="sm-cell" style="grid-column:8;grid-row:6;background:#0B3D6B" title="SC: Available"><span>SC</span></div><div class="sm-cell" style="grid-column:4;grid-row:7;background:#0B3D6B" title="LA: Available"><span>LA</span></div><div class="sm-cell" style="grid-column:5;grid-row:7;background:#0B3D6B" title="MS: Available"><span>MS</span></div><div class="sm-cell" style="grid-column:6;grid-row:7;background:#0B3D6B" title="AL: Available"><span>AL</span></div><div class="sm-cell" style="grid-column:7;grid-row:7;background:#0B3D6B" title="GA: Available"><span>GA</span></div><div class="sm-cell" style="grid-column:8;grid-row:7;background:#0B3D6B" title="FL: Available"><span>FL</span></div><div class="sm-cell" style="grid-column:1;grid-row:8;background:#0B3D6B" title="AK: Available"><span>AK</span></div><div class="sm-cell" style="grid-column:2;grid-row:8;background:#0B3D6B" title="HI: Available"><span>HI</span></div>
+  </div>
+  <div style="display:flex;gap:18px;justify-content:center;font-size:11px;margin-top:6px">
+    <span style="display:flex;align-items:center;gap:5px"><span style="width:14px;height:14px;border-radius:3px;background:#0B3D6B;display:inline-block"></span>
+      <span class="en">Available for sale</span><span class="es">Disponible para venta</span></span>
+    <span style="display:flex;align-items:center;gap:5px"><span style="width:14px;height:14px;border-radius:3px;background:#8a9ba8;display:inline-block"></span>
+      <span class="en">No state license</span><span class="es">Sin licencia estatal</span></span>
+  </div>
+</div>
+
+<!-- APPOINTMENT INFO -->
+<div class="section-wrap">
+  <div class="section-title">&#128203; <span class="en">Sales Time Appointment</span><span class="es">Nombramiento en Tiempo de Venta</span></div>
+  <div style="font-size:13px;line-height:1.65;color:var(--txt2);max-width:740px">
+    <p style="margin-bottom:10px">
+      <span class="en">CICA LIFE OF AMERICA will appoint an agent to sell its products in the states where our products are available, provided the agent holds the necessary license. The appointment process begins once the contracting and onboarding are completed, and a new business application is submitted. This means that we will submit the appointment agreement to the state Department of Insurance (DOI) once you have submitted your first application in that state.</span>
+      <span class="es">CICA LIFE OF AMERICA nombrará a un agente para vender sus productos en los estados donde nuestros productos están disponibles, siempre que el agente tenga la licencia necesaria. El proceso de nombramiento comienza una vez completado el contrato y la incorporación, y se envía una solicitud de nuevo negocio. Esto significa que enviaremos el acuerdo de nombramiento al Departamento de Seguros (DOI) del estado una vez que haya enviado su primera solicitud en ese estado.</span>
+    </p>
+    <div style="background:rgba(251,133,0,.08);border-left:4px solid #fb8500;border-radius:0 8px 8px 0;padding:10px 14px;margin-bottom:10px">
+      <strong style="color:#fb8500;font-size:12px;text-transform:uppercase;letter-spacing:.5px">
+        <span class="en">&#8594; Pre-appointment State</span><span class="es">&#8594; Estado de Pre-nombramiento</span>
+      </strong>
+      <p style="margin-top:6px">
+        <span class="en">A pre-appointment state is a state that mandates an insurance agent be officially appointed by an insurance company before they can legally solicit, negotiate, or sell insurance products on behalf of that company.</span>
+        <span class="es">Un estado de pre-nombramiento es un estado que exige que un agente de seguros sea nombrado oficialmente por una compañía de seguros antes de poder legalmente solicitar, negociar o vender productos de seguros en nombre de esa compañía.</span>
+      </p>
+    </div>
+  </div>
+  <div class="sa-regs">
+    <div class="sa-reg-card">
+      <div class="sa-reg-state">Montana</div>
+      <div class="sa-reg-flag">MT</div>
+      <ul class="sa-reg-list">
+        <li><span class="en">Appointment becomes effective on the earlier of: the date the contract is signed, or the date the company files the appointment with the DOI.</span><span class="es">El nombramiento entra en vigor en la fecha anterior entre: la fecha en que se firma el contrato, o la fecha en que la compañía presenta el nombramiento ante el DOI.</span></li>
+        <li><span class="en">If the DOI rejects the appointment, the agent must stop all activities immediately and the appointment will be considered void from the date of disapproval.</span><span class="es">Si el DOI rechaza el nombramiento, el agente debe cesar todas las actividades de inmediato y el nombramiento se considerará nulo desde la fecha de desaprobación.</span></li>
+      </ul>
+    </div>
+    <div class="sa-reg-card">
+      <div class="sa-reg-state">Pennsylvania</div>
+      <div class="sa-reg-flag">PA</div>
+      <ul class="sa-reg-list">
+        <li><span class="en">For insurers with 50 or fewer transactions per calendar year, the state accepts a Monthly Appointment Activity Report in paper form.</span><span class="es">Para aseguradoras con 50 o menos transacciones por año calendario, el estado acepta un Informe Mensual de Actividad de Nombramiento en papel.</span></li>
+        <li><span class="en">This report is due within 30 days of the end of each month.</span><span class="es">Este informe debe presentarse dentro de los 30 días posteriores al final de cada mes.</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- PRODUCT TABLE -->
+<div class="section-wrap">
+  <div class="section-title">&#9989; <span class="en">Product Availability by State</span><span class="es">Disponibilidad de Productos por Estado</span></div>
+  <div style="overflow-x:auto">
+  <table class="sa-table">
+    <thead>
+      <tr>
+        <th><span class="en">State</span><span class="es">Estado</span></th>
+        <th>Standard Whole Life <span style="font-size:9px;opacity:.7">(EN)</span></th>
+        <th>Standard Whole Life <span style="font-size:9px;opacity:.7">(ES)</span></th>
+        <th>Guaranteed Issue <span style="font-size:9px;opacity:.7">(EN)</span></th>
+        <th>Guaranteed Issue <span style="font-size:9px;opacity:.7">(ES)</span></th>
+      </tr>
+    </thead>
+    <tbody><tr><td>Alabama</td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td></tr><tr><td>Alaska</td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td></tr><tr><td>Arizona</td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td></tr><tr><td>Arkansas</td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td></tr><tr><td>Colorado</td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td></tr><tr><td>Connecticut</td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td></tr><tr><td>Florida</td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td></tr><tr><td>Georgia</td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td></tr><tr><td>Hawaii</td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td></tr><tr><td>Idaho</td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td></tr><tr><td>Illinois</td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td></tr><tr><td>Indiana</td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td></tr><tr><td>Iowa</td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td></tr><tr><td>Kansas</td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td></tr><tr><td>Kentucky</td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td></tr><tr><td>Louisiana</td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td></tr><tr><td>Maryland</td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td></tr><tr><td>Michigan</td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td></tr><tr><td>Minnesota</td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td></tr><tr><td>Mississippi</td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td></tr><tr><td>Missouri</td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td></tr><tr><td>Montana</td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td></td></tr><tr><td>Nebraska</td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td></tr><tr><td>Nevada</td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td></tr><tr><td>New Hampshire</td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td></td></tr><tr><td>New Mexico</td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td></tr><tr><td>North Carolina</td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td></tr><tr><td>North Dakota</td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td></tr><tr><td>Ohio</td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td></tr><tr><td>Oklahoma</td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td></tr><tr><td>Oregon</td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td></tr><tr><td>Pennsylvania</td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td></tr><tr><td>Rhode Island</td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td></tr><tr><td>South Carolina</td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td></tr><tr><td>South Dakota</td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td></tr><tr><td>Tennessee</td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td></tr><tr><td>Texas</td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td></td></tr><tr><td>Utah</td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td></td></tr><tr><td>Vermont</td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td></td></tr><tr><td>Washington</td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td></td></tr><tr><td>West Virginia</td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td></td></tr><tr><td>Wisconsin</td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td></td></tr><tr><td>Wyoming</td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td><span style="color:#0B3D6B;font-weight:700">✓</span></td><td></td></tr><tr class="sa-no-lic" style="background:#e8edf0"><td>California</td><td colspan="4" style="text-align:center;font-style:italic;font-size:10px;color:#8a9ba8">No state license</td></tr><tr class="sa-no-lic" style="background:#e8edf0"><td>Delaware</td><td colspan="4" style="text-align:center;font-style:italic;font-size:10px;color:#8a9ba8">No state license</td></tr><tr class="sa-no-lic" style="background:#e8edf0"><td>Maine</td><td colspan="4" style="text-align:center;font-style:italic;font-size:10px;color:#8a9ba8">No state license</td></tr><tr class="sa-no-lic" style="background:#e8edf0"><td>Massachusetts</td><td colspan="4" style="text-align:center;font-style:italic;font-size:10px;color:#8a9ba8">No state license</td></tr><tr class="sa-no-lic" style="background:#e8edf0"><td>New Jersey</td><td colspan="4" style="text-align:center;font-style:italic;font-size:10px;color:#8a9ba8">No state license</td></tr><tr class="sa-no-lic" style="background:#e8edf0"><td>New York</td><td colspan="4" style="text-align:center;font-style:italic;font-size:10px;color:#8a9ba8">No state license</td></tr><tr class="sa-no-lic" style="background:#e8edf0"><td>Virginia</td><td colspan="4" style="text-align:center;font-style:italic;font-size:10px;color:#8a9ba8">No state license</td></tr></tbody>
+  </table>
+  </div>
+  <p style="font-size:10px;color:var(--txt2);margin-top:8px;font-style:italic">
+    <span class="en">✓ = Available for sale &nbsp;|&nbsp; Empty = Not available &nbsp;|&nbsp; Gray rows = No state license. For financial professional use only.</span>
+    <span class="es">✓ = Disponible para venta &nbsp;|&nbsp; Vacío = No disponible &nbsp;|&nbsp; Filas grises = Sin licencia estatal. Solo para uso de profesionales financieros.</span>
+  </p>
+</div>
+</div>
+<div class="page" id="page-portal"><div class="ph"><div class="ph-row"><div class="ph-ico">&#128279;</div><div><h1><span class="en">Portal Links</span><span class="es">Enlaces del Portal</span></h1><p><span class="en">Quick access to agent and corporate portals.</span><span class="es">Acceso rapido a portales.</span></p></div></div></div><div class="section-wrap"><div class="pl-grid"><a class="pl-card" href="https://cicaamerica.citizensinc.com/login" target="_blank"><div class="pl-ico">&#128274;</div><div><div class="pl-title"><span class="en">Agent Portal Login</span><span class="es">Portal del Agente</span></div><div class="pl-url">cicaamerica.citizensinc.com</div></div><div class="pl-arrow">&#8594;</div></a><a class="pl-card" href="https://www.citizensinc.com/about/" target="_blank"><div class="pl-ico">&#128226;</div><div><div class="pl-title"><span class="en">About Citizens Inc.</span><span class="es">About Citizens Inc.</span></div><div class="pl-url">citizensinc.com/about</div></div><div class="pl-arrow">&#8594;</div></a></div></div></div><div class="page" id="page-admin-users"><div class="ph"><div class="ph-row"><div class="ph-ico">&#128101;</div><div><h1><span class="en">&#128101; Users</span><span class="es">&#128101; Usuarios</span></h1><p><span class="en">Manage registered users and admin accounts</span><span class="es">Gestiona usuarios registrados y cuentas de administrador</span></p></div></div></div><div id="page-admin-users-body"></div></div><div class="page" id="page-admin-activity"><div class="ph"><div class="ph-row"><div class="ph-ico">&#9989;</div><div><h1><span class="en">&#9989; Activity</span><span class="es">&#9989; Actividad</span></h1><p><span class="en">View user activity, quiz history and session logs</span><span class="es">Actividad, historial de pruebas y sesiones</span></p></div></div></div><div id="page-admin-activity-body"></div></div><div class="page" id="page-admin-ranking"><div class="ph"><div class="ph-row"><div class="ph-ico">&#127942;</div><div><h1><span class="en">&#127942; Ranking</span><span class="es">&#127942; Ranking</span></h1><p><span class="en">Leaderboard of all agents by tests passed and XP</span><span class="es">Tabla de líderes por pruebas y XP</span></p></div></div></div><div id="page-admin-ranking-body"></div></div></div></div></div>
+<script>
+/* Pre-define setLang BEFORE all_js runs so IIFE uses correct version */
+window.LANG='en';
+window.setLang=function(l){
+  if(l!=='en'&&l!=='es')l='en';
+  window.LANG=l;
+  var root=document.documentElement;
+  root.setAttribute('data-lang',l);
+  root.setAttribute('lang-'+l,'');
+  root.removeAttribute('lang-'+(l==='en'?'es':'en'));
+  try{localStorage.setItem('cica_lang',l);}catch(e){}
+  var lb=document.getElementById('tb-lang-lbl');if(lb)lb.textContent=(l==='en')?'ES':'EN';
+  var pb=document.getElementById('pre-lang-lbl');if(pb)pb.textContent=(l==='en')?'ES':'EN';
+};
+window.toggleLang=function(){
+  var cur=document.documentElement.getAttribute('data-lang')||'en';
+  window.setLang(cur==='en'?'es':'en');
+};
+</script>
+<script>
+
+const QUIZ_DATA={"portal": {"en": "Agent Portal Training", "es": "Entrenamiento del Portal", "questions": [{"en": "What website do you access the CICA Agent Portal?", "es": "Qu\u00e9 sitio web usas para acceder al portal CICA?", "opts_en": ["www.cicabenefits.com", "www.citizenslife.com", "www.cigna.com", "www.cica.net"], "opts_es": ["www.cicabenefits.com", "www.citizenslife.com", "www.cigna.com", "www.cica.net"], "ans": 1}, {"en": "To submit a new application you must use:", "es": "Para enviar una nueva aplicaci\u00f3n debes usar:", "opts_en": ["Email", "Fax", "Agent Portal Online Submission", "Mail"], "opts_es": ["Email", "Fax", "Env\u00edo en l\u00ednea del portal", "Correo"], "ans": 2}, {"en": "How do you verify Social Security Billing eligibility?", "es": "C\u00f3mo verificas la elegibilidad SSB?", "opts_en": ["Call customer service", "Check the Agent Portal", "Send a fax", "Ask the client"], "opts_es": ["Llamar servicio al cliente", "Verificar en el Portal", "Enviar fax", "Preguntarle al cliente"], "ans": 1}, {"en": "Voice recording is required for which enrollment type?", "es": "La grabaci\u00f3n de voz es requerida para qu\u00e9 tipo de inscripci\u00f3n?", "opts_en": ["Face-to-face only", "Phone enrollments", "Mail enrollments", "All enrollments"], "opts_es": ["Solo presencial", "Inscripciones por tel\u00e9fono", "Por correo", "Todas"], "ans": 1}, {"en": "What does HIPAA stand for?", "es": "Qu\u00e9 significa HIPAA?", "opts_en": ["Health Insurance Portability and Accountability Act", "Health Information Privacy and Access Act", "Healthcare Insurance Payment Authorization Act", "Health Information Processing Act"], "opts_es": ["Ley de Portabilidad y Responsabilidad del Seguro de Salud", "Ley de Privacidad de Informaci\u00f3n de Salud", "Ley de Autorizaci\u00f3n de Pago de Seguro", "Ley de Procesamiento de Informaci\u00f3n"], "ans": 0}]}, "product": {"en": "CLOA Product Knowledge", "es": "Conocimiento del Producto CLOA", "questions": [{"en": "What does CLOA stand for?", "es": "Qu\u00e9 significa CLOA?", "opts_en": ["Citizens Life of America", "Citizens Liability of America", "Combined Life of America", "Commercial Life of America"], "opts_es": ["Citizens Life of America", "Citizens Liability of America", "Combined Life of America", "Commercial Life of America"], "ans": 0}, {"en": "CICA Medicare Supplement plans help cover:", "es": "Los planes Medicare Suplemento de CICA ayudan a cubrir:", "opts_en": ["Only prescriptions", "Gaps in Original Medicare coverage", "Only hospital stays", "Dental and vision only"], "opts_es": ["Solo medicamentos", "Brechas en la cobertura Original de Medicare", "Solo hospitalizaci\u00f3n", "Solo dental y visi\u00f3n"], "ans": 1}, {"en": "Minimum age to qualify for Medicare?", "es": "Edad m\u00ednima para calificar para Medicare?", "opts_en": ["60", "62", "65", "70"], "opts_es": ["60", "62", "65", "70"], "ans": 2}, {"en": "During Open Enrollment, the insurer:", "es": "Durante la Inscripci\u00f3n Abierta, el asegurador:", "opts_en": ["Can deny coverage", "Must accept all applicants", "Can charge more", "Can limit benefits"], "opts_es": ["Puede negar cobertura", "Debe aceptar a todos", "Puede cobrar m\u00e1s", "Puede limitar beneficios"], "ans": 1}, {"en": "SSB means the premium is:", "es": "SSB significa que la prima se:", "opts_en": ["Paid by Medicare", "Deducted from Social Security check", "Billed to employer", "Paid quarterly"], "opts_es": ["La paga Medicare", "Se descuenta del cheque del Seguro Social", "Se factura al empleador", "Se paga trimestral"], "ans": 1}]}, "eligibility": {"en": "Eligibility & HIPAA", "es": "Elegibilidad e HIPAA", "questions": [{"en": "HIPAA Authorization allows the agent to:", "es": "La autorizaci\u00f3n HIPAA permite al agente:", "opts_en": ["Access client medical records", "Request Medicare payment", "Submit applications electronically", "All of the above"], "opts_es": ["Acceder a registros m\u00e9dicos", "Solicitar pagos de Medicare", "Enviar aplicaciones electr\u00f3nicamente", "Todo lo anterior"], "ans": 0}, {"en": "To qualify for Medicare Part B, the client must be:", "es": "Para calificar para Medicare Parte B, el cliente debe:", "opts_en": ["Under 65 with disability", "65 or older OR under 65 with qualifying disability", "Any age with employer insurance", "60 or older"], "opts_es": ["Menor de 65 con discapacidad", "65+ O menor de 65 con discapacidad calificada", "Cualquier edad con seguro del empleador", "60 o mayor"], "ans": 1}, {"en": "When does Medigap Open Enrollment begin?", "es": "Cu\u00e1ndo comienza la inscripci\u00f3n abierta de Medigap?", "opts_en": ["January 1st", "Month client turns 65 AND enrolled in Medicare Part B", "90 days before turning 65", "At any time"], "opts_es": ["El 1 de enero", "El mes que el cliente cumple 65 Y est\u00e1 en Medicare Parte B", "90 d\u00edas antes de los 65", "En cualquier momento"], "ans": 1}, {"en": "HIPAA authorization requires:", "es": "La autorizaci\u00f3n HIPAA requiere:", "opts_en": ["Only name and DOB", "Name, DOB, Medicare number and signature", "Only Medicare number", "Only signature"], "opts_es": ["Solo nombre y fecha de nacimiento", "Nombre, DOB, n\u00famero de Medicare y firma", "Solo n\u00famero de Medicare", "Solo firma"], "ans": 1}, {"en": "Pre-existing conditions during Open Enrollment:", "es": "Condiciones preexistentes durante la Inscripci\u00f3n Abierta:", "opts_en": ["Always cause denial", "Cannot be used to deny or charge more", "Require extra documentation", "Must be reported to Medicare"], "opts_es": ["Siempre causan negaci\u00f3n", "No pueden usarse para negar o cobrar m\u00e1s", "Requieren documentaci\u00f3n extra", "Deben reportarse a Medicare"], "ans": 1}]}};
+var ADMIN_EMAIL='nerrafael1@gmail.com';
+var ADMIN_DEFAULT_PW='Admin2024';
+var LANG='en',DARK=false,CUR_USER=null;
+var RESET_CODES={};
+function el(id){return document.getElementById(id);}
+function dl(name,key,fname){var sc=el('pdf_'+key);if(!sc){alert('File not found: '+key);return;}var b64=sc.textContent.trim();var bin=atob(b64),arr=new Uint8Array(bin.length);for(var i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);var blob=new Blob([arr],{type:'application/pdf'});var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=(fname||name)+'.pdf';a.click();trackDownload(name);}
+function setLang(lang){LANG=lang;var r=document.documentElement;if(LANG==='es'){r.removeAttribute('lang-en');r.setAttribute('lang-es','');}else{r.removeAttribute('lang-es');r.setAttribute('lang-en','');}var b=el('lang-btn');if(b)b.textContent=LANG==='es'?'EN':'ES';var ab=el('auth-lang-btn');if(ab)ab.textContent=LANG==='es'?'EN':'ES';try{localStorage.setItem('cica_lang',LANG);}catch(e){}}
+function toggleLang(){setLang(LANG==='en'?'es':'en');}
+function toggleAuthLang(){toggleLang();}
+function toggleDark(){DARK=!DARK;document.body.classList.toggle('dark',DARK);var btn=el('dark-btn');if(btn)btn.textContent=DARK?'Sol':'Noche';try{localStorage.setItem('cica_dark',DARK?'1':'0');}catch(e){}}
+function dismissBanner(){var b=el('training-banner');if(b)b.style.display='none';var s=el('banner-show-again');if(s)s.style.display='block';try{localStorage.setItem('cica_banner_dismissed','1');}catch(e){}}
+function showBanner(){var b=el('training-banner');if(b)b.style.display='flex';var s=el('banner-show-again');if(s)s.style.display='none';try{localStorage.removeItem('cica_banner_dismissed');}catch(e){}}
+function toggleInfoPanel(){var p=el('auth-info-panel');if(p)p.classList.toggle('open');}
+function getUsers(){try{var d=localStorage.getItem('cica_users');return d?JSON.parse(d):[];}catch(e){return[];}}
+function saveUsers(u){try{localStorage.setItem('cica_users',JSON.stringify(u));}catch(e){}}
+function loadST(e){try{var d=localStorage.getItem('cica_st_'+e);return d?JSON.parse(d):null;}catch(ex){return null;}}
+function saveST(e,st){try{localStorage.setItem('cica_st_'+e,JSON.stringify(st));}catch(ex){}}
+function getActivity(e){try{var d=localStorage.getItem('cica_act_'+e);return d?JSON.parse(d):{sessions:[],downloads:[]};}catch(ex){return{sessions:[],downloads:[]};}}
+function saveActivity(e,a){try{localStorage.setItem('cica_act_'+e,JSON.stringify(a));}catch(ex){}}
+function isValidEmail(e){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);}
+function togglePw(id){var i=el(id);if(i)i.type=i.type==='password'?'text':'password';}
+function showMsg(id,msg,good){var e=el(id);if(!e)return;e.textContent=msg;e.style.color=good?'#6ee7b7':'#fca5a5';}
+function clearErr(id){var e=el(id);if(e)e.textContent='';}
+function switchTab(tab){
+  var fl=el('form-login'),fr=el('form-register'),tl=el('tab-login'),tr=el('tab-register');
+  var sm=el('auth-success-msg');if(sm)sm.textContent='';
+  ['form-forgot','form-verify','form-reset-pw'].forEach(function(id){var e=el(id);if(e)e.style.display='none';});
+  var t=el('auth-tabs');if(t)t.style.visibility='visible';
+  if(tab==='login'){if(fl)fl.style.display='block';if(fr)fr.style.display='none';if(tl)tl.classList.add('active');if(tr)tr.classList.remove('active');}
+  else{if(fl)fl.style.display='none';if(fr)fr.style.display='block';if(tl)tl.classList.remove('active');if(tr)tr.classList.add('active');}
+}
+function doSignIn(){
+  clearErr('li-err-email');clearErr('li-err-pass');
+  var email=el('li-email')?el('li-email').value.trim().toLowerCase():'';
+  var pass=el('li-pass')?el('li-pass').value:'';
+  var ok=true;
+  if(!email){showMsg('li-err-email',LANG==='es'?'Correo obligatorio':'Email required');ok=false;}
+  else if(!isValidEmail(email)){showMsg('li-err-email',LANG==='es'?'Formato invalido':'Invalid format');ok=false;}
+  if(!pass){showMsg('li-err-pass',LANG==='es'?'Contrasena obligatoria':'Password required');ok=false;}
+  if(!ok)return;
+  var users=getUsers(),found=null;
+  for(var i=0;i<users.length;i++){if(users[i].email.toLowerCase()===email&&users[i].pass===pass){found=users[i];break;}}
+  if(!found){showMsg('li-err-email',LANG==='es'?'Correo o contrasena incorrectos':'Invalid email or password');return;}
+  loginUser(found);
+}
+function doRegister(){
+  clearErr('re-err-name');clearErr('re-err-email');clearErr('re-err-pass');clearErr('re-err-pass2');
+  var name=el('re-name')?el('re-name').value.trim():'';
+  var email=el('re-email')?el('re-email').value.trim().toLowerCase():'';
+  var pass=el('re-pass')?el('re-pass').value:'';
+  var pass2=el('re-pass2')?el('re-pass2').value:'';
+  var ok=true;
+  if(!name||name.length<2){showMsg('re-err-name',LANG==='es'?'Nombre obligatorio (min. 2)':'Name required (min 2)');ok=false;}
+  if(!email){showMsg('re-err-email',LANG==='es'?'Correo obligatorio':'Email required');ok=false;}
+  else if(!isValidEmail(email)){showMsg('re-err-email',LANG==='es'?'Correo invalido':'Invalid email');ok=false;}
+  if(!pass||pass.length<6){showMsg('re-err-pass',LANG==='es'?'Minimo 6 caracteres':'Min 6 characters');ok=false;}
+  else if(pass!==pass2){showMsg('re-err-pass2',LANG==='es'?'Las contrasenas no coinciden':'Passwords do not match');ok=false;}
+  if(!ok)return;
+  var users=getUsers();
+  if(users.some(function(u){return u.email.toLowerCase()===email;})){showMsg('re-err-email',LANG==='es'?'Correo ya registrado':'Email already registered');return;}
+  var isAdm=(email===ADMIN_EMAIL.toLowerCase());
+  users.push({name:name,email:email,pass:pass,isAdmin:isAdm});
+  saveUsers(users);
+  var sm=el('auth-success-msg');if(sm){sm.textContent=LANG==='es'?'Cuenta creada! Iniciando sesion...':'Account created! Signing in...';sm.style.color='#6ee7b7';}
+  setTimeout(function(){loginUser(users[users.length-1]);},800);
+}
+function showForgot(){
+  var fl=el('form-login');if(fl)fl.style.display='none';
+  ['form-register','form-verify','form-reset-pw'].forEach(function(id){var e=el(id);if(e)e.style.display='none';});
+  var ff=el('form-forgot');if(ff)ff.style.display='block';
+  var t=el('auth-tabs');if(t)t.style.visibility='hidden';
+  clearErr('fr-msg');
+  var em=el('fr-email');if(em){em.value='';setTimeout(function(){em.focus();},80);}
+}
+function backToLogin(){
+  ['form-forgot','form-verify','form-reset-pw'].forEach(function(id){var e=el(id);if(e)e.style.display='none';});
+  var fl=el('form-login');if(fl)fl.style.display='block';
+  var t=el('auth-tabs');if(t)t.style.visibility='visible';
+}
+function sendResetCode(){
+  var email=el('fr-email')?el('fr-email').value.trim().toLowerCase():'';
+  clearErr('fr-msg');
+  if(!email||!isValidEmail(email)){showMsg('fr-msg',LANG==='es'?'Correo invalido':'Invalid email');return;}
+  var users=getUsers(),found=null;
+  for(var i=0;i<users.length;i++){if(users[i].email.toLowerCase()===email){found=users[i];break;}}
+  if(!found){showMsg('fr-msg',LANG==='es'?'Correo no registrado':'Email not registered');return;}
+  var code=String(Math.floor(100000+Math.random()*900000));
+  RESET_CODES[email]={code:code,expires:Date.now()+600000};
+  el('form-forgot').style.display='none';
+  el('frv-pending-email').value=email;
+  var fb=el('frv-fallback-box');if(fb)fb.style.display='block';
+  var cs=el('frv-code-show');if(cs)cs.textContent=code;
+  var cses=el('frv-code-show-es');if(cses)cses.textContent=code;
+  el('form-verify').style.display='block';
+  clearErr('frv-msg');
+}
+function verifyResetCode(){
+  var email=el('frv-pending-email')?el('frv-pending-email').value.trim().toLowerCase():'';
+  var code=el('frv-code')?el('frv-code').value.trim():'';
+  clearErr('frv-msg');
+  if(!code||code.length!==6){showMsg('frv-msg',LANG==='es'?'Ingresa el codigo de 6 digitos':'Enter 6-digit code');return;}
+  var rc=RESET_CODES[email];
+  if(!rc){showMsg('frv-msg',LANG==='es'?'Codigo expirado':'Code expired');return;}
+  if(Date.now()>rc.expires){showMsg('frv-msg',LANG==='es'?'Codigo expirado (10 min)':'Code expired (10 min)');delete RESET_CODES[email];return;}
+  if(code!==rc.code){showMsg('frv-msg',LANG==='es'?'Codigo incorrecto':'Incorrect code');return;}
+  el('form-verify').style.display='none';
+  el('frp-pending-email').value=email;
+  el('form-reset-pw').style.display='block';
+  clearErr('frp-msg');
+}
+function doResetPassword(){
+  var email=el('frp-pending-email')?el('frp-pending-email').value.trim().toLowerCase():'';
+  var pass=el('frp-pass')?el('frp-pass').value:'';
+  var pass2=el('frp-pass2')?el('frp-pass2').value:'';
+  clearErr('frp-msg');
+  if(!pass||pass.length<6){showMsg('frp-msg',LANG==='es'?'Minimo 6 caracteres':'Min 6 characters');return;}
+  if(pass!==pass2){showMsg('frp-msg',LANG==='es'?'Las contrasenas no coinciden':'Passwords do not match');return;}
+  var users=getUsers();
+  for(var i=0;i<users.length;i++){if(users[i].email.toLowerCase()===email){users[i].pass=pass;break;}}
+  saveUsers(users);delete RESET_CODES[email];
+  el('form-reset-pw').style.display='none';
+  var t=el('auth-tabs');if(t)t.style.visibility='visible';
+  var sm=el('auth-success-msg');if(sm){sm.textContent=LANG==='es'?'Contrasena actualizada! Ingresa con tu nueva contrasena.':'Password updated! Sign in with your new password.';sm.style.color='#6ee7b7';}
+  switchTab('login');
+}
+(function(){var users=getUsers();if(!users.some(function(u){return u.email.toLowerCase()===ADMIN_EMAIL.toLowerCase();}))users.push({name:'Admin',email:ADMIN_EMAIL,pass:ADMIN_DEFAULT_PW,isAdmin:true});for(var i=0;i<users.length;i++){if(users[i].email.toLowerCase()===ADMIN_EMAIL.toLowerCase())users[i].isAdmin=true;}saveUsers(users);})();
+function loginUser(user){
+  CUR_USER=user;
+  var st=loadST(user.email)||{xp:0,sessions:0,downloads:0};
+  st.sessions=(st.sessions||0)+1;saveST(user.email,st);
+  var act=getActivity(user.email);act.sessions.push({start:Date.now()});saveActivity(user.email,act);
+  if(user.isAdmin||user.email.toLowerCase()===ADMIN_EMAIL.toLowerCase())document.body.classList.add('is-admin');
+  var ini=user.name.split(' ').map(function(w){return w[0]||'';}).join('').toUpperCase().slice(0,2);
+  el('tb-name').textContent=user.name.split(' ')[0];
+  el('sb-name').textContent=user.name;
+  el('sb-avatar').textContent=ini||'AG';
+  updateLevel(st.xp||0);updateDashStats();
+  try{var dis=localStorage.getItem('cica_banner_dismissed');var b=el('training-banner');var s=el('banner-show-again');if(dis==='1'){if(b)b.style.display='none';if(s)s.style.display='block';}else{if(b)b.style.display='flex';if(s)s.style.display='none';}}catch(e){}
+  el('login-screen').classList.add('hidden');el('app').classList.add('visible');
+}
+function doLogout(){CUR_USER=null;document.body.classList.remove('is-admin');el('app').classList.remove('visible');el('login-screen').classList.remove('hidden');if(el('li-email'))el('li-email').value='';if(el('li-pass'))el('li-pass').value='';switchTab('login');}
+function navTo(pageId){
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.sb-item').forEach(function(b){b.classList.remove('active');});
+  var pg=el('page-'+pageId);if(pg)pg.classList.add('active');
+  var btn=document.querySelector('.sb-item[data-page="'+pageId+'"]');if(btn)btn.classList.add('active');
+  var ct=el('content');if(ct)ct.scrollTop=0;
+  if(pageId==='admin-users')renderAdminUsers();
+  if(pageId==='admin-activity')renderAdminActivity();
+  if(pageId==='admin-ranking')renderAdminRanking();
+  if(pageId==='metrics')renderMetrics();
+  if(pageId==='etraining')etTab('portal');
+}
+document.querySelectorAll('.sb-item').forEach(function(btn){btn.addEventListener('click',function(){navTo(this.getAttribute('data-page'));});});
+function etTab(id){
+  document.querySelectorAll('#page-etraining .os-panel').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('#et-tabs .os-tab').forEach(function(b){b.classList.remove('active');});
+  var panel=el('et-'+id);if(panel)panel.classList.add('active');
+  var idx={portal:0,eligibility:1,quizzes:2}[id]||0;var tabs=document.querySelectorAll('#et-tabs .os-tab');if(tabs[idx])tabs[idx].classList.add('active');
+  if(id==='quizzes')loadQuiz('portal');
+}
+var LEVELS=[{name:'Seed Novice',min:0},{name:'Bronze Agent',min:100},{name:'Silver Agent',min:300},{name:'Gold Agent',min:600},{name:'Platinum Agent',min:1000},{name:'Diamond Agent',min:1500},{name:'Elite Agent',min:2500}];
+function getLevel(xp){var lv='Seed Novice';for(var i=0;i<LEVELS.length;i++){if(xp>=LEVELS[i].min)lv=LEVELS[i].name;}return lv;}
+function updateLevel(xp){if(el('sb-level'))el('sb-level').textContent=getLevel(xp)+' - '+xp+' XP';}
+function trackDownload(name){if(!CUR_USER)return;var st=loadST(CUR_USER.email)||{xp:0,sessions:0,downloads:0};st.downloads=(st.downloads||0)+1;st.xp=(st.xp||0)+10;saveST(CUR_USER.email,st);var act=getActivity(CUR_USER.email);act.downloads.push({name:name,date:new Date().toLocaleString()});saveActivity(CUR_USER.email,act);updateLevel(st.xp);updateDashStats();}
+function updateDashStats(){if(!CUR_USER)return;var st=loadST(CUR_USER.email)||{xp:0,sessions:0,downloads:0};var users=getUsers();if(el('d-reg'))el('d-reg').textContent=users.length;if(el('d-sess'))el('d-sess').textContent=st.sessions||0;if(el('d-dl'))el('d-dl').textContent=st.downloads||0;if(el('d-xp'))el('d-xp').textContent=st.xp||0;}
+function renderMetrics(){if(!CUR_USER)return;var st=loadST(CUR_USER.email)||{xp:0,sessions:0,downloads:0};var act=getActivity(CUR_USER.email);var html='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-bottom:20px">';html+='<div class="stat-box"><div class="stat-val">'+getLevel(st.xp||0).split(' ')[0]+'</div><div class="stat-lbl">Level</div></div>';html+='<div class="stat-box"><div class="stat-val">'+(st.xp||0)+'</div><div class="stat-lbl">XP</div></div>';html+='<div class="stat-box"><div class="stat-val">'+(st.sessions||0)+'</div><div class="stat-lbl">Sessions</div></div>';html+='<div class="stat-box"><div class="stat-val">'+(st.downloads||0)+'</div><div class="stat-lbl">Downloads</div></div></div>';/* downloads removed from metrics */if(CUR_USER&&CUR_USER.email.toLowerCase()!==ADMIN_EMAIL.toLowerCase()){html+='<div style="margin-top:20px;background:var(--sur2);border:1px solid var(--bdr);border-radius:10px;padding:16px"><h3 style="font-size:13px;font-weight:700;margin-bottom:8px;color:var(--cica-blue)">&#128279; <span class=\"en\">My Registration Code</span><span class=\"es\">Mi Código de Registro</span></h3><p style="font-size:11px;color:var(--tx3);margin-bottom:10px"><span class=\"en\">Share this code with your administrator so they can see your account on their device.</span><span class=\"es\">Comparte este código con tu administrador para que pueda ver tu cuenta en su dispositivo.</span></p><textarea id=\"cica-myreg-ta\" readonly style=\"width:100%;height:60px;font-size:10px;font-family:monospace;padding:6px;border:1px solid var(--bdr);border-radius:6px;background:var(--sur);color:var(--tx);resize:none\" placeholder=\"Haz clic en Generar / Click Generate\"></textarea><button class=\"fbtn\" style=\"width:auto;padding:8px 18px;margin-top:8px;font-size:12px\" onclick=\"cica_exportMyReg()\">&#128279; <span class=\"en\">Generate &amp; Copy Code</span><span class=\"es\">Generar y Copiar Código</span></button></div>';}el('metrics-body').innerHTML=html;}
+function renderAdminUsers(){var users=getUsers();var body=el('page-admin-users-body');var allST=users.map(function(u){return loadST(u.email)||{sessions:0,downloads:0,xp:0};});var tS=allST.reduce(function(s,st){return s+(st.sessions||0);},0);var tD=allST.reduce(function(s,st){return s+(st.downloads||0);},0);var html='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px"><div class="adm-stat"><div class="val">'+users.length+'</div><div class="stat-lbl">Registered</div></div><div class="adm-stat"><div class="val">'+tS+'</div><div class="stat-lbl">Sessions</div></div><div class="adm-stat"><div class="val">'+tD+'</div><div class="stat-lbl">Downloads</div></div></div>';html+='<div class="admin-form"><h3 style="margin-bottom:14px;font-size:14px;font-weight:700">Add Admin User</h3><label>Full Name</label><input type="text" id="na-name" placeholder="Full name"><label>Email</label><input type="email" id="na-email" placeholder="admin@email.com"><label>Password</label><input type="password" id="na-pass" placeholder="Min 6 chars"><button class="create-btn" onclick="createAdmin()">Create Admin</button></div>';html+='<table><tr><th>User</th><th>Level</th><th>Sessions</th><th>DL</th><th>Actions</th></tr>';users.forEach(function(u,i){var st=allST[i];var ab=u.isAdmin?'<span class="admin-badge">ADMIN</span>':'';html+='<tr><td>'+u.name+'<br><small style="color:var(--tx3)">'+u.email+'</small>'+ab+'</td><td>'+getLevel(st.xp||0)+'<br><small style="color:var(--tx3)">'+(st.xp||0)+' XP</small></td><td>'+(st.sessions||0)+'</td><td>'+(st.downloads||0)+'</td><td>';if(!u.isAdmin)html+='<button class="adm-btn" onclick="adminToggleAdmin(this.dataset.email)" data-email="'+u.email+'">Admin</button> ';if(u.email.toLowerCase()!==ADMIN_EMAIL.toLowerCase())html+='<button class="adm-btn del" onclick="adminDelete(this.dataset.email)" data-email="'+u.email+'">Del</button>';html+='</td></tr>';});html+='</table>';html+='<div style="margin-top:24px;background:var(--sur2);border:1px solid var(--bdr);border-radius:10px;padding:16px"><h3 style="font-size:13px;font-weight:700;margin-bottom:10px;color:var(--cica-blue)">&#128257; Sync / Import Users</h3><p style="font-size:11px;color:var(--tx3);margin-bottom:10px">Los agentes en otros dispositivos pueden compartir su código de registro aquí. / Agents on other devices can share their registration code here.</p><textarea id="cica-backup-ta" style="width:100%;height:70px;font-size:10px;font-family:monospace;padding:6px;border:1px solid var(--bdr);border-radius:6px;background:var(--sur);color:var(--tx);resize:vertical" placeholder="Pega el código del agente aquí / Paste agent code here..."></textarea><div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap"><button class="adm-btn" onclick="cica_importUsers()" style="padding:8px 14px;font-size:12px">&#128229; Importar / Import</button><button class="adm-btn" onclick="cica_exportAllUsers()" style="padding:8px 14px;font-size:12px;background:#005BAC;color:#fff">&#128228; Exportar Todos / Export All</button></div></div>';body.innerHTML=html;}
+function createAdmin(){var n=el('na-name')?el('na-name').value.trim():'';var em=el('na-email')?el('na-email').value.trim().toLowerCase():'';var pw=el('na-pass')?el('na-pass').value:'';if(!n||!em||pw.length<6){alert('Fill all fields (password min 6 chars)');return;}var users=getUsers();if(users.some(function(u){return u.email===em;})){alert('Email already exists');return;}users.push({name:n,email:em,pass:pw,isAdmin:true});saveUsers(users);renderAdminUsers();}
+function adminToggleAdmin(email){var users=getUsers();for(var i=0;i<users.length;i++){if(users[i].email.toLowerCase()===email.toLowerCase()){users[i].isAdmin=!users[i].isAdmin;break;}}saveUsers(users);renderAdminUsers();}
+function adminDelete(email){if(!confirm('Delete user '+email+'?'))return;saveUsers(getUsers().filter(function(u){return u.email.toLowerCase()!==email.toLowerCase();}));renderAdminUsers();}
+function cica_exportAllUsers(){var code=btoa(unescape(encodeURIComponent(JSON.stringify({users:getUsers(),v:'cica1'}))));var ta=el('cica-backup-ta');if(ta){ta.value=code;ta.select();try{document.execCommand('copy');}catch(e){}}alert(LANG==='es'?'Código copiado al portapapeles.':'Code copied to clipboard.');}
+function cica_importUsers(){var ta=el('cica-backup-ta');if(!ta||!ta.value.trim()){alert('Pega un código primero / Paste a code first');return;}try{var d=JSON.parse(decodeURIComponent(escape(atob(ta.value.trim()))));if(d&&d.users&&d.v==='cica1'){var cur=getUsers();d.users.forEach(function(nu){var found=false;for(var i=0;i<cur.length;i++){if(cur[i].email.toLowerCase()===nu.email.toLowerCase()){cur[i]=nu;found=true;break;}}if(!found)cur.push(nu);});saveUsers(cur);renderAdminUsers();alert((LANG==='es'?'Importado: ':'Imported: ')+d.users.length+' usuario(s).');}}catch(e){alert('Código inválido / Invalid code: '+e);}}
+function cica_exportMyReg(){if(!CUR_USER){return;}var users=getUsers();var u=null;for(var i=0;i<users.length;i++){if(users[i].email.toLowerCase()===CUR_USER.email.toLowerCase()){u=users[i];break;}}if(!u){alert('User not found');return;}var code=btoa(unescape(encodeURIComponent(JSON.stringify({users:[u],v:'cica1'}))));var ta=el('cica-myreg-ta');if(ta){ta.value=code;ta.select();try{document.execCommand('copy');}catch(e){}}alert(LANG==='es'?'Código copiado. Envíalo al administrador.':'Code copied. Send it to your administrator.');}
+function renderAdminActivity(){var users=getUsers();var body=el('page-admin-activity-body');var opts=users.map(function(u){return '<option value="'+u.email+'">'+u.name+' ('+u.email+')</option>';}).join('');body.innerHTML='<div class="section-wrap"><label style="font-size:11px;font-weight:700;color:var(--tx3);display:block;margin-bottom:6px">USER:</label><select id="act-sel" onchange="renderActDetail()" style="padding:8px 12px;border:1px solid var(--bdr);border-radius:6px;background:var(--sur2);color:var(--tx);font-size:13px;width:100%;max-width:400px">'+opts+'</select></div><div id="act-detail"></div>';renderActDetail();}
+function renderActDetail(){var sel=el('act-sel');if(!sel)return;var email=sel.value;var st=loadST(email)||{xp:0,sessions:0,downloads:0};var act=getActivity(email);var html='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:16px"><div class="adm-stat"><div class="val">'+getLevel(st.xp||0).split(' ')[0]+'</div><div class="stat-lbl">Level</div></div><div class="adm-stat"><div class="val">'+(st.xp||0)+'</div><div class="stat-lbl">XP</div></div><div class="adm-stat"><div class="val">'+(st.sessions||0)+'</div><div class="stat-lbl">Sessions</div></div><div class="adm-stat"><div class="val">'+(st.downloads||0)+'</div><div class="stat-lbl">Downloads</div></div></div>';if(act.downloads&&act.downloads.length){html+='<table><tr><th>Document</th><th>Date</th></tr>';act.downloads.slice(-30).reverse().forEach(function(d){html+='<tr><td>'+d.name+'</td><td>'+d.date+'</td></tr>';});html+='</table>';}el('act-detail').innerHTML=html;}
+function renderAdminRanking(){var users=getUsers();var ranked=users.map(function(u){var st=loadST(u.email)||{xp:0,downloads:0};return{name:u.name,email:u.email,xp:st.xp||0,dl:st.downloads||0,lv:getLevel(st.xp||0)};}).sort(function(a,b){return b.xp-a.xp;});var body=el('page-admin-ranking-body');var mCls=['gold','silver','bronze'];var html='<h3 style="font-size:14px;font-weight:700;margin-bottom:12px">Leaderboard - XP</h3>';ranked.forEach(function(u,i){var you=CUR_USER&&CUR_USER.email===u.email?' (you)':'';html+='<div class="rank-card"><div class="rank-pos '+(mCls[i]||'')+'">'+(i+1)+'</div><div><div class="rank-name">'+u.name+you+'</div><div style="font-size:10px;color:var(--tx3)">'+u.lv+'</div></div><div style="text-align:right"><div class="rank-xp">'+u.xp+' XP</div><div style="font-size:10px;color:var(--tx3)">'+u.dl+' DL</div></div></div>';});body.innerHTML=html;}
+var qState={module:'portal',idx:0,score:0,answered:false};
+function loadQuiz(mod){qState={module:mod,idx:0,score:0,answered:false};document.querySelectorAll('#et-quizzes .os-tabs-bar .os-tab').forEach(function(b){b.classList.remove('active');});var tabs=document.querySelectorAll('#et-quizzes .os-tabs-bar .os-tab');var idx={portal:0,product:1,eligibility:2}[mod]||0;if(tabs[idx])tabs[idx].classList.add('active');renderQuestion();}
+function renderQuestion(){var container=el('quiz-container');if(!container)return;var mod=QUIZ_DATA[qState.module];if(!mod)return;var qs=mod.questions;var q=qs[qState.idx];if(!q){container.innerHTML='<div style="text-align:center;padding:20px"><div style="font-size:22px;font-weight:800;color:var(--cica-blue)">'+qState.score+'/'+qs.length+'</div><div style="font-size:14px;color:var(--tx2);margin:10px 0"><span class="en">Quiz complete! Score: '+qState.score+'/'+qs.length+'</span><span class="es">Quiz completado! Puntaje: '+qState.score+'/'+qs.length+'</span></div>'+(qState.score===qs.length?'<div style="color:#10b981;font-weight:700;font-size:12px">+50 XP</div>':'')+'<button class="fbtn" style="width:auto;padding:10px 24px;margin-top:10px" onclick="loadQuiz(qState.module)"><span class="en">Retry</span><span class="es">Reintentar</span></button></div>';if(qState.score===qs.length&&CUR_USER){var st=loadST(CUR_USER.email)||{xp:0};st.xp=(st.xp||0)+50;saveST(CUR_USER.email,st);updateLevel(st.xp);}return;}var opts=(LANG==='es'?q.opts_es:q.opts_en);var qText=(LANG==='es'?q.es:q.en);var html='<div style="font-size:11px;color:var(--tx3);margin-bottom:8px">'+(qState.idx+1)+'/'+qs.length+'</div>';html+='<div class="quiz-q">'+qText+'</div><div class="quiz-opts">';opts.forEach(function(o,i){html+='<div class="quiz-opt" id="qopt-'+i+'" onclick="answerQ('+i+')">'+String.fromCharCode(65+i)+'. '+o+'</div>';});html+='</div><div class="quiz-nav"><button class="fbtn" style="width:auto;padding:8px 18px" id="qnext" onclick="nextQ()" disabled><span class="en">Next</span><span class="es">Siguiente</span></button></div>';container.innerHTML=html;qState.answered=false;}
+function answerQ(i){if(qState.answered)return;qState.answered=true;var q=QUIZ_DATA[qState.module].questions[qState.idx];var correct=q.ans;document.querySelectorAll('.quiz-opt').forEach(function(o,idx){if(idx===correct)o.classList.add('correct');else if(idx===i&&i!==correct)o.classList.add('wrong');o.style.pointerEvents='none';});if(i===correct)qState.score++;var nxt=el('qnext');if(nxt)nxt.disabled=false;}
+function nextQ(){qState.idx++;renderQuestion();}
+(function(){try{var l=localStorage.getItem('cica_lang');setLang(l||'en');}catch(e){setLang('en');}try{var d=localStorage.getItem('cica_dark');if(d==='1'){DARK=false;toggleDark();}}catch(e){}setTimeout(function(){loadQuiz('portal');},100);})();
+
+
+/* ── Override updateDashStats to also populate hero stats ── */
+function updateDashStats(){
+  if(!CUR_USER)return;
+  var st=loadST(CUR_USER.email)||{xp:0,sessions:0,downloads:0};
+  var users=getUsers();
+  if(el('d-reg'))el('d-reg').textContent=users.length;
+  if(el('d-sess'))el('d-sess').textContent=st.sessions||0;
+  if(el('d-dl'))el('d-dl').textContent=st.downloads||0;
+  if(el('d-xp'))el('d-xp').textContent=st.xp||0;
+  if(el('hero-dl'))el('hero-dl').textContent=st.downloads||0;
+  if(el('hero-xp'))el('hero-xp').textContent=st.xp||0;
+  if(el('hero-mods'))el('hero-mods').textContent=0;
+  if(el('home-username'))el('home-username').textContent=CUR_USER.name.split(' ')[0];
+}
+
+/* ── Override renderMetrics with progress bars + level ladder ── */
+function renderMetrics(){
+  if(!CUR_USER)return;
+  var st=loadST(CUR_USER.email)||{xp:0,sessions:0,downloads:0};
+  var act=getActivity(CUR_USER.email);
+  var xp=st.xp||0, dl=st.downloads||0;
+  var LVLS=[
+    {name:'Novato',eN:'Novice',min:0,ico:'&#127807;'},
+    {name:'Aprendiz',eN:'Apprentice',min:100,ico:'&#128216;'},
+    {name:'Agente',eN:'Agent',min:300,ico:'&#128188;'},
+    {name:'Agente Pro',eN:'Agent Pro',min:700,ico:'&#11088;'},
+    {name:'Elite',eN:'Elite',min:1300,ico:'&#128293;'},
+    {name:'Maestro',eN:'Master',min:2500,ico:'&#127942;'},
+    {name:'Leyenda',eN:'Legend',min:4500,ico:'&#128081;'}
+  ];
+  var curIdx=0;
+  for(var i=0;i<LVLS.length;i++){if(xp>=LVLS[i].min)curIdx=i;}
+  var cur=LVLS[curIdx];
+  var nxt=LVLS[curIdx+1]||null;
+  var xpPct=nxt?Math.min(100,Math.round((xp-cur.min)*100/(nxt.min-cur.min))):100;
+  var MAX_MODS=12;
+  var html='';
+  // Hero
+  html+='<div class="met-hero">';
+  html+='<div class="met-level-badge">'+cur.ico+'</div>';
+  html+='<div><div class="met-level-name"><span class="en">'+cur.eN+'</span><span class="es">'+cur.name+'</span></div>';
+  html+='<div class="met-user-name">'+CUR_USER.name+'</div>';
+  html+='<div class="met-sub"><span class="en">'+getLevel(xp)+'</span><span class="es">'+getLevel(xp)+'</span> &middot; <span style="color:#6ee7b7">'+xp+' XP</span>'+(nxt?' &middot; <span style="opacity:.7">'+( nxt.min-xp)+' XP to '+nxt.eN+'</span>':'')+'</div>';
+  html+='</div></div>';
+  // Progress bars
+  html+='<div class="met-section"><div class="met-section-title">&#128218; <span class="en">Training Progress</span><span class="es">Progreso de Entrenamiento</span></div>';
+  var bars=[
+    {label:'<span class="en">Modules (0/'+MAX_MODS+')</span><span class="es">Modulos (0/'+MAX_MODS+')</span>',pct:0,color:'#3b82f6'},
+    {label:'<span class="en">Downloads ('+dl+')</span><span class="es">Descargas ('+dl+')</span>',pct:dl>0?100:0,color:'#10b981'},
+    {label:'XP ('+xp+')',pct:xpPct,color:'#f59e0b'}
+  ];
+  bars.forEach(function(b){
+    html+='<div class="met-bar-row"><div class="met-bar-label">'+b.label+'</div>';
+    html+='<div class="met-bar-track"><div class="met-bar-fill" style="width:'+b.pct+'%;background:'+b.color+'"></div></div>';
+    html+='<div class="met-bar-pct">'+b.pct+'%</div></div>';
+  });
+  html+='</div>';
+  // Level ladder
+  html+='<div class="met-section"><div class="met-section-title">&#127942; <span class="en">Levels</span><span class="es">Niveles</span></div>';
+  LVLS.forEach(function(lv,i){
+    var reached=xp>=lv.min, isCur=(i===curIdx);
+    html+='<div class="met-level-row'+(isCur?' met-level-current':'')+'">';
+    html+='<span style="font-size:18px">'+lv.ico+'</span>';
+    html+='<div class="met-level-info">';
+    html+='<div class="met-level-rname"><span class="en">'+lv.eN+'</span><span class="es">'+lv.name+'</span>';
+    if(isCur)html+='<span class="met-current-badge"><span class="en">current</span><span class="es">actual</span></span>';
+    html+='</div><div class="met-level-req">'+lv.min+'+ XP</div></div>';
+    html+='<div style="margin-left:auto;font-size:17px">'+(reached?'<span style="color:#10b981">&#10003;</span>':'<span style="color:var(--bdr)">&#9675;</span>')+'</div>';
+    html+='</div>';
+  });
+  html+='</div>';
+  // Recent downloads removed from My Metrics
+  el('metrics-body').innerHTML=html;
+}
+
+function dl(name,key,fname){
+  var el2=document.getElementById('pdf_'+key);
+  if(!el2){alert('PDF not found: '+key);return;}
+  var b64=el2.textContent.trim();
+  try{
+    var bin=atob(b64),arr=new Uint8Array(bin.length);
+    for(var i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);
+    var blob=new Blob([arr],{type:'application/pdf'});
+    var a=document.createElement('a');a.href=URL.createObjectURL(blob);
+    a.download=(fname||name)+'.pdf';a.click();
+    if(typeof trackDownload==='function')trackDownload(name);
+  }catch(e){alert('Download error: '+e);}
+}
+
+/* ── Language toggle — JS-controlled label, no CSS class dependence ── */
+function setLang(l){
+  LANG=l;
+  // data-lang approach — reliable across all browsers
+  document.documentElement.setAttribute('data-lang',l);
+  // legacy compat
+  document.documentElement.setAttribute('lang-'+l,'');
+  document.documentElement.removeAttribute('lang-'+(l==='en'?'es':'en'));
+  localStorage.setItem('cica_lang',l);
+  var tbLbl=document.getElementById('tb-lang-lbl');
+  if(tbLbl)tbLbl.textContent=l==='en'?'ES':'EN';
+  var preLbl=document.getElementById('pre-lang-lbl');
+  if(preLbl)preLbl.textContent=l==='en'?'ES':'EN';
+}
+function toggleLang(){setLang(LANG==='en'?'es':'en');}
+
+function toggleDark(){
+  DARK=!DARK;
+  document.body.classList.toggle('dark',DARK);
+  localStorage.setItem('cica_dark',DARK?'1':'0');
+}
+
+document.addEventListener('DOMContentLoaded',function(){
+  document.querySelectorAll('.sb-item[data-page]').forEach(function(btn){
+    btn.addEventListener('click',function(){navTo(this.getAttribute('data-page'));});
+  });
+  var savedLang=localStorage.getItem('cica_lang')||'en';
+  setLang(savedLang);
+  var savedDark=localStorage.getItem('cica_dark');
+  if(savedDark==='1'){DARK=true;document.body.classList.add('dark');}
+});
+
+</script>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   FINAL OVERRIDES — runs after all_js, wins all conflicts
+   ═══════════════════════════════════════════════════════════ */
+
+/* 1. Auto-show home after login */
+(function(){
+  var _orig = window.loginUser;
+  window.loginUser = function(user){
+    if(_orig) _orig(user);
+    setTimeout(function(){ if(typeof navTo==='function') navTo('home'); }, 80);
+  };
+})();
+
+/* admin pages use standard navTo renderAdmin* calls */
+
+/* 2. Language system — reads DOM state, no variable drift */
+window.setLang = function(l){
+  if(l !== 'en' && l !== 'es') l = 'en';          // sanitize
+  window.LANG = l;
+  var root = document.documentElement;
+  root.setAttribute('data-lang', l);              // CSS driver
+  root.setAttribute('lang-' + l, '');
+  root.removeAttribute('lang-' + (l==='en'?'es':'en'));
+  try{ localStorage.setItem('cica_lang', l); }catch(e){}
+  var lb = document.getElementById('tb-lang-lbl');
+  if(lb) lb.textContent = (l==='en') ? 'ES' : 'EN';
+  var pb = document.getElementById('pre-lang-lbl');
+  if(pb) pb.textContent = (l==='en') ? 'ES' : 'EN';
+};
+
+window.toggleLang = function(){
+  /* Read current lang directly from DOM — avoids variable drift */
+  var cur = document.documentElement.getAttribute('data-lang') || 'en';
+  window.setLang(cur === 'en' ? 'es' : 'en');
+};
+
+/* 3. Init: apply saved language after DOM is ready */
+document.addEventListener('DOMContentLoaded', function(){
+  /* Force-correct all state map labels from title attribute — immune to any translation */
+  document.querySelectorAll('.sm-cell[title]').forEach(function(cell){
+    var abbr = cell.getAttribute('title').split(':')[0].trim();
+    var sp = cell.querySelector('span');
+    if(sp){ sp.textContent = abbr; sp.removeAttribute('class'); }
+  });
+
+  /* Apply language */
+  var saved = 'en';
+  try{
+    var s = localStorage.getItem('cica_lang');
+    if(s === 'en' || s === 'es') saved = s;
+  }catch(e){}
+  window.setLang(saved);
+  setTimeout(function(){
+    window.setLang(saved);
+    /* Re-force state labels after any deferred render */
+    document.querySelectorAll('.sm-cell[title]').forEach(function(cell){
+      var abbr = cell.getAttribute('title').split(':')[0].trim();
+      var sp = cell.querySelector('span');
+      if(sp) sp.textContent = abbr;
+    });
+  }, 100);
+});
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../../shared/supabase-config.js"></script>
+<script src="cica-patch.js"></script>
+</body></html>
+
+<script type="application/pdf" id="pdf_cf_life_claim">https://qvamdopwbjlccazchoer.supabase.co/storage/v1/object/public/pdfs-cica/cf_life_claim.pdf</script>
+<script type="application/pdf" id="pdf_cf_life_kit">https://qvamdopwbjlccazchoer.supabase.co/storage/v1/object/public/pdfs-cica/cf_life_kit.pdf</script>
+<script type="application/pdf" id="pdf_cc_comm_over">https://qvamdopwbjlccazchoer.supabase.co/storage/v1/object/public/pdfs-cica/cc_comm_over.pdf</script>
+<script type="application/pdf" id="pdf_cc_comm_one">https://qvamdopwbjlccazchoer.supabase.co/storage/v1/object/public/pdfs-cica/cc_comm_one.pdf</script>
+<script type="application/pdf" id="pdf_cc_ach">https://qvamdopwbjlccazchoer.supabase.co/storage/v1/object/public/pdfs-cica/cc_ach.pdf</script>
+<script type="application/pdf" id="pdf_cc_advance">https://qvamdopwbjlccazchoer.supabase.co/storage/v1/object/public/pdfs-cica/cc_advance.pdf</script>
+<script type="application/pdf" id="pdf_cc_state_break">https://qvamdopwbjlccazchoer.supabase.co/storage/v1/object/public/pdfs-cica/cc_state_break.pdf</script>
+<script type="application/pdf" id="pdf_dg_agent_guide">https://qvamdopwbjlccazchoer.supabase.co/storage/v1/object/public/pdfs-cica/dg_agent_guide.pdf</script>
+<script type="application/pdf" id="pdf_dg_agent_guide_es">https://qvamdopwbjlccazchoer.supabase.co/storage/v1/object/public/pdfs-cica/dg_agent_guide_es.pdf</script>
+<script type="application/pdf" id="pdf_dg_agent_faq">https://qvamdopwbjlccazchoer.supabase.co/storage/v1/object/public/pdfs-cica/dg_agent_faq.pdf</script>
+<script type="application/pdf" id="pdf_dg_faq_es">https://qvamdopwbjlccazchoer.supabase.co/storage/v1/object/public/pdfs-cica/dg_faq_es.pdf</script>
+<script type="application/pdf" id="pdf_dg_advertising">https://qvamdopwbjlccazchoer.supabase.co/storage/v1/object/public/pdfs-cica/dg_advertising.pdf</script>
+<script type="application/pdf" id="pdf_dg_market_conduct">https://qvamdopwbjlccazchoer.supabase.co/storage/v1/object/public/pdfs-cica/dg_market_conduct.pdf</script>
+<script type="application/pdf" id="pdf_dg_market_conduct_es">https://qvamdopwbjlccazchoer.supabase.co/storage/v1/object/public/pdfs-cica/dg_market_conduct_es.pdf</script>
+<script type="application/pdf" id="pdf_dg_risk_assess">https://qvamdopwbjlccazchoer.supabase.co/storage/v1/object/public/pdfs-cica/dg_risk_assess.pdf</script>
+<script type="application/pdf" id="pdf_dg_risk_en">https://qvamdopwbjlccazchoer.supabase.co/storage/v1/object/public/pdfs-cica/dg_risk_en.pdf</script>
+<script type="application/pdf" id="pdf_dg_risk_es">https://qvamdopwbjlccazchoer.supabase.co/storage/v1/object/public/pdfs-cica/dg_risk_es.pdf</script>
+<script type="application/pdf" id="pdf_hl_portal_intro">https://qvamdopwbjlccazchoer.supabase.co/storage/v1/object/public/pdfs-cica/hl_portal_intro.pdf</script>
+<script type="application/pdf" id="pdf_hl_portal_intro_es">https://qvamdopwbjlccazchoer.supabase.co/storage/v1/object/public/pdfs-cica/hl_portal_intro_es.pdf</script>
+<script type="application/pdf" id="pdf_hl_app_video">https://qvamdopwbjlccazchoer.supabase.co/storage/v1/object/public/pdfs-cica/hl_app_video.pdf</script>
+<script type="application/pdf" id="pdf_hl_customer_view">https://qvamdopwbjlccazchoer.supabase.co/storage/v1/object/public/pdfs-cica/hl_customer_view.pdf</script>
+<script type="application/pdf" id="pdf_hl_customer_view_es">https://qvamdopwbjlccazchoer.supabase.co/storage/v1/object/public/pdfs-cica/hl_customer_view_es.pdf</script>
+<script type="application/pdf" id="pdf_hl_ssb_quick_ref">https://qvamdopwbjlccazchoer.supabase.co/storage/v1/object/public/pdfs-cica/hl_ssb_quick_ref.pdf</script>
+<script type="application/pdf" id="pdf_hl_ss_guide">https://qvamdopwbjlccazchoer.supabase.co/storage/v1/object/public/pdfs-cica/hl_ss_guide.pdf</script>
+<script type="application/pdf" id="pdf_hl_auth_pago_es">https://qvamdopwbjlccazchoer.supabase.co/storage/v1/object/public/pdfs-cica/hl_auth_pago_es.pdf</script>
+<script type="application/pdf" id="pdf_hl_form_auth_es">https://qvamdopwbjlccazchoer.supabase.co/storage/v1/object/public/pdfs-cica/hl_form_auth_es.pdf</script>
+<script type="application/pdf" id="pdf_hl_eligibility_hipaa">https://qvamdopwbjlccazchoer.supabase.co/storage/v1/object/public/pdfs-cica/hl_eligibility_hipaa.pdf</script>
+<script type="application/pdf" id="pdf_hl_verif_elig">https://qvamdopwbjlccazchoer.supabase.co/storage/v1/object/public/pdfs-cica/hl_verif_elig.pdf</script>
+<script type="application/pdf" id="pdf_hl_grabaciones">https://qvamdopwbjlccazchoer.supabase.co/storage/v1/object/public/pdfs-cica/hl_grabaciones.pdf</script>
+<script type="application/pdf" id="pdf_mkt_brochure">https://qvamdopwbjlccazchoer.supabase.co/storage/v1/object/public/pdfs-cica/mkt_brochure.pdf</script>
+<script type="application/pdf" id="pdf_mkt_corp_brochure">https://qvamdopwbjlccazchoer.supabase.co/storage/v1/object/public/pdfs-cica/mkt_corp_brochure.pdf</script>
+<script type="application/pdf" id="pdf_mkt_corporate_life">https://qvamdopwbjlccazchoer.supabase.co/storage/v1/object/public/pdfs-cica/mkt_corporate_life.pdf</script>
+<script type="application/pdf" id="pdf_ps_reinstatement">https://qvamdopwbjlccazchoer.supabase.co/storage/v1/object/public/pdfs-cica/ps_reinstatement.pdf</script>
+<script type="application/pdf" id="pdf_ps_change_req">https://qvamdopwbjlccazchoer.supabase.co/storage/v1/object/public/pdfs-cica/ps_change_req.pdf</script>
+<script type="application/pdf" id="pdf_ps_policy_changes">https://qvamdopwbjlccazchoer.supabase.co/storage/v1/object/public/pdfs-cica/ps_policy_changes.pdf</script>
+<script type="application/pdf" id="pdf_ps_rein_app">https://qvamdopwbjlccazchoer.supabase.co/storage/v1/object/public/pdfs-cica/ps_rein_app.pdf</script>

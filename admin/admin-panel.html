@@ -1,0 +1,739 @@
+﻿<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Admin Panel — Academia Ensurity</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #f4f6fa; --surface: #fff; --surface2: #f0f2f7; --border: #e2e6ef;
+  --text: #1a2035; --text2: #5a6480; --accent: #7c3aed; --accent-h: #6d28d9;
+  --success: #38a169; --danger: #e53e3e; --warning: #d69e2e;
+  --shadow: 0 2px 16px rgba(0,0,0,.08); --radius: 10px;
+}
+[data-theme="dark"] {
+  --bg: #0f1117; --surface: #1a1d27; --surface2: #232736; --border: #2d3245;
+  --text: #e8ecf8; --text2: #8891b0; --shadow: 0 2px 16px rgba(0,0,0,.4);
+}
+body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; }
+
+/* LAYOUT */
+.layout { display: flex; min-height: 100vh; }
+.sidebar {
+  width: 220px; background: var(--surface); border-right: 1px solid var(--border);
+  display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh; overflow-y: auto;
+}
+.sidebar-logo {
+  padding: 18px 16px; font-weight: 800; font-size: 1rem; color: var(--accent);
+  border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px;
+}
+.sidebar-logo a { color: var(--text2); font-size: .75rem; font-weight: 400; margin-left: auto; text-decoration: none; }
+.sidebar-logo a:hover { color: var(--accent); }
+.nav-section { padding: 12px 8px 4px; font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--text2); }
+.nav-item {
+  display: flex; align-items: center; gap: 8px; padding: 9px 12px; cursor: pointer;
+  border-radius: 8px; margin: 1px 6px; font-size: .88rem; color: var(--text2);
+  transition: background .15s, color .15s; text-decoration: none;
+}
+.nav-item:hover, .nav-item.active { background: var(--surface2); color: var(--text); }
+.nav-item.active { color: var(--accent); font-weight: 600; }
+.nav-item svg { width: 16px; height: 16px; flex-shrink: 0; }
+.sidebar-footer { margin-top: auto; padding: 12px; }
+.signout-btn {
+  width: 100%; padding: 8px; background: none; border: 1px solid var(--border);
+  border-radius: 8px; color: var(--text2); cursor: pointer; font-size: .82rem; transition: all .15s;
+}
+.signout-btn:hover { border-color: var(--danger); color: var(--danger); }
+
+/* MAIN */
+.main { flex: 1; padding: 28px; overflow-x: hidden; }
+.page { display: none; }
+.page.active { display: block; }
+.page-header { margin-bottom: 24px; }
+.page-header h1 { font-size: 1.4rem; font-weight: 700; }
+.page-header p  { color: var(--text2); margin-top: 4px; font-size: .88rem; }
+
+/* STATS GRID */
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px,1fr)); gap: 16px; margin-bottom: 28px; }
+.stat-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 18px 20px; box-shadow: var(--shadow);
+}
+.stat-card .stat-num  { font-size: 2rem; font-weight: 800; color: var(--text); }
+.stat-card .stat-label{ font-size: .8rem; color: var(--text2); margin-top: 2px; }
+.stat-card .stat-badge{ display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; }
+
+/* TABLE */
+.table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+.table-toolbar { padding: 14px 18px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+.table-toolbar input {
+  flex: 1; min-width: 160px; padding: 7px 12px; border: 1px solid var(--border);
+  border-radius: 8px; background: var(--surface2); color: var(--text); font-size: .85rem; outline: none;
+}
+.table-toolbar input:focus { border-color: var(--accent); }
+.filter-select {
+  padding: 7px 12px; border: 1px solid var(--border); border-radius: 8px;
+  background: var(--surface2); color: var(--text); font-size: .85rem; cursor: pointer;
+}
+.btn-sm {
+  padding: 7px 14px; border-radius: 8px; font-size: .82rem; font-weight: 600; cursor: pointer;
+  border: none; transition: all .15s;
+}
+.btn-primary-sm { background: var(--accent); color: #fff; }
+.btn-primary-sm:hover { background: var(--accent-h); }
+.btn-danger-sm  { background: var(--danger); color: #fff; }
+table { width: 100%; border-collapse: collapse; font-size: .85rem; }
+th { padding: 11px 16px; text-align: left; font-size: .75rem; font-weight: 700; text-transform: uppercase;
+     letter-spacing: .05em; color: var(--text2); background: var(--surface2); border-bottom: 1px solid var(--border); }
+td { padding: 11px 16px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: var(--surface2); }
+.badge {
+  display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 20px;
+  font-size: .73rem; font-weight: 700; gap: 4px;
+}
+.badge-admin  { background: #ede9fe; color: #6d28d9; }
+.badge-agent  { background: #e0f2fe; color: #0369a1; }
+.badge-super  { background: #fef9c3; color: #854d0e; }
+.badge-green  { background: #dcfce7; color: #166534; }
+.badge-red    { background: #fee2e2; color: #991b1b; }
+[data-theme="dark"] .badge-admin { background: #3b2e6e; color: #c4b5fd; }
+[data-theme="dark"] .badge-agent { background: #0c2942; color: #7dd3fc; }
+[data-theme="dark"] .badge-super { background: #3b2910; color: #fde68a; }
+[data-theme="dark"] .badge-green { background: #14532d; color: #86efac; }
+[data-theme="dark"] .badge-red   { background: #450a0a; color: #fca5a5; }
+.module-dots { display: flex; gap: 4px; flex-wrap: wrap; }
+.module-dot {
+  width: 10px; height: 10px; border-radius: 50%; display: inline-block; cursor: help;
+}
+.loading-row { text-align: center; padding: 32px; color: var(--text2); }
+.spinner { width: 20px; height: 20px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin .6s linear infinite; display: inline-block; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* MODAL */
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 1000; align-items: center; justify-content: center; }
+.modal-overlay.open { display: flex; }
+.modal { background: var(--surface); border-radius: var(--radius); padding: 28px; width: 100%; max-width: 460px; box-shadow: 0 20px 60px rgba(0,0,0,.3); }
+.modal h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; }
+.modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px; }
+.form-group { margin-bottom: 14px; }
+.form-group label { display: block; font-size: .82rem; font-weight: 600; color: var(--text2); margin-bottom: 4px; }
+.form-group select, .form-group input {
+  width: 100%; padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px;
+  background: var(--surface2); color: var(--text); font-size: .9rem;
+}
+.module-checkboxes { display: flex; flex-direction: column; gap: 8px; }
+.module-checkboxes label { display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: .88rem; font-weight: 400; color: var(--text); }
+
+/* MOBILE NAV */
+.mobile-topbar {
+  display: none; align-items: center; gap: 12px; padding: 12px 16px;
+  background: var(--surface); border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; z-index: 50;
+}
+.hamburger { background: none; border: none; cursor: pointer; padding: 4px; color: var(--text); line-height: 0; }
+.mobile-topbar-title { font-weight: 700; color: var(--accent); font-size: .95rem; }
+.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 99; }
+.sidebar-overlay.open { display: block; }
+.sidebar.mobile-open { display: flex !important; position: fixed; left: 0; top: 0; z-index: 100; height: 100vh; box-shadow: 4px 0 24px rgba(0,0,0,.3); }
+/* THEME TOGGLE */
+.theme-toggle {
+  width: 100%; padding: 8px; background: none; border: 1px solid var(--border);
+  border-radius: 8px; color: var(--text2); cursor: pointer; font-size: .82rem;
+  transition: all .15s; display: flex; align-items: center; gap: 6px;
+  justify-content: center; margin-bottom: 6px;
+}
+.theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+/* EVENT DATA PILLS */
+.event-pill {
+  background: var(--surface2); border: 1px solid var(--border);
+  padding: 1px 7px; border-radius: 12px; font-size: .72rem; color: var(--text2);
+  display: inline-block; margin: 2px 2px 0 0; white-space: nowrap;
+}
+@media (max-width: 768px) {
+  .sidebar { display: none; }
+  .mobile-topbar { display: flex; }
+  .main { padding: 16px; }
+}
+</style>
+</head>
+<body>
+<div class="mobile-topbar">
+  <button class="hamburger" onclick="toggleMobileNav()" aria-label="Menu">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+  <span class="mobile-topbar-title">🎓 Admin Panel</span>
+</div>
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="closeMobileNav()"></div>
+<div class="layout">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    🎓 Admin Panel
+    <a href="../academia-ensurity.html">← Back</a>
+  </div>
+
+  <span class="nav-section">Overview</span>
+  <a class="nav-item active" onclick="showPage('dashboard')" href="#">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+    Dashboard
+  </a>
+
+  <span class="nav-section">Users</span>
+  <a class="nav-item" onclick="showPage('users')" href="#">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    All Users
+  </a>
+  <a class="nav-item" onclick="showPage('access')" href="#">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+    Module Access
+  </a>
+
+  <span class="nav-section">Analytics</span>
+  <a class="nav-item" onclick="showPage('activity')" href="#">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+    Activity Feed
+  </a>
+  <a class="nav-item" onclick="showPage('ranking')" href="#">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+    Leaderboard
+  </a>
+
+  <div class="sidebar-footer">
+    <button class="theme-toggle" onclick="toggleTheme()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      <span id="theme-label">Dark Mode</span>
+    </button>
+    <button class="signout-btn" onclick="doSignOut()">Sign Out</button>
+  </div>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+
+  <!-- DASHBOARD PAGE -->
+  <div class="page active" id="page-dashboard">
+    <div class="page-header">
+      <h1>Dashboard</h1>
+      <p>Academia Ensurity — platform overview</p>
+    </div>
+    <div class="stats-grid" id="stats-grid">
+      <div class="stat-card"><div class="spinner"></div></div>
+    </div>
+    <div class="table-wrap">
+      <div class="table-toolbar">
+        <strong style="font-size:.9rem">Recent Activity</strong>
+      </div>
+      <table>
+        <thead><tr><th>Time</th><th>User</th><th>Module</th><th>Event</th></tr></thead>
+        <tbody id="recent-activity-body">
+          <tr class="loading-row"><td colspan="4"><span class="spinner"></span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- USERS PAGE -->
+  <div class="page" id="page-users">
+    <div class="page-header">
+      <h1>All Users</h1>
+      <p>Manage agent accounts and roles</p>
+    </div>
+    <div class="table-wrap">
+      <div class="table-toolbar">
+        <input type="search" id="users-search" placeholder="Search by name or email…" oninput="filterUsers()"/>
+        <select class="filter-select" id="users-role-filter" onchange="filterUsers()">
+          <option value="">All roles</option>
+          <option value="agent">Agent</option>
+          <option value="admin">Admin</option>
+          <option value="super_admin">Super Admin</option>
+        </select>
+        <button class="btn-sm btn-primary-sm" onclick="openGrantModal()">+ Grant Access</button>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Name / Email</th>
+            <th>Role</th>
+            <th>Modules</th>
+            <th>XP</th>
+            <th>Downloads</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="users-tbody">
+          <tr class="loading-row"><td colspan="6"><span class="spinner"></span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- MODULE ACCESS PAGE -->
+  <div class="page" id="page-access">
+    <div class="page-header">
+      <h1>Module Access</h1>
+      <p>Control which agents can access each training module</p>
+    </div>
+    <div class="table-wrap">
+      <div class="table-toolbar">
+        <select class="filter-select" id="access-module-filter" onchange="loadAccessTable()">
+          <option value="">All modules</option>
+          <option value="allstate">Allstate Health Solutions</option>
+          <option value="american-amicable">American Amicable</option>
+          <option value="cica">CICA Citizens</option>
+        </select>
+        <button class="btn-sm btn-primary-sm" onclick="openGrantModal()">+ Grant Access</button>
+      </div>
+      <table>
+        <thead><tr><th>Name / Email</th><th>Module</th><th>Granted</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="access-tbody">
+          <tr class="loading-row"><td colspan="5"><span class="spinner"></span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ACTIVITY PAGE -->
+  <div class="page" id="page-activity">
+    <div class="page-header">
+      <h1>Activity Feed</h1>
+      <p>All user events across modules</p>
+    </div>
+    <div class="table-wrap">
+      <div class="table-toolbar">
+        <input type="search" id="activity-search" placeholder="Filter by user or event…" oninput="filterActivity()"/>
+        <select class="filter-select" id="activity-module-filter" onchange="filterActivity()">
+          <option value="">All modules</option>
+          <option value="allstate">Allstate</option>
+          <option value="american-amicable">American Amicable</option>
+          <option value="cica">CICA</option>
+        </select>
+        <select class="filter-select" id="activity-event-filter" onchange="filterActivity()">
+          <option value="">All events</option>
+          <option value="login">Login</option>
+          <option value="logout">Logout</option>
+          <option value="page_view">Page View</option>
+          <option value="download">Download</option>
+          <option value="quiz_complete">Quiz Complete</option>
+        </select>
+      </div>
+      <table>
+        <thead><tr><th>Time</th><th>User</th><th>Module</th><th>Event</th><th>Details</th></tr></thead>
+        <tbody id="activity-tbody">
+          <tr class="loading-row"><td colspan="5"><span class="spinner"></span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- RANKING PAGE -->
+  <div class="page" id="page-ranking">
+    <div class="page-header">
+      <h1>Leaderboard</h1>
+      <p>Top agents by XP across all modules</p>
+    </div>
+    <div class="table-wrap">
+      <div class="table-toolbar">
+        <select class="filter-select" id="ranking-module" onchange="loadRanking()">
+          <option value="">Global (all modules)</option>
+          <option value="allstate">Allstate</option>
+          <option value="american-amicable">American Amicable</option>
+          <option value="cica">CICA</option>
+        </select>
+      </div>
+      <table>
+        <thead><tr><th>#</th><th>Agent</th><th>XP</th><th>Level</th></tr></thead>
+        <tbody id="ranking-tbody">
+          <tr class="loading-row"><td colspan="4"><span class="spinner"></span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</main>
+</div>
+
+<!-- GRANT ACCESS MODAL -->
+<div class="modal-overlay" id="grant-modal">
+  <div class="modal">
+    <h3>Grant Module Access</h3>
+    <div class="form-group">
+      <label>User Email</label>
+      <input type="email" id="grant-email" placeholder="agent@example.com"/>
+    </div>
+    <div class="form-group">
+      <label>Modules</label>
+      <div class="module-checkboxes">
+        <label><input type="checkbox" id="chk-allstate" value="allstate"/> Allstate Health Solutions</label>
+        <label><input type="checkbox" id="chk-aa" value="american-amicable"/> American Amicable</label>
+        <label><input type="checkbox" id="chk-cica" value="cica"/> CICA Citizens</label>
+      </div>
+    </div>
+    <div class="auth-msg" id="grant-msg" style="margin-top:8px; padding:8px 12px; border-radius:8px; font-size:.83rem; display:none"></div>
+    <div class="modal-actions">
+      <button class="btn-sm" onclick="closeGrantModal()" style="background:var(--surface2);border:1px solid var(--border);color:var(--text2)">Cancel</button>
+      <button class="btn-sm btn-primary-sm" onclick="doGrantAccess()">Grant Access</button>
+    </div>
+  </div>
+</div>
+
+<!-- ROLE MODAL -->
+<div class="modal-overlay" id="role-modal">
+  <div class="modal">
+    <h3>Change Role</h3>
+    <p id="role-modal-user" style="color:var(--text2);font-size:.85rem;margin-bottom:14px"></p>
+    <div class="form-group">
+      <label>New Role</label>
+      <select id="role-select">
+        <option value="agent">Agent</option>
+        <option value="admin">Admin</option>
+        <option value="super_admin">Super Admin</option>
+      </select>
+    </div>
+    <input type="hidden" id="role-modal-user-id"/>
+    <div class="modal-actions">
+      <button class="btn-sm" onclick="closeRoleModal()" style="background:var(--surface2);border:1px solid var(--border);color:var(--text2)">Cancel</button>
+      <button class="btn-sm btn-primary-sm" onclick="doChangeRole()">Save</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../shared/supabase-config.js"></script>
+<script>
+const MODULE_COLORS = {
+  'allstate':          '#0033A0',
+  'american-amicable': '#1A3C6E',
+  'cica':              '#2E7D32',
+};
+const MODULE_NAMES = {
+  'allstate':          'Allstate',
+  'american-amicable': 'AA',
+  'cica':              'CICA',
+};
+
+let allUsers    = [];
+let allActivity = [];
+const userMap   = new Map();
+
+// ===== THEME =====
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.dataset.theme === 'dark';
+  html.dataset.theme = isDark ? 'light' : 'dark';
+  localStorage.setItem('az-admin-theme', html.dataset.theme);
+  document.getElementById('theme-label').textContent = isDark ? 'Dark Mode' : 'Light Mode';
+}
+function initTheme() {
+  const saved = localStorage.getItem('az-admin-theme') || 'light';
+  document.documentElement.dataset.theme = saved;
+  const label = document.getElementById('theme-label');
+  if (label) label.textContent = saved === 'dark' ? 'Light Mode' : 'Dark Mode';
+}
+
+// ===== MOBILE NAV =====
+function toggleMobileNav() {
+  document.querySelector('.sidebar').classList.toggle('mobile-open');
+  document.getElementById('sidebar-overlay').classList.toggle('open');
+}
+function closeMobileNav() {
+  document.querySelector('.sidebar').classList.remove('mobile-open');
+  document.getElementById('sidebar-overlay').classList.remove('open');
+}
+
+// ===== NAV =====
+function showPage(id) {
+  closeMobileNav();
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById(`page-${id}`).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => {
+    if (n.getAttribute('onclick')?.includes(id)) n.classList.add('active');
+  });
+  if (id === 'users')    loadUsers();
+  if (id === 'access')   loadAccessTable();
+  if (id === 'activity') loadActivity();
+  if (id === 'ranking')  loadRanking();
+}
+
+// ===== DASHBOARD =====
+async function loadDashboard() {
+  const [users, activity] = await Promise.all([
+    AZ.Admin.getAllUsers(),
+    AZ.Admin.getActivityFeed(20),
+  ]);
+  allUsers    = users;
+  allActivity = activity;
+
+  const totalUsers     = users.length;
+  const totalAgents    = users.filter(u => u.role === 'agent').length;
+  const totalDownloads = users.reduce((s, u) => s + (u.total_downloads || 0), 0);
+  const totalQuizzes   = users.reduce((s, u) => s + (u.quizzes_completed || 0), 0);
+  const totalXP        = users.reduce((s, u) => s + (u.xp || 0), 0);
+
+  document.getElementById('stats-grid').innerHTML = `
+    <div class="stat-card"><div class="stat-num">${totalUsers}</div><div class="stat-label">Total Users</div></div>
+    <div class="stat-card"><div class="stat-num">${totalAgents}</div><div class="stat-label">Active Agents</div></div>
+    <div class="stat-card"><div class="stat-num">${totalDownloads}</div><div class="stat-label">Total Downloads</div></div>
+    <div class="stat-card"><div class="stat-num">${totalQuizzes}</div><div class="stat-label">Quizzes Completed</div></div>
+    <div class="stat-card"><div class="stat-num">${totalXP.toLocaleString()}</div><div class="stat-label">Total XP Earned</div></div>
+  `;
+
+  const tbody = document.getElementById('recent-activity-body');
+  tbody.innerHTML = activity.slice(0,10).map(a => `
+    <tr>
+      <td style="white-space:nowrap;font-size:.8rem;color:var(--text2)" title="${fmtDate(a.created_at)}">${relTime(a.created_at)}</td>
+      <td>${escHtml(a.full_name || a.email)}</td>
+      <td>${a.module_id ? `<span class="badge" style="background:${MODULE_COLORS[a.module_id]}22;color:${MODULE_COLORS[a.module_id]}">${MODULE_NAMES[a.module_id]||escHtml(a.module_id)}</span>` : '—'}</td>
+      <td><span class="badge ${eventBadge(a.event_type)}">${escHtml(a.event_type)}</span></td>
+    </tr>`).join('') || '<tr><td colspan="4" class="loading-row">No activity yet.</td></tr>';
+}
+
+// ===== USERS =====
+async function loadUsers() {
+  if (!allUsers.length) allUsers = await AZ.Admin.getAllUsers();
+  renderUsers(allUsers);
+}
+
+function renderUsers(users) {
+  userMap.clear();
+  users.forEach(u => userMap.set(u.id, u));
+  const tbody = document.getElementById('users-tbody');
+  tbody.innerHTML = users.map(u => `
+    <tr>
+      <td>
+        <div style="font-weight:600">${escHtml(u.full_name || '—')}</div>
+        <div style="font-size:.78rem;color:var(--text2)">${escHtml(u.email)}</div>
+      </td>
+      <td><span class="badge ${roleBadge(u.role)}">${u.role}</span></td>
+      <td>
+        <div class="module-dots">
+          ${(u.active_modules || []).map(m => `<span class="module-dot" title="${MODULE_NAMES[m]||m}" style="background:${MODULE_COLORS[m]||'#aaa'}"></span>`).join('')}
+        </div>
+      </td>
+      <td>${u.xp || 0} <small style="color:var(--text2)">L${u.level||1}</small></td>
+      <td>${u.total_downloads || 0}</td>
+      <td style="white-space:nowrap">
+        <button class="btn-sm" style="background:var(--surface2);border:1px solid var(--border);color:var(--text2)"
+          data-action="role" data-id="${u.id}">Role</button>
+      </td>
+    </tr>`).join('') || '<tr><td colspan="6" class="loading-row">No users found.</td></tr>';
+}
+
+function filterUsers() {
+  const q    = document.getElementById('users-search').value.toLowerCase();
+  const role = document.getElementById('users-role-filter').value;
+  renderUsers(allUsers.filter(u =>
+    (!q    || u.email.toLowerCase().includes(q) || (u.full_name||'').toLowerCase().includes(q)) &&
+    (!role || u.role === role)
+  ));
+}
+
+// ===== ACCESS TABLE =====
+async function loadAccessTable() {
+  const moduleFilter = document.getElementById('access-module-filter').value;
+  const users = allUsers.length ? allUsers : await AZ.Admin.getAllUsers();
+  allUsers = users;
+  const rows = [];
+  users.forEach(u => {
+    (u.active_modules || []).forEach(m => {
+      if (!moduleFilter || m === moduleFilter) rows.push({ ...u, module_id: m });
+    });
+  });
+  const tbody = document.getElementById('access-tbody');
+  tbody.innerHTML = rows.map(r => `
+    <tr>
+      <td>
+        <div style="font-weight:600">${escHtml(r.full_name || '—')}</div>
+        <div style="font-size:.78rem;color:var(--text2)">${escHtml(r.email)}</div>
+      </td>
+      <td><span class="badge" style="background:${MODULE_COLORS[r.module_id]}22;color:${MODULE_COLORS[r.module_id]}">${MODULE_NAMES[r.module_id]||escHtml(r.module_id)}</span></td>
+      <td style="font-size:.8rem;color:var(--text2)">${fmtDate(r.created_at)}</td>
+      <td><span class="badge badge-green">Active</span></td>
+      <td>
+        <button class="btn-sm btn-danger-sm" data-action="revoke" data-uid="${r.id}" data-mid="${r.module_id}">Revoke</button>
+      </td>
+    </tr>`).join('') || '<tr><td colspan="5" class="loading-row">No access records found.</td></tr>';
+}
+
+// ===== ACTIVITY =====
+async function loadActivity() {
+  if (!allActivity.length) allActivity = await AZ.Admin.getActivityFeed(200);
+  renderActivity(allActivity);
+}
+
+function renderActivity(rows) {
+  const tbody = document.getElementById('activity-tbody');
+  tbody.innerHTML = rows.map(a => `
+    <tr>
+      <td style="white-space:nowrap;font-size:.8rem;color:var(--text2)" title="${fmtDate(a.created_at)}">${relTime(a.created_at)}</td>
+      <td>
+        <div style="font-weight:600">${escHtml(a.full_name || '—')}</div>
+        <div style="font-size:.75rem;color:var(--text2)">${escHtml(a.email)}</div>
+      </td>
+      <td>${a.module_id ? `<span class="badge" style="background:${MODULE_COLORS[a.module_id]}22;color:${MODULE_COLORS[a.module_id]}">${MODULE_NAMES[a.module_id]||escHtml(a.module_id)}</span>` : '—'}</td>
+      <td><span class="badge ${eventBadge(a.event_type)}">${escHtml(a.event_type)}</span></td>
+      <td>${fmtEventData(a.event_data)}</td>
+    </tr>`).join('') || '<tr><td colspan="5" class="loading-row">No activity found.</td></tr>';
+}
+
+function filterActivity() {
+  const q      = document.getElementById('activity-search').value.toLowerCase();
+  const mod    = document.getElementById('activity-module-filter').value;
+  const evType = document.getElementById('activity-event-filter').value;
+  renderActivity(allActivity.filter(a =>
+    (!q      || a.email?.toLowerCase().includes(q) || (a.full_name||'').toLowerCase().includes(q)) &&
+    (!mod    || a.module_id === mod) &&
+    (!evType || a.event_type === evType)
+  ));
+}
+
+// ===== RANKING =====
+async function loadRanking() {
+  document.getElementById('ranking-tbody').innerHTML = '<tr class="loading-row"><td colspan="4"><span class="spinner"></span></td></tr>';
+  const moduleId = document.getElementById('ranking-module').value || null;
+  const { data } = await AZ.db.rpc('get_leaderboard', { p_module_id: moduleId, p_limit: 50 });
+  const rows = data || [];
+  const tbody = document.getElementById('ranking-tbody');
+  tbody.innerHTML = rows.map(r => `
+    <tr>
+      <td style="font-weight:800;font-size:1rem;color:${r.rank<=3?'#f59e0b':'var(--text2)'}">${r.rank <= 3 ? ['🥇','🥈','🥉'][r.rank-1] : r.rank}</td>
+      <td>
+        <div style="font-weight:600">${escHtml(r.full_name || '—')}</div>
+        <div style="font-size:.75rem;color:var(--text2)">${escHtml(r.email)}</div>
+      </td>
+      <td style="font-weight:700">${r.xp}</td>
+      <td><span class="badge badge-agent">L${r.level}</span></td>
+    </tr>`).join('') || '<tr><td colspan="4" class="loading-row">No data.</td></tr>';
+}
+
+// ===== GRANT MODAL =====
+function openGrantModal() {
+  document.getElementById('grant-modal').classList.add('open');
+  document.getElementById('grant-msg').style.display = 'none';
+  document.getElementById('grant-email').value = '';
+  ['chk-allstate','chk-aa','chk-cica'].forEach(id => { document.getElementById(id).checked = false; });
+}
+function closeGrantModal() { document.getElementById('grant-modal').classList.remove('open'); }
+
+async function doGrantAccess() {
+  const email   = document.getElementById('grant-email').value.trim();
+  const modules = ['allstate','american-amicable','cica'].filter((_, i) =>
+    document.getElementById(['chk-allstate','chk-aa','chk-cica'][i]).checked
+  );
+  const msgEl = document.getElementById('grant-msg');
+  if (!email || modules.length === 0) {
+    showMsg(msgEl, 'Please enter an email and select at least one module.', 'error');
+    return;
+  }
+  try {
+    const { data: profile } = await AZ.db.from('profiles').select('id').eq('email', email).single();
+    if (!profile) throw new Error('No account found with this email.');
+    for (const moduleId of modules) await AZ.Admin.grantModuleAccess(profile.id, moduleId);
+    showMsg(msgEl, `Access granted to ${modules.map(m => MODULE_NAMES[m]).join(', ')} for ${escHtml(email)}.`, 'success');
+    allUsers = [];
+    setTimeout(closeGrantModal, 2000);
+  } catch (e) {
+    showMsg(msgEl, e.message, 'error');
+  }
+}
+
+// ===== ROLE MODAL =====
+function openRoleModal(userId, email, currentRole) {
+  document.getElementById('role-modal').classList.add('open');
+  document.getElementById('role-modal-user').textContent = email;
+  document.getElementById('role-modal-user-id').value = userId;
+  document.getElementById('role-select').value = currentRole;
+}
+function closeRoleModal() { document.getElementById('role-modal').classList.remove('open'); }
+
+async function doChangeRole() {
+  const userId = document.getElementById('role-modal-user-id').value;
+  const role   = document.getElementById('role-select').value;
+  try {
+    await AZ.Admin.setUserRole(userId, role);
+    allUsers = [];
+    closeRoleModal();
+    loadUsers();
+  } catch (e) { alert(e.message); }
+}
+
+// ===== DELEGATED ACTIONS =====
+document.addEventListener('click', async e => {
+  const roleBtn = e.target.closest('[data-action="role"]');
+  if (roleBtn) {
+    const u = userMap.get(roleBtn.dataset.id);
+    if (u) openRoleModal(u.id, u.email, u.role);
+    return;
+  }
+  const revokeBtn = e.target.closest('[data-action="revoke"]');
+  if (revokeBtn) {
+    const moduleId = revokeBtn.dataset.mid;
+    if (!confirm(`Revoke access to ${MODULE_NAMES[moduleId]||moduleId} for this user?`)) return;
+    try {
+      await AZ.Modules.revokeAccess(revokeBtn.dataset.uid, moduleId);
+      allUsers = [];
+      loadAccessTable();
+    } catch (err) { alert(err.message); }
+  }
+});
+
+// ===== SIGN OUT =====
+async function doSignOut() {
+  await AZ.Auth.signOut();
+  location.href = '../academia-ensurity.html';
+}
+
+// ===== UTILS =====
+function fmtDate(iso) {
+  if (!iso) return '—';
+  return new Date(iso).toLocaleString('en-US', { month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' });
+}
+function relTime(iso) {
+  if (!iso) return '—';
+  const m = Math.floor((Date.now() - new Date(iso).getTime()) / 60000);
+  if (m < 1)  return 'just now';
+  if (m < 60) return `${m}m ago`;
+  const h = Math.floor(m / 60);
+  if (h < 24) return `${h}h ago`;
+  const d = Math.floor(h / 24);
+  return d < 7 ? `${d}d ago` : fmtDate(iso);
+}
+function roleBadge(role) {
+  return { agent: 'badge-agent', admin: 'badge-admin', super_admin: 'badge-super' }[role] || 'badge-agent';
+}
+function eventBadge(ev) {
+  return { login:'badge-green', logout:'badge-agent', download:'badge-admin', quiz_complete:'badge-super', page_view:'' }[ev] || '';
+}
+function fmtEventData(data) {
+  if (!data || typeof data !== 'object' || !Object.keys(data).length) return '<span style="color:var(--text2)">—</span>';
+  return Object.entries(data).map(([k, v]) =>
+    `<span class="event-pill">${escHtml(k)}: ${escHtml(String(v))}</span>`
+  ).join('');
+}
+function escHtml(str) {
+  if (str == null) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function showMsg(el, text, type) {
+  el.innerHTML = text;
+  el.style.cssText = type === 'success'
+    ? 'display:block;background:#dcfce7;color:#166534;border:1px solid #86efac;padding:8px 12px;border-radius:8px;font-size:.83rem'
+    : 'display:block;background:#fee2e2;color:#991b1b;border:1px solid #fca5a5;padding:8px 12px;border-radius:8px;font-size:.83rem';
+}
+
+// ===== INIT =====
+(async () => {
+  initTheme();
+  const current = await AZ.Auth.getCurrentUser();
+  if (!current || !['admin','super_admin'].includes(current.profile.role)) {
+    location.href = '../academia-ensurity.html';
+    return;
+  }
+  loadDashboard();
+})();
+</script>
+</body>
+</html>

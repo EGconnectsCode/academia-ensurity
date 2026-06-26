@@ -1,0 +1,42 @@
+﻿{
+  "version": 2,
+  "name": "academia-ensurity",
+  "builds": [
+    { "src": "**/*.html", "use": "@vercel/static" },
+    { "src": "shared/**",  "use": "@vercel/static" },
+    { "src": "assets/**",  "use": "@vercel/static" },
+    { "src": "modules/**", "use": "@vercel/static" },
+    { "src": "admin/**",   "use": "@vercel/static" }
+  ],
+  "routes": [
+    { "src": "/",                    "dest": "/academia-ensurity.html" },
+    { "src": "/allstate",            "dest": "/modules/allstate/allstate-academy.html" },
+    { "src": "/american-amicable",   "dest": "/modules/american-amicable/american-amicable.html" },
+    { "src": "/cica",                "dest": "/modules/cica/cica-citizens-v2.html" },
+    { "src": "/admin",               "dest": "/admin/admin-panel.html" },
+    { "src": "/(.*)",                "dest": "/$1" }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Frame-Options",       "value": "SAMEORIGIN" },
+        { "key": "X-Content-Type-Options","value": "nosniff" },
+        { "key": "Referrer-Policy",       "value": "strict-origin-when-cross-origin" },
+        { "key": "Permissions-Policy",    "value": "camera=(), microphone=(), geolocation=()" }
+      ]
+    },
+    {
+      "source": "/shared/supabase-config.js",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=300" }
+      ]
+    },
+    {
+      "source": "/modules/**/*.html",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=86400" }
+      ]
+    }
+  ]
+}
