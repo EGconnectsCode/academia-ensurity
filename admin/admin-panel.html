@@ -182,6 +182,10 @@ tr:hover td { background: var(--surface2); }
   </a>
 
   <span class="nav-section">Users</span>
+  <a class="nav-item" onclick="showPage('pending')" href="#" id="nav-pending">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+    Pending <span id="pending-badge" style="background:#ef4444;color:#fff;border-radius:99px;padding:1px 7px;font-size:.7rem;margin-left:4px;display:none"></span>
+  </a>
   <a class="nav-item" onclick="showPage('users')" href="#">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
     All Users
@@ -230,6 +234,33 @@ tr:hover td { background: var(--surface2); }
         <thead><tr><th>Time</th><th>User</th><th>Module</th><th>Event</th></tr></thead>
         <tbody id="recent-activity-body">
           <tr class="loading-row"><td colspan="4"><span class="spinner"></span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- PENDING APPROVALS PAGE -->
+  <div class="page" id="page-pending">
+    <div class="page-header">
+      <h1>Pending Approvals</h1>
+      <p>Users registered but not yet assigned to a module</p>
+    </div>
+    <div class="table-wrap">
+      <div class="table-toolbar">
+        <strong style="font-size:.9rem">Awaiting access assignment</strong>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>Phone</th>
+            <th>Course Interest</th>
+            <th>Registered</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="pending-tbody">
+          <tr class="loading-row"><td colspan="5"><span class="spinner"></span></td></tr>
         </tbody>
       </table>
     </div>
@@ -452,10 +483,92 @@ function showPage(id) {
   document.querySelectorAll('.nav-item').forEach(n => {
     if (n.getAttribute('onclick')?.includes(id)) n.classList.add('active');
   });
+  if (id === 'pending')  loadPending();
   if (id === 'users')    loadUsers();
   if (id === 'access')   loadAccessTable();
   if (id === 'activity') loadActivity();
   if (id === 'ranking')  loadRanking();
+}
+
+// ===== PENDING APPROVALS =====
+const COURSE_NAMES = {
+  'allstate': 'Allstate Health Solutions',
+  'american-amicable': 'American Amicable',
+  'cica': 'CICA Citizens',
+  'undecided': 'Not sure yet',
+};
+
+async function loadPending() {
+  const tbody = document.getElementById('pending-tbody');
+  tbody.innerHTML = '<tr class="loading-row"><td colspan="5"><span class="spinner"></span></td></tr>';
+  try {
+    const { data, error } = await AZ.db
+      .from('profiles')
+      .select('id, email, full_name, phone, course_interest, created_at, role')
+      .eq('role', 'agent')
+      .order('created_at', { ascending: false });
+    if (error) throw error;
+
+    const { data: accessData } = await AZ.db
+      .from('user_modules')
+      .select('user_id')
+      .eq('active', true);
+
+    const withAccess = new Set((accessData || []).map(r => r.user_id));
+    const pending = (data || []).filter(u => !withAccess.has(u.id));
+
+    const badge = document.getElementById('pending-badge');
+    if (pending.length > 0) {
+      badge.textContent = pending.length;
+      badge.style.display = 'inline';
+    } else {
+      badge.style.display = 'none';
+    }
+
+    tbody.innerHTML = pending.map(u => `
+      <tr>
+        <td>
+          <div style="font-weight:600">${escHtml(u.full_name || '—')}</div>
+          <div style="font-size:.78rem;color:var(--text2)">${escHtml(u.email)}</div>
+        </td>
+        <td>${escHtml(u.phone || '—')}</td>
+        <td>
+          ${u.course_interest
+            ? `<span class="badge" style="background:var(--accent)22;color:var(--accent)">${escHtml(COURSE_NAMES[u.course_interest] || u.course_interest)}</span>`
+            : '<span style="color:var(--text2)">—</span>'}
+        </td>
+        <td style="font-size:.8rem;color:var(--text2);white-space:nowrap">${relTime(u.created_at)}</td>
+        <td>
+          <select id="approve-module-${u.id}" style="font-size:.8rem;padding:4px 8px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text1);margin-right:6px">
+            <option value="">Select module…</option>
+            <option value="allstate" ${u.course_interest==='allstate'?'selected':''}>Allstate</option>
+            <option value="american-amicable" ${u.course_interest==='american-amicable'?'selected':''}>American Amicable</option>
+            <option value="cica" ${u.course_interest==='cica'?'selected':''}>CICA</option>
+          </select>
+          <button class="btn-sm" style="background:var(--accent);color:#fff;border:none"
+            onclick="approvePending('${u.id}')">Approve</button>
+        </td>
+      </tr>`).join('') || '<tr><td colspan="5" class="loading-row">No pending users. 🎉</td></tr>';
+  } catch(e) {
+    tbody.innerHTML = `<tr><td colspan="5" class="loading-row">Error: ${escHtml(e.message)}</td></tr>`;
+  }
+}
+
+async function approvePending(userId) {
+  const select = document.getElementById(`approve-module-${userId}`);
+  const moduleId = select.value;
+  if (!moduleId) { alert('Please select a module first.'); return; }
+  try {
+    const { error } = await AZ.db.from('user_modules').upsert(
+      { user_id: userId, module_id: moduleId, active: true },
+      { onConflict: 'user_id,module_id' }
+    );
+    if (error) throw error;
+    allUsers = []; // force refresh
+    loadPending();
+  } catch(e) {
+    alert('Error: ' + e.message);
+  }
 }
 
 // ===== DASHBOARD =====
@@ -473,9 +586,15 @@ async function loadDashboard() {
   const totalQuizzes   = users.reduce((s, u) => s + (u.quizzes_completed || 0), 0);
   const totalXP        = users.reduce((s, u) => s + (u.xp || 0), 0);
 
+  const pendingCount = users.filter(u => u.role === 'agent' && !(u.active_modules || []).length).length;
+
   document.getElementById('stats-grid').innerHTML = `
     <div class="stat-card"><div class="stat-num">${totalUsers}</div><div class="stat-label">Total Users</div></div>
     <div class="stat-card"><div class="stat-num">${totalAgents}</div><div class="stat-label">Active Agents</div></div>
+    <div class="stat-card" onclick="showPage('pending')" style="cursor:pointer;border:2px solid ${pendingCount>0?'#ef4444':'var(--border)'}">
+      <div class="stat-num" style="color:${pendingCount>0?'#ef4444':'inherit'}">${pendingCount}</div>
+      <div class="stat-label">Pending Approval</div>
+    </div>
     <div class="stat-card"><div class="stat-num">${totalDownloads}</div><div class="stat-label">Total Downloads</div></div>
     <div class="stat-card"><div class="stat-num">${totalQuizzes}</div><div class="stat-label">Quizzes Completed</div></div>
     <div class="stat-card"><div class="stat-num">${totalXP.toLocaleString()}</div><div class="stat-label">Total XP Earned</div></div>
@@ -733,6 +852,7 @@ function showMsg(el, text, type) {
     return;
   }
   loadDashboard();
+  loadPending(); // update badge on sidebar
 })();
 </script>
 </body>
