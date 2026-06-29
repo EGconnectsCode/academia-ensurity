@@ -511,18 +511,12 @@ async function loadPending() {
   try {
     const { data, error } = await AZ.db
       .from('profiles')
-      .select('id, email, full_name, phone, course_interest, created_at, role')
-      .eq('role', 'agent')
+      .select('id, email, full_name, phone, course_interest, created_at, role, status')
+      .eq('status', 'pending')
       .order('created_at', { ascending: false });
     if (error) throw error;
 
-    const { data: accessData } = await AZ.db
-      .from('user_modules')
-      .select('user_id')
-      .eq('active', true);
-
-    const withAccess = new Set((accessData || []).map(r => r.user_id));
-    const pending = (data || []).filter(u => !withAccess.has(u.id));
+    const pending = data || [];
 
     const badge = document.getElementById('pending-badge');
     if (pending.length > 0) {
@@ -566,11 +560,15 @@ async function approvePending(userId) {
   const moduleId = select.value;
   if (!moduleId) { alert('Please select a module first.'); return; }
   try {
-    const { error } = await AZ.db.from('user_modules').upsert(
+    const { error: statusErr } = await AZ.db.from('profiles')
+      .update({ status: 'active', role: 'agent' })
+      .eq('id', userId);
+    if (statusErr) throw statusErr;
+    const { error: modErr } = await AZ.db.from('user_modules').upsert(
       { user_id: userId, module_id: moduleId, active: true },
       { onConflict: 'user_id,module_id' }
     );
-    if (error) throw error;
+    if (modErr) throw modErr;
     allUsers = []; // force refresh
     loadPending();
   } catch(e) {

@@ -42,13 +42,13 @@ const Auth = {
     const { data, error } = await db.auth.signInWithPassword({ email, password });
     if (error) throw error;
     const profile = await Auth._getProfile(data.user.id);
-    // Block agents that haven't been approved (no module access yet)
-    if (profile.role === 'agent') {
-      const mods = await Modules.getUserModules(data.user.id);
-      if (mods.length === 0) {
-        await db.auth.signOut();
-        throw new Error('PENDING_APPROVAL');
-      }
+    if (profile.status === 'pending') {
+      await db.auth.signOut();
+      throw new Error('PENDING_APPROVAL');
+    }
+    if (profile.status === 'suspended') {
+      await db.auth.signOut();
+      throw new Error('ACCOUNT_SUSPENDED');
     }
     await Activity.log(null, 'login');
     return { user: data.user, profile };
