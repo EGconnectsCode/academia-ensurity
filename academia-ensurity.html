@@ -115,6 +115,10 @@ body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', syste
 [data-theme="dark"] .auth-msg.error   { background: #2d1515; border-color: #7b2d2d; }
 [data-theme="dark"] .auth-msg.success { background: #162615; border-color: #2d7b3a; }
 .forgot-link { font-size: .82rem; color: var(--accent); cursor: pointer; text-decoration: underline; margin-top: 6px; display: inline-block; }
+.pw-wrap { position: relative; }
+.pw-wrap input { padding-right: 42px; }
+.pw-toggle { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--text2); padding: 0; display: flex; align-items: center; }
+.pw-toggle:hover { color: var(--accent); }
 
 /* ===== COURSE PICKER ===== */
 .course-picker { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 6px; }
@@ -248,7 +252,12 @@ body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', syste
       </div>
       <div class="form-group">
         <label id="lbl-pass-si" data-en="Password" data-es="Contraseña">Password</label>
-        <input type="password" id="si-password" required autocomplete="current-password" placeholder="••••••••"/>
+        <div class="pw-wrap">
+          <input type="password" id="si-password" required autocomplete="current-password" placeholder="••••••••"/>
+          <button type="button" class="pw-toggle" onclick="togglePw('si-password',this)" tabindex="-1">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
       </div>
       <button type="submit" class="btn-primary" id="btn-signin">
         <span id="signin-label" data-en="Sign In" data-es="Iniciar Sesión">Sign In</span>
@@ -299,7 +308,21 @@ body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', syste
       </div>
       <div class="form-group">
         <label data-en="Password (min 8 chars)" data-es="Contraseña (mín. 8 caracteres)" id="lbl-pass-reg">Password (min 8 chars)</label>
-        <input type="password" id="reg-password" required minlength="8" placeholder="••••••••"/>
+        <div class="pw-wrap">
+          <input type="password" id="reg-password" required minlength="8" placeholder="••••••••"/>
+          <button type="button" class="pw-toggle" onclick="togglePw('reg-password',this)" tabindex="-1">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label data-en="Confirm Password" data-es="Confirmar Contraseña" id="lbl-pass-confirm">Confirm Password</label>
+        <div class="pw-wrap">
+          <input type="password" id="reg-password-confirm" required minlength="8" placeholder="••••••••"/>
+          <button type="button" class="pw-toggle" onclick="togglePw('reg-password-confirm',this)" tabindex="-1">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
       </div>
       <div class="consent-group">
         <input type="checkbox" id="reg-consent" required/>
@@ -408,14 +431,26 @@ function showMsg(id, text, type) {
 
 function setLoading(btnId, loading, labelId) {
   const btn = document.getElementById(btnId);
-  const lbl = document.getElementById(labelId);
   btn.disabled = loading;
   if (loading) {
+    const lbl = document.getElementById(labelId);
+    btn.dataset.savedEn = lbl?.dataset?.en || lbl?.textContent || '';
+    btn.dataset.savedEs = lbl?.dataset?.es || lbl?.textContent || '';
     btn.innerHTML = `<span class="spinner"></span>${currentLang === 'es' ? 'Cargando...' : 'Loading...'}`;
   } else {
-    btn.innerHTML = `<span id="${labelId}" data-en="${lbl?.dataset?.en || ''}" data-es="${lbl?.dataset?.es || ''}">${currentLang === 'es' ? (lbl?.dataset?.es || '') : (lbl?.dataset?.en || '')}</span>`;
-    applyLang();
+    const en = btn.dataset.savedEn || '';
+    const es = btn.dataset.savedEs || '';
+    btn.innerHTML = `<span id="${labelId}" data-en="${en}" data-es="${es}">${currentLang === 'es' ? es : en}</span>`;
   }
+}
+
+function togglePw(inputId, btn) {
+  const input = document.getElementById(inputId);
+  const show = input.type === 'password';
+  input.type = show ? 'text' : 'password';
+  btn.innerHTML = show
+    ? `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`
+    : `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
 }
 
 // ===== AUTH ACTIONS =====
@@ -443,9 +478,14 @@ async function doRegister(e) {
   const name   = document.getElementById('reg-name').value.trim();
   const email  = document.getElementById('reg-email').value.trim();
   const phone  = document.getElementById('reg-phone').value.trim();
-  const pass   = document.getElementById('reg-password').value;
-  const course = document.getElementById('reg-course').value;
+  const pass    = document.getElementById('reg-password').value;
+  const confirm = document.getElementById('reg-password-confirm').value;
+  const course  = document.getElementById('reg-course').value;
   clearMessages();
+  if (pass !== confirm) {
+    showMsg('msg-register', currentLang === 'es' ? 'Las contraseñas no coinciden.' : 'Passwords do not match.', 'error');
+    return;
+  }
   setLoading('btn-register', true, 'register-label');
   try {
     await AZ.Auth.signUp(email, pass, name, phone, course);
