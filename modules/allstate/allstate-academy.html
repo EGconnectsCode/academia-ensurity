@@ -5,42 +5,45 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Ensurity Academy — Allstate Health Solutions</title>
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  /* ── Content palette (from coolors.co screenshot) ───────────── */
-  --p1:#390099;   /* Electricidad de la Armada — deep purple     */
-  --p2:#9E0059;   /* Frambuesa oscura — dark raspberry           */
-  --p3:#FF0054;   /* Fucsia intenso — vivid fuchsia              */
-  --p4:#FF5400;   /* Naranja brillante — bright orange           */
-  --p5:#FFBD00;   /* Oro ambar — amber gold                      */
+  /* ── Content palette ─────────────────────────────────────────── */
+  --p1:#1e40af;
+  --p2:#0369a1;
+  --p3:#0284c7;
+  --p4:#0891b2;
+  --p5:#F5A623;
 
   /* ── Derived shades ─────────────────────────────────────────── */
-  --p1-light:#5c1dbf;
-  --p1-glow:rgba(57,0,153,.14);
-  --p3-glow:rgba(255,0,84,.12);
-  --p4-glow:rgba(255,84,0,.12);
+  --p1-light:#3b5fc0;
+  --p1-glow:rgba(30,64,175,.12);
+  --p3-glow:rgba(2,132,199,.1);
+  --p4-glow:rgba(8,145,178,.1);
 
-  /* ── AHS brand (sidebar + login — NEVER changes) ────────────── */
+  /* ── AHS brand (sidebar + login) ────────────────────────────── */
   --ahs-navy:#003087;--ahs-blue:#0057B8;--ahs-sky:#0094D9;--ahs-gold:#F5A623;
 
-  /* ── Light mode semantic tokens ─────────────────────────────── */
-  --bg:#f5f0ff;          /* soft lavender background              */
+  /* ── UI chrome tokens ────────────────────────────────────────── */
+  --navy:#003087;
+  --bg:#F1F5F9;
   --sur:#ffffff;
-  --sur2:#faf7ff;
-  --bdr:#e0d4f5;
-  --bdr2:#cbbef0;
-  --tx:#1a0533;          /* deep purple-black for readability     */
-  --tx2:#4a2d7a;
-  --tx3:#8b6aad;
+  --sur2:#F8FAFC;
+  --bdr:#E2E8F0;
+  --bdr2:#CBD5E1;
+  --tx:#0F172A;
+  --tx2:#334155;
+  --tx3:#64748B;
 
-  /* ── Semantic aliases ──────────────────────────────────────────  */
-  --blue:#390099;
-  --teal:#9E0059;
-  --green:#059669;--gold:#FFBD00;--red:#FF0054;--purple:#390099;
+  /* ── Semantic aliases (compat) ───────────────────────────────── */
+  --surface:#ffffff;--border:#E2E8F0;--text:#0F172A;--text2:#334155;--text3:#64748B;
+  --blue:#0057B8;
+  --teal:#0369a1;
+  --green:#059669;--gold:#F5A623;--red:#DC2626;--purple:#1e40af;
   --r:12px;
-  --shadow:0 2px 10px rgba(57,0,153,.09),0 6px 24px rgba(26,5,51,.07);
+  --shadow:0 2px 10px rgba(0,48,135,.07),0 6px 24px rgba(15,23,42,.05);
 }
-body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5}
+body{font-family:'Inter','Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--tx);font-size:14px;line-height:1.5}
 button{font-family:inherit;cursor:pointer;border:none;outline:none;background:none}
 a{text-decoration:none;color:inherit}
 input{font-family:inherit}

@@ -4,18 +4,19 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>CICA Citizens — Agent Portal</title>
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 :root{
   --cl-navy:#003D6B;--cl-blue:#0098CC;--cl-sky:#00B4E5;--cl-light:#E5F6FD;
-  --bg:#f0f7fc;--sur:#ffffff;--sur2:#f5fafd;--bdr:#cce6f4;
-  --txt:#1a2a3a;--txt2:#4a6a80;--cica-blue:#0098CC;
-  --tx:#1a2a3a;--tx2:#4a6a80;--tx3:#6a9ab8;
+  --bg:#F0F7FC;--sur:#ffffff;--sur2:#F5FAFD;--bdr:#C8E0F0;
+  --txt:#0F1E2E;--txt2:#2E4A62;--cica-blue:#0098CC;
+  --tx:#0F1E2E;--tx2:#2E4A62;--tx3:#5A8AAA;
   --sb-bg:var(--cl-navy);--sb-txt:#c8e6f7;--sb-act:#fff;--sb-ico:#80c8e8;
-  --r:10px;--rad:12px;--sha:0 2px 12px rgba(0,61,107,.10);
+  --r:10px;--rad:12px;--sha:0 2px 12px rgba(0,61,107,.08);
 }
-body.dark{--bg:#0a1520;--sur:#0f1f2e;--sur2:#142030;--bdr:#1a3a50;
+body.dark{--bg:#081520;--sur:#0d1d2c;--sur2:#112030;--bdr:#1a3a50;
   --txt:#d0eaf8;--tx:#d0eaf8;--tx2:#7aaac8;--tx3:#5a8aa8;--sb-bg:#020d18;}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--txt);display:flex;height:100vh;overflow:hidden;font-size:14px}
+body{font-family:'Inter','Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--txt);display:flex;height:100vh;overflow:hidden;font-size:14px}
 /* ── Login ── */
 #login-screen{position:fixed;inset:0;background:linear-gradient(150deg,#003D6B 0%,#0076B6 40%,#0098CC 70%,#29B9E7 100%);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;z-index:1000;overflow-y:auto;padding-bottom:30px}
 #login-screen.hidden{display:none!important}
