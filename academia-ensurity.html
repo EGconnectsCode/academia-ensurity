@@ -551,23 +551,15 @@ async function showModules(profile) {
 }
 
 // ===== BITRIX INTEGRATION =====
-const BITRIX_WEBHOOK_URL = ''; // TODO: paste your Bitrix inbound webhook URL here
-
 async function sendToBitrix(data) {
-  if (!BITRIX_WEBHOOK_URL) return;
   try {
-    await fetch(BITRIX_WEBHOOK_URL, {
+    await fetch('https://qvamdopwbjlccazchoer.supabase.co/functions/v1/bitrix-sync', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        fields: {
-          NAME:     data.name,
-          EMAIL:    [{ VALUE: data.email, VALUE_TYPE: 'WORK' }],
-          PHONE:    [{ VALUE: data.phone, VALUE_TYPE: 'MOBILE' }],
-          COMMENTS: 'Course interest: ' + (data.course || 'not specified'),
-          SOURCE_ID: 'ACADEMIA',
-        }
-      })
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + (window.ENV_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF2YW1kb3B3YmpsY2NhemNob2VyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMTA4ODQsImV4cCI6MjA5Nzg4Njg4NH0.F2VmsQUyBDWXgX_kh8soWOv6W59wWaDRFMlmg6kzHY4'),
+      },
+      body: JSON.stringify(data),
     });
   } catch(e) {
     console.warn('Bitrix sync failed:', e.message);
