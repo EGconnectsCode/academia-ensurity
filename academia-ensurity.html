@@ -464,9 +464,17 @@ async function doSignIn(e) {
     const { profile } = await AZ.Auth.signIn(email, password);
     await showModules(profile);
   } catch (err) {
-    const msg = err.message === 'NO_MODULE_ACCESS'
-      ? (currentLang === 'es' ? 'No tienes acceso asignado. Contacta a tu administrador.' : 'No module access assigned. Contact your administrator.')
-      : (currentLang === 'es' ? 'Email o contraseña incorrectos.' : 'Incorrect email or password.');
+    let msg;
+    if (err.message === 'PENDING_APPROVAL')
+      msg = currentLang === 'es'
+        ? 'Tu cuenta está pendiente de aprobación. Te avisaremos cuando el administrador la active.'
+        : 'Your account is pending approval. You will be notified when activated.';
+    else if (err.message === 'NO_MODULE_ACCESS')
+      msg = currentLang === 'es' ? 'No tienes acceso asignado. Contacta a tu administrador.' : 'No module access assigned. Contact your administrator.';
+    else if (err.message?.toLowerCase().includes('invalid login') || err.message?.toLowerCase().includes('invalid credentials'))
+      msg = currentLang === 'es' ? 'Email o contraseña incorrectos.' : 'Incorrect email or password.';
+    else
+      msg = err.message;
     showMsg('msg-signin', msg, 'error');
   } finally {
     setLoading('btn-signin', false, 'signin-label');
