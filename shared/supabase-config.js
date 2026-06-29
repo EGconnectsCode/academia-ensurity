@@ -287,15 +287,43 @@ const Prefs = {
 // ---------------------------------------------------------------------------
 const Admin = {
   async getAllUsers() {
-    const { data, error } = await db.from('admin_user_summary').select('*').order('created_at', { ascending: false });
-    if (error) throw error;
-    return data || [];
+    const [profilesRes, modulesRes, downloadsRes, progressRes] = await Promise.all([
+      db.from('profiles').select('id,email,full_name,role,xp,level,created_at,course_interest').order('created_at', { ascending: false }),
+      db.from('user_modules').select('user_id,module_id,active').eq('active', true),
+      db.from('downloads').select('user_id'),
+      db.from('progress').select('user_id').eq('completed', true),
+    ]);
+    if (profilesRes.error) throw profilesRes.error;
+    const profiles = profilesRes.data || [];
+    const modulesByUser = {};
+    (modulesRes.data || []).forEach(r => {
+      if (!modulesByUser[r.user_id]) modulesByUser[r.user_id] = [];
+      modulesByUser[r.user_id].push(r.module_id);
+    });
+    const downloadsByUser = {};
+    (downloadsRes.data || []).forEach(r => { downloadsByUser[r.user_id] = (downloadsByUser[r.user_id] || 0) + 1; });
+    const quizzesByUser = {};
+    (progressRes.data || []).forEach(r => { quizzesByUser[r.user_id] = (quizzesByUser[r.user_id] || 0) + 1; });
+    return profiles.map(p => ({
+      ...p,
+      active_modules:    modulesByUser[p.id] || [],
+      total_downloads:   downloadsByUser[p.id] || 0,
+      quizzes_completed: quizzesByUser[p.id] || 0,
+    }));
   },
 
   async getActivityFeed(limit = 100) {
-    const { data, error } = await db.from('admin_activity_feed').select('*').limit(limit);
+    const { data, error } = await db
+      .from('activity')
+      .select('created_at,module_id,event_type,event_data,profiles(email,full_name)')
+      .order('created_at', { ascending: false })
+      .limit(limit);
     if (error) throw error;
-    return data || [];
+    return (data || []).map(r => ({
+      ...r,
+      email:     r.profiles?.email,
+      full_name: r.profiles?.full_name,
+    }));
   },
 
   async getModuleRanking(moduleId) {
