@@ -163,6 +163,7 @@
       .admin-badge { background: #DBEAFE !important; color: #1D4ED8 !important; font-size: .6rem !important; font-weight: 700 !important; border-radius: 4px !important; padding: 1px 5px !important; margin-left: 4px !important; }
       .admin-only { display: none !important; }
       body.is-admin .admin-only { display: flex !important; }
+      #dark-btn { display: none !important; }
 
       /* ── XP bar ── */
       #xp-section { margin-bottom: 16px !important; }
