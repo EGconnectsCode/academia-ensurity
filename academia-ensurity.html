@@ -441,8 +441,11 @@ body {
     <div class="hero-ring2"></div>
     <div class="hero-orb3"></div>
     <div class="hero-main">
-      <h2>Train smarter.<br><em>Sell better.</em></h2>
-      <p>Your complete insurance agent training platform. Master the knowledge to serve your clients with confidence.</p>
+      <h2>
+        <span data-en="Train smarter." data-es="Capacítate mejor.">Train smarter.</span><br>
+        <em data-en="Sell better." data-es="Vende más.">Sell better.</em>
+      </h2>
+      <p data-en="Your complete insurance agent training platform. Master the knowledge to serve your clients with confidence." data-es="Tu plataforma completa de capacitación para agentes de seguros. Domina el conocimiento para servir a tus clientes con confianza.">Your complete insurance agent training platform. Master the knowledge to serve your clients with confidence.</p>
       <div class="hero-features">
         <div class="hero-feat">
           <span class="hero-feat-dot" style="background:#4A90D9"></span>
@@ -464,7 +467,7 @@ body {
   <div class="auth-form-panel">
   <div class="auth-card">
     <div class="auth-card-logo">
-      <p id="auth-subtitle">Insurance Agent Training Platform</p>
+      <p id="auth-subtitle" data-en="Insurance Agent Training Platform" data-es="Plataforma de Capacitación para Agentes">Insurance Agent Training Platform</p>
     </div>
 
     <!-- Tabs -->
@@ -615,7 +618,7 @@ function applyLang() {
   document.querySelectorAll('[data-en]').forEach(el => {
     el.textContent = currentLang === 'es' ? el.dataset.es : el.dataset.en;
   });
-  document.getElementById('langToggle').textContent = currentLang === 'es' ? 'ES' : 'EN';
+  document.getElementById('langToggle').textContent = currentLang === 'es' ? 'EN' : 'ES';
   document.documentElement.lang = currentLang;
 }
 
