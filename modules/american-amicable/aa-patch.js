@@ -22,6 +22,13 @@
   const MODULE_ID = 'american-amicable';
   const PREFIX    = 'aa';
 
+  // Hide login screen immediately — auth is handled by the main login page
+  (function hideLoginEarly() {
+    const style = document.createElement('style');
+    style.textContent = '#login-screen, #auth-screen { display: none !important; }';
+    document.head.appendChild(style);
+  })();
+
   const CACHE = {
     users:     [],
     stByEmail:  {},
@@ -232,12 +239,12 @@
   whenReady(async () => {
     try {
       const current = await AZ.Auth.getCurrentUser();
-      if (!current) return;
+      if (!current) { window.location.replace('/'); return; }
 
       const { user, profile } = current;
       const hasAccess = await AZ.Modules.hasAccess(profile.id, MODULE_ID);
       const isAdmin   = ['admin', 'super_admin'].includes(profile.role);
-      if (!hasAccess && !isAdmin) { await AZ.Auth.signOut(); return; }
+      if (!hasAccess && !isAdmin) { await AZ.Auth.signOut(); window.location.replace('/'); return; }
 
       window.ST = window.ST || { name: '', email: '', xp: 0, downloads: 0 };
       window.ST.name  = profile.full_name || user.email;

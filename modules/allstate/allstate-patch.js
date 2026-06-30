@@ -22,6 +22,13 @@
   const MODULE_ID = 'allstate';
   const PREFIX    = 'ahs';
 
+  // Hide login screen immediately — auth is handled by the main login page
+  (function hideLoginEarly() {
+    const style = document.createElement('style');
+    style.textContent = '#login-screen, #auth-screen { display: none !important; }';
+    document.head.appendChild(style);
+  })();
+
   // ── Local cache: synchronous bridge for async Supabase ──
   // The original dashboard code is synchronous. We pre-load Supabase data
   // into this cache so original code can read synchronously, while writes
@@ -328,7 +335,7 @@
   whenReady(async () => {
     try {
       const current = await AZ.Auth.getCurrentUser();
-      if (!current) return;
+      if (!current) { window.location.replace('/'); return; }
 
       const { user, profile } = current;
       const hasAccess = await AZ.Modules.hasAccess(profile.id, MODULE_ID);
@@ -336,6 +343,7 @@
 
       if (!hasAccess && !isAdmin) {
         await AZ.Auth.signOut();
+        window.location.replace('/');
         return;
       }
 
