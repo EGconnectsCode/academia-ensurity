@@ -85,7 +85,28 @@
       .admin-only { display:none!important; }
       body.is-admin .admin-only { display:flex!important; }
       #dark-btn { display:none!important; }
+      #lang-btn-en, #lang-btn-es { display:none!important; }
+      .az-lang-select {
+        background:rgba(255,255,255,.08)!important; border:1px solid rgba(255,255,255,.2)!important;
+        color:#fff!important; border-radius:8px!important; padding:5px 28px 5px 10px!important;
+        font-size:.78rem!important; font-weight:600!important; cursor:pointer!important;
+        outline:none!important; appearance:none!important; -webkit-appearance:none!important;
+        background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='white' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E")!important;
+        background-repeat:no-repeat!important; background-position:right 8px center!important; background-size:10px!important;
+      }
+      .az-lang-select option { background:#1e293b!important; color:#fff!important; }
     `;
+    document.addEventListener('DOMContentLoaded', function() {
+      const acts = document.querySelector('.tb-acts') || document.querySelector('.tb-actions');
+      if (!acts) return;
+      const sel = document.createElement('select');
+      sel.className = 'az-lang-select';
+      sel.innerHTML = '<option value="en">🌐 English</option><option value="es">🌐 Español</option>';
+      sel.addEventListener('change', function() {
+        if (window.setLang) window.setLang(this.value);
+      });
+      acts.insertBefore(sel, acts.firstChild);
+    });
     document.head.appendChild(style);
   })();
 

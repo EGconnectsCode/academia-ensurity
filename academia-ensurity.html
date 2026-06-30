@@ -72,12 +72,16 @@ body {
   transition: background var(--transition), color var(--transition);
 }
 .btn-icon:hover { background: var(--surface2); color: var(--text); }
-.lang-toggle {
+.lang-select {
   background: var(--surface2); border: 1px solid var(--border); border-radius: 8px;
   padding: 4px 10px; font-size: .75rem; font-weight: 700; cursor: pointer;
   color: var(--text2); transition: all var(--transition); letter-spacing: .04em;
+  outline: none; appearance: none; -webkit-appearance: none;
+  padding-right: 24px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2364748B' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 8px center;
 }
-.lang-toggle:hover { color: var(--accent); border-color: var(--accent); }
+.lang-select:hover, .lang-select:focus { color: var(--accent); border-color: var(--accent); }
 
 /* ===== AUTH LAYOUT — SPLIT SCREEN ===== */
 #auth-section {
@@ -419,7 +423,10 @@ body {
     <span>Academia Ensurity Group</span>
   </a>
   <div class="topbar-actions">
-    <button class="lang-toggle" id="langToggle" onclick="toggleLang()" title="Switch language">EN</button>
+    <select class="lang-select" id="langToggle" onchange="setLangFromSelect(this.value)" title="Switch language">
+      <option value="en">🌐 English</option>
+      <option value="es">🌐 Español</option>
+    </select>
   </div>
 </header>
 
@@ -610,12 +617,13 @@ function applyLang() {
   document.querySelectorAll('[data-en]').forEach(el => {
     el.textContent = currentLang === 'es' ? el.dataset.es : el.dataset.en;
   });
-  document.getElementById('langToggle').textContent = currentLang === 'es' ? 'EN' : 'ES';
+  const sel = document.getElementById('langToggle');
+  if (sel) sel.value = currentLang;
   document.documentElement.lang = currentLang;
 }
 
-function toggleLang() {
-  currentLang = currentLang === 'en' ? 'es' : 'en';
+function setLangFromSelect(lang) {
+  currentLang = lang;
   localStorage.setItem('az_lang', currentLang);
   applyLang();
 }
