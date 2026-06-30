@@ -83,10 +83,26 @@ body {
 }
 .lang-select:hover, .lang-select:focus { color: var(--accent); border-color: var(--accent); }
 
+/* ===== PAGE LOAD OVERLAY ===== */
+#page-loader {
+  position: fixed; inset: 0; z-index: 9999;
+  background: var(--surface);
+  display: flex; align-items: center; justify-content: center;
+  transition: opacity .25s ease;
+}
+#page-loader.hidden { opacity: 0; pointer-events: none; }
+.loader-spinner {
+  width: 36px; height: 36px; border-radius: 50%;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  animation: spin .7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
 /* ===== AUTH LAYOUT — SPLIT SCREEN ===== */
 #auth-section {
   min-height: calc(100vh - 56px);
-  display: flex;
+  display: none;
 }
 
 /* ── Hero animations ── */
@@ -446,6 +462,9 @@ body {
 </style>
 </head>
 <body>
+
+<!-- PAGE LOAD OVERLAY -->
+<div id="page-loader"><div class="loader-spinner"></div></div>
 
 <!-- TOPBAR -->
 <header class="topbar">
@@ -937,14 +956,23 @@ async function sendToBitrix(data) {
     switchTab('register');
   }
 
-  // Check for existing session
+  // Check for existing session — hide loader after decision
+  function hideLoader() {
+    const loader = document.getElementById('page-loader');
+    if (loader) { loader.classList.add('hidden'); setTimeout(() => loader.remove(), 300); }
+  }
+
   try {
     const current = await AZ.Auth.getCurrentUser();
     if (current) {
       await showModules(current.profile);
+    } else {
+      document.getElementById('auth-section').style.display = 'flex';
     }
   } catch (_) {
-    // No session — show auth
+    document.getElementById('auth-section').style.display = 'flex';
+  } finally {
+    hideLoader();
   }
 })();
 </script>
