@@ -62,10 +62,8 @@ body {
   display: flex; align-items: center; gap: 10px;
 }
 .sidebar-logo-icon {
-  width: 34px; height: 34px; border-radius: 9px;
-  background: linear-gradient(135deg, #3B82F6, #0891B2);
-  display: flex; align-items: center; justify-content: center;
-  font-weight: 900; font-size: 16px; color: white; flex-shrink: 0;
+  height: 30px; width: auto; object-fit: contain; flex-shrink: 0;
+  filter: brightness(0) invert(1);
 }
 .sidebar-logo-text { font-weight: 700; font-size: .95rem; color: white; letter-spacing: -.01em; flex: 1; }
 .sidebar-logo a {
@@ -266,7 +264,7 @@ tr:hover td { background: var(--surface2); }
 <!-- SIDEBAR -->
 <aside class="sidebar">
   <div class="sidebar-logo">
-    <div class="sidebar-logo-icon">A</div>
+    <img class="sidebar-logo-icon" src="https://cdn.bitrix24.com/b21945603/landing/898/8989ac3a7b465689d46cb6fd83474a26/Logo_Ensurity_Group_1080_500_px_1x.png" alt="Ensurity Group">
     <span class="sidebar-logo-text">Admin Panel</span>
     <a href="../academia-ensurity.html">← Back</a>
   </div>
