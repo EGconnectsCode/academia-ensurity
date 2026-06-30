@@ -87,47 +87,95 @@ body {
 
 /* ── Hero animations ── */
 @keyframes orb-drift {
-  0%,100% { transform: translate(0,0) scale(1); }
-  33%      { transform: translate(18px,-22px) scale(1.08); }
-  66%      { transform: translate(-14px,16px) scale(.94); }
+  0%,100% { transform: translate(0,0) scale(1); opacity:.45; }
+  33%      { transform: translate(24px,-28px) scale(1.12); opacity:.6; }
+  66%      { transform: translate(-18px,20px) scale(.9); opacity:.35; }
 }
 @keyframes orb-drift2 {
-  0%,100% { transform: translate(0,0) scale(1); }
-  40%      { transform: translate(-20px,18px) scale(1.1); }
-  75%      { transform: translate(12px,-14px) scale(.92); }
+  0%,100% { transform: translate(0,0) scale(1); opacity:.35; }
+  40%      { transform: translate(-26px,22px) scale(1.14); opacity:.55; }
+  75%      { transform: translate(16px,-18px) scale(.88); opacity:.25; }
+}
+@keyframes orb-drift3 {
+  0%,100% { transform: translate(0,0) scale(1); opacity:.2; }
+  50%      { transform: translate(20px,30px) scale(1.2); opacity:.4; }
 }
 @keyframes float-feat {
-  0%,100% { transform: translateY(0); }
-  50%      { transform: translateY(-5px); }
+  0%,100% { transform: translateY(0) translateX(0); }
+  50%      { transform: translateY(-6px) translateX(2px); }
 }
 @keyframes shimmer-text {
   0%   { background-position: 0% 50%; }
   50%  { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
+@keyframes grid-scroll {
+  0%   { transform: translateY(0); }
+  100% { transform: translateY(40px); }
+}
+@keyframes pulse-ring {
+  0%,100% { transform: scale(1); opacity:.12; }
+  50%      { transform: scale(1.06); opacity:.22; }
+}
+@keyframes slide-in-feat {
+  from { opacity:0; transform: translateX(-16px); }
+  to   { opacity:1; transform: translateX(0); }
+}
 
 /* LEFT HERO PANEL */
 .auth-hero {
-  flex: 1; min-width: 0;
+  flex: 0 0 38%; min-width: 0;
   background: linear-gradient(160deg, #080f1e 0%, #0e2044 55%, #080f1e 100%);
   display: flex; flex-direction: column; justify-content: center;
-  padding: 64px 56px; position: relative; overflow: hidden;
+  padding: 52px 48px; position: relative; overflow: hidden;
+}
+/* animated grid overlay */
+.auth-hero .hero-grid {
+  position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+  animation: grid-scroll 6s linear infinite;
+}
+/* pulse ring */
+.auth-hero .hero-ring {
+  position: absolute; border-radius: 50%; pointer-events: none; z-index: 0;
+  width: 500px; height: 500px; top: 50%; left: 50%;
+  margin: -250px 0 0 -250px;
+  border: 1px solid rgba(37,99,235,.3);
+  animation: pulse-ring 5s ease-in-out infinite;
+}
+.auth-hero .hero-ring2 {
+  position: absolute; border-radius: 50%; pointer-events: none; z-index: 0;
+  width: 350px; height: 350px; top: 50%; left: 50%;
+  margin: -175px 0 0 -175px;
+  border: 1px solid rgba(8,145,178,.25);
+  animation: pulse-ring 5s ease-in-out infinite .8s;
 }
 .auth-hero::before,
 .auth-hero::after {
   content: '';
-  position: absolute; border-radius: 50%; filter: blur(60px);
-  pointer-events: none;
+  position: absolute; border-radius: 50%; filter: blur(70px);
+  pointer-events: none; z-index: 0;
 }
 .auth-hero::before {
-  width: 420px; height: 420px; top: -80px; right: -80px;
-  background: radial-gradient(circle, rgba(37,99,235,.45) 0%, transparent 70%);
+  width: 380px; height: 380px; top: -60px; right: -60px;
+  background: radial-gradient(circle, rgba(37,99,235,.5) 0%, transparent 70%);
   animation: orb-drift 9s ease-in-out infinite;
 }
 .auth-hero::after {
-  width: 340px; height: 340px; bottom: -60px; left: -60px;
-  background: radial-gradient(circle, rgba(8,145,178,.35) 0%, transparent 70%);
+  width: 300px; height: 300px; bottom: -50px; left: -50px;
+  background: radial-gradient(circle, rgba(8,145,178,.4) 0%, transparent 70%);
   animation: orb-drift2 11s ease-in-out infinite;
+}
+/* third orb */
+.auth-hero .hero-orb3 {
+  position: absolute; border-radius: 50%; filter: blur(55px);
+  pointer-events: none; z-index: 0;
+  width: 220px; height: 220px; top: 55%; right: 10%;
+  background: radial-gradient(circle, rgba(129,140,248,.3) 0%, transparent 70%);
+  animation: orb-drift3 13s ease-in-out infinite;
 }
 .hero-brand {
   display: flex; align-items: center; gap: 14px;
@@ -166,9 +214,9 @@ body {
   border-radius: 10px;
   transition: background .2s, border-color .2s, transform .2s;
 }
-.hero-feat:nth-child(1) { animation: float-feat 4s ease-in-out infinite; }
-.hero-feat:nth-child(2) { animation: float-feat 4s ease-in-out infinite .8s; }
-.hero-feat:nth-child(3) { animation: float-feat 4s ease-in-out infinite 1.6s; }
+.hero-feat:nth-child(1) { animation: float-feat 4s ease-in-out infinite, slide-in-feat .6s ease both; }
+.hero-feat:nth-child(2) { animation: float-feat 4s ease-in-out infinite .8s, slide-in-feat .6s ease .15s both; }
+.hero-feat:nth-child(3) { animation: float-feat 4s ease-in-out infinite 1.6s, slide-in-feat .6s ease .3s both; }
 .hero-feat:hover { background: rgba(255,255,255,.11); border-color: rgba(255,255,255,.18); transform: translateX(4px); }
 .hero-feat-dot {
   width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
@@ -178,7 +226,7 @@ body {
 
 /* RIGHT FORM PANEL */
 .auth-form-panel {
-  width: 460px; flex-shrink: 0;
+  flex: 1; min-width: 0; max-width: 560px;
   background: var(--surface);
   display: flex; align-items: center; justify-content: center;
   padding: 40px 44px; overflow-y: auto;
@@ -388,6 +436,10 @@ body {
 
   <!-- LEFT: Hero Panel -->
   <div class="auth-hero">
+    <div class="hero-grid"></div>
+    <div class="hero-ring"></div>
+    <div class="hero-ring2"></div>
+    <div class="hero-orb3"></div>
     <div class="hero-main">
       <h2>Train smarter.<br><em>Sell better.</em></h2>
       <p>Your complete insurance agent training platform. Master the knowledge to serve your clients with confidence.</p>
