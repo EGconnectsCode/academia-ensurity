@@ -564,23 +564,23 @@ body {
       <div class="form-group">
         <label data-en="Course of interest" data-es="Curso de interés" id="lbl-course">Course of interest</label>
         <div class="course-picker" id="course-picker">
-          <label class="course-card" onclick="selectCourse(this,'allstate')">
-            <input type="radio" name="reg-course" value="allstate"/>
+          <label class="course-card" onclick="toggleCourse(this,'allstate')">
+            <input type="checkbox" name="reg-course" value="allstate"/>
             <span class="course-dot" style="background:#0033A0"></span>
             <span class="course-card-name">Allstate Health Solutions</span>
           </label>
-          <label class="course-card" onclick="selectCourse(this,'american-amicable')">
-            <input type="radio" name="reg-course" value="american-amicable"/>
+          <label class="course-card" onclick="toggleCourse(this,'american-amicable')">
+            <input type="checkbox" name="reg-course" value="american-amicable"/>
             <span class="course-dot" style="background:#1A3C6E"></span>
             <span class="course-card-name">American Amicable</span>
           </label>
-          <label class="course-card" onclick="selectCourse(this,'cica')">
-            <input type="radio" name="reg-course" value="cica"/>
+          <label class="course-card" onclick="toggleCourse(this,'cica')">
+            <input type="checkbox" name="reg-course" value="cica"/>
             <span class="course-dot" style="background:#2E7D32"></span>
             <span class="course-card-name">CICA Citizens</span>
           </label>
-          <label class="course-card full-width" onclick="selectCourse(this,'undecided')">
-            <input type="radio" name="reg-course" value="undecided"/>
+          <label class="course-card full-width" onclick="toggleCourse(this,'undecided')">
+            <input type="checkbox" name="reg-course" value="undecided"/>
             <span class="course-dot" style="background:#9ca3af"></span>
             <span class="course-card-name" data-en="Not sure yet" data-es="No estoy seguro/a">Not sure yet</span>
           </label>
@@ -926,10 +926,20 @@ async function showModules(profile) {
 }
 
 // ===== COURSE PICKER =====
-function selectCourse(card, value) {
-  document.querySelectorAll('.course-card').forEach(c => c.classList.remove('selected'));
-  card.classList.add('selected');
-  document.getElementById('reg-course').value = value;
+function toggleCourse(card, value) {
+  if (value === 'undecided') {
+    // "Not sure" clears everything else and selects itself exclusively
+    document.querySelectorAll('.course-card').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+  } else {
+    // Selecting a real course clears "undecided" if active
+    const undecidedCard = document.querySelector('.course-card input[value="undecided"]')?.closest('.course-card');
+    if (undecidedCard) undecidedCard.classList.remove('selected');
+    card.classList.toggle('selected');
+  }
+  const selected = [...document.querySelectorAll('.course-card.selected')]
+    .map(c => c.querySelector('input').value);
+  document.getElementById('reg-course').value = selected.join(',');
 }
 
 // ===== BITRIX INTEGRATION =====
@@ -953,12 +963,20 @@ async function sendToBitrix(data) {
   applyLang();
   applyTheme();
 
-  // Pre-fill form from URL params (Bitrix link: ?name=...&email=...&phone=...)
+  // Pre-fill form from URL params (Bitrix link: ?name=...&email=...&phone=...&course=allstate,cica)
   const params = new URLSearchParams(location.search);
-  if (params.get('name') || params.get('email') || params.get('phone')) {
+  if (params.get('name') || params.get('email') || params.get('phone') || params.get('course')) {
     if (params.get('name'))  document.getElementById('reg-name').value  = params.get('name');
     if (params.get('email')) document.getElementById('reg-email').value = params.get('email');
     if (params.get('phone')) document.getElementById('reg-phone').value = params.get('phone');
+    if (params.get('course')) {
+      const courses = params.get('course').split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
+      courses.forEach(val => {
+        const card = document.querySelector(`.course-card input[value="${val}"]`)?.closest('.course-card');
+        if (card) card.classList.add('selected');
+      });
+      document.getElementById('reg-course').value = courses.join(',');
+    }
     switchTab('register');
   }
 
