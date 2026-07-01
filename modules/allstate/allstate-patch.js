@@ -207,6 +207,67 @@
     quizProg:  {},   // modId -> progress
   };
 
+  // ── PDF Preview Modal ──
+  (function injectPdfPreview() {
+    const s = document.createElement('style');
+    s.textContent = `
+      #az-pdf-modal { display:none; position:fixed; inset:0; z-index:10000; }
+      #az-pdf-modal.active { display:flex; align-items:center; justify-content:center; }
+      .az-pdf-backdrop { position:absolute; inset:0; background:rgba(0,0,0,.65); backdrop-filter:blur(3px); }
+      .az-pdf-panel { position:relative; width:min(92vw,1100px); height:90vh; background:#fff; border-radius:14px; overflow:hidden; display:flex; flex-direction:column; box-shadow:0 25px 60px rgba(0,0,0,.35); }
+      .az-pdf-header { display:flex; align-items:center; gap:12px; padding:12px 16px; background:#0F172A; color:#fff; flex-shrink:0; }
+      .az-pdf-title { font-weight:600; font-size:.9rem; flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+      .az-pdf-dl { background:#2563EB; color:#fff !important; padding:6px 14px; border-radius:8px; font-size:.8rem; font-weight:600; text-decoration:none; white-space:nowrap; }
+      .az-pdf-dl:hover { background:#1d4ed8; }
+      .az-pdf-close { background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.2); color:#fff; width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:1rem; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+      .az-pdf-close:hover { background:rgba(255,255,255,.2); }
+      .az-pdf-frame { flex:1; width:100%; border:none; }
+    `;
+    document.head.appendChild(s);
+
+    const modal = document.createElement('div');
+    modal.id = 'az-pdf-modal';
+    modal.innerHTML = `
+      <div class="az-pdf-backdrop" onclick="window.closePdfPreview()"></div>
+      <div class="az-pdf-panel">
+        <div class="az-pdf-header">
+          <span class="az-pdf-title" id="az-pdf-title">Documento</span>
+          <a class="az-pdf-dl" id="az-pdf-dl" target="_blank" download>&#8659; Descargar</a>
+          <button class="az-pdf-close" onclick="window.closePdfPreview()">&#10005;</button>
+        </div>
+        <iframe class="az-pdf-frame" id="az-pdf-frame" src="" frameborder="0"></iframe>
+      </div>
+    `;
+    document.body.appendChild(modal);
+
+    window.showPdfPreview = function(url, title) {
+      document.getElementById('az-pdf-title').textContent = title || 'Documento';
+      document.getElementById('az-pdf-frame').src = url;
+      document.getElementById('az-pdf-dl').href = url;
+      document.getElementById('az-pdf-modal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    };
+
+    window.closePdfPreview = function() {
+      document.getElementById('az-pdf-modal').classList.remove('active');
+      document.getElementById('az-pdf-frame').src = '';
+      document.body.style.overflow = '';
+    };
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') window.closePdfPreview();
+    });
+
+    const _orig = window.dlFromUrl;
+    window.dlFromUrl = function(url, fname) {
+      if (url && url.startsWith('https://')) {
+        window.showPdfPreview(url, fname);
+      } else if (_orig) {
+        _orig(url, fname);
+      }
+    };
+  })();
+
   // ── Wait until AZ (supabase-config.js) is ready ──
   function whenReady(fn) {
     if (window.AZ && window.AZ.Auth) { fn(); return; }
