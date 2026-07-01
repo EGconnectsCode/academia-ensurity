@@ -84,6 +84,15 @@
       .admin-badge { background:#DBEAFE!important; color:#1D4ED8!important; font-size:.6rem!important; font-weight:700!important; border-radius:4px!important; padding:1px 5px!important; margin-left:4px!important; }
       .admin-only { display:none!important; }
       body.is-admin .admin-only { display:flex!important; }
+      /* EG-only features */
+      .sb-item[data-page="order-supply"],
+      .sb-item[data-page="illustrations"],
+      #page-order-supply,
+      #page-illustrations { display:none!important; }
+      body.is-eg-member .sb-item[data-page="order-supply"],
+      body.is-eg-member .sb-item[data-page="illustrations"] { display:flex!important; }
+      body.is-eg-member #page-order-supply,
+      body.is-eg-member #page-illustrations { display:block!important; }
       #dark-btn { display:none!important; }
       #lang-btn-en, #lang-btn-es { display:none!important; }
       .az-lang-select {
@@ -268,6 +277,8 @@
 
       if (isAdmin) document.body.classList.add('is-admin');
       else         document.body.classList.remove('is-admin');
+      if (profile.eg_member) document.body.classList.add('is-eg-member');
+      else                   document.body.classList.remove('is-eg-member');
 
       // Launch app using original AA launchApp()
       if (window.launchApp) window.launchApp();

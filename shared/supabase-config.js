@@ -18,6 +18,9 @@ const MODULE_IDS = {
   CICA:               'cica',
 };
 
+// EG member access code
+const EG_ACCESS_CODE = 'EG2026';
+
 // ---------------------------------------------------------------------------
 // 2. SUPABASE CLIENT
 // ---------------------------------------------------------------------------
@@ -58,7 +61,7 @@ const Auth = {
    * Register new account.
    * Returns { user, profile } or throws.
    */
-  async signUp(email, password, fullName, phone = '', courseInterest = '') {
+  async signUp(email, password, fullName, phone = '', courseInterest = '', egCode = '') {
     const { data, error } = await db.auth.signUp({
       email,
       password,
@@ -67,7 +70,8 @@ const Auth = {
     if (error) throw error;
     // Profile auto-created by DB trigger; update with extra fields
     if (data.user) {
-      await db.from('profiles').update({ full_name: fullName, phone, course_interest: courseInterest }).eq('id', data.user.id);
+      const egMember = egCode.trim().toUpperCase() === EG_ACCESS_CODE;
+      await db.from('profiles').update({ full_name: fullName, phone, course_interest: courseInterest, eg_member: egMember }).eq('id', data.user.id);
     }
     return { user: data.user };
   },

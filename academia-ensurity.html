@@ -588,6 +588,11 @@ body {
         <input type="hidden" id="reg-course" value=""/>
       </div>
       <div class="form-group">
+        <label data-en="EG Access Code (optional)" data-es="Código de acceso EG (opcional)" id="lbl-eg-code">EG Access Code (optional)</label>
+        <input type="text" id="reg-eg-code" placeholder="EG2026" autocomplete="off" style="text-transform:uppercase"/>
+        <small style="color:var(--text-muted,#6b7280);font-size:.75rem;margin-top:4px;display:block" data-en="If you have an EG access code, enter it here to unlock additional features." data-es="Si tienes un código EG, ingrésalo para desbloquear funciones adicionales.">If you have an EG access code, enter it here to unlock additional features.</small>
+      </div>
+      <div class="form-group">
         <label data-en="Password (min 8 chars)" data-es="Contraseña (mín. 8 caracteres)" id="lbl-pass-reg">Password (min 8 chars)</label>
         <div class="pw-wrap">
           <input type="password" id="reg-password" required minlength="8" placeholder="••••••••"/>
@@ -772,6 +777,7 @@ async function doRegister(e) {
   const pass    = document.getElementById('reg-password').value;
   const confirm = document.getElementById('reg-password-confirm').value;
   const course  = document.getElementById('reg-course').value;
+  const egCode  = (document.getElementById('reg-eg-code').value || '').trim().toUpperCase();
   clearMessages();
   if (pass !== confirm) {
     showMsg('msg-register', currentLang === 'es' ? 'Las contraseñas no coinciden.' : 'Passwords do not match.', 'error');
@@ -779,7 +785,7 @@ async function doRegister(e) {
   }
   setLoading('btn-register', true, 'register-label');
   try {
-    await AZ.Auth.signUp(email, pass, name, phone, course);
+    await AZ.Auth.signUp(email, pass, name, phone, course, egCode);
     sendToBitrix({ name, email, phone, course });
     showMsg('msg-register',
       currentLang === 'es'
