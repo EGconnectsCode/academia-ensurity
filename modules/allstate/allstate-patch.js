@@ -165,34 +165,28 @@
       body.is-admin .admin-only { display: flex !important; }
       #dark-btn { display: none !important; }
       #lang-btn { display: none !important; }
-      .az-lang-select {
-        background: rgba(255,255,255,.08) !important; border: 1px solid rgba(255,255,255,.2) !important;
-        color: #fff !important; border-radius: 8px !important; padding: 5px 28px 5px 10px !important;
-        font-size: .78rem !important; font-weight: 600 !important; cursor: pointer !important;
-        outline: none !important; appearance: none !important; -webkit-appearance: none !important;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='white' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") !important;
-        background-repeat: no-repeat !important; background-position: right 8px center !important;
-        background-size: 10px !important;
-      }
-      .az-lang-select option { background: #1e293b !important; color: #fff !important; }
+      .az-lang-pill { display:flex !important; gap:3px !important; background:rgba(255,255,255,.08) !important; border:1px solid rgba(255,255,255,.15) !important; border-radius:8px !important; padding:3px !important; }
+      .az-lang-btn { background:transparent !important; border:none !important; color:rgba(255,255,255,.55) !important; border-radius:6px !important; padding:3px 9px !important; font-size:.75rem !important; font-weight:700 !important; cursor:pointer !important; transition:all .15s !important; letter-spacing:.02em !important; }
+      .az-lang-btn.active { background:#fff !important; color:#0F172A !important; }
+      .az-lang-btn:hover:not(.active) { color:#fff !important; background:rgba(255,255,255,.1) !important; }
 
       /* ── XP bar ── */
       #xp-section { margin-bottom: 16px !important; }
     `;
     document.head.appendChild(style);
 
-    // Inject language select into topbar
+    // Inject EN/ES pill language toggle into topbar
     document.addEventListener('DOMContentLoaded', function() {
-      const acts = document.querySelector('.tb-acts');
+      var acts = document.querySelector('.tb-acts');
       if (!acts) return;
-      const sel = document.createElement('select');
-      sel.className = 'az-lang-select';
-      sel.innerHTML = '<option value="en">🌐 English</option><option value="es">🌐 Español</option>';
-      sel.addEventListener('change', function() {
-        const lang = this.value;
+      var pill = document.createElement('div');
+      pill.className = 'az-lang-pill';
+      pill.innerHTML = '<button class="az-lang-btn active" data-lang="en" onclick="window._azLang(\'en\')">EN</button><button class="az-lang-btn" data-lang="es" onclick="window._azLang(\'es\')">ES</button>';
+      acts.insertBefore(pill, acts.firstChild);
+      window._azLang = function(lang) {
+        document.querySelectorAll('.az-lang-btn').forEach(function(b) { b.classList.toggle('active', b.dataset.lang === lang); });
         if (window.LANG !== lang && window.toggleLang) window.toggleLang();
-      });
-      acts.insertBefore(sel, acts.firstChild);
+      };
     });
   })();
 
@@ -267,6 +261,29 @@
       }
     };
   })();
+
+  // ── PDF preview for dl(name, key, fname) ──
+  function _patchDl() {
+    var _orig = window.dl;
+    if (!_orig) return;
+    window.dl = function(name, key, fname) {
+      var el = document.getElementById('pdf_' + key);
+      if (!el) { _orig(name, key, fname); return; }
+      var content = el.textContent.trim();
+      if (content.startsWith('http')) {
+        window.showPdfPreview(content, name);
+        if (window.trackDownload) window.trackDownload(fname || name);
+      } else {
+        try {
+          var bin = atob(content);
+          var arr = new Uint8Array(bin.length);
+          for (var i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+          window.showPdfPreview(URL.createObjectURL(new Blob([arr], { type: 'application/pdf' })), name);
+          if (window.trackDownload) window.trackDownload(fname || name);
+        } catch(e) { _orig(name, key, fname); }
+      }
+    };
+  }
 
   // ── Wait until AZ (supabase-config.js) is ready ──
   function whenReady(fn) {
@@ -561,6 +578,7 @@
   //  10. AUTO-LOGIN: Check for existing session on page load
   // ════════════════════════════════════════════════
   whenReady(async () => {
+    _patchDl();
     try {
       const current = await AZ.Auth.getCurrentUser();
       if (!current) { window.location.replace('/'); return; }

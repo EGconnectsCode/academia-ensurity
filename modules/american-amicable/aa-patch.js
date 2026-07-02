@@ -95,26 +95,22 @@
       body.is-eg-member #page-illustrations { display:block!important; }
       #dark-btn { display:none!important; }
       #lang-btn-en, #lang-btn-es { display:none!important; }
-      .az-lang-select {
-        background:rgba(255,255,255,.08)!important; border:1px solid rgba(255,255,255,.2)!important;
-        color:#fff!important; border-radius:8px!important; padding:5px 28px 5px 10px!important;
-        font-size:.78rem!important; font-weight:600!important; cursor:pointer!important;
-        outline:none!important; appearance:none!important; -webkit-appearance:none!important;
-        background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='white' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E")!important;
-        background-repeat:no-repeat!important; background-position:right 8px center!important; background-size:10px!important;
-      }
-      .az-lang-select option { background:#1e293b!important; color:#fff!important; }
+      .az-lang-pill { display:flex!important; gap:3px!important; background:rgba(255,255,255,.08)!important; border:1px solid rgba(255,255,255,.15)!important; border-radius:8px!important; padding:3px!important; }
+      .az-lang-btn { background:transparent!important; border:none!important; color:rgba(255,255,255,.55)!important; border-radius:6px!important; padding:3px 9px!important; font-size:.75rem!important; font-weight:700!important; cursor:pointer!important; transition:all .15s!important; letter-spacing:.02em!important; }
+      .az-lang-btn.active { background:#fff!important; color:#0F172A!important; }
+      .az-lang-btn:hover:not(.active) { color:#fff!important; background:rgba(255,255,255,.1)!important; }
     `;
     document.addEventListener('DOMContentLoaded', function() {
-      const acts = document.querySelector('.tb-acts') || document.querySelector('.tb-actions');
+      var acts = document.querySelector('.tb-acts') || document.querySelector('.tb-actions');
       if (!acts) return;
-      const sel = document.createElement('select');
-      sel.className = 'az-lang-select';
-      sel.innerHTML = '<option value="en">🌐 English</option><option value="es">🌐 Español</option>';
-      sel.addEventListener('change', function() {
-        if (window.setLang) window.setLang(this.value);
-      });
-      acts.insertBefore(sel, acts.firstChild);
+      var pill = document.createElement('div');
+      pill.className = 'az-lang-pill';
+      pill.innerHTML = '<button class="az-lang-btn active" data-lang="en" onclick="window._azLang(\'en\')">EN</button><button class="az-lang-btn" data-lang="es" onclick="window._azLang(\'es\')">ES</button>';
+      acts.insertBefore(pill, acts.firstChild);
+      window._azLang = function(lang) {
+        document.querySelectorAll('.az-lang-btn').forEach(function(b) { b.classList.toggle('active', b.dataset.lang === lang); });
+        if (window.setLang) window.setLang(lang);
+      };
     });
     document.head.appendChild(style);
   })();
@@ -185,6 +181,29 @@
       }
     };
   })();
+
+  // ── PDF preview for dl(name, key, fname) ──
+  function _patchDl() {
+    var _orig = window.dl;
+    if (!_orig) return;
+    window.dl = function(name, key, fname) {
+      var el = document.getElementById('pdf_' + key);
+      if (!el) { _orig(name, key, fname); return; }
+      var content = el.textContent.trim();
+      if (content.startsWith('http')) {
+        window.showPdfPreview(content, name);
+        if (window.trackDownload) window.trackDownload(fname || name);
+      } else {
+        try {
+          var bin = atob(content);
+          var arr = new Uint8Array(bin.length);
+          for (var i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+          window.showPdfPreview(URL.createObjectURL(new Blob([arr], { type: 'application/pdf' })), name);
+          if (window.trackDownload) window.trackDownload(fname || name);
+        } catch(e) { _orig(name, key, fname); }
+      }
+    };
+  }
 
   function whenReady(fn) {
     if (window.AZ && window.AZ.Auth) { fn(); return; }
@@ -390,6 +409,7 @@
   //  9. AUTO-LOGIN on page load
   // ════════════════════════════════════════════════
   whenReady(async () => {
+    _patchDl();
     try {
       const current = await AZ.Auth.getCurrentUser();
       if (!current) { window.location.replace('/'); return; }
