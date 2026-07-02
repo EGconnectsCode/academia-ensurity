@@ -52,19 +52,20 @@ body {
 /* ===== TOPBAR ===== */
 .topbar {
   background: var(--surface); border-bottom: 1px solid var(--border);
-  padding: 0 20px; height: 56px;
-  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 20px; height: 64px;
+  display: grid; grid-template-columns: 1fr auto 1fr;
+  align-items: center;
   position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow-sm);
 }
 .topbar-logo {
-  display: flex; align-items: center; gap: 10px;
-  font-weight: 700; font-size: 1rem; color: var(--text);
-  text-decoration: none; letter-spacing: -.01em;
+  display: flex; align-items: center; gap: 12px;
+  font-weight: 800; font-size: 1.2rem; color: var(--text);
+  text-decoration: none; letter-spacing: -.02em; justify-self: center;
 }
 .logo-icon {
-  height: 42px; width: auto; flex-shrink: 0; object-fit: contain;
+  height: 52px; width: auto; flex-shrink: 0; object-fit: contain;
 }
-.topbar-actions { display: flex; align-items: center; gap: 8px; }
+.topbar-actions { display: flex; align-items: center; gap: 10px; justify-self: end; }
 .btn-icon {
   background: none; border: none; cursor: pointer; color: var(--text2);
   width: 34px; height: 34px; border-radius: 8px;
@@ -72,16 +73,23 @@ body {
   transition: background var(--transition), color var(--transition);
 }
 .btn-icon:hover { background: var(--surface2); color: var(--text); }
-.lang-select {
-  background: var(--surface2); border: 1px solid var(--border); border-radius: 8px;
-  padding: 4px 10px; font-size: .75rem; font-weight: 700; cursor: pointer;
-  color: var(--text2); transition: all var(--transition); letter-spacing: .04em;
-  outline: none; appearance: none; -webkit-appearance: none;
-  padding-right: 24px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2364748B' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-  background-repeat: no-repeat; background-position: right 8px center;
+.lang-toggle {
+  display: flex; background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 20px; padding: 3px; gap: 2px;
 }
-.lang-select:hover, .lang-select:focus { color: var(--accent); border-color: var(--accent); }
+.lang-btn {
+  background: none; border: none; cursor: pointer; font-size: .72rem;
+  font-weight: 700; color: var(--text2); padding: 4px 13px; border-radius: 16px;
+  transition: all var(--transition); font-family: inherit; letter-spacing: .05em;
+}
+.lang-btn.active { background: var(--accent); color: #fff; box-shadow: 0 1px 4px rgba(0,0,0,.18); }
+.lang-btn:not(.active):hover { color: var(--text); }
+.topbar-signout {
+  background: none; border: 1.5px solid var(--border); color: var(--text2);
+  padding: 5px 14px; border-radius: 8px; cursor: pointer; font-size: .75rem;
+  font-weight: 600; transition: all var(--transition); font-family: inherit;
+}
+.topbar-signout:hover { border-color: var(--danger); color: var(--danger); background: #FEF2F2; }
 
 /* ===== PAGE LOAD OVERLAY ===== */
 #page-loader {
@@ -468,15 +476,17 @@ body {
 
 <!-- TOPBAR -->
 <header class="topbar">
+  <div></div>
   <a href="#" class="topbar-logo">
     <img class="logo-icon" src="https://cdn.bitrix24.com/b21945603/landing/898/8989ac3a7b465689d46cb6fd83474a26/Logo_Ensurity_Group_1080_500_px_1x.png" alt="Ensurity Group">
     <span>Academia Ensurity Group</span>
   </a>
   <div class="topbar-actions">
-    <select class="lang-select" id="langToggle" onchange="setLangFromSelect(this.value)" title="Switch language">
-      <option value="en">🌐 English</option>
-      <option value="es">🌐 Español</option>
-    </select>
+    <div class="lang-toggle">
+      <button class="lang-btn" id="btn-lang-en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" id="btn-lang-es" onclick="setLang('es')">ES</button>
+    </div>
+    <button class="topbar-signout" id="topbar-signout-btn" onclick="doSignOut()" style="display:none" data-en="Sign Out" data-es="Cerrar Sesión">Sign Out</button>
   </div>
 </header>
 
@@ -641,16 +651,12 @@ body {
   <div class="welcome-banner">
     <div>
       <h2 id="welcome-name">Welcome back!</h2>
-      <p id="welcome-sub">Select a training module to continue</p>
+      <p id="welcome-sub" data-en="Select a training module to continue" data-es="Selecciona un módulo de entrenamiento para continuar">Select a training module to continue</p>
     </div>
     <div class="xp-badge">
       <div class="xp-num" id="xp-display">0</div>
       <div class="xp-label">XP • Level <span id="level-display">1</span></div>
     </div>
-  </div>
-
-  <div id="user-topbar-actions" style="display:flex; justify-content:flex-end; margin-bottom:20px; gap:10px;">
-    <button class="signout-btn" onclick="doSignOut()" id="signout-btn" data-en="Sign Out" data-es="Cerrar Sesión">Sign Out</button>
   </div>
 
   <p class="section-title" id="modules-heading" data-en="YOUR MODULES" data-es="TUS MÓDULOS">YOUR MODULES</p>
@@ -672,16 +678,20 @@ function applyLang() {
   document.querySelectorAll('[data-en]').forEach(el => {
     el.textContent = currentLang === 'es' ? el.dataset.es : el.dataset.en;
   });
-  const sel = document.getElementById('langToggle');
-  if (sel) sel.value = currentLang;
+  document.getElementById('btn-lang-en')?.classList.toggle('active', currentLang === 'en');
+  document.getElementById('btn-lang-es')?.classList.toggle('active', currentLang === 'es');
   document.documentElement.lang = currentLang;
 }
 
-function setLangFromSelect(lang) {
+function setLang(lang) {
   currentLang = lang;
   localStorage.setItem('az_lang', currentLang);
   applyLang();
+  if (window._currentProfile && document.getElementById('modules-section').style.display !== 'none') {
+    showModules(window._currentProfile);
+  }
 }
+function setLangFromSelect(lang) { setLang(lang); }
 
 function applyTheme() {
   document.documentElement.setAttribute('data-theme', currentTheme);
@@ -822,6 +832,9 @@ async function doForgot(e) {
 
 async function doSignOut() {
   await AZ.Auth.signOut();
+  window._currentProfile = null;
+  const signoutBtn = document.getElementById('topbar-signout-btn');
+  if (signoutBtn) signoutBtn.style.display = 'none';
   document.getElementById('modules-section').style.display = 'none';
   document.getElementById('auth-section').style.display = 'flex';
   switchTab('signin');
@@ -853,6 +866,9 @@ const MODULE_META = {
 };
 
 async function showModules(profile) {
+  window._currentProfile = profile;
+  const signoutBtn = document.getElementById('topbar-signout-btn');
+  if (signoutBtn) signoutBtn.style.display = '';
   document.getElementById('auth-section').style.display = 'none';
   document.getElementById('modules-section').style.display = 'block';
 
