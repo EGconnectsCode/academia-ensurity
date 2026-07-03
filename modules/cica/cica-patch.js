@@ -58,13 +58,20 @@
       .sb-label { font-size:.62rem!important; font-weight:700!important; text-transform:uppercase!important;
         letter-spacing:.1em!important; color:rgba(255,255,255,.3)!important; padding:14px 16px 5px!important; }
       .sb-label:first-of-type { display:none!important; }
-      .sb-item[data-page="home"]   { display:none!important; }
       .sb-item[data-page="portal"] { display:none!important; }
+      .sb-item[data-page="admin-users"],
+      .sb-item[data-page="admin-activity"],
+      .sb-item[data-page="admin-ranking"] { display:none!important; }
+      #page-admin-users, #page-admin-activity, #page-admin-ranking { display:none!important; }
       .sb-item { display:flex!important; align-items:center!important; gap:9px!important;
-        padding:9px 16px!important; width:100%!important; text-align:left!important;
+        padding:11px 16px!important; width:100%!important; text-align:left!important;
         background:none!important; border:none!important; color:rgba(255,255,255,.65)!important;
-        font-size:.83rem!important; font-weight:500!important; cursor:pointer!important;
+        font-size:.86rem!important; font-weight:500!important; cursor:pointer!important;
         transition:background .13s,color .13s!important; }
+      .az-topbar-signout { background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15);
+        color:rgba(255,255,255,.8); padding:5px 12px; border-radius:8px; font-size:.75rem;
+        font-weight:600; cursor:pointer; font-family:inherit; transition:all .15s; white-space:nowrap; }
+      .az-topbar-signout:hover { background:rgba(239,68,68,.2); border-color:rgba(239,68,68,.4); color:#fca5a5; }
       .sb-item:hover  { background:rgba(255,255,255,.06)!important; color:#fff!important; }
       .sb-item.active { background:rgba(37,99,235,.3)!important; color:#fff!important; font-weight:600!important; }
       .sb-badge { background:#3B82F6!important; color:#fff!important; font-size:.62rem!important;
@@ -77,9 +84,6 @@
       .admin-only { display:none!important; }
 
       /* ── Home page: only hero ── */
-      #training-banner   { display:none!important; }
-      #banner-show-again { display:none!important; }
-      #page-home .home-2col { display:none!important; }
       #page-portal { display:none!important; }
 
       /* ── Cards / Layout ── */
@@ -172,7 +176,7 @@
     document.head.appendChild(style);
 
     document.addEventListener('DOMContentLoaded', function () {
-      // ── Inject EN/ES pill toggle into topbar ──
+      // ── Inject EN/ES pill toggle + Sign Out into topbar right ──
       var acts = document.querySelector('.topbar-right') || document.querySelector('.tb-acts');
       if (acts) {
         var div = document.createElement('div');
@@ -180,7 +184,12 @@
         div.innerHTML =
           '<button class="az-lb" id="az-lb-en" onclick="window._azLang(\'en\')">EN</button>' +
           '<button class="az-lb" id="az-lb-es" onclick="window._azLang(\'es\')">ES</button>';
-        acts.insertBefore(div, acts.firstChild);
+        acts.appendChild(div);
+        var soBtn = document.createElement('button');
+        soBtn.className = 'az-topbar-signout';
+        soBtn.textContent = 'Cerrar Sesión';
+        soBtn.onclick = function () { if (window.logout) window.logout(); };
+        acts.appendChild(soBtn);
       }
       // Sync active state with current lang
       function syncLangBtns(l) {
@@ -203,6 +212,41 @@
         syncLangBtns(l);
         if (_sl) _sl.call(this, l);
       };
+
+      // ── Remove emojis/icons from sidebar items ──
+      document.querySelectorAll('.sb-item').forEach(function (item) {
+        item.querySelectorAll('svg, .sb-ico, .sb-icon, img').forEach(function (el) { el.remove(); });
+        item.childNodes.forEach(function (node) {
+          if (node.nodeType === 3) {
+            node.textContent = node.textContent.replace(/[\u{1F000}-\u{1FFFF}\u{2600}-\u{27FF}\u{2700}-\u{27BF}]|️/gu, '').trim();
+          }
+        });
+      });
+
+      // ── Rename home → Inicio and inject page content ──
+      var homeBtn = document.querySelector('.sb-item[data-page="home"]');
+      if (homeBtn) homeBtn.textContent = 'Inicio';
+
+      var pageHome = document.getElementById('page-home');
+      if (pageHome) {
+        var inicioWrap = document.createElement('div');
+        inicioWrap.id = 'az-inicio';
+        inicioWrap.style.cssText = 'padding:20px;';
+        inicioWrap.innerHTML =
+          '<div style="background:#fff;border-radius:14px;padding:32px;box-shadow:0 1px 3px rgba(0,0,0,.07),0 4px 12px rgba(0,0,0,.06);max-width:820px;margin:0 auto;">' +
+          '<h2 style="font-size:1.4rem;font-weight:800;color:#0F172A;margin-bottom:8px;">Bienvenido al Portal CICA Citizens</h2>' +
+          '<p style="color:#64748B;font-size:.9rem;line-height:1.6;margin-bottom:24px;">Este portal centraliza todos los recursos que necesitas como agente CICA: materiales de entrenamiento, formularios, guías departamentales y herramientas para gestionar tus clientes y comisiones.</p>' +
+          '<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:24px;">' +
+          '<div style="background:#F1F5F9;border-radius:10px;padding:18px;"><div style="font-weight:700;color:#0F172A;margin-bottom:5px;font-size:.9rem;">e-Training</div><div style="font-size:.82rem;color:#64748B;line-height:1.5;">Videos de entrenamiento, quizzes y elegibilidad. Gana hasta 50 XP por quiz perfecto.</div></div>' +
+          '<div style="background:#F1F5F9;border-radius:10px;padding:18px;"><div style="font-weight:700;color:#0F172A;margin-bottom:5px;font-size:.9rem;">Contratos y Comisiones</div><div style="font-size:.82rem;color:#64748B;line-height:1.5;">Tablas de comisiones, formulario ACH y solicitudes de adelanto de comisión.</div></div>' +
+          '<div style="background:#F1F5F9;border-radius:10px;padding:18px;"><div style="font-weight:700;color:#0F172A;margin-bottom:5px;font-size:.9rem;">Formularios de Reclamo</div><div style="font-size:.82rem;color:#64748B;line-height:1.5;">Formularios de reclamo de vida para asegurados y beneficiarios. Previsualiza o descarga.</div></div>' +
+          '<div style="background:#F1F5F9;border-radius:10px;padding:18px;"><div style="font-weight:700;color:#0F172A;margin-bottom:5px;font-size:.9rem;">Recursos Útiles</div><div style="font-size:.82rem;color:#64748B;line-height:1.5;">Links al portal de agentes, guías SS Billing, recursos HIPAA y disponibilidad por estado.</div></div>' +
+          '</div>' +
+          '<button onclick="if(window.azStartTour)window.azStartTour()" style="background:#2563EB;color:#fff;border:none;border-radius:8px;padding:10px 22px;font-size:.88rem;font-weight:600;cursor:pointer;font-family:inherit;">Ver guía del portal</button>' +
+          '</div>';
+        pageHome.appendChild(inicioWrap);
+        pageHome.querySelector('.home-2col') && (pageHome.querySelector('.home-2col').style.display = 'none');
+      }
 
       // ── "Ir a mi portal" in hero buttons ──
       document.querySelectorAll('.hero-btn .en, .hero-btn .es').forEach(function (el) {
@@ -744,6 +788,11 @@
     _patchUpdateLevel();
     _patchRenderQuestion();
 
+    // Re-render quiz with patched renderQuestion
+    setTimeout(function () {
+      if (window.loadQuiz && window.qState) window.loadQuiz(window.qState.module || 'portal');
+    }, 300);
+
     try {
       var current = await AZ.Auth.getCurrentUser();
       if (!current) { window.location.replace('/'); return; }
@@ -770,11 +819,14 @@
         if (window.loginUser) window.loginUser(window.CUR_USER);
       }
 
-      // Show tutorial on first visit
+      // Navigate to Inicio on load
+      setTimeout(function () { if (window.navTo) window.navTo('home'); }, 100);
+
+      // Show tutorial on first visit only
       var tourDone = false;
       try { tourDone = localStorage.getItem(TOUR_KEY) === '1'; } catch (e) {}
       if (!tourDone) {
-        setTimeout(function () { if (window.azStartTour) window.azStartTour(); }, 800);
+        setTimeout(function () { if (window.azStartTour) window.azStartTour(); }, 900);
       }
 
     } catch (e) { console.warn('[CICA Patch] auto-login error:', e.message); }
