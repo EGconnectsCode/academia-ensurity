@@ -371,7 +371,7 @@ body {
 .pw-toggle:hover { color: var(--accent); }
 
 /* COURSE PICKER */
-.course-picker { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-top: 6px; }
+.course-picker { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; margin-top: 6px; }
 .course-card {
   border: 1.5px solid var(--border); border-radius: 9px; padding: 10px 12px;
   cursor: pointer; transition: all .15s ease; display: flex; align-items: center; gap: 8px;
@@ -382,7 +382,7 @@ body {
   border-color: var(--accent); background: rgba(37,99,235,.07);
   box-shadow: 0 0 0 3px rgba(37,99,235,.1);
 }
-.course-card input[type=radio] { display: none; }
+.course-card input[type=checkbox] { display: none; }
 .course-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
 .course-card-name { font-size: .79rem; font-weight: 600; color: var(--text); line-height: 1.3; }
 .course-card.full-width { grid-column: 1 / -1; }
