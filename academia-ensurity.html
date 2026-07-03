@@ -979,14 +979,23 @@ async function sendToBitrix(data) {
   applyLang();
   applyTheme();
 
-  // Pre-fill form from URL params (Bitrix link: ?name=...&email=...&phone=...&course=allstate,cica)
+  // Pre-fill form from URL params (Bitrix link: ?fname=...&lname=...&email=...&phone=...&course=allstate,cica)
   const params = new URLSearchParams(location.search);
-  if (params.get('name') || params.get('email') || params.get('phone') || params.get('course')) {
-    if (params.get('name'))  document.getElementById('reg-name').value  = params.get('name');
-    if (params.get('email')) document.getElementById('reg-email').value = params.get('email');
-    if (params.get('phone')) document.getElementById('reg-phone').value = params.get('phone');
+  if (params.get('name') || params.get('fname') || params.get('email') || params.get('phone') || params.get('course')) {
+    const fullName = params.get('name') || [params.get('fname'), params.get('lname')].filter(Boolean).join(' ');
+    if (fullName)             document.getElementById('reg-name').value  = fullName;
+    if (params.get('email'))  document.getElementById('reg-email').value = params.get('email');
+    if (params.get('phone'))  document.getElementById('reg-phone').value = params.get('phone');
     if (params.get('course')) {
-      const courses = params.get('course').split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
+      const resolveCourse = raw => {
+        const s = raw.trim().toLowerCase();
+        if (['allstate','american-amicable','cica','undecided'].includes(s)) return s;
+        if (s.includes('american') || s.includes('amicable')) return 'american-amicable';
+        if (s.includes('cica'))     return 'cica';
+        if (s.includes('allstate')) return 'allstate';
+        return s;
+      };
+      const courses = params.get('course').split(',').map(resolveCourse).filter(Boolean);
       courses.forEach(val => {
         const card = document.querySelector(`.course-card input[value="${val}"]`)?.closest('.course-card');
         if (card) card.classList.add('selected');
