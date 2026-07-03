@@ -58,9 +58,11 @@ body {
   position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow-sm);
 }
 .topbar-logo {
-  display: flex; align-items: center; gap: 12px;
+  display: flex; align-items: center; text-decoration: none; justify-self: start;
+}
+.topbar-brand {
   font-weight: 800; font-size: 1.2rem; color: var(--text);
-  text-decoration: none; letter-spacing: -.02em; justify-self: center;
+  letter-spacing: -.02em; justify-self: center; text-align: center;
 }
 .logo-icon {
   height: 52px; width: auto; flex-shrink: 0; object-fit: contain;
@@ -466,7 +468,7 @@ body {
   .auth-form-panel { padding: 28px 20px; }
   .welcome-banner { padding: 20px; }
   #modules-section { padding: 20px 14px; }
-  .topbar-logo { font-size: .85rem; gap: 8px; }
+  .topbar-brand { font-size: .85rem; }
   .logo-icon { height: 36px; }
   .course-picker { grid-template-columns: 1fr; gap: 6px; }
   .course-card { padding: 8px 10px; }
@@ -482,11 +484,10 @@ body {
 
 <!-- TOPBAR -->
 <header class="topbar">
-  <div></div>
   <a href="#" class="topbar-logo">
     <img class="logo-icon" src="https://cdn.bitrix24.com/b21945603/landing/898/8989ac3a7b465689d46cb6fd83474a26/Logo_Ensurity_Group_1080_500_px_1x.png" alt="Ensurity Group">
-    <span>Academia Ensurity Group</span>
   </a>
+  <span class="topbar-brand">Academia Ensurity Group</span>
   <div class="topbar-actions">
     <div class="lang-toggle">
       <button class="lang-btn" id="btn-lang-en" onclick="setLang('en')">EN</button>
