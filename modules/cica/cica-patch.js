@@ -69,10 +69,11 @@
         background:none!important; border:none!important; color:rgba(255,255,255,.65)!important;
         font-size:.86rem!important; font-weight:500!important; cursor:pointer!important;
         transition:background .13s,color .13s!important; }
-      .az-topbar-signout { background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.3);
-        color:#fff; padding:7px 16px; border-radius:8px; font-size:.82rem;
-        font-weight:600; cursor:pointer; font-family:inherit; transition:all .15s; white-space:nowrap; }
-      .az-topbar-signout:hover { background:rgba(239,68,68,.3); border-color:rgba(239,68,68,.5); color:#fca5a5; }
+      .az-topbar-signout { background:#DC2626; border:2px solid #ef4444;
+        color:#fff; padding:8px 20px; border-radius:8px; font-size:.85rem;
+        font-weight:700; cursor:pointer; font-family:inherit; transition:all .15s; white-space:nowrap;
+        letter-spacing:.01em; box-shadow:0 2px 8px rgba(220,38,38,.4); }
+      .az-topbar-signout:hover { background:#b91c1c; border-color:#dc2626; box-shadow:0 4px 12px rgba(220,38,38,.5); }
       /* ── Training notification banner ── */
       #training-banner { background:linear-gradient(135deg,#DC2626,#B91C1C)!important; color:#fff!important;
         border:none!important; border-radius:10px!important; padding:10px 16px!important;
