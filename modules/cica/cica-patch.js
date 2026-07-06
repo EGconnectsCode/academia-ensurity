@@ -214,7 +214,8 @@
         backBtn.className = 'az-admin-back';
         backBtn.textContent = '← Admin';
         backBtn.onclick = function () { window.location.href = '/admin'; };
-        acts.insertBefore(backBtn, acts.firstChild);
+        var topbar = acts.closest('.topbar') || acts.parentElement;
+        topbar.insertBefore(backBtn, acts);
         var div = document.createElement('div');
         div.className = 'az-lang-toggle';
         div.innerHTML =
