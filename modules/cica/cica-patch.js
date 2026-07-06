@@ -28,7 +28,8 @@
       /* ── Topbar ── */
       .topbar { background:var(--az-navy)!important; border-bottom:1px solid rgba(255,255,255,.07)!important;
         box-shadow:0 1px 8px rgba(0,0,0,.25)!important; height:54px!important;
-        padding:0 16px!important; display:flex!important; align-items:center!important; gap:10px!important; }
+        padding:0 16px!important; display:flex!important; align-items:center!important; gap:10px!important;
+        justify-content:space-between!important; }
       .topbar-logo { display:none!important; }
       .tb-user  { display:none!important; }
       .tb-dark-btn { display:none!important; }
@@ -68,10 +69,31 @@
         background:none!important; border:none!important; color:rgba(255,255,255,.65)!important;
         font-size:.86rem!important; font-weight:500!important; cursor:pointer!important;
         transition:background .13s,color .13s!important; }
-      .az-topbar-signout { background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15);
-        color:rgba(255,255,255,.8); padding:5px 12px; border-radius:8px; font-size:.75rem;
+      .az-topbar-signout { background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.3);
+        color:#fff; padding:7px 16px; border-radius:8px; font-size:.82rem;
         font-weight:600; cursor:pointer; font-family:inherit; transition:all .15s; white-space:nowrap; }
-      .az-topbar-signout:hover { background:rgba(239,68,68,.2); border-color:rgba(239,68,68,.4); color:#fca5a5; }
+      .az-topbar-signout:hover { background:rgba(239,68,68,.3); border-color:rgba(239,68,68,.5); color:#fca5a5; }
+      /* ── Training notification banner ── */
+      #training-banner { background:linear-gradient(135deg,#DC2626,#B91C1C)!important; color:#fff!important;
+        border:none!important; border-radius:10px!important; padding:10px 16px!important;
+        font-size:.82rem!important; font-weight:600!important; margin:16px 20px 0!important;
+        display:flex!important; align-items:center!important; gap:10px!important;
+        box-shadow:0 2px 8px rgba(220,38,38,.3)!important; }
+      #training-banner button { background:rgba(255,255,255,.2)!important; border:1px solid rgba(255,255,255,.3)!important;
+        color:#fff!important; border-radius:6px!important; padding:3px 10px!important;
+        font-size:.75rem!important; cursor:pointer!important; }
+      /* ── e-Training step tabs ── */
+      #et-tabs { display:flex!important; align-items:stretch!important; gap:0!important;
+        margin-bottom:20px!important; flex-wrap:nowrap!important; }
+      #et-tabs .os-tab { flex:1!important; padding:14px 10px!important; font-size:.88rem!important;
+        font-weight:600!important; border-radius:0!important; border-right:none!important; text-align:center!important; }
+      #et-tabs .os-tab:first-child { border-radius:10px 0 0 10px!important; }
+      #et-tabs .os-tab:last-child { border-radius:0 10px 10px 0!important; border-right:1px solid var(--bdr)!important; }
+      .az-et-step-num { font-size:.65rem; font-weight:700; letter-spacing:.05em; opacity:.65; display:block; margin-bottom:3px; }
+      .az-et-arrow { display:flex; align-items:center; padding:0 2px; color:#94A3B8; font-size:1.1rem;
+        flex-shrink:0; background:var(--sur2); border-top:1px solid var(--bdr); border-bottom:1px solid var(--bdr); }
+      /* ── Hide emoji icons in page headers ── */
+      .ph-ico { display:none!important; }
       .az-admin-back { display:none!important; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15); color:rgba(255,255,255,.8); padding:5px 12px; border-radius:8px; font-size:.75rem; font-weight:600; cursor:pointer; font-family:inherit; transition:all .15s; white-space:nowrap; }
       body.is-admin .az-admin-back { display:inline-flex!important; align-items:center; gap:5px; }
       .az-admin-back:hover { background:rgba(255,255,255,.16)!important; }
@@ -304,12 +326,55 @@
         });
       });
 
-      // ── Change Download buttons to "Preview" in fcard ──
+      // ── Change Download buttons to "Preview" in fcard (not inside quiz) ──
       document.querySelectorAll('.fbtn').forEach(function (btn) {
+        if (btn.closest('#quiz-container')) return;
         btn.querySelectorAll('.en').forEach(function (e) { e.textContent = '👁 Preview'; });
         btn.querySelectorAll('.es').forEach(function (e) { e.textContent = '👁 Vista previa'; });
         if (!btn.querySelector('.en') && !btn.querySelector('.es')) btn.textContent = '👁 Preview';
       });
+
+      // ── Move training banner above welcome in Inicio page ──
+      var trainBanner = document.getElementById('training-banner');
+      var pageHome2 = document.getElementById('page-home');
+      if (trainBanner && pageHome2) {
+        var inicioEl = document.getElementById('az-inicio');
+        pageHome2.insertBefore(trainBanner, inicioEl || pageHome2.firstChild);
+      }
+
+      // ── Remove emojis from e-Training tab bar and add step indicators ──
+      var etTabs = document.getElementById('et-tabs');
+      if (etTabs) {
+        var etTabBtns = Array.from(etTabs.querySelectorAll('.os-tab'));
+        etTabBtns.forEach(function (tab, i) {
+          tab.querySelectorAll('.en, .es').forEach(function (span) {
+            span.textContent = span.textContent.replace(/[\u{1F000}-\u{1FFFF}\u{2600}-\u{27FF}\u{2700}-\u{27BF}]|️/gu, '').trim();
+          });
+          tab.childNodes.forEach(function (node) {
+            if (node.nodeType === 3) node.textContent = node.textContent.replace(/[\u{1F000}-\u{1FFFF}\u{2600}-\u{27FF}\u{2700}-\u{27BF}]|️/gu, '').trim();
+          });
+          var stepNum = document.createElement('span');
+          stepNum.className = 'az-et-step-num';
+          stepNum.textContent = 'Paso ' + (i + 1);
+          tab.insertBefore(stepNum, tab.firstChild);
+          if (i < etTabBtns.length - 1) {
+            var arrow = document.createElement('div');
+            arrow.className = 'az-et-arrow';
+            arrow.textContent = '→';
+            etTabs.insertBefore(arrow, tab.nextSibling);
+          }
+        });
+      }
+
+      // ── Remove emojis from home page original content ──
+      var homePageEl = document.getElementById('page-home');
+      if (homePageEl) {
+        homePageEl.querySelectorAll('.home-title,.hero-stat,.section-title,.ph-row,h1,h2,h3').forEach(function (el) {
+          el.childNodes.forEach(function (node) {
+            if (node.nodeType === 3) node.textContent = node.textContent.replace(/[\u{1F000}-\u{1FFFF}\u{2600}-\u{27FF}\u{2700}-\u{27BF}]|️/gu, '').trim();
+          });
+        });
+      }
     });
   })();
 
@@ -601,8 +666,8 @@
       var total = qs.length;
       var idx   = window.qState.idx;
       var progPct = Math.round((idx / total) * 100);
-      var text  = (lang === 'es' && q.text_es) ? q.text_es : q.text;
-      var opts  = (lang === 'es' && q.opts_es) ? q.opts_es : q.opts;
+      var text  = (lang === 'es' && q.es) ? q.es : (q.en || q.text || '');
+      var opts  = (lang === 'es' && q.opts_es) ? q.opts_es : (q.opts_en || q.opts || []);
 
       var optsHtml = opts.map(function (opt, i) {
         return '<div class="azq-opt" onclick="window.azAnswerQ(' + i + ')">' +
@@ -640,9 +705,10 @@
 
       var fb = document.createElement('div');
       fb.className = 'azq-fb ' + (correct ? 'ok' : 'ko');
+      var answerOpts = (lang === 'es' && q.opts_es) ? q.opts_es : (q.opts_en || q.opts || []);
       fb.textContent = correct
         ? (lang === 'es' ? '✓ ¡Correcto!' : '✓ Correct!')
-        : (lang === 'es' ? '✗ Incorrecto. La respuesta era: ' + (q.opts ? q.opts[q.ans] : '') : '✗ Incorrect. The answer was: ' + (q.opts ? q.opts[q.ans] : ''));
+        : (lang === 'es' ? '✗ Incorrecto. La respuesta era: ' + (answerOpts[q.ans] || '') : '✗ Incorrect. The answer was: ' + (answerOpts[q.ans] || ''));
 
       var wrap = document.querySelector('.azq-wrap');
       if (wrap) {
@@ -793,11 +859,37 @@
   // ════════════════════════════════════════════════════════════════════════
   //  14. AUTO-LOGIN + APPLY PATCHES
   // ════════════════════════════════════════════════════════════════════════
+  // ════════════════════════════════════════════════════════════════════════
+  //  14b. PATCH renderMetrics — fix downloads percentage
+  // ════════════════════════════════════════════════════════════════════════
+  function _patchRenderMetrics() {
+    var _origRM = window.renderMetrics;
+    window.renderMetrics = function () {
+      if (_origRM) _origRM.call(this);
+      if (!window.CUR_USER) return;
+      var st = window.loadST(window.CUR_USER.email) || { downloads: 0 };
+      var dl = st.downloads || 0;
+      var totalFiles = document.querySelectorAll('[id^="pdf_"]').length || 1;
+      var pct = Math.min(100, Math.round(dl / totalFiles * 100));
+      document.querySelectorAll('.met-bar-row').forEach(function (row) {
+        if (row.textContent.includes('Descargas') || row.textContent.includes('Downloads')) {
+          var fill = row.querySelector('.met-bar-fill');
+          if (fill) fill.style.width = pct + '%';
+          var pctEl = row.querySelector('.met-bar-pct');
+          if (pctEl) pctEl.textContent = pct + '%';
+          var lbl = row.querySelector('.met-bar-label');
+          if (lbl) lbl.innerHTML = lbl.innerHTML.replace(/\(\d+\)/, '(' + dl + '/' + totalFiles + ')');
+        }
+      });
+    };
+  }
+
   whenReady(async function () {
     // Apply function overrides after the original JS has run
     _patchDl();
     _patchUpdateLevel();
     _patchRenderQuestion();
+    _patchRenderMetrics();
 
     // Re-render quiz with patched renderQuestion
     setTimeout(function () {
