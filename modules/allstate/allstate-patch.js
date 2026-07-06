@@ -80,14 +80,14 @@
       .sb-section { font-size: .62rem !important; font-weight: 700 !important; text-transform: uppercase !important; letter-spacing: .1em !important; color: rgba(255,255,255,.3) !important; padding: 14px 16px 5px !important; }
       .sb-item {
         display: flex !important; align-items: center !important; gap: 9px !important;
-        padding: 9px 16px !important; width: 100% !important; text-align: left !important;
+        padding: 11px 16px !important; width: 100% !important; text-align: left !important;
         background: none !important; border: none !important; border-radius: 0 !important;
-        color: rgba(255,255,255,.65) !important; font-size: .83rem !important; font-weight: 500 !important;
+        color: rgba(255,255,255,.65) !important; font-size: .86rem !important; font-weight: 500 !important;
         cursor: pointer !important; transition: background .13s, color .13s !important;
       }
       .sb-item:hover { background: rgba(255,255,255,.06) !important; color: #fff !important; }
       .sb-item.active { background: rgba(37,99,235,.3) !important; color: #fff !important; font-weight: 600 !important; }
-      .sb-icon { font-size: .9rem !important; width: 18px !important; text-align: center !important; }
+      .sb-icon { display: none !important; }
       .sb-badge { background: #3B82F6 !important; color: #fff !important; font-size: .62rem !important; font-weight: 700 !important; border-radius: 99px !important; padding: 1px 6px !important; margin-left: auto !important; }
       .sb-avatar { width: 30px !important; height: 30px !important; border-radius: 50% !important; background: linear-gradient(135deg,#3B82F6,#0891B2) !important; display: flex !important; align-items: center !important; justify-content: center !important; font-weight: 700 !important; font-size: .72rem !important; color: #fff !important; flex-shrink: 0 !important; }
       .sb-name { font-size: .82rem !important; font-weight: 600 !important; color: #fff !important; }
@@ -195,6 +195,15 @@
         document.querySelectorAll('.az-lang-btn').forEach(function(b) { b.classList.toggle('active', b.dataset.lang === lang); });
         if (window.LANG !== lang && window.toggleLang) window.toggleLang();
       };
+      // ── Remove emojis/icons from sidebar items ──
+      document.querySelectorAll('.sb-item').forEach(function (item) {
+        item.querySelectorAll('svg, .sb-ico, .sb-icon, img').forEach(function (el) { el.remove(); });
+        item.childNodes.forEach(function (node) {
+          if (node.nodeType === 3) {
+            node.textContent = node.textContent.replace(/[\u{1F000}-\u{1FFFF}\u{2600}-\u{27FF}\u{2700}-\u{27BF}]|️/gu, '').trim();
+          }
+        });
+      });
     });
   })();
 
