@@ -85,6 +85,10 @@
       .admin-badge { background:#DBEAFE!important; color:#1D4ED8!important; font-size:.6rem!important; font-weight:700!important; border-radius:4px!important; padding:1px 5px!important; margin-left:4px!important; }
       .admin-only { display:none!important; }
       body.is-admin .admin-only { display:flex!important; }
+      .sb-item[data-page="admin-users"],
+      .sb-item[data-page="admin-activity"],
+      .sb-item[data-page="admin-ranking"] { display:none!important; }
+      #page-admin-users, #page-admin-activity, #page-admin-ranking { display:none!important; }
       /* EG-only features */
       .sb-item[data-page="order-supply"],
       .sb-item[data-page="illustrations"],

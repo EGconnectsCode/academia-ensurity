@@ -171,6 +171,10 @@
       .admin-badge { background: #DBEAFE !important; color: #1D4ED8 !important; font-size: .6rem !important; font-weight: 700 !important; border-radius: 4px !important; padding: 1px 5px !important; margin-left: 4px !important; }
       .admin-only { display: none !important; }
       body.is-admin .admin-only { display: flex !important; }
+      .sb-item[data-page="admin-users"],
+      .sb-item[data-page="admin-activity"],
+      .sb-item[data-page="admin-ranking"] { display:none!important; }
+      #page-admin-users, #page-admin-activity, #page-admin-ranking { display:none!important; }
       #dark-btn { display: none !important; }
       #lang-btn { display: none !important; }
       .az-lang-pill { display:flex !important; gap:3px !important; background:rgba(255,255,255,.08) !important; border:1px solid rgba(255,255,255,.15) !important; border-radius:8px !important; padding:3px !important; }
