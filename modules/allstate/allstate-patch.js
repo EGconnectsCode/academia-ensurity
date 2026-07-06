@@ -55,10 +55,11 @@
         display: flex !important; align-items: center !important; gap: 10px !important;
         justify-content: space-between !important;
       }
-      .az-topbar-signout { background:rgba(255,255,255,.14)!important; border:1px solid rgba(255,255,255,.3)!important;
-        color:#fff!important; padding:7px 16px!important; border-radius:8px!important; font-size:.82rem!important;
-        font-weight:600!important; cursor:pointer!important; font-family:inherit!important; transition:all .15s!important; white-space:nowrap!important; }
-      .az-topbar-signout:hover { background:rgba(239,68,68,.3)!important; border-color:rgba(239,68,68,.5)!important; color:#fca5a5!important; }
+      .az-topbar-signout { background:#DC2626!important; border:2px solid #ef4444!important;
+        color:#fff!important; padding:8px 20px!important; border-radius:8px!important; font-size:.85rem!important;
+        font-weight:700!important; cursor:pointer!important; font-family:inherit!important; transition:all .15s!important;
+        white-space:nowrap!important; letter-spacing:.01em!important; box-shadow:0 2px 8px rgba(220,38,38,.4)!important; }
+      .az-topbar-signout:hover { background:#b91c1c!important; border-color:#dc2626!important; box-shadow:0 4px 12px rgba(220,38,38,.5)!important; }
       /* ── Hide section header emoji icons ── */
       .ph-ico { display:none!important; }
       .tb-logo { font-weight: 700 !important; font-size: .9rem !important; color: #fff !important; letter-spacing: -.01em !important; }
@@ -185,15 +186,19 @@
     `;
     document.head.appendChild(style);
 
-    // Inject EN/ES pill language toggle + Admin back button into topbar
     document.addEventListener('DOMContentLoaded', function() {
-      var acts = document.querySelector('.tb-acts');
-      if (!acts) return;
+      var topbar = document.querySelector('.topbar');
+      var acts   = document.querySelector('.tb-acts');
+      if (!topbar || !acts) return;
+
+      // ── Admin button → LEFT side of topbar (before .tb-acts) ──
       var backBtn = document.createElement('button');
       backBtn.className = 'az-admin-back';
       backBtn.textContent = '← Admin';
       backBtn.onclick = function () { window.location.href = '/admin'; };
-      acts.insertBefore(backBtn, acts.firstChild);
+      topbar.insertBefore(backBtn, acts);
+
+      // ── Lang pill + Cerrar Sesión → RIGHT side (.tb-acts) ──
       var pill = document.createElement('div');
       pill.className = 'az-lang-pill';
       pill.innerHTML = '<button class="az-lang-btn active" data-lang="en" onclick="window._azLang(\'en\')">EN</button><button class="az-lang-btn" data-lang="es" onclick="window._azLang(\'es\')">ES</button>';
@@ -202,27 +207,23 @@
         document.querySelectorAll('.az-lang-btn').forEach(function(b) { b.classList.toggle('active', b.dataset.lang === lang); });
         if (window.LANG !== lang && window.toggleLang) window.toggleLang();
       };
-      // ── Inject sign-out button into topbar ──
       var soBtn = document.createElement('button');
       soBtn.className = 'az-topbar-signout';
       soBtn.textContent = 'Cerrar Sesión';
       soBtn.onclick = function() { if (window.doLogout) window.doLogout(); };
       acts.appendChild(soBtn);
-      // ── Remove emojis/icons from sidebar items ──
+
+      // ── Remove emojis from sidebar items ──
       document.querySelectorAll('.sb-item').forEach(function (item) {
         item.querySelectorAll('svg, .sb-ico, .sb-icon, img').forEach(function (el) { el.remove(); });
         item.childNodes.forEach(function (node) {
-          if (node.nodeType === 3) {
-            node.textContent = node.textContent.replace(/[\u{1F000}-\u{1FFFF}\u{2600}-\u{27FF}\u{2700}-\u{27BF}]|️/gu, '').trim();
-          }
+          if (node.nodeType === 3) node.textContent = node.textContent.replace(/[\u{1F000}-\u{1FFFF}\u{2600}-\u{27FF}\u{2700}-\u{27BF}]|️/gu, '').trim();
         });
       });
-      // ── Remove emojis from section/page headings ──
-      document.querySelectorAll('h1, h2, h3, .ph-title, .page-title, .section-title').forEach(function (el) {
+      // ── Remove emojis from headings and hero buttons ──
+      document.querySelectorAll('h1, h2, h3, .ph-title, .card-title, .ctitle, .hero-btns button').forEach(function (el) {
         el.childNodes.forEach(function (node) {
-          if (node.nodeType === 3) {
-            node.textContent = node.textContent.replace(/[\u{1F000}-\u{1FFFF}\u{2600}-\u{27FF}\u{2700}-\u{27BF}\u{FE00}-\u{FE0F}]|️/gu, '').trim();
-          }
+          if (node.nodeType === 3) node.textContent = node.textContent.replace(/[\u{1F000}-\u{1FFFF}\u{2600}-\u{27FF}\u{2700}-\u{27BF}\u{FE00}-\u{FE0F}]|️/gu, '').trim();
         });
       });
     });

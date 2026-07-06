@@ -105,11 +105,34 @@
       .az-admin-back:hover { background:rgba(255,255,255,.16)!important; }
       /* ── Hide section header emoji icons ── */
       .ph-ico { display:none!important; }
+      /* ── Hide original logout button (replaced by our red one) ── */
+      .tb-ctrl { display:none!important; }
       /* ── Topbar sign-out button ── */
-      .az-topbar-signout { background:rgba(255,255,255,.14)!important; border:1px solid rgba(255,255,255,.3)!important;
-        color:#fff!important; padding:7px 16px!important; border-radius:8px!important; font-size:.82rem!important;
-        font-weight:600!important; cursor:pointer!important; font-family:inherit!important; transition:all .15s!important; white-space:nowrap!important; }
-      .az-topbar-signout:hover { background:rgba(239,68,68,.3)!important; border-color:rgba(239,68,68,.5)!important; color:#fca5a5!important; }
+      .az-topbar-signout { background:#DC2626!important; border:2px solid #ef4444!important;
+        color:#fff!important; padding:8px 20px!important; border-radius:8px!important; font-size:.85rem!important;
+        font-weight:700!important; cursor:pointer!important; font-family:inherit!important; transition:all .15s!important;
+        white-space:nowrap!important; letter-spacing:.01em!important; box-shadow:0 2px 8px rgba(220,38,38,.4)!important; }
+      .az-topbar-signout:hover { background:#b91c1c!important; border-color:#dc2626!important; box-shadow:0 4px 12px rgba(220,38,38,.5)!important; }
+      /* ── Dashboard quick-link cards → CICA sec-row style ── */
+      .dash-grid { display:flex!important; flex-direction:column!important; gap:6px!important; }
+      .dash-card { display:flex!important; align-items:center!important; gap:12px!important;
+        padding:12px 14px!important; border-radius:10px!important; cursor:pointer!important;
+        background:var(--az-surface)!important; border:1px solid var(--az-border)!important;
+        transition:background .13s!important; text-decoration:none!important; }
+      .dash-card:hover { background:#EFF6FF!important; border-color:#BFDBFE!important; }
+      .dash-card-ico { font-size:1.1rem!important; flex-shrink:0!important; width:32px!important; text-align:center!important; }
+      .dash-card-body { flex:1!important; }
+      .dash-card-title { font-size:.85rem!important; font-weight:600!important; color:var(--az-text)!important; }
+      .dash-card-sub { font-size:.75rem!important; color:var(--az-text2)!important; margin-top:2px!important; }
+      .dash-card-arrow { color:var(--az-text2)!important; font-size:.9rem!important; opacity:.5!important; }
+      /* ── Hero stats (AA only has badge, add stat boxes) ── */
+      .hero-badge { display:none!important; }
+      .az-hero-stats { display:flex!important; gap:6px!important; flex-wrap:wrap!important; }
+      .az-h-stat { background:rgba(255,255,255,.08)!important; border:1px solid rgba(255,255,255,.1)!important;
+        border-radius:10px!important; padding:12px 18px!important; text-align:center!important; min-width:70px!important; }
+      .az-h-stat-n { font-size:1.5rem!important; font-weight:800!important; color:#fff!important; line-height:1!important; }
+      .az-h-stat-l { font-size:.62rem!important; font-weight:600!important; color:rgba(255,255,255,.5)!important;
+        text-transform:uppercase!important; letter-spacing:.07em!important; margin-top:4px!important; }
       /* ── Notice banner → red ── */
       #notice-banner { background:linear-gradient(90deg,#7f1d1d 0%,#b91c1c 60%,#dc2626 100%)!important; border-color:#ef4444!important; }
       #notice-banner * { color:#fff!important; }
@@ -141,7 +164,7 @@
       var pill = document.createElement('div');
       pill.className = 'az-lang-pill';
       pill.innerHTML = '<button class="az-lang-btn active" data-lang="en" onclick="window._azLang(\'en\')">EN</button><button class="az-lang-btn" data-lang="es" onclick="window._azLang(\'es\')">ES</button>';
-      acts.insertBefore(pill, acts.firstChild);
+      acts.appendChild(pill);
       window._azLang = function(lang) {
         document.querySelectorAll('.az-lang-btn').forEach(function(b) { b.classList.toggle('active', b.dataset.lang === lang); });
         if (window.setLang) window.setLang(lang);
@@ -169,6 +192,17 @@
           }
         });
       });
+      // ── Hero stats: hide badge, inject Modules + Downloads + XP boxes ──
+      var hero = document.querySelector('.hero');
+      if (hero && !hero.querySelector('.az-hero-stats')) {
+        var statsWrap = document.createElement('div');
+        statsWrap.className = 'az-hero-stats';
+        statsWrap.innerHTML =
+          '<div class="az-h-stat"><div class="az-h-stat-n" id="az-hs-mods">—</div><div class="az-h-stat-l">Módulos</div></div>' +
+          '<div class="az-h-stat"><div class="az-h-stat-n" id="az-hs-docs">—</div><div class="az-h-stat-l">Docs</div></div>' +
+          '<div class="az-h-stat"><div class="az-h-stat-n" id="az-hs-xp">0</div><div class="az-h-stat-l">XP</div></div>';
+        hero.appendChild(statsWrap);
+      }
       // ── Add step numbers + arrows to training tabs ──
       var etTabs = document.querySelectorAll('#page-etraining .os-tabs-bar .os-tab');
       etTabs.forEach(function(tab, i) {
@@ -479,7 +513,18 @@
 
       CACHE.stByEmail[email.toLowerCase()] = st;
       if (window.ST) { window.ST.xp = st.xp; window.ST.downloads = st.downloads; }
+      const completedMods = Object.values(progressMap).filter(r => r.completed).length;
+      _updateHeroStats(completedMods, st.downloads, st.xp);
     } catch (e) { console.warn('[AA Patch] loadUserCache error:', e.message); }
+  }
+
+  function _updateHeroStats(mods, docs, xp) {
+    var m = document.getElementById('az-hs-mods');
+    var d = document.getElementById('az-hs-docs');
+    var x = document.getElementById('az-hs-xp');
+    if (m) m.textContent = mods != null ? mods : '—';
+    if (d) d.textContent = docs != null ? docs : '—';
+    if (x) x.textContent = xp  != null ? xp  : '0';
   }
 
   // ════════════════════════════════════════════════
