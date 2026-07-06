@@ -655,8 +655,9 @@
     window.renderQuestion = function () {
       var container = document.getElementById('quiz-container');
       if (!container) return;
-      if (!window.QUIZ_DATA || !window.qState) return;
-      var mod = window.QUIZ_DATA[window.qState.module];
+      var _QD = (typeof QUIZ_DATA !== 'undefined' ? QUIZ_DATA : null);
+      if (!_QD || !window.qState) return;
+      var mod = _QD[window.qState.module];
       if (!mod) return;
       var qs = mod.questions;
       var q  = qs[window.qState.idx];
@@ -720,7 +721,7 @@
     window.azAnswerQ = function (i) {
       if (!window.qState || window.qState.answered) return;
       window.qState.answered = true;
-      var mod  = window.QUIZ_DATA[window.qState.module];
+      var mod  = (typeof QUIZ_DATA !== 'undefined' ? QUIZ_DATA : {})[window.qState.module];
       var q    = mod.questions[window.qState.idx];
       var lang = (document.documentElement.getAttribute('data-lang') || 'en') === 'es' ? 'es' : 'en';
       var correct = (i === q.ans);
