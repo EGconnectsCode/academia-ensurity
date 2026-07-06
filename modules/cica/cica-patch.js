@@ -79,6 +79,8 @@
         font-size:.82rem!important; font-weight:600!important; margin:16px 20px 0!important;
         display:flex!important; align-items:center!important; gap:10px!important;
         box-shadow:0 2px 8px rgba(220,38,38,.3)!important; }
+      #training-banner * { color:#fff!important; }
+      #training-banner a { text-decoration:underline!important; }
       #training-banner button { background:rgba(255,255,255,.2)!important; border:1px solid rgba(255,255,255,.3)!important;
         color:#fff!important; border-radius:6px!important; padding:3px 10px!important;
         font-size:.75rem!important; cursor:pointer!important; }
@@ -285,6 +287,25 @@
             el.textContent.toLowerCase().includes('agent portal login')) {
           el.textContent = 'Ir a mi portal';
         }
+      });
+      // Strip emoji text nodes from .hero-btn parent (e.g. 🔒 before span text)
+      document.querySelectorAll('.hero-btn').forEach(function (btn) {
+        btn.childNodes.forEach(function (node) {
+          if (node.nodeType === 3) {
+            node.textContent = node.textContent.replace(/[\u{1F000}-\u{1FFFF}\u{2600}-\u{27FF}\u{2700}-\u{27BF}\u{FE00}-\u{FE0F}]|️/gu, '').trim();
+          }
+        });
+      });
+      // Strip emoji from hero-btn-2 (e.g. 🎓 e-Training)
+      document.querySelectorAll('.hero-btn-2').forEach(function (btn) {
+        btn.childNodes.forEach(function (node) {
+          if (node.nodeType === 3) {
+            node.textContent = node.textContent.replace(/[\u{1F000}-\u{1FFFF}\u{2600}-\u{27FF}\u{2700}-\u{27BF}\u{FE00}-\u{FE0F}]|️/gu, '').trim();
+          }
+        });
+        btn.querySelectorAll('.en, .es').forEach(function (s) {
+          s.textContent = s.textContent.replace(/[\u{1F000}-\u{1FFFF}\u{2600}-\u{27FF}\u{2700}-\u{27BF}\u{FE00}-\u{FE0F}]|️/gu, '').trim();
+        });
       });
       // Quick links in home sidebar widget
       document.querySelectorAll('.sec-name .en, .sec-name .es').forEach(function (el) {
