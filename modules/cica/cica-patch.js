@@ -72,6 +72,9 @@
         color:rgba(255,255,255,.8); padding:5px 12px; border-radius:8px; font-size:.75rem;
         font-weight:600; cursor:pointer; font-family:inherit; transition:all .15s; white-space:nowrap; }
       .az-topbar-signout:hover { background:rgba(239,68,68,.2); border-color:rgba(239,68,68,.4); color:#fca5a5; }
+      .az-admin-back { display:none!important; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15); color:rgba(255,255,255,.8); padding:5px 12px; border-radius:8px; font-size:.75rem; font-weight:600; cursor:pointer; font-family:inherit; transition:all .15s; white-space:nowrap; }
+      body.is-admin .az-admin-back { display:inline-flex!important; align-items:center; gap:5px; }
+      .az-admin-back:hover { background:rgba(255,255,255,.16)!important; }
       .sb-item:hover  { background:rgba(255,255,255,.06)!important; color:#fff!important; }
       .sb-item.active { background:rgba(37,99,235,.3)!important; color:#fff!important; font-weight:600!important; }
       .sb-badge { background:#3B82F6!important; color:#fff!important; font-size:.62rem!important;
@@ -179,6 +182,11 @@
       // ── Inject EN/ES pill toggle + Sign Out into topbar right ──
       var acts = document.querySelector('.topbar-right') || document.querySelector('.tb-acts');
       if (acts) {
+        var backBtn = document.createElement('button');
+        backBtn.className = 'az-admin-back';
+        backBtn.textContent = '← Admin';
+        backBtn.onclick = function () { window.location.href = '/admin'; };
+        acts.insertBefore(backBtn, acts.firstChild);
         var div = document.createElement('div');
         div.className = 'az-lang-toggle';
         div.innerHTML =
