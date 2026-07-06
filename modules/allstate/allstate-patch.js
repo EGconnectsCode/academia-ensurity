@@ -53,7 +53,14 @@
         height: 54px !important;
         padding: 0 16px !important;
         display: flex !important; align-items: center !important; gap: 10px !important;
+        justify-content: space-between !important;
       }
+      .az-topbar-signout { background:rgba(255,255,255,.14)!important; border:1px solid rgba(255,255,255,.3)!important;
+        color:#fff!important; padding:7px 16px!important; border-radius:8px!important; font-size:.82rem!important;
+        font-weight:600!important; cursor:pointer!important; font-family:inherit!important; transition:all .15s!important; white-space:nowrap!important; }
+      .az-topbar-signout:hover { background:rgba(239,68,68,.3)!important; border-color:rgba(239,68,68,.5)!important; color:#fca5a5!important; }
+      /* ── Hide section header emoji icons ── */
+      .ph-ico { display:none!important; }
       .tb-logo { font-weight: 700 !important; font-size: .9rem !important; color: #fff !important; letter-spacing: -.01em !important; }
       .tb-logo small { display: block !important; font-size: .65rem !important; font-weight: 500 !important; color: rgba(255,255,255,.5) !important; text-transform: uppercase !important; letter-spacing: .06em !important; }
       .tb-greet { font-size: .88rem !important; color: rgba(255,255,255,.75) !important; }
@@ -195,12 +202,26 @@
         document.querySelectorAll('.az-lang-btn').forEach(function(b) { b.classList.toggle('active', b.dataset.lang === lang); });
         if (window.LANG !== lang && window.toggleLang) window.toggleLang();
       };
+      // ── Inject sign-out button into topbar ──
+      var soBtn = document.createElement('button');
+      soBtn.className = 'az-topbar-signout';
+      soBtn.textContent = 'Cerrar Sesión';
+      soBtn.onclick = function() { if (window.doLogout) window.doLogout(); };
+      acts.appendChild(soBtn);
       // ── Remove emojis/icons from sidebar items ──
       document.querySelectorAll('.sb-item').forEach(function (item) {
         item.querySelectorAll('svg, .sb-ico, .sb-icon, img').forEach(function (el) { el.remove(); });
         item.childNodes.forEach(function (node) {
           if (node.nodeType === 3) {
             node.textContent = node.textContent.replace(/[\u{1F000}-\u{1FFFF}\u{2600}-\u{27FF}\u{2700}-\u{27BF}]|️/gu, '').trim();
+          }
+        });
+      });
+      // ── Remove emojis from section/page headings ──
+      document.querySelectorAll('h1, h2, h3, .ph-title, .page-title, .section-title').forEach(function (el) {
+        el.childNodes.forEach(function (node) {
+          if (node.nodeType === 3) {
+            node.textContent = node.textContent.replace(/[\u{1F000}-\u{1FFFF}\u{2600}-\u{27FF}\u{2700}-\u{27BF}\u{FE00}-\u{FE0F}]|️/gu, '').trim();
           }
         });
       });

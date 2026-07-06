@@ -36,7 +36,7 @@
       }
       body { background:var(--az-bg)!important; font-family:'Inter','Segoe UI',system-ui,sans-serif!important; }
 
-      .topbar { background:var(--az-navy)!important; border-bottom:1px solid rgba(255,255,255,.07)!important; box-shadow:0 1px 8px rgba(0,0,0,.25)!important; height:54px!important; padding:0 16px!important; display:flex!important; align-items:center!important; gap:10px!important; }
+      .topbar, #topbar { background:var(--az-navy)!important; border-bottom:1px solid rgba(255,255,255,.07)!important; box-shadow:0 1px 8px rgba(0,0,0,.25)!important; height:54px!important; padding:0 16px!important; display:flex!important; align-items:center!important; gap:10px!important; justify-content:space-between!important; }
       .tb-logo { font-weight:700!important; font-size:.9rem!important; color:#fff!important; }
       .tb-logo small { display:block!important; font-size:.65rem!important; color:rgba(255,255,255,.5)!important; text-transform:uppercase!important; letter-spacing:.06em!important; }
       .tb-greet { font-size:.88rem!important; color:rgba(255,255,255,.75)!important; }
@@ -103,9 +103,35 @@
       .az-admin-back { display:none!important; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15); color:rgba(255,255,255,.8); padding:5px 12px; border-radius:8px; font-size:.75rem; font-weight:600; cursor:pointer; font-family:inherit; transition:all .15s; white-space:nowrap; }
       body.is-admin .az-admin-back { display:inline-flex!important; align-items:center; gap:5px; }
       .az-admin-back:hover { background:rgba(255,255,255,.16)!important; }
+      /* ── Hide section header emoji icons ── */
+      .ph-ico { display:none!important; }
+      /* ── Topbar sign-out button ── */
+      .az-topbar-signout { background:rgba(255,255,255,.14)!important; border:1px solid rgba(255,255,255,.3)!important;
+        color:#fff!important; padding:7px 16px!important; border-radius:8px!important; font-size:.82rem!important;
+        font-weight:600!important; cursor:pointer!important; font-family:inherit!important; transition:all .15s!important; white-space:nowrap!important; }
+      .az-topbar-signout:hover { background:rgba(239,68,68,.3)!important; border-color:rgba(239,68,68,.5)!important; color:#fca5a5!important; }
+      /* ── Notice banner → red ── */
+      #notice-banner { background:linear-gradient(90deg,#7f1d1d 0%,#b91c1c 60%,#dc2626 100%)!important; border-color:#ef4444!important; }
+      #notice-banner * { color:#fff!important; }
+      /* ── Training step tabs ── */
+      #page-etraining .os-tabs-bar { display:flex!important; flex-direction:column!important; gap:10px!important; padding:8px 0!important; }
+      #page-etraining .os-tab { display:flex!important; align-items:center!important; gap:12px!important;
+        padding:14px 18px!important; border-radius:12px!important; font-size:.88rem!important; font-weight:600!important;
+        background:var(--az-surface)!important; border:1px solid var(--az-border)!important; color:var(--az-text)!important;
+        cursor:pointer!important; transition:all .15s!important; position:relative!important; }
+      #page-etraining .os-tab:hover { background:#EFF6FF!important; border-color:#BFDBFE!important; color:#1D4ED8!important; }
+      #page-etraining .os-tab.active { background:linear-gradient(135deg,#1E3A5F,#2563EB)!important; color:#fff!important; border-color:#2563EB!important; }
+      .az-et-step-num { display:inline-flex!important; align-items:center!important; justify-content:center!important;
+        width:28px!important; height:28px!important; border-radius:50%!important; background:#E0E7FF!important; color:#3730A3!important;
+        font-size:.75rem!important; font-weight:700!important; flex-shrink:0!important; }
+      #page-etraining .os-tab.active .az-et-step-num { background:rgba(255,255,255,.2)!important; color:#fff!important; }
+      .az-et-label { flex:1!important; text-align:left!important; }
+      .az-et-arrow { margin-left:auto!important; opacity:.4!important; font-size:1rem!important; }
+      #page-etraining .os-tab.active .az-et-arrow { opacity:.9!important; }
+      #page-etraining .os-tab:not(:last-child)::after { content:''; display:block!important; width:2px!important; height:10px!important; background:#CBD5E1!important; margin:0 auto!important; }
     `;
     document.addEventListener('DOMContentLoaded', function() {
-      var acts = document.querySelector('.tb-acts') || document.querySelector('.tb-actions');
+      var acts = document.querySelector('.tb-acts') || document.querySelector('.tb-actions') || document.getElementById('topbar');
       if (!acts) return;
       var backBtn = document.createElement('button');
       backBtn.className = 'az-admin-back';
@@ -120,6 +146,12 @@
         document.querySelectorAll('.az-lang-btn').forEach(function(b) { b.classList.toggle('active', b.dataset.lang === lang); });
         if (window.setLang) window.setLang(lang);
       };
+      // ── Inject sign-out button into topbar ──
+      var soBtn = document.createElement('button');
+      soBtn.className = 'az-topbar-signout';
+      soBtn.textContent = 'Cerrar Sesión';
+      soBtn.onclick = function() { if (window.doLogout) window.doLogout(); };
+      acts.appendChild(soBtn);
       // ── Remove emojis/icons from sidebar items ──
       document.querySelectorAll('.sb-item').forEach(function (item) {
         item.querySelectorAll('svg, .sb-ico, .sb-icon, img').forEach(function (el) { el.remove(); });
@@ -128,6 +160,33 @@
             node.textContent = node.textContent.replace(/[\u{1F000}-\u{1FFFF}\u{2600}-\u{27FF}\u{2700}-\u{27BF}]|️/gu, '').trim();
           }
         });
+      });
+      // ── Remove emojis from section/page headings ──
+      document.querySelectorAll('h1, h2, h3, .ph-title, .page-title, .section-title').forEach(function (el) {
+        el.childNodes.forEach(function (node) {
+          if (node.nodeType === 3) {
+            node.textContent = node.textContent.replace(/[\u{1F000}-\u{1FFFF}\u{2600}-\u{27FF}\u{2700}-\u{27BF}\u{FE00}-\u{FE0F}]|️/gu, '').trim();
+          }
+        });
+      });
+      // ── Add step numbers + arrows to training tabs ──
+      var etTabs = document.querySelectorAll('#page-etraining .os-tabs-bar .os-tab');
+      etTabs.forEach(function(tab, i) {
+        var originalText = tab.textContent.trim()
+          .replace(/[\u{1F000}-\u{1FFFF}\u{2600}-\u{27FF}\u{2700}-\u{27BF}\u{FE00}-\u{FE0F}]|️/gu, '').trim();
+        tab.innerHTML = '';
+        var stepNum = document.createElement('span');
+        stepNum.className = 'az-et-step-num';
+        stepNum.textContent = i + 1;
+        var label = document.createElement('span');
+        label.className = 'az-et-label';
+        label.textContent = originalText;
+        var arrow = document.createElement('span');
+        arrow.className = 'az-et-arrow';
+        arrow.textContent = '→';
+        tab.appendChild(stepNum);
+        tab.appendChild(label);
+        tab.appendChild(arrow);
       });
     });
     document.head.appendChild(style);
