@@ -181,10 +181,6 @@
       .az-lang-btn { background:transparent !important; border:none !important; color:rgba(255,255,255,.55) !important; border-radius:6px !important; padding:3px 9px !important; font-size:.75rem !important; font-weight:700 !important; cursor:pointer !important; transition:all .15s !important; letter-spacing:.02em !important; }
       .az-lang-btn.active { background:#fff !important; color:#0F172A !important; }
       .az-lang-btn:hover:not(.active) { color:#fff !important; background:rgba(255,255,255,.1) !important; }
-      .az-admin-back { display:none!important; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15); color:rgba(255,255,255,.8); padding:5px 12px; border-radius:8px; font-size:.75rem; font-weight:600; cursor:pointer; font-family:inherit; transition:all .15s; white-space:nowrap; }
-      body.is-admin .az-admin-back { display:inline-flex!important; align-items:center; gap:5px; }
-      .az-admin-back:hover { background:rgba(255,255,255,.16)!important; }
-
       /* ── XP bar ── */
       #xp-section { margin-bottom: 16px !important; }
     `;
@@ -194,13 +190,6 @@
       var topbar = document.querySelector('.topbar');
       var acts   = document.querySelector('.tb-acts');
       if (!topbar || !acts) return;
-
-      // ── Admin button → LEFT side of topbar (before .tb-acts) ──
-      var backBtn = document.createElement('button');
-      backBtn.className = 'az-admin-back';
-      backBtn.textContent = '← Admin';
-      backBtn.onclick = function () { window.location.href = '/admin'; };
-      topbar.insertBefore(backBtn, acts);
 
       // ── Lang pill + Cerrar Sesión → RIGHT side (.tb-acts) ──
       var pill = document.createElement('div');
