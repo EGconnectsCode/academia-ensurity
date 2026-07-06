@@ -153,7 +153,8 @@
       .azq-btn { padding:9px 22px; border-radius:8px; border:none; font-size:.85rem;
         font-weight:600; cursor:pointer; transition:opacity .15s; font-family:inherit; }
       .azq-btn-p { background:#2563EB; color:#fff; }
-      .azq-btn-p:hover { opacity:.9; }
+      .azq-btn-p:hover:not(:disabled) { opacity:.9; }
+      .azq-btn-p:disabled { background:#94A3B8; cursor:not-allowed; opacity:.7; }
       .azq-btn-s { background:var(--az-surface); border:1.5px solid var(--az-border); color:var(--az-text2); }
       .azq-result { text-align:center; padding:32px 20px; }
       .azq-score { font-size:3.2rem; font-weight:900; color:#2563EB; line-height:1; }
@@ -696,6 +697,11 @@
           '<span>' + opt + '</span></div>';
       }).join('');
 
+      var isLast = (idx + 1 >= total);
+      var nextLabel = isLast
+        ? (lang === 'es' ? 'Ver resultados →' : 'See results →')
+        : (lang === 'es' ? 'Siguiente →' : 'Next →');
+
       container.innerHTML =
         '<div class="azq-wrap">' +
         '<div class="azq-prog-label">' +
@@ -705,6 +711,9 @@
         '<div class="azq-prog-bar"><div class="azq-prog-fill" style="width:' + progPct + '%"></div></div>' +
         '<div class="azq-q">' + text + '</div>' +
         '<div class="azq-opts">' + optsHtml + '</div>' +
+        '<div class="azq-actions">' +
+        '<button class="azq-btn azq-btn-p" id="azq-next-btn" onclick="window.nextQ()" disabled>' + nextLabel + '</button>' +
+        '</div>' +
         '</div>';
     };
 
@@ -733,15 +742,10 @@
 
       var wrap = document.querySelector('.azq-wrap');
       if (wrap) {
-        wrap.appendChild(fb);
-        var actions = document.createElement('div');
-        actions.className = 'azq-actions';
-        actions.innerHTML = '<button class="azq-btn azq-btn-p" onclick="window.nextQ()">' +
-          (window.qState.idx + 1 >= mod.questions.length
-            ? (lang === 'es' ? 'Ver resultados →' : 'See results →')
-            : (lang === 'es' ? 'Siguiente →' : 'Next →')) +
-          '</button>';
-        wrap.appendChild(actions);
+        var actionsEl = wrap.querySelector('.azq-actions');
+        wrap.insertBefore(fb, actionsEl);
+        var nextBtn = document.getElementById('azq-next-btn');
+        if (nextBtn) nextBtn.disabled = false;
       }
     };
 
