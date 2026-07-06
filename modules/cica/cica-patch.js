@@ -31,6 +31,7 @@
         padding:0 16px!important; display:flex!important; align-items:center!important; gap:10px!important;
         justify-content:space-between!important; }
       .topbar-logo { display:none!important; }
+      .topbar-right { margin-left:auto!important; }
       .tb-user  { display:none!important; }
       .tb-dark-btn { display:none!important; }
       .tb-lang-btn  { display:none!important; }
