@@ -484,7 +484,8 @@
 
     function end() {
       if (overlay) overlay.classList.remove('active');
-      if (spot) spot.style.cssText = '';
+      if (spot)  { spot.style.cssText = ''; spot.style.display = 'none'; }
+      if (card)  { card.style.display = 'none'; card.innerHTML = ''; }
       try { localStorage.setItem(TOUR_KEY, '1'); } catch (e) {}
     }
 
@@ -492,6 +493,8 @@
     window.azEndTour  = end;
     window.azStartTour = function () {
       if (!overlay) buildDOM();
+      if (spot) spot.style.display = '';
+      if (card) card.style.display = '';
       curStep = 0;
       step(0);
     };
