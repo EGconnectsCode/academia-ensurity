@@ -69,6 +69,7 @@
         background:none!important; border:none!important; color:rgba(255,255,255,.65)!important;
         font-size:.86rem!important; font-weight:500!important; cursor:pointer!important;
         transition:background .13s,color .13s!important; }
+      .sb-bottom { display:none!important; }
       .az-topbar-signout { background:#DC2626; border:2px solid #ef4444;
         color:#fff; padding:8px 20px; border-radius:8px; font-size:.85rem;
         font-weight:700; cursor:pointer; font-family:inherit; transition:all .15s; white-space:nowrap;
