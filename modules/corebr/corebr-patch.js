@@ -437,10 +437,15 @@
     await AZ.Prefs.save(session.user.id, { lang: window.LANG || 'en' });
   };
 
+  function _removeAdminUI() {
+    document.querySelectorAll('.admin-only').forEach(function(el) { el.remove(); });
+  }
+
   // ── AUTO-LOGIN ──
   whenReady(async function () {
     _patchDl();
     _azInjectFileButtons();
+    _removeAdminUI();
     try {
       var current = await AZ.Auth.getCurrentUser();
       if (!current) { window.location.replace('/'); return; }

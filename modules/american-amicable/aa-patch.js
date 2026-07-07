@@ -611,9 +611,14 @@
   // ════════════════════════════════════════════════
   //  9. AUTO-LOGIN on page load
   // ════════════════════════════════════════════════
+  function _removeAdminUI() {
+    document.querySelectorAll('.admin-only').forEach(function(el) { el.remove(); });
+  }
+
   whenReady(async () => {
     _patchDl();
     _azInjectFileButtons();
+    _removeAdminUI();
     try {
       const current = await AZ.Auth.getCurrentUser();
       if (!current) { window.location.replace('/'); return; }

@@ -179,6 +179,7 @@
       button[onclick*="toggleDark"] { display:none!important; }
       .admin-only { display:none!important; }
       body.is-admin .admin-only { display:none!important; }
+      .admin-only, body.is-admin .admin-only, .sb-section.admin-only, .sb-item.admin-only, .page.admin-only { display:none!important; }
       #lang-btn { display: none !important; }
       .az-lang-pill { display:flex !important; gap:3px !important; background:rgba(255,255,255,.08) !important; border:1px solid rgba(255,255,255,.15) !important; border-radius:8px !important; padding:3px !important; }
       .az-lang-btn { background:transparent !important; border:none !important; color:rgba(255,255,255,.55) !important; border-radius:6px !important; padding:3px 9px !important; font-size:.75rem !important; font-weight:700 !important; cursor:pointer !important; transition:all .15s !important; letter-spacing:.02em !important; }
@@ -694,9 +695,14 @@
   // ════════════════════════════════════════════════
   //  10. AUTO-LOGIN: Check for existing session on page load
   // ════════════════════════════════════════════════
+  function _removeAdminUI() {
+    document.querySelectorAll('.admin-only').forEach(function(el) { el.remove(); });
+  }
+
   whenReady(async () => {
     _patchDl();
     _azInjectFileButtons();
+    _removeAdminUI();
     try {
       const current = await AZ.Auth.getCurrentUser();
       if (!current) { window.location.replace('/'); return; }

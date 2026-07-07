@@ -991,10 +991,15 @@
     };
   }
 
+  function _removeAdminUI() {
+    document.querySelectorAll('.admin-only').forEach(function(el) { el.remove(); });
+  }
+
   whenReady(async function () {
     // Apply function overrides after the original JS has run
     _patchDl();
     _azInjectFileButtons();
+    _removeAdminUI();
     _patchUpdateLevel();
     _patchRenderQuestion();
     _patchRenderMetrics();
