@@ -10,8 +10,15 @@
 import { readFileSync, writeFileSync } from 'fs';
 import { resolve } from 'path';
 
-const SUPABASE_URL     = 'https://qvamdopwbjlccazchoer.supabase.co';
-const SERVICE_ROLE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF2YW1kb3B3YmpsY2NhemNob2VyIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MjMxMDg4NCwiZXhwIjoyMDk3ODg2ODg0fQ.txlLgl1gTL66usTZs0aRDsSbgfIgYHd78cqjsjNjVqI';
+// Load from .env — never hardcode secrets
+import { config } from 'dotenv';
+config();
+const SUPABASE_URL     = process.env.SUPABASE_URL;
+const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+if (!SUPABASE_URL || !SERVICE_ROLE_KEY) {
+  console.error('Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY in .env');
+  process.exit(1);
+}
 
 const MODULES = [
   {
