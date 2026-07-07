@@ -7,6 +7,7 @@
 
   const MODULE_ID = 'gtl';
 
+  // ── Design system + UI overrides ──
   (function injectDesign() {
     const style = document.createElement('style');
     style.textContent = `
@@ -19,6 +20,8 @@
         --az-shadow:0 1px 3px rgba(0,0,0,.07),0 4px 12px rgba(0,0,0,.06);
       }
 
+      body { background:var(--az-bg)!important; font-family:'Inter','Segoe UI',system-ui,sans-serif!important; }
+
       .topbar { background:var(--az-navy)!important; border-bottom:1px solid rgba(255,255,255,.07)!important;
         box-shadow:0 1px 8px rgba(0,0,0,.25)!important; height:54px!important; padding:0 16px!important;
         display:flex!important; align-items:center!important; justify-content:space-between!important; }
@@ -29,17 +32,13 @@
       .tb-dark-btn { display:none!important; }
       .tb-user { display:none!important; }
 
-      .sb-bottom { display:none!important; }
+      .az-topbar-signout { background:#DC2626!important; border:2px solid #ef4444!important;
+        color:#fff!important; padding:8px 20px!important; border-radius:8px!important; font-size:.85rem!important;
+        font-weight:700!important; cursor:pointer!important; font-family:inherit!important; transition:all .15s!important;
+        white-space:nowrap!important; letter-spacing:.01em!important; box-shadow:0 2px 8px rgba(220,38,38,.4)!important; }
+      .az-topbar-signout:hover { background:#b91c1c!important; border-color:#dc2626!important;
+        box-shadow:0 4px 12px rgba(220,38,38,.5)!important; }
 
-      /* Admin panel pages hidden */
-      .sb-item[data-page="admin-users"],
-      .sb-item[data-page="admin-activity"],
-      .sb-item[data-page="admin-ranking"] { display:none!important; }
-      #page-admin-users, #page-admin-activity, #page-admin-ranking { display:none!important; }
-      .admin-only { display:none!important; }
-      body.is-admin .admin-only { display:flex!important; }
-
-      /* Lang pill */
       .az-lang-toggle { display:flex!important; background:rgba(255,255,255,.08)!important;
         border:1px solid rgba(255,255,255,.15)!important; border-radius:8px!important; padding:3px!important; }
       .az-lb { background:transparent!important; border:none!important; color:rgba(255,255,255,.55)!important;
@@ -48,21 +47,27 @@
       .az-lb.active { background:#fff!important; color:#0F172A!important; }
       .az-lb:hover:not(.active) { color:#fff!important; background:rgba(255,255,255,.1)!important; }
 
-      /* Cerrar Sesión */
-      .az-topbar-signout { background:#DC2626!important; border:2px solid #ef4444!important;
-        color:#fff!important; padding:8px 20px!important; border-radius:8px!important; font-size:.85rem!important;
-        font-weight:700!important; cursor:pointer!important; font-family:inherit!important; transition:all .15s!important;
-        white-space:nowrap!important; letter-spacing:.01em!important; box-shadow:0 2px 8px rgba(220,38,38,.4)!important; }
-      .az-topbar-signout:hover { background:#b91c1c!important; border-color:#dc2626!important;
-        box-shadow:0 4px 12px rgba(220,38,38,.5)!important; }
-
-      /* Sidebar */
       .sidebar, #sidebar { background:var(--az-navy)!important; border-right:1px solid rgba(255,255,255,.07)!important; }
       .sb-item { color:rgba(255,255,255,.65)!important; font-size:.86rem!important; }
       .sb-item:hover { background:rgba(255,255,255,.06)!important; color:#fff!important; }
       .sb-item.active { background:rgba(37,99,235,.3)!important; color:#fff!important; font-weight:600!important; }
+      .sb-bottom { display:none!important; }
 
-      body { background:var(--az-bg)!important; font-family:'Inter','Segoe UI',system-ui,sans-serif!important; }
+      .admin-only { display:none!important; }
+      body.is-admin .admin-only { display:flex!important; }
+      .sb-item[data-page="admin-users"],
+      .sb-item[data-page="admin-activity"],
+      .sb-item[data-page="admin-ranking"] { display:none!important; }
+      #page-admin-users, #page-admin-activity, #page-admin-ranking { display:none!important; }
+
+      .card { background:var(--az-surface)!important; border:1px solid var(--az-border)!important;
+        border-radius:var(--az-radius)!important; padding:16px!important; box-shadow:var(--az-shadow)!important; }
+      .card-title, .ctitle { font-size:.75rem!important; font-weight:700!important;
+        text-transform:uppercase!important; letter-spacing:.06em!important; color:var(--az-text2)!important; margin-bottom:12px!important; }
+      .g2 { display:grid!important; grid-template-columns:1fr 1fr!important; gap:16px!important; }
+      @media (max-width:700px) { .g2 { grid-template-columns:1fr!important; } }
+      .content { padding:20px!important; background:var(--az-bg)!important; }
+      .page { padding:0!important; }
     `;
     document.head.appendChild(style);
 
@@ -89,27 +94,113 @@
         acts.appendChild(soBtn);
       }
 
-      // Strip emojis from hero buttons
-      document.querySelectorAll('.hero-btn').forEach(function (btn) {
-        btn.childNodes.forEach(function (node) {
-          if (node.nodeType === 3) {
-            node.textContent = node.textContent.replace(/[\u{1F000}-\u{1FFFF}\u{2600}-\u{27FF}\u{2700}-\u{27BF}\u{FE00}-\u{FE0F}]|️/gu, '').trim();
-          }
+      // Remove emojis from sidebar items
+      document.querySelectorAll('.sb-item').forEach(function (item) {
+        item.querySelectorAll('svg, .sb-ico, .sb-icon, img').forEach(function (el) { el.remove(); });
+        item.childNodes.forEach(function (node) {
+          if (node.nodeType === 3) node.textContent = node.textContent.replace(/[\u{1F000}-\u{1FFFF}\u{2600}-\u{27FF}\u{2700}-\u{27BF}]|️/gu, '').trim();
+        });
+      });
+      document.querySelectorAll('h1,h2,h3,.card-title,.ctitle,.hero-btn').forEach(function (el) {
+        el.childNodes.forEach(function (node) {
+          if (node.nodeType === 3) node.textContent = node.textContent.replace(/[\u{1F000}-\u{1FFFF}\u{2600}-\u{27FF}\u{2700}-\u{27BF}\u{FE00}-\u{FE0F}]|️/gu, '').trim();
         });
       });
     });
   })();
 
+  // ── PDF Preview Modal ──
+  (function injectPdfPreview() {
+    const s = document.createElement('style');
+    s.textContent = `
+      #az-pdf-modal { display:none; position:fixed; inset:0; z-index:10000; }
+      #az-pdf-modal.active { display:flex; align-items:center; justify-content:center; }
+      .az-pdf-backdrop { position:absolute; inset:0; background:rgba(0,0,0,.65); backdrop-filter:blur(3px); }
+      .az-pdf-panel { position:relative; width:min(92vw,1100px); height:90vh; background:#fff; border-radius:14px; overflow:hidden; display:flex; flex-direction:column; box-shadow:0 25px 60px rgba(0,0,0,.35); }
+      .az-pdf-header { display:flex; align-items:center; gap:12px; padding:12px 16px; background:#0F172A; color:#fff; flex-shrink:0; }
+      .az-pdf-title { font-weight:600; font-size:.9rem; flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+      .az-pdf-dl { background:#2563EB; color:#fff!important; padding:6px 14px; border-radius:8px; font-size:.8rem; font-weight:600; text-decoration:none; white-space:nowrap; }
+      .az-pdf-dl:hover { background:#1d4ed8; }
+      .az-pdf-close { background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.2); color:#fff; width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:1rem; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+      .az-pdf-close:hover { background:rgba(255,255,255,.2); }
+      .az-pdf-frame { flex:1; width:100%; border:none; }
+    `;
+    document.head.appendChild(s);
+
+    const modal = document.createElement('div');
+    modal.id = 'az-pdf-modal';
+    modal.innerHTML = `
+      <div class="az-pdf-backdrop" onclick="window.closePdfPreview()"></div>
+      <div class="az-pdf-panel">
+        <div class="az-pdf-header">
+          <span class="az-pdf-title" id="az-pdf-title">Documento</span>
+          <a class="az-pdf-dl" id="az-pdf-dl" target="_blank" download>&#8659; Descargar</a>
+          <button class="az-pdf-close" onclick="window.closePdfPreview()">&#10005;</button>
+        </div>
+        <iframe class="az-pdf-frame" id="az-pdf-frame" src="" frameborder="0"></iframe>
+      </div>
+    `;
+    document.body.appendChild(modal);
+
+    window.showPdfPreview = function (url, title) {
+      document.getElementById('az-pdf-title').textContent = title || 'Documento';
+      document.getElementById('az-pdf-frame').src = url;
+      document.getElementById('az-pdf-dl').href = url;
+      document.getElementById('az-pdf-modal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    };
+    window.closePdfPreview = function () {
+      document.getElementById('az-pdf-modal').classList.remove('active');
+      document.getElementById('az-pdf-frame').src = '';
+      document.body.style.overflow = '';
+    };
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') window.closePdfPreview();
+    });
+
+    var _origDlFromUrl = window.dlFromUrl;
+    window.dlFromUrl = function (url, fname) {
+      if (url && url.startsWith('https://')) {
+        window.showPdfPreview(url, fname);
+      } else if (_origDlFromUrl) {
+        _origDlFromUrl(url, fname);
+      }
+    };
+  })();
+
+  // Patch window.dl() to show preview
+  function _patchDl() {
+    var _orig = window.dl;
+    if (!_orig) return;
+    window.dl = function (name, key, fname) {
+      var el = document.getElementById('pdf_' + key);
+      if (!el) { _orig(name, key, fname); return; }
+      var content = el.textContent.trim();
+      if (content.startsWith('http')) {
+        window.showPdfPreview(content, name);
+        if (window.trackDownload) window.trackDownload(fname || name);
+      } else {
+        try {
+          var bin = atob(content);
+          var arr = new Uint8Array(bin.length);
+          for (var i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+          window.showPdfPreview(URL.createObjectURL(new Blob([arr], { type: 'application/pdf' })), name);
+          if (window.trackDownload) window.trackDownload(fname || name);
+        } catch (e) { _orig(name, key, fname); }
+      }
+    };
+  }
+
   function whenReady(fn) {
-    if (document.readyState !== 'loading') fn();
-    else document.addEventListener('DOMContentLoaded', fn);
+    if (window.AZ && window.AZ.Auth) { fn(); return; }
+    var t = setInterval(function () { if (window.AZ && window.AZ.Auth) { clearInterval(t); fn(); } }, 50);
   }
 
   // ── OVERRIDE SIGN IN ──
   window.doSignIn = async function () {
-    var emailEl = document.getElementById('li-email');
-    var passEl  = document.getElementById('li-pass');
-    var errEl   = document.getElementById('li-err-pass');
+    var emailEl = document.getElementById('li-email') || document.querySelector('[id*="email"]');
+    var passEl  = document.getElementById('li-pass')  || document.querySelector('[id*="pass"]');
+    var errEl   = document.getElementById('li-err-pass') || document.getElementById('li-error');
     if (!emailEl || !passEl) return;
     var email = emailEl.value.trim();
     var pass  = passEl.value;
@@ -142,6 +233,70 @@
     if (ls) ls.style.display = 'flex';
   };
   window.logout = window.doLogout = window.doSignOut;
+
+  // ── OVERRIDE REGISTRATION ──
+  window.doRegister = async function () {
+    var nameEl  = document.getElementById('re-name')  || document.getElementById('reg-name')  || document.getElementById('li-name');
+    var emailEl = document.getElementById('re-email') || document.getElementById('reg-email') || document.getElementById('li-email2');
+    var passEl  = document.getElementById('re-pass')  || document.getElementById('reg-pass')  || document.getElementById('li-pass2');
+    var errEl   = document.getElementById('re-error') || document.getElementById('reg-error');
+    if (!emailEl || !passEl) return;
+    var name  = nameEl  ? nameEl.value.trim()  : '';
+    var email = emailEl.value.trim();
+    var pass  = passEl.value;
+    try {
+      await AZ.Auth.signUp(email, pass, name);
+      var okEl = document.getElementById('re-success') || document.getElementById('reg-success');
+      if (okEl) {
+        okEl.textContent = window.LANG === 'es' ? '¡Cuenta creada! Revisa tu correo.' : 'Account created! Check your email.';
+        okEl.style.display = 'block';
+      }
+    } catch (err) {
+      var msg = err.message && err.message.includes('already') ?
+        (window.LANG === 'es' ? 'Correo ya registrado.' : 'Email already registered.') : err.message;
+      if (errEl) { errEl.textContent = msg; errEl.style.display = 'block'; }
+    }
+  };
+
+  // ── OVERRIDE PASSWORD RESET ──
+  window.doForgot = async function () {
+    var emailEl = document.getElementById('fp-email') || document.getElementById('forgot-email') || document.getElementById('reset-email');
+    if (!emailEl) return;
+    try {
+      await AZ.Auth.sendPasswordReset(emailEl.value.trim());
+      var msgEl = document.getElementById('fp-msg') || document.getElementById('forgot-msg');
+      if (msgEl) { msgEl.textContent = window.LANG === 'es' ? 'Enlace enviado. Revisa tu correo.' : 'Reset link sent. Check your email.'; msgEl.style.display = 'block'; }
+    } catch (e) { console.error('[GTL Patch] Forgot error:', e.message); }
+  };
+  window.sendResetCode   = window.doForgot;
+  window.doResetPassword = window.doForgot;
+
+  // ── OVERRIDE DOWNLOAD TRACKING ──
+  var _origTrack = window.trackDownload;
+  window.trackDownload = async function (fileName) {
+    if (_origTrack) _origTrack.call(this, fileName);
+    var session = await AZ.Auth.getSession();
+    if (!session) return;
+    await AZ.Downloads.record(session.user.id, MODULE_ID, fileName);
+  };
+
+  // ── OVERRIDE QUIZ COMPLETION ──
+  var _origQz = window.qzFinish || window.finishQuiz || window.azFinishQuiz;
+  window.qzFinish = window.azFinishQuiz = async function (mid, score, xpEarned) {
+    if (_origQz) _origQz.call(this, mid, score, xpEarned);
+    var session = await AZ.Auth.getSession();
+    if (!session) return;
+    try {
+      await AZ.Progress.complete(session.user.id, MODULE_ID, mid, score, xpEarned || 0);
+      await AZ.Activity.log(MODULE_ID, 'quiz_complete', { quiz: mid, score: score });
+    } catch (e) { console.warn('[GTL Patch] qzFinish error:', e.message); }
+  };
+
+  // ── SUPPRESS ADMIN SEED ──
+  window.initAdminUser = function () {};
+  window.getUsers      = function () { return []; };
+  window.saveUsers     = function () {};
+  window.seedAdminUser = function () {};
 
   function _applyUser(user, profile, isAdmin) {
     var name = profile.full_name || user.email;
@@ -181,14 +336,26 @@
     if (xEl) xEl.textContent = xp;
   }
 
-  window.initAdminUser = function () {};
-  window.getUsers      = function () { return []; };
-  window.saveUsers     = function () {};
-  window.seedAdminUser = function () {};
+  // ── PREFERENCE SAVES ──
+  var _origToggleDark = window.toggleDark;
+  window.toggleDark = async function () {
+    if (_origToggleDark) _origToggleDark.call(this);
+    var session = await AZ.Auth.getSession();
+    if (!session) return;
+    await AZ.Prefs.save(session.user.id, { theme: document.body.classList.contains('dark') ? 'dark' : 'light' });
+  };
+
+  var _origToggleLang = window.toggleLang;
+  window.toggleLang = async function () {
+    if (_origToggleLang) _origToggleLang.call(this);
+    var session = await AZ.Auth.getSession();
+    if (!session) return;
+    await AZ.Prefs.save(session.user.id, { lang: window.LANG || 'en' });
+  };
 
   // ── AUTO-LOGIN ──
   whenReady(async function () {
-    if (typeof AZ === 'undefined') return;
+    _patchDl();
     try {
       var current = await AZ.Auth.getCurrentUser();
       if (!current) { window.location.replace('/'); return; }
@@ -198,6 +365,13 @@
       var isAdmin   = ['admin', 'super_admin'].includes(profile.role);
       if (!hasAccess && !isAdmin) { await AZ.Auth.signOut(); window.location.replace('/'); return; }
       _applyUser(user, profile, isAdmin);
+      // Apply saved preferences
+      if (profile.theme === 'dark' && _origToggleDark && !document.body.classList.contains('dark')) {
+        _origToggleDark();
+      }
+      if (profile.lang && profile.lang !== 'en' && window._azLang) {
+        window._azLang(profile.lang);
+      }
       await AZ.Activity.log(MODULE_ID, 'login');
     } catch (e) { console.warn('[GTL Patch] auto-login error:', e.message); }
   });

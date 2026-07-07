@@ -597,6 +597,21 @@ body {
             <span class="course-dot" style="background:#2E7D32"></span>
             <span class="course-card-name">CICA Citizens</span>
           </label>
+          <label class="course-card" onclick="toggleCourse(this,'corebr')">
+            <input type="checkbox" name="reg-course" value="corebr"/>
+            <span class="course-dot" style="background:#F97316"></span>
+            <span class="course-card-name">Corebridge Financial</span>
+          </label>
+          <label class="course-card" onclick="toggleCourse(this,'gtl')">
+            <input type="checkbox" name="reg-course" value="gtl"/>
+            <span class="course-dot" style="background:#0369A1"></span>
+            <span class="course-card-name">Guarantee Trust Life</span>
+          </label>
+          <label class="course-card" onclick="toggleCourse(this,'liberty-bankers')">
+            <input type="checkbox" name="reg-course" value="liberty-bankers"/>
+            <span class="course-dot" style="background:#059669"></span>
+            <span class="course-card-name">Liberty Bankers Life</span>
+          </label>
           <label class="course-card full-width" onclick="toggleCourse(this,'undecided')">
             <input type="checkbox" name="reg-course" value="undecided"/>
             <span class="course-dot" style="background:#9ca3af"></span>
@@ -871,6 +886,27 @@ const MODULE_META = {
     href:  'modules/cica/cica-citizens-v2.html',
     pills: { en: ['Claims','Contracts','Portal'], es: ['Reclamaciones','Contratos','Portal'] },
   },
+  'corebr': {
+    name:  { en: 'Corebridge Financial', es: 'Corebridge Financial' },
+    desc:  { en: 'Annuities, life insurance products, agent training resources.', es: 'Anualidades, productos de vida, recursos de capacitación.' },
+    color: '#F97316',
+    href:  'modules/corebr/COREBR_1.html',
+    pills: { en: ['Annuities','Life','Training'], es: ['Anualidades','Vida','Capacitación'] },
+  },
+  'gtl': {
+    name:  { en: 'Guarantee Trust Life', es: 'Guarantee Trust Life' },
+    desc:  { en: 'Supplemental health, Medicare supplement, agent resources.', es: 'Salud suplementaria, suplemento Medicare, recursos del agente.' },
+    color: '#0369A1',
+    href:  'modules/gtl/gtl-dashboard.html',
+    pills: { en: ['Supplemental','Medicare','Agent'], es: ['Suplementario','Medicare','Agente'] },
+  },
+  'liberty-bankers': {
+    name:  { en: 'Liberty Bankers Life', es: 'Liberty Bankers Life' },
+    desc:  { en: 'Life insurance, final expense, annuity products and agent portal.', es: 'Seguro de vida, gastos finales, anualidades y portal del agente.' },
+    color: '#059669',
+    href:  'modules/liberty-bankers/liberty-bankers.html',
+    pills: { en: ['Life','Final Expense','Annuity'], es: ['Vida','Gastos Finales','Anualidad'] },
+  },
 };
 
 async function showModules(profile) {
@@ -997,10 +1033,13 @@ async function sendToBitrix(data) {
     if (params.get('course')) {
       const resolveCourse = raw => {
         const s = raw.trim().toLowerCase();
-        if (['allstate','american-amicable','cica','undecided'].includes(s)) return s;
+        if (['allstate','american-amicable','cica','corebr','gtl','liberty-bankers','undecided'].includes(s)) return s;
         if (s.includes('american') || s.includes('amicable')) return 'american-amicable';
         if (s.includes('cica'))     return 'cica';
         if (s.includes('allstate')) return 'allstate';
+        if (s.includes('corebridge') || s.includes('corebr')) return 'corebr';
+        if (s.includes('gtl') || s.includes('guarantee')) return 'gtl';
+        if (s.includes('liberty')) return 'liberty-bankers';
         return s;
       };
       const courses = params.get('course').split(',').map(resolveCourse).filter(Boolean);

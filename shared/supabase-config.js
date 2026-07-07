@@ -16,6 +16,9 @@ const MODULE_IDS = {
   ALLSTATE:           'allstate',
   AMERICAN_AMICABLE:  'american-amicable',
   CICA:               'cica',
+  COREBR:             'corebr',
+  GTL:                'gtl',
+  LIBERTY_BANKERS:    'liberty-bankers',
 };
 
 // EG member access code
