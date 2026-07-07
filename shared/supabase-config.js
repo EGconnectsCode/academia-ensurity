@@ -9,7 +9,7 @@
 // 1. CONFIGURATION — replace with your Supabase project values
 // ---------------------------------------------------------------------------
 const SUPABASE_URL = window.ENV_SUPABASE_URL || 'https://qvamdopwbjlccazchoer.supabase.co';
-const SUPABASE_ANON_KEY = window.ENV_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF2YW1kb3B3YmpsY2NhemNob2VyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMTA4ODQsImV4cCI6MjA5Nzg4Njg4NH0.F2VmsQUyBDWXgX_kh8soWOv6W59wWaDRFMlmg6kzHY4';
+const SUPABASE_ANON_KEY = window.ENV_SUPABASE_ANON_KEY || 'sb_publishable_elaYSTS4exO-z3cVTC41yA_RBv9j1GZ';
 
 // Module IDs — must match schema.sql modules.id
 const MODULE_IDS = {
