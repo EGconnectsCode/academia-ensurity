@@ -169,7 +169,7 @@
       var soBtn = document.createElement('button');
       soBtn.className = 'az-topbar-signout';
       soBtn.textContent = 'Cerrar Sesión';
-      soBtn.onclick = function() { if (window.doLogout) window.doLogout(); };
+      soBtn.onclick = function() { if (window.doSignOut) window.doSignOut(); };
       acts.appendChild(soBtn);
       // ── Remove emojis/icons from sidebar items ──
       document.querySelectorAll('.sb-item').forEach(function (item) {
@@ -428,6 +428,7 @@
     window.ST = { name: '', email: '', xp: 0, downloads: 0 };
     location.reload();
   };
+  window.logout = window.doLogout = window.doSignOut;
 
   // ════════════════════════════════════════════════
   //  4. OVERRIDE REGISTRATION
