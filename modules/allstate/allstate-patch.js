@@ -181,6 +181,7 @@
       .az-lang-btn { background:transparent !important; border:none !important; color:rgba(255,255,255,.55) !important; border-radius:6px !important; padding:3px 9px !important; font-size:.75rem !important; font-weight:700 !important; cursor:pointer !important; transition:all .15s !important; letter-spacing:.02em !important; }
       .az-lang-btn.active { background:#fff !important; color:#0F172A !important; }
       .az-lang-btn:hover:not(.active) { color:#fff !important; background:rgba(255,255,255,.1) !important; }
+      .tb-acts { display:flex !important; align-items:center !important; gap:8px !important; flex-wrap:nowrap !important; }
       /* ── XP bar ── */
       #xp-section { margin-bottom: 16px !important; }
     `;
