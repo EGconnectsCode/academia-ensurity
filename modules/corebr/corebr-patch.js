@@ -297,6 +297,11 @@
   window.saveUsers     = function () {};
   window.seedAdminUser = function () {};
 
+  // ── BLOCK MODULE-LEVEL LOGIN/REGISTER UI — auth is handled by academia-ensurity.html ──
+  var _blockLogin = function () { window.location.replace('/'); };
+  window.showLogin = window.showRegister = window.showAuth = window.showForgot = _blockLogin;
+  window.goToLogin = window.openLogin   = window.displayLogin = _blockLogin;
+
   function _applyUser(user, profile, isAdmin) {
     var name = profile.full_name || user.email;
     window.CUR_USER = { name: name, email: user.email, isAdmin: isAdmin };

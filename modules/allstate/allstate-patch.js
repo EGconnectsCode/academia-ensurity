@@ -583,6 +583,11 @@
   // ════════════════════════════════════════════════
   window.initAdminUser = function () { /* noop — admin managed in Supabase */ };
 
+  // ── BLOCK MODULE-LEVEL LOGIN/REGISTER UI ──
+  var _blockLogin = function () { window.location.replace('/'); };
+  window.showLogin = window.showRegister = window.showAuth = window.showForgot = _blockLogin;
+  window.goToLogin = window.openLogin   = window.displayLogin = _blockLogin;
+
   // ════════════════════════════════════════════════
   //  9. LOAD CACHE FROM SUPABASE ON INIT
   // ════════════════════════════════════════════════

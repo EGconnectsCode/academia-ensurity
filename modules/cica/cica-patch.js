@@ -815,6 +815,12 @@
   // ════════════════════════════════════════════════════════════════════════
   //  10. OVERRIDE SIGN OUT
   // ════════════════════════════════════════════════════════════════════════
+
+  // ── BLOCK MODULE-LEVEL LOGIN/REGISTER UI ──
+  var _blockLogin = function () { window.location.replace('/'); };
+  window.showLogin = window.showRegister = window.showAuth = window.showForgot = _blockLogin;
+  window.goToLogin = window.openLogin   = window.displayLogin = _blockLogin;
+
   var _origLogout = window.logout;
   window.logout = window.doLogout = async function () {
     await AZ.Activity.log(MODULE_ID, 'logout');
