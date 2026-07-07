@@ -192,6 +192,82 @@
     };
   }
 
+  // ── Preview + Download buttons ──
+  function _azResolveUrl(key, cb) {
+    var el = document.getElementById('pdf_' + key);
+    if (!el) { cb(null); return; }
+    var content = el.textContent.trim();
+    if (content.startsWith('http')) { cb(content); return; }
+    try {
+      var bin = atob(content), arr = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+      cb(URL.createObjectURL(new Blob([arr], { type: 'application/pdf' })));
+    } catch(e) { cb(null); }
+  }
+  window._azPreview = function(name, key) {
+    _azResolveUrl(key, function(url) {
+      if (url && window.showPdfPreview) window.showPdfPreview(url, name);
+      else alert('Preview unavailable');
+    });
+  };
+  window._azDownload = function(name, key, fname) {
+    _azResolveUrl(key, function(url) {
+      if (!url) { alert('Download unavailable'); return; }
+      var trigger = function(blobUrl) {
+        var a = document.createElement('a');
+        a.href = blobUrl; a.download = (fname || name) + '.pdf';
+        document.body.appendChild(a); a.click();
+        setTimeout(function() { if (a.parentNode) a.parentNode.removeChild(a); }, 200);
+        if (window.trackDownload) window.trackDownload(name);
+      };
+      if (url.startsWith('blob:')) { trigger(url); return; }
+      fetch(url).then(function(r) { return r.blob(); })
+        .then(function(b) { var u = URL.createObjectURL(b); trigger(u); setTimeout(function() { URL.revokeObjectURL(u); }, 500); })
+        .catch(function() { window.open(url, '_blank'); if (window.trackDownload) window.trackDownload(name); });
+    });
+  };
+  function _azMakeButtons(name, key, fname) {
+    var wrap = document.createElement('div'); wrap.className = 'az-fb';
+    var prev = document.createElement('button'); prev.className = 'az-fb-prev'; prev.textContent = '👁 Preview';
+    var dl   = document.createElement('button'); dl.className   = 'az-fb-dl';   dl.textContent   = '⬇ Download';
+    prev.addEventListener('click', function(e) { e.stopPropagation(); window._azPreview(name, key); });
+    dl.addEventListener('click',   function(e) { e.stopPropagation(); window._azDownload(name, key, fname); });
+    wrap.appendChild(prev); wrap.appendChild(dl); return wrap;
+  }
+  function _azInjectFileButtons() {
+    if (!document.getElementById('az-fb-css')) {
+      var s = document.createElement('style'); s.id = 'az-fb-css';
+      s.textContent = '.az-fb{display:flex;gap:6px;width:100%;margin-top:8px}' +
+        '.az-fb-prev,.az-fb-dl{flex:1;padding:7px 6px;border:none;border-radius:8px;font-size:.76rem;font-weight:700;cursor:pointer;font-family:inherit;transition:background .15s;white-space:nowrap;text-align:center}' +
+        '.az-fb-prev{background:#1e40af;color:#fff}.az-fb-prev:hover{background:#1d4ed8}' +
+        '.az-fb-dl{background:#059669;color:#fff}.az-fb-dl:hover{background:#047857}' +
+        '.fcard[data-azp]{cursor:default!important}.pdf-card[data-azp]{cursor:default!important}';
+      document.head.appendChild(s);
+    }
+    var dlPat = /dl\('([^']+)',\s*'([^']+)',\s*'([^']*)'\)/;
+    function patchEl(card, btnSel) {
+      if (card.hasAttribute('data-azp')) return;
+      var oc = card.getAttribute('onclick') || '';
+      var m = oc.match(dlPat);
+      if (!m && btnSel) { var b = card.querySelector(btnSel); if (b) m = (b.getAttribute('onclick') || '').match(dlPat); }
+      if (!m) return;
+      card.setAttribute('data-azp', '1'); card.removeAttribute('onclick');
+      var btns = _azMakeButtons(m[1], m[2], m[3]);
+      var old = card.querySelector((btnSel || '') + ',.az-fb');
+      if (old) old.replaceWith(btns); else card.appendChild(btns);
+    }
+    document.querySelectorAll('.fcard').forEach(function(c) { patchEl(c, '.fbtn'); });
+    document.querySelectorAll('.pdf-card').forEach(function(c) { patchEl(c, '.pdf-dl'); });
+    document.querySelectorAll('[onclick]').forEach(function(el) {
+      if (el.hasAttribute('data-azp') || el.classList.contains('fcard') || el.classList.contains('pdf-card')) return;
+      var m = (el.getAttribute('onclick') || '').match(dlPat);
+      if (!m) return;
+      el.setAttribute('data-azp', '1'); el.removeAttribute('onclick');
+      var btns = _azMakeButtons(m[1], m[2], m[3]);
+      el.parentNode.replaceChild(btns, el);
+    });
+  }
+
   function whenReady(fn) {
     if (window.AZ && window.AZ.Auth) { fn(); return; }
     var t = setInterval(function () { if (window.AZ && window.AZ.Auth) { clearInterval(t); fn(); } }, 50);
@@ -362,6 +438,7 @@
   // ── AUTO-LOGIN ──
   whenReady(async function () {
     _patchDl();
+    _azInjectFileButtons();
     try {
       var current = await AZ.Auth.getCurrentUser();
       if (!current) { window.location.replace('/'); return; }
