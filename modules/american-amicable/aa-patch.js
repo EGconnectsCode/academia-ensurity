@@ -99,6 +99,7 @@
       body.is-eg-member #page-order-supply,
       body.is-eg-member #page-illustrations { display:block!important; }
       #dark-btn { display:none!important; }
+      button[onclick*="toggleDark"] { display:none!important; }
       #lang-btn-en, #lang-btn-es { display:none!important; }
       .az-lang-pill { display:flex!important; gap:3px!important; background:rgba(255,255,255,.08)!important; border:1px solid rgba(255,255,255,.15)!important; border-radius:8px!important; padding:3px!important; }
       .az-lang-btn { background:transparent!important; border:none!important; color:rgba(255,255,255,.55)!important; border-radius:6px!important; padding:3px 9px!important; font-size:.75rem!important; font-weight:700!important; cursor:pointer!important; transition:all .15s!important; letter-spacing:.02em!important; }

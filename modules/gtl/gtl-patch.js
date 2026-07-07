@@ -30,6 +30,7 @@
       .topbar-right { margin-left:auto!important; display:flex!important; align-items:center!important; gap:8px!important; }
       .tb-lang-btn { display:none!important; }
       .tb-dark-btn { display:none!important; }
+      button[onclick*="toggleDark"] { display:none!important; }
       .tb-user { display:none!important; }
 
       .az-topbar-signout { background:#DC2626!important; border:2px solid #ef4444!important;
