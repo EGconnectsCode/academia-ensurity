@@ -6,7 +6,10 @@
     { "source": "/allstate",          "destination": "/modules/allstate/allstate-academy.html" },
     { "source": "/american-amicable", "destination": "/modules/american-amicable/american-amicable.html" },
     { "source": "/cica",              "destination": "/modules/cica/cica-citizens-v2.html" },
-    { "source": "/admin",             "destination": "/admin/admin-panel.html" }
+    { "source": "/admin",             "destination": "/admin/admin-panel.html" },
+    { "source": "/corebr",           "destination": "/modules/corebr/COREBR_1.html" },
+    { "source": "/gtl",              "destination": "/modules/gtl/gtl-dashboard.html" },
+    { "source": "/liberty-bankers",  "destination": "/modules/liberty-bankers/liberty-bankers.html" }
   ],
   "headers": [
     {
