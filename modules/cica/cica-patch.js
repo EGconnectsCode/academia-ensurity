@@ -35,6 +35,8 @@
       .tb-user  { display:none!important; }
       .tb-dark-btn { display:none!important; }
       button[onclick*="toggleDark"] { display:none!important; }
+      .admin-only { display:none!important; }
+      body.is-admin .admin-only { display:none!important; }
       .tb-lang-btn  { display:none!important; }
       .tb-sep   { display:none!important; }
       .tb-btn { background:rgba(255,255,255,.08)!important; border:1px solid rgba(255,255,255,.12)!important;
