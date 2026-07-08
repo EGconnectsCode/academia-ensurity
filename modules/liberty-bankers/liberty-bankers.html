@@ -3278,11 +3278,7 @@ function pdfOpenTab(){
   var script=document.getElementById('pdf_'+_pdfCurrentKey);
   if(!script)return;
   var w=window.open();
-  w.document.write('<html><body style="margin:0"><embed src="data:application/pdf;base64,'+script.textContent.trim()+'" width="100%" height="100%" type="application/pdf"/>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="../../shared/supabase-config.js"></script>
-<script src="lb-patch.js"></script>
-</body></html>');
+  w.document.write('<html><body style="margin:0"><embed src="data:application/pdf;base64,'+script.textContent.trim()+'" width="100%" height="100%" type="application/pdf"><\/embed><\/body><\/html>');
   w.document.close();
 }
 
