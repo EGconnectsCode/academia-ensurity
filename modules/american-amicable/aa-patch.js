@@ -615,6 +615,56 @@
     document.querySelectorAll('.admin-only').forEach(function(el) { el.remove(); });
   }
 
+  // ── Widget loader ──────────────────────────────────────────────────────────
+  function _withWidgets(cb) {
+    if (window.AZWidgets) { cb(); return; }
+    var s = document.createElement('script');
+    s.src = '../../shared/az-widgets.js';
+    s.onload = cb;
+    s.onerror = function () { console.warn('[AA Patch] az-widgets.js could not load'); };
+    document.head.appendChild(s);
+  }
+
+  var _ONBOARD_STEPS = [
+    { icon: '🤝', title: 'Bienvenido a American Amicable',
+      body: 'Bienvenido al portal de entrenamiento de American Amicable. Aquí encontrarás módulos de capacitación sobre seguros de vida y suplementarios, formularios y herramientas de ventas.' },
+    { icon: '📚', title: 'Módulos de Entrenamiento',
+      body: 'Explora los módulos del menú lateral. Aprende sobre los productos American Amicable, técnicas de venta y cumplimiento. Completa los quizzes para ganar XP.' },
+    { icon: '📄', title: 'Descargas y Formularios',
+      body: 'Todos los formularios de solicitud, brochures y documentos de campo están en la sección Descargas. Usa "Vista Previa" para revisar o "Descargar" para guardar el archivo.' },
+    { icon: '📊', title: 'Tu Progreso',
+      body: 'Tu progreso y XP se registran automáticamente. Cada evaluación completada sube tu nivel. Revisa tus logros y módulos completados en tu perfil de usuario.' },
+    { icon: '💬', title: 'Chat de Soporte',
+      body: 'Usa el botón de chat en la esquina inferior derecha para respuestas rápidas sobre formularios, descargas, módulos o cualquier aspecto de la plataforma de entrenamiento.' }
+  ];
+
+  var _CHAT_FAQS = [
+    { label: '📋 Formularios',
+      keywords: ['formulario', 'form', 'solicitud', 'aplicacion', 'aplicación', 'documentos'],
+      answer: 'Los formularios están en la sección "Descargas" del menú lateral. Localiza el documento y haz clic en el botón azul "Vista Previa" para revisarlo, o el verde "Descargar" para guardarlo.' },
+    { label: '📥 Descargar PDF',
+      keywords: ['descargar', 'download', 'pdf', 'archivo', 'guardar', 'bajar'],
+      answer: 'Para descargar un PDF: ve a la sección Descargas, encuentra el archivo y haz clic en "Descargar" (botón verde). Para solo visualizarlo, usa "Vista Previa" (botón azul).' },
+    { label: '📚 Módulos',
+      keywords: ['modulo', 'módulo', 'curso', 'entrenamiento', 'training', 'capacitacion', 'lección', 'leccion'],
+      answer: 'Los módulos están en el menú lateral. Selecciona el que deseas, revisa el material y completa el quiz al final para registrar tu progreso y ganar XP.' },
+    { label: '🏆 Mi XP / Nivel',
+      keywords: ['xp', 'nivel', 'puntos', 'progreso', 'avance', 'certificado', 'logro'],
+      answer: 'Tu XP y nivel se actualizan al completar quizzes. Puedes verlos en tu perfil (ícono de usuario arriba a la derecha) o en la barra superior del dashboard.' },
+    { label: '❓ Quiz / Evaluación',
+      keywords: ['quiz', 'evaluacion', 'evaluación', 'examen', 'prueba', 'test', 'preguntas'],
+      answer: 'Las evaluaciones aparecen al finalizar cada módulo. Selecciona tus respuestas y envía el formulario. Tu resultado se guarda automáticamente y suma XP a tu perfil.' },
+    { label: '🔐 Acceso / Contraseña',
+      keywords: ['contraseña', 'clave', 'password', 'acceso', 'sesion', 'sesión', 'login'],
+      answer: 'Si tienes problemas para iniciar sesión, ve a la página principal y usa "¿Olvidaste tu contraseña?". Para problemas de acceso escribe a it@egconnects.com.' },
+    { label: '📞 Soporte Técnico',
+      keywords: ['soporte', 'ayuda', 'contacto', 'correo', 'email', 'problema', 'error'],
+      answer: 'Para soporte técnico escribe a it@egconnects.com. Para preguntas sobre comisiones o contratos contacta a tu supervisor o manager de campo.' },
+    { label: '📦 Productos AA',
+      keywords: ['producto', 'poliza', 'póliza', 'seguro', 'vida', 'term', 'whole', 'cobertura', 'prima'],
+      answer: 'La información sobre productos American Amicable está en los módulos de entrenamiento y en la sección de Descargas (folletos, guías y materiales de ventas para agentes).' }
+  ];
+
   whenReady(async () => {
     _patchDl();
     _azInjectFileButtons();
@@ -650,6 +700,10 @@
       if (loginScreen && loginScreen.style.display !== 'none') {
         if (window.launchApp) window.launchApp();
       }
+      _withWidgets(function () {
+        window.AZWidgets.initChat(_CHAT_FAQS);
+        setTimeout(function () { window.AZWidgets.initOnboarding(_ONBOARD_STEPS); }, 700);
+      });
     } catch (e) { console.warn('[AA Patch] auto-login error:', e.message); }
   });
 

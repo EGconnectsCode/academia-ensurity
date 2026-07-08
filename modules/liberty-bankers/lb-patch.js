@@ -460,6 +460,56 @@
     document.querySelectorAll('.admin-only').forEach(function(el) { el.remove(); });
   }
 
+  // ── Widget loader ──────────────────────────────────────────────────────────
+  function _withWidgets(cb) {
+    if (window.AZWidgets) { cb(); return; }
+    var s = document.createElement('script');
+    s.src = '../../shared/az-widgets.js';
+    s.onload = cb;
+    s.onerror = function () { console.warn('[LB Patch] az-widgets.js could not load'); };
+    document.head.appendChild(s);
+  }
+
+  var _ONBOARD_STEPS = [
+    { icon: '🏦', title: 'Bienvenido a Liberty Bankers Life',
+      body: 'Bienvenido al portal de entrenamiento de Liberty Bankers Life. Aquí encontrarás todos los recursos de capacitación, formularios y materiales de venta para crecer como agente.' },
+    { icon: '📚', title: 'Módulos de Entrenamiento',
+      body: 'Navega por los módulos en el menú lateral: Final Expense, SPWL y más. Completa cada módulo y su evaluación para ganar puntos XP y avanzar de nivel.' },
+    { icon: '📄', title: 'Descargas y Formularios',
+      body: 'En la sección Descargas encontrarás formularios de aplicación, folletos de productos y guías para agentes. Usa "Vista Previa" para revisar o "Descargar" para guardar el archivo.' },
+    { icon: '📊', title: 'Tu Progreso',
+      body: 'Tu XP y nivel se actualizan automáticamente al completar quizzes. Revisa tu perfil para ver tu historial de progreso y módulos completados.' },
+    { icon: '💬', title: '¿Dudas o Preguntas?',
+      body: 'Usa el chat en la esquina inferior derecha para preguntar dónde encontrar formularios, cómo funciona la plataforma, o cualquier duda sobre los materiales. ¡Estamos aquí para ayudarte!' }
+  ];
+
+  var _CHAT_FAQS = [
+    { label: '📋 Formularios',
+      keywords: ['formulario', 'form', 'solicitud', 'aplicacion', 'aplicación', 'documentos'],
+      answer: 'Los formularios están en la sección "Descargas" del menú lateral. Localiza el documento y haz clic en el botón azul "Vista Previa" para revisarlo, o el verde "Descargar" para guardarlo.' },
+    { label: '📥 Descargar PDF',
+      keywords: ['descargar', 'download', 'pdf', 'archivo', 'guardar', 'bajar'],
+      answer: 'Para descargar un PDF: ve a la sección Descargas, encuentra el archivo y haz clic en "Descargar" (botón verde). Para solo visualizarlo, usa "Vista Previa" (botón azul).' },
+    { label: '📚 Módulos',
+      keywords: ['modulo', 'módulo', 'curso', 'entrenamiento', 'training', 'capacitacion', 'lección', 'leccion'],
+      answer: 'Los módulos están en el menú lateral. Selecciona el que deseas, revisa el material y completa el quiz al final para registrar tu progreso y ganar XP.' },
+    { label: '🏆 Mi XP / Nivel',
+      keywords: ['xp', 'nivel', 'puntos', 'progreso', 'avance', 'certificado', 'logro'],
+      answer: 'Tu XP y nivel se actualizan al completar quizzes. Puedes verlos en tu perfil (ícono de usuario arriba a la derecha) o en la barra superior del dashboard.' },
+    { label: '❓ Quiz / Evaluación',
+      keywords: ['quiz', 'evaluacion', 'evaluación', 'examen', 'prueba', 'test', 'preguntas'],
+      answer: 'Las evaluaciones aparecen al finalizar cada módulo. Selecciona tus respuestas y envía el formulario. Tu resultado se guarda automáticamente y suma XP a tu perfil.' },
+    { label: '🔐 Acceso / Contraseña',
+      keywords: ['contraseña', 'clave', 'password', 'acceso', 'sesion', 'sesión', 'login'],
+      answer: 'Si tienes problemas para iniciar sesión, ve a la página principal y usa "¿Olvidaste tu contraseña?". Para problemas de acceso escribe a it@egconnects.com.' },
+    { label: '📞 Soporte Técnico',
+      keywords: ['soporte', 'ayuda', 'contacto', 'correo', 'email', 'problema', 'error'],
+      answer: 'Para soporte técnico escribe a it@egconnects.com. Para preguntas sobre comisiones o contratos contacta a tu supervisor o manager de campo.' },
+    { label: '📦 Productos LBL',
+      keywords: ['producto', 'poliza', 'póliza', 'seguro', 'final expense', 'spwl', 'whole life', 'cobertura'],
+      answer: 'La información sobre productos Liberty Bankers (Final Expense, SPWL, etc.) está en los módulos de entrenamiento y en la sección de Descargas (folletos y guías del agente).' }
+  ];
+
   // ── AUTO-LOGIN ──
   whenReady(async function () {
     _patchDl();
@@ -481,6 +531,10 @@
       if (profile.lang && profile.lang !== 'en' && window._azLang) {
         window._azLang(profile.lang);
       }
+      _withWidgets(function () {
+        window.AZWidgets.initChat(_CHAT_FAQS);
+        setTimeout(function () { window.AZWidgets.initOnboarding(_ONBOARD_STEPS); }, 700);
+      });
       await AZ.Activity.log(MODULE_ID, 'login');
     } catch (e) { console.warn('[LB Patch] auto-login error:', e.message); }
   });
