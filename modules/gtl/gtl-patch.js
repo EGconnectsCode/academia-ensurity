@@ -51,9 +51,8 @@
       .az-lb:hover:not(.active) { color:#fff!important; background:rgba(255,255,255,.1)!important; }
       .az-topbar-dark { background:transparent!important; border:1px solid rgba(255,255,255,.2)!important; color:#fff!important; width:28px!important; height:28px!important; border-radius:6px!important; cursor:pointer!important; font-size:.85rem!important; display:flex!important; align-items:center!important; justify-content:center!important; padding:0!important; flex-shrink:0!important; }
       .az-topbar-dark:hover { background:rgba(255,255,255,.1)!important; }
-      .az-admin-back { background:rgba(251,191,36,.15)!important; border:1px solid rgba(251,191,36,.4)!important; color:#fbbf24!important; padding:4px 12px!important; border-radius:6px!important; font-size:.75rem!important; font-weight:700!important; cursor:pointer!important; text-decoration:none!important; display:none!important; align-items:center!important; white-space:nowrap!important; }
+      .az-admin-back { background:rgba(251,191,36,.15)!important; border:1px solid rgba(251,191,36,.4)!important; color:#fbbf24!important; padding:4px 12px!important; border-radius:6px!important; font-size:.75rem!important; font-weight:700!important; cursor:pointer!important; text-decoration:none!important; display:flex!important; align-items:center!important; white-space:nowrap!important; }
       .az-admin-back:hover { background:rgba(251,191,36,.25)!important; }
-      body.is-admin .az-admin-back { display:flex!important; }
 
       .sidebar, #sidebar { background:var(--az-navy)!important; border-right:1px solid rgba(255,255,255,.07)!important; }
       .sb-item { color:rgba(255,255,255,.65)!important; font-size:.86rem!important; }
