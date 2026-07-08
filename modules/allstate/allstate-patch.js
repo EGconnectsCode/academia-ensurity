@@ -204,8 +204,8 @@
       // ── Admin back | Lang pill | Dark mode | Cerrar Sesión → RIGHT side (.tb-acts) ──
       var backBtn = document.createElement('a');
       backBtn.className = 'az-admin-back';
-      backBtn.href = '/admin';
-      backBtn.textContent = '← Admin';
+      backBtn.href = '/';
+      backBtn.textContent = '← Dashboard';
 
       var pill = document.createElement('div');
       pill.className = 'az-lang-pill';

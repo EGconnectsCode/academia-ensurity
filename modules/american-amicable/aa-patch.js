@@ -167,8 +167,8 @@
       if (!acts) return;
       var backBtn = document.createElement('a');
       backBtn.className = 'az-admin-back';
-      backBtn.href = '/admin';
-      backBtn.textContent = '← Admin';
+      backBtn.href = '/';
+      backBtn.textContent = '← Dashboard';
       acts.appendChild(backBtn);
       var pill = document.createElement('div');
       pill.className = 'az-lang-pill';

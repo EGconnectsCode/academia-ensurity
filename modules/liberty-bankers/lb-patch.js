@@ -94,8 +94,8 @@
       if (acts) {
         var backBtn = document.createElement('a');
         backBtn.className = 'az-admin-back';
-        backBtn.href = '/admin';
-        backBtn.textContent = '← Admin';
+        backBtn.href = '/';
+        backBtn.textContent = '← Dashboard';
         acts.insertBefore(backBtn, acts.firstChild);
 
         var div = document.createElement('div');
