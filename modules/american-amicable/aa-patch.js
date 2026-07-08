@@ -423,7 +423,7 @@
       keyContacts.after(btn);
     }
     // ── Page content ──
-    var mainContent = document.getElementById('main-content') || document.querySelector('.main-content') || document.querySelector('.content');
+    var mainContent = document.getElementById('content') || document.getElementById('main-content') || document.querySelector('.main-content') || document.querySelector('.content');
     if (mainContent && !document.getElementById('page-new-agent-guide')) {
       var BASE = 'https://qvamdopwbjlccazchoer.supabase.co/storage/v1/object/public/pdfs-american-amicable/';
       var page = document.createElement('div');
