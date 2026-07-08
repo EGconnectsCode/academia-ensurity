@@ -21,9 +21,6 @@ const MODULE_IDS = {
   LIBERTY_BANKERS:    'liberty-bankers',
 };
 
-// EG member access code
-const EG_ACCESS_CODE = 'EG2026';
-
 // ---------------------------------------------------------------------------
 // 2. SUPABASE CLIENT
 // ---------------------------------------------------------------------------
@@ -64,7 +61,7 @@ const Auth = {
    * Register new account.
    * Returns { user, profile } or throws.
    */
-  async signUp(email, password, fullName, phone = '', courseInterest = '', egCode = '') {
+  async signUp(email, password, fullName, phone = '', courseInterest = '') {
     const { data, error } = await db.auth.signUp({
       email,
       password,
@@ -73,8 +70,7 @@ const Auth = {
     if (error) throw error;
     // Profile auto-created by DB trigger; update with extra fields
     if (data.user) {
-      const egMember = egCode.trim().toUpperCase() === EG_ACCESS_CODE;
-      await db.from('profiles').update({ full_name: fullName, phone, course_interest: courseInterest, eg_member: egMember }).eq('id', data.user.id);
+      await db.from('profiles').update({ full_name: fullName, phone, course_interest: courseInterest }).eq('id', data.user.id);
     }
     return { user: data.user };
   },
@@ -303,7 +299,7 @@ const Prefs = {
 const Admin = {
   async getAllUsers() {
     const [profilesRes, modulesRes, downloadsRes, progressRes] = await Promise.all([
-      db.from('profiles').select('id,email,full_name,role,xp,level,created_at,course_interest').order('created_at', { ascending: false }),
+      db.from('profiles').select('id,email,full_name,role,xp,level,created_at,course_interest,full_access').order('created_at', { ascending: false }),
       db.from('user_modules').select('user_id,module_id,active').eq('active', true),
       db.from('downloads').select('user_id'),
       db.from('progress').select('user_id').eq('completed', true),

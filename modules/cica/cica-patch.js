@@ -79,6 +79,11 @@
         font-weight:700; cursor:pointer; font-family:inherit; transition:all .15s; white-space:nowrap;
         letter-spacing:.01em; box-shadow:0 2px 8px rgba(220,38,38,.4); }
       .az-topbar-signout:hover { background:#b91c1c; border-color:#dc2626; box-shadow:0 4px 12px rgba(220,38,38,.5); }
+      .az-topbar-dark { background:transparent!important; border:1px solid rgba(255,255,255,.2)!important; color:#fff!important; width:28px!important; height:28px!important; border-radius:6px!important; cursor:pointer!important; font-size:.85rem!important; display:flex!important; align-items:center!important; justify-content:center!important; padding:0!important; flex-shrink:0!important; }
+      .az-topbar-dark:hover { background:rgba(255,255,255,.1)!important; }
+      .az-admin-back { background:rgba(251,191,36,.15)!important; border:1px solid rgba(251,191,36,.4)!important; color:#fbbf24!important; padding:4px 12px!important; border-radius:6px!important; font-size:.75rem!important; font-weight:700!important; cursor:pointer!important; text-decoration:none!important; display:none!important; align-items:center!important; white-space:nowrap!important; }
+      .az-admin-back:hover { background:rgba(251,191,36,.25)!important; }
+      body.is-admin .az-admin-back { display:flex!important; }
       /* ── Training notification banner ── */
       #training-banner { background:linear-gradient(135deg,#DC2626,#B91C1C)!important; color:#fff!important;
         border:none!important; border-radius:10px!important; padding:10px 16px!important;
@@ -207,15 +212,29 @@
     document.head.appendChild(style);
 
     document.addEventListener('DOMContentLoaded', function () {
-      // ── Inject EN/ES pill toggle + Sign Out into topbar right ──
+      // ── Inject Admin back | EN/ES toggle | Dark mode | Sign Out into topbar right ──
       var acts = document.querySelector('.topbar-right') || document.querySelector('.tb-acts');
       if (acts) {
+        var backBtn = document.createElement('a');
+        backBtn.className = 'az-admin-back';
+        backBtn.href = '/admin';
+        backBtn.textContent = '← Admin';
+        acts.appendChild(backBtn);
+
         var div = document.createElement('div');
         div.className = 'az-lang-toggle';
         div.innerHTML =
           '<button class="az-lb" id="az-lb-en" onclick="window._azLang(\'en\')">EN</button>' +
           '<button class="az-lb" id="az-lb-es" onclick="window._azLang(\'es\')">ES</button>';
         acts.appendChild(div);
+
+        var darkBtn = document.createElement('button');
+        darkBtn.className = 'az-topbar-dark';
+        darkBtn.title = 'Dark mode / Modo noche';
+        darkBtn.textContent = '🌙';
+        darkBtn.onclick = function () { if (typeof window.toggleDark === 'function') window.toggleDark(); };
+        acts.appendChild(darkBtn);
+
         var soBtn = document.createElement('button');
         soBtn.className = 'az-topbar-signout';
         soBtn.textContent = 'Cerrar Sesión';
@@ -295,7 +314,7 @@
           }
         });
       });
-      // Strip emoji from hero-btn-2 (e.g. 🎓 e-Training)
+      // Strip emoji from hero-btn-2 (e.g. 🎓 e-Training) and inject About Us after it
       document.querySelectorAll('.hero-btn-2').forEach(function (btn) {
         btn.childNodes.forEach(function (node) {
           if (node.nodeType === 3) {
@@ -306,6 +325,16 @@
           s.textContent = s.textContent.replace(/[\u{1F000}-\u{1FFFF}\u{2600}-\u{27FF}\u{2700}-\u{27BF}\u{FE00}-\u{FE0F}]|️/gu, '').trim();
         });
       });
+      // ── Inject "About Us" button after e-Training in hero ──
+      var heroBtn2 = document.querySelector('.hero-btn-2');
+      if (heroBtn2 && heroBtn2.parentElement && !heroBtn2.parentElement.querySelector('.az-about-hero')) {
+        var aboutHeroBtn = document.createElement('a');
+        aboutHeroBtn.href = '/about';
+        aboutHeroBtn.className = 'hero-btn-2 az-about-hero';
+        aboutHeroBtn.style.cssText = 'text-decoration:none!important;';
+        aboutHeroBtn.innerHTML = '<span class="en">About Us</span><span class="es">Sobre Nosotros</span>';
+        heroBtn2.parentElement.insertBefore(aboutHeroBtn, heroBtn2.nextSibling);
+      }
       // Quick links in home sidebar widget
       document.querySelectorAll('.sec-name .en, .sec-name .es').forEach(function (el) {
         if (el.textContent.toLowerCase().includes('agent portal') ||

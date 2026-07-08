@@ -92,6 +92,13 @@ body {
   font-weight: 600; transition: all var(--transition); font-family: inherit;
 }
 .topbar-signout:hover { border-color: var(--danger); color: var(--danger); background: #FEF2F2; }
+.topbar-dark-btn {
+  background: none; border: 1.5px solid var(--border); color: var(--text2);
+  width: 32px; height: 32px; border-radius: 8px; cursor: pointer; font-size: .95rem;
+  display: flex; align-items: center; justify-content: center;
+  transition: all var(--transition); flex-shrink: 0;
+}
+.topbar-dark-btn:hover { background: var(--surface2); border-color: var(--accent); }
 
 /* ===== PAGE LOAD OVERLAY ===== */
 #page-loader {
@@ -494,6 +501,7 @@ body {
       <button class="lang-btn" id="btn-lang-en" onclick="setLang('en')">EN</button>
       <button class="lang-btn" id="btn-lang-es" onclick="setLang('es')">ES</button>
     </div>
+    <button class="topbar-dark-btn" id="topbar-dark-btn" onclick="toggleTheme()" title="Modo noche / Dark mode" aria-label="Toggle dark mode">🌙</button>
     <button class="topbar-signout" id="topbar-signout-btn" onclick="doSignOut()" style="display:none" data-en="Sign Out" data-es="Cerrar Sesión">Sign Out</button>
   </div>
 </header>
@@ -631,11 +639,6 @@ body {
           </label>
         </div>
         <input type="hidden" id="reg-course" value=""/>
-      </div>
-      <div class="form-group">
-        <label data-en="EG Access Code (optional)" data-es="Código de acceso EG (opcional)" id="lbl-eg-code">EG Access Code (optional)</label>
-        <input type="text" id="reg-eg-code" placeholder="EG2026" autocomplete="off" style="text-transform:uppercase"/>
-        <small style="color:var(--text-muted,#6b7280);font-size:.75rem;margin-top:4px;display:block" data-en="If you have an EG access code, enter it here to unlock additional features." data-es="Si tienes un código EG, ingrésalo para desbloquear funciones adicionales.">If you have an EG access code, enter it here to unlock additional features.</small>
       </div>
       <div class="form-group">
         <label data-en="Password (min 8 chars)" data-es="Contraseña (mín. 8 caracteres)" id="lbl-pass-reg">Password (min 8 chars)<span class="req">*</span></label>
@@ -822,7 +825,6 @@ async function doRegister(e) {
   const pass    = document.getElementById('reg-password').value;
   const confirm = document.getElementById('reg-password-confirm').value;
   const course  = document.getElementById('reg-course').value;
-  const egCode  = (document.getElementById('reg-eg-code').value || '').trim().toUpperCase();
   clearMessages();
   if (pass !== confirm) {
     showMsg('msg-register', currentLang === 'es' ? 'Las contraseñas no coinciden.' : 'Passwords do not match.', 'error');
@@ -830,8 +832,9 @@ async function doRegister(e) {
   }
   setLoading('btn-register', true, 'register-label');
   try {
-    await AZ.Auth.signUp(email, pass, name, phone, course, egCode);
+    await AZ.Auth.signUp(email, pass, name, phone, course);
     sendToBitrix({ name, email, phone, course });
+    sendRegistrationNotification(name, email, phone, course);
     showMsg('msg-register',
       currentLang === 'es'
         ? '¡Cuenta creada! Tu solicitud está pendiente de aprobación. Te notificaremos pronto.'
@@ -1015,6 +1018,21 @@ function toggleCourse(card, value) {
 }
 
 // ===== BITRIX INTEGRATION =====
+async function sendRegistrationNotification(name, email, phone, course) {
+  try {
+    await fetch('https://qvamdopwbjlccazchoer.supabase.co/functions/v1/bitrix-sync', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + (window.ENV_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF2YW1kb3B3YmpsY2NhemNob2VyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMTA4ODQsImV4cCI6MjA5Nzg4Njg4NH0.F2VmsQUyBDWXgX_kh8soWOv6W59wWaDRFMlmg6kzHY4'),
+      },
+      body: JSON.stringify({ action: 'academia_registration', name, email, phone, course }),
+    });
+  } catch(e) {
+    console.warn('Registration notification failed:', e.message);
+  }
+}
+
 async function sendToBitrix(data) {
   try {
     await fetch('https://qvamdopwbjlccazchoer.supabase.co/functions/v1/bitrix-sync', {
@@ -1063,6 +1081,11 @@ async function sendToBitrix(data) {
     }
     switchTab('register');
   }
+
+  // Fix course-card double-fire: label click activates hidden checkbox which bubbles back up
+  document.querySelectorAll('.course-card input[type=checkbox]').forEach(function(inp) {
+    inp.addEventListener('click', function(e) { e.stopPropagation(); });
+  });
 
   // Check for existing session — hide loader after decision
   function hideLoader() {

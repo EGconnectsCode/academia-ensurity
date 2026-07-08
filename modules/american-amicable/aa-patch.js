@@ -117,6 +117,11 @@
         font-weight:700!important; cursor:pointer!important; font-family:inherit!important; transition:all .15s!important;
         white-space:nowrap!important; letter-spacing:.01em!important; box-shadow:0 2px 8px rgba(220,38,38,.4)!important; }
       .az-topbar-signout:hover { background:#b91c1c!important; border-color:#dc2626!important; box-shadow:0 4px 12px rgba(220,38,38,.5)!important; }
+      .az-topbar-dark { background:transparent!important; border:1px solid rgba(255,255,255,.2)!important; color:#fff!important; width:28px!important; height:28px!important; border-radius:6px!important; cursor:pointer!important; font-size:.85rem!important; display:flex!important; align-items:center!important; justify-content:center!important; padding:0!important; flex-shrink:0!important; }
+      .az-topbar-dark:hover { background:rgba(255,255,255,.1)!important; }
+      .az-admin-back { background:rgba(251,191,36,.15)!important; border:1px solid rgba(251,191,36,.4)!important; color:#fbbf24!important; padding:4px 12px!important; border-radius:6px!important; font-size:.75rem!important; font-weight:700!important; cursor:pointer!important; text-decoration:none!important; display:none!important; align-items:center!important; white-space:nowrap!important; }
+      .az-admin-back:hover { background:rgba(251,191,36,.25)!important; }
+      body.is-admin .az-admin-back { display:flex!important; }
       /* ── Dashboard quick-link cards → CICA sec-row style ── */
       .dash-grid { display:flex!important; flex-direction:column!important; gap:6px!important; }
       .dash-card { display:flex!important; align-items:center!important; gap:12px!important;
@@ -160,6 +165,11 @@
     document.addEventListener('DOMContentLoaded', function() {
       var acts = document.querySelector('.tb-acts') || document.querySelector('.tb-actions') || document.getElementById('topbar');
       if (!acts) return;
+      var backBtn = document.createElement('a');
+      backBtn.className = 'az-admin-back';
+      backBtn.href = '/admin';
+      backBtn.textContent = '← Admin';
+      acts.appendChild(backBtn);
       var pill = document.createElement('div');
       pill.className = 'az-lang-pill';
       pill.innerHTML = '<button class="az-lang-btn active" data-lang="en" onclick="window._azLang(\'en\')">EN</button><button class="az-lang-btn" data-lang="es" onclick="window._azLang(\'es\')">ES</button>';
@@ -168,6 +178,12 @@
         document.querySelectorAll('.az-lang-btn').forEach(function(b) { b.classList.toggle('active', b.dataset.lang === lang); });
         if (window.setLang) window.setLang(lang);
       };
+      var darkBtn = document.createElement('button');
+      darkBtn.className = 'az-topbar-dark';
+      darkBtn.title = 'Dark mode / Modo noche';
+      darkBtn.textContent = '🌙';
+      darkBtn.onclick = function () { if (typeof window.toggleDark === 'function') window.toggleDark(); };
+      acts.appendChild(darkBtn);
       // ── Inject sign-out button into topbar ──
       var soBtn = document.createElement('button');
       soBtn.className = 'az-topbar-signout';

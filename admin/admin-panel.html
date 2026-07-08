@@ -643,6 +643,9 @@ async function loadPending() {
             <option value="gtl" ${u.course_interest==='gtl'?'selected':''}>GTL</option>
             <option value="liberty-bankers" ${u.course_interest==='liberty-bankers'?'selected':''}>Liberty Bankers</option>
           </select>
+          <label style="font-size:.78rem;display:inline-flex;align-items:center;gap:4px;margin-right:6px;cursor:pointer;color:var(--text2)" title="Grant access to full-access-only files">
+            <input type="checkbox" id="full-access-${u.id}"> Full Access
+          </label>
           <button class="btn-sm" style="background:var(--accent);color:#fff;border:none"
             onclick="approvePending('${u.id}')">Approve</button>
         </td>
@@ -656,8 +659,9 @@ async function approvePending(userId) {
   const select = document.getElementById(`approve-module-${userId}`);
   const moduleId = select.value;
   if (!moduleId) { alert('Please select a module first.'); return; }
+  const fullAccess = document.getElementById(`full-access-${userId}`)?.checked || false;
   try {
-    await AZ.db.from('profiles').update({ status: 'active', role: 'agent' }).eq('id', userId);
+    await AZ.db.from('profiles').update({ status: 'active', role: 'agent', full_access: fullAccess }).eq('id', userId);
     await AZ.db.from('user_modules').upsert(
       { user_id: userId, module_id: moduleId, active: true },
       { onConflict: 'user_id,module_id' }
@@ -729,11 +733,25 @@ function renderUsers(users) {
       </td>
       <td>${u.xp || 0} <small style="color:var(--text2)">L${u.level||1}</small></td>
       <td>${u.total_downloads || 0}</td>
-      <td>
+      <td style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
         <button class="btn-sm" style="background:var(--surface2);border:1px solid var(--border);color:var(--text2)"
           data-action="role" data-id="${u.id}">Role</button>
+        <button class="btn-sm" onclick="toggleFullAccess('${u.id}', ${!!u.full_access})"
+          style="background:${u.full_access?'#fbbf2420':'var(--surface2)'};border:1px solid ${u.full_access?'#fbbf24':'var(--border)'};color:${u.full_access?'#d97706':'var(--text2)'}"
+          title="${u.full_access?'Revoke full access':'Grant full access'}">
+          ${u.full_access?'Full ✓':'Full'}
+        </button>
       </td>
     </tr>`).join('') || '<tr><td colspan="6" class="loading-row">No users found.</td></tr>';
+}
+
+async function toggleFullAccess(userId, current) {
+  const newVal = !current;
+  try {
+    await AZ.db.from('profiles').update({ full_access: newVal }).eq('id', userId);
+    allUsers = [];
+    loadUsers();
+  } catch(e) { alert('Error: ' + e.message); }
 }
 
 function filterUsers() {
