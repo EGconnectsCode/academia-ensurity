@@ -412,6 +412,53 @@
     const t = setInterval(() => { if (window.AZ && window.AZ.Auth) { clearInterval(t); fn(); } }, 50);
   }
 
+  function _injectNewAgentGuide() {
+    // ── Sidebar item under Resources ──
+    var keyContacts = document.querySelector('.sb-item[data-page="key-contacts"]');
+    if (keyContacts && !document.querySelector('.sb-item[data-page="new-agent-guide"]')) {
+      var btn = document.createElement('button');
+      btn.className = 'sb-item';
+      btn.setAttribute('data-page', 'new-agent-guide');
+      btn.innerHTML = '<span class="sb-icon">&#128203;</span><span class="en">New Agent Guide</span><span class="es">Guía del Nuevo Agente</span>';
+      btn.onclick = function () { if (window.showPage) window.showPage('new-agent-guide'); };
+      keyContacts.after(btn);
+    }
+    // ── Page content ──
+    var mainContent = document.getElementById('main-content') || document.querySelector('.main-content') || document.querySelector('.content');
+    if (mainContent && !document.getElementById('page-new-agent-guide')) {
+      var BASE = 'https://qvamdopwbjlccazchoer.supabase.co/storage/v1/object/public/pdfs-american-amicable/';
+      var page = document.createElement('div');
+      page.id = 'page-new-agent-guide';
+      page.className = 'page';
+      page.innerHTML = `
+        <div class="ph-title en">New Agent Guide</div>
+        <div class="ph-title es" style="display:none">Guía del Nuevo Agente</div>
+        <div class="ph-sub en">Step-by-step guide to get started with American-Amicable after contracting.</div>
+        <div class="ph-sub es" style="display:none">Guía paso a paso para comenzar con American-Amicable después de la contratación.</div>
+        <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:20px;">
+          <div class="fcard" style="flex:1;min-width:260px;max-width:340px;padding:20px;border-radius:12px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.08);border:1px solid #E2E8F0;">
+            <div style="font-size:2rem;margin-bottom:8px;">🇺🇸</div>
+            <div style="font-weight:700;font-size:.95rem;margin-bottom:4px;">New Agent Onboarding Guide</div>
+            <div style="font-size:.8rem;color:#64748B;margin-bottom:16px;">English version — Steps 1–3 to access your credentials and portal.</div>
+            <div style="display:flex;gap:8px;">
+              <button onclick="window.open('${BASE}agent-welcome-guide-v2.pdf','_blank')" style="flex:1;padding:8px;background:#1e40af;color:#fff;border:none;border-radius:8px;font-size:.8rem;font-weight:700;cursor:pointer;">👁 Preview</button>
+              <a href="${BASE}agent-welcome-guide-v2.pdf" download style="flex:1;padding:8px;background:#059669;color:#fff;border:none;border-radius:8px;font-size:.8rem;font-weight:700;cursor:pointer;text-align:center;text-decoration:none;">⬇ Download</a>
+            </div>
+          </div>
+          <div class="fcard" style="flex:1;min-width:260px;max-width:340px;padding:20px;border-radius:12px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.08);border:1px solid #E2E8F0;">
+            <div style="font-size:2rem;margin-bottom:8px;">🇪🇸</div>
+            <div style="font-weight:700;font-size:.95rem;margin-bottom:4px;">Guía de Incorporación para Nuevos Agentes</div>
+            <div style="font-size:.8rem;color:#64748B;margin-bottom:16px;">Versión en español — Pasos 1–3 para acceder a tus credenciales y al portal.</div>
+            <div style="display:flex;gap:8px;">
+              <button onclick="window.open('${BASE}agent-welcome-guide-es.pdf','_blank')" style="flex:1;padding:8px;background:#1e40af;color:#fff;border:none;border-radius:8px;font-size:.8rem;font-weight:700;cursor:pointer;">👁 Vista Previa</button>
+              <a href="${BASE}agent-welcome-guide-es.pdf" download style="flex:1;padding:8px;background:#059669;color:#fff;border:none;border-radius:8px;font-size:.8rem;font-weight:700;cursor:pointer;text-align:center;text-decoration:none;">⬇ Descargar</a>
+            </div>
+          </div>
+        </div>`;
+      mainContent.appendChild(page);
+    }
+  }
+
   // ════════════════════════════════════════════════
   //  1. OVERRIDE STORAGE FUNCTIONS
   // ════════════════════════════════════════════════
@@ -685,6 +732,7 @@
     _patchDl();
     _azInjectFileButtons();
     _removeAdminUI();
+    _injectNewAgentGuide();
     try {
       const current = await AZ.Auth.getCurrentUser();
       if (!current) { window.location.replace('/'); return; }
