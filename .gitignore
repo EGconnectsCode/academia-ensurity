@@ -3,3 +3,5 @@
 .vercel
 supabase/.temp/
 .git-rewrite/
+
+.vercel
