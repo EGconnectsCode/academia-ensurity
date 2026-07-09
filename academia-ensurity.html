@@ -600,47 +600,6 @@ body {
         <input type="tel" id="reg-phone" required placeholder="+1 555 000 0000"/>
       </div>
       <div class="form-group">
-        <label data-en="Course of interest" data-es="Curso de interés" id="lbl-course">Course of interest<span class="req">*</span></label>
-        <div class="course-picker" id="course-picker">
-          <label class="course-card" onclick="toggleCourse(this,'allstate')">
-            <input type="checkbox" name="reg-course" value="allstate"/>
-            <span class="course-dot" style="background:#0033A0"></span>
-            <span class="course-card-name">Allstate Health Solutions</span>
-          </label>
-          <label class="course-card" onclick="toggleCourse(this,'american-amicable')">
-            <input type="checkbox" name="reg-course" value="american-amicable"/>
-            <span class="course-dot" style="background:#1A3C6E"></span>
-            <span class="course-card-name">American Amicable</span>
-          </label>
-          <label class="course-card" onclick="toggleCourse(this,'cica')">
-            <input type="checkbox" name="reg-course" value="cica"/>
-            <span class="course-dot" style="background:#2E7D32"></span>
-            <span class="course-card-name">CICA Citizens</span>
-          </label>
-          <label class="course-card" onclick="toggleCourse(this,'corebr')">
-            <input type="checkbox" name="reg-course" value="corebr"/>
-            <span class="course-dot" style="background:#F97316"></span>
-            <span class="course-card-name">Corebridge Financial</span>
-          </label>
-          <label class="course-card" onclick="toggleCourse(this,'gtl')">
-            <input type="checkbox" name="reg-course" value="gtl"/>
-            <span class="course-dot" style="background:#0369A1"></span>
-            <span class="course-card-name">Guarantee Trust Life</span>
-          </label>
-          <label class="course-card" onclick="toggleCourse(this,'liberty-bankers')">
-            <input type="checkbox" name="reg-course" value="liberty-bankers"/>
-            <span class="course-dot" style="background:#059669"></span>
-            <span class="course-card-name">Liberty Bankers Life</span>
-          </label>
-          <label class="course-card full-width" onclick="toggleCourse(this,'undecided')">
-            <input type="checkbox" name="reg-course" value="undecided"/>
-            <span class="course-dot" style="background:#9ca3af"></span>
-            <span class="course-card-name" data-en="Not sure yet" data-es="No estoy seguro/a">Not sure yet</span>
-          </label>
-        </div>
-        <input type="hidden" id="reg-course" value=""/>
-      </div>
-      <div class="form-group">
         <label data-en="Password (min 8 chars)" data-es="Contraseña (mín. 8 caracteres)" id="lbl-pass-reg">Password (min 8 chars)<span class="req">*</span></label>
         <div class="pw-wrap">
           <input type="password" id="reg-password" required minlength="8" placeholder="••••••••"/>
@@ -674,8 +633,8 @@ body {
         <label data-en="Your email address" data-es="Tu correo electrónico" id="lbl-email-fp">Your email address</label>
         <input type="email" id="fp-email" required placeholder="you@example.com"/>
       </div>
-      <button type="submit" class="btn-primary">
-        <span id="forgot-label" data-en="Send Reset Link" data-es="Enviar enlace">Send Reset Link</span>
+      <button type="submit" class="btn-primary" id="btn-forgot">
+        <span id="forgot-label" data-en="Request Code" data-es="Solicitar Código">Request Code</span>
       </button>
       <span class="forgot-link" onclick="switchTab('signin')" id="back-signin" data-en="← Back to Sign In" data-es="← Volver">← Back to Sign In</span>
       <div class="auth-msg" id="msg-forgot"></div>
@@ -824,7 +783,6 @@ async function doRegister(e) {
   const phone  = document.getElementById('reg-phone').value.trim();
   const pass    = document.getElementById('reg-password').value;
   const confirm = document.getElementById('reg-password-confirm').value;
-  const course  = document.getElementById('reg-course').value;
   clearMessages();
   if (pass !== confirm) {
     showMsg('msg-register', currentLang === 'es' ? 'Las contraseñas no coinciden.' : 'Passwords do not match.', 'error');
@@ -832,9 +790,9 @@ async function doRegister(e) {
   }
   setLoading('btn-register', true, 'register-label');
   try {
-    await AZ.Auth.signUp(email, pass, name, phone, course);
-    sendToBitrix({ name, email, phone, course });
-    sendRegistrationNotification(name, email, phone, course);
+    await AZ.Auth.signUp(email, pass, name, phone);
+    sendToBitrix({ name, email, phone });
+    sendRegistrationNotification(name, email, phone);
     showMsg('msg-register',
       currentLang === 'es'
         ? '¡Cuenta creada! Tu solicitud está pendiente de aprobación. Te notificaremos pronto.'
@@ -855,16 +813,27 @@ async function doForgot(e) {
   e.preventDefault();
   const email = document.getElementById('fp-email').value.trim();
   clearMessages();
+  const btn = document.getElementById('btn-forgot');
+  btn.disabled = true;
   try {
-    await AZ.Auth.sendPasswordReset(email);
-    showMsg('msg-forgot',
-      currentLang === 'es'
-        ? 'Enlace enviado. Revisa tu email.'
-        : 'Reset link sent. Check your email.',
-      'success'
-    );
+    const res = await fetch('https://qvamdopwbjlccazchoer.supabase.co/functions/v1/bitrix-sync', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + (window.ENV_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF2YW1kb3B3YmpsY2NhemNob2VyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMTA4ODQsImV4cCI6MjA5Nzg4Njg4NH0.F2VmsQUyBDWXgX_kh8soWOv6W59wWaDRFMlmg6kzHY4'),
+      },
+      body: JSON.stringify({ action: 'password_reset_request', email }),
+    });
+    const d = await res.json();
+    if (d.error) throw new Error(d.error);
+    const msg = d.method === 'email'
+      ? (currentLang === 'es' ? 'Enlace enviado. Revisa tu correo.' : 'Reset link sent. Check your email.')
+      : (currentLang === 'es' ? 'Código enviado. Revisa tu correo de Ensurity Group.' : 'Code sent. Check your email from Ensurity Group.');
+    showMsg('msg-forgot', msg, 'success');
   } catch (err) {
-    showMsg('msg-forgot', err.message, 'error');
+    showMsg('msg-forgot', err.message || 'Error sending code.', 'error');
+  } finally {
+    btn.disabled = false;
   }
 }
 
@@ -1001,24 +970,8 @@ async function showModules(profile) {
 }
 
 // ===== COURSE PICKER =====
-function toggleCourse(card, value) {
-  if (value === 'undecided') {
-    // "Not sure" clears everything else and selects itself exclusively
-    document.querySelectorAll('.course-card').forEach(c => c.classList.remove('selected'));
-    card.classList.add('selected');
-  } else {
-    // Selecting a real course clears "undecided" if active
-    const undecidedCard = document.querySelector('.course-card input[value="undecided"]')?.closest('.course-card');
-    if (undecidedCard) undecidedCard.classList.remove('selected');
-    card.classList.toggle('selected');
-  }
-  const selected = [...document.querySelectorAll('.course-card.selected')]
-    .map(c => c.querySelector('input').value);
-  document.getElementById('reg-course').value = selected.join(',');
-}
-
 // ===== BITRIX INTEGRATION =====
-async function sendRegistrationNotification(name, email, phone, course) {
+async function sendRegistrationNotification(name, email, phone) {
   try {
     await fetch('https://qvamdopwbjlccazchoer.supabase.co/functions/v1/bitrix-sync', {
       method: 'POST',
@@ -1026,7 +979,7 @@ async function sendRegistrationNotification(name, email, phone, course) {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + (window.ENV_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF2YW1kb3B3YmpsY2NhemNob2VyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMTA4ODQsImV4cCI6MjA5Nzg4Njg4NH0.F2VmsQUyBDWXgX_kh8soWOv6W59wWaDRFMlmg6kzHY4'),
       },
-      body: JSON.stringify({ action: 'academia_registration', name, email, phone, course }),
+      body: JSON.stringify({ action: 'academia_registration', name, email, phone }),
     });
   } catch(e) {
     console.warn('Registration notification failed:', e.message);
@@ -1053,39 +1006,15 @@ async function sendToBitrix(data) {
   applyLang();
   applyTheme();
 
-  // Pre-fill form from URL params (Bitrix link: ?fname=...&lname=...&email=...&phone=...&course=allstate,cica)
+  // Pre-fill form from URL params (Bitrix link: ?fname=...&lname=...&email=...&phone=...)
   const params = new URLSearchParams(location.search);
-  if (params.get('name') || params.get('fname') || params.get('email') || params.get('phone') || params.get('course')) {
+  if (params.get('name') || params.get('fname') || params.get('email') || params.get('phone')) {
     const fullName = params.get('name') || [params.get('fname'), params.get('lname')].filter(Boolean).join(' ');
     if (fullName)             document.getElementById('reg-name').value  = fullName;
     if (params.get('email'))  document.getElementById('reg-email').value = params.get('email');
     if (params.get('phone'))  document.getElementById('reg-phone').value = params.get('phone');
-    if (params.get('course')) {
-      const resolveCourse = raw => {
-        const s = raw.trim().toLowerCase();
-        if (['allstate','american-amicable','cica','corebr','gtl','liberty-bankers','undecided'].includes(s)) return s;
-        if (s.includes('american') || s.includes('amicable')) return 'american-amicable';
-        if (s.includes('cica'))     return 'cica';
-        if (s.includes('allstate')) return 'allstate';
-        if (s.includes('corebridge') || s.includes('corebr')) return 'corebr';
-        if (s.includes('gtl') || s.includes('guarantee')) return 'gtl';
-        if (s.includes('liberty')) return 'liberty-bankers';
-        return s;
-      };
-      const courses = params.get('course').split(',').map(resolveCourse).filter(Boolean);
-      courses.forEach(val => {
-        const card = document.querySelector(`.course-card input[value="${val}"]`)?.closest('.course-card');
-        if (card) card.classList.add('selected');
-      });
-      document.getElementById('reg-course').value = courses.join(',');
-    }
     switchTab('register');
   }
-
-  // Fix course-card double-fire: label click activates hidden checkbox which bubbles back up
-  document.querySelectorAll('.course-card input[type=checkbox]').forEach(function(inp) {
-    inp.addEventListener('click', function(e) { e.stopPropagation(); });
-  });
 
   // Check for existing session — hide loader after decision
   function hideLoader() {

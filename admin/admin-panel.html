@@ -373,7 +373,7 @@ tr:hover td { background: var(--surface2); }
       <table>
         <thead>
           <tr>
-            <th>User</th><th>Phone</th><th>Course Interest</th><th>Registered</th><th>Action</th>
+            <th>User</th><th>Phone</th><th>Bitrix Courses</th><th>Registered</th><th>Action</th>
           </tr>
         </thead>
         <tbody id="pending-tbody">
@@ -549,6 +549,10 @@ const MODULE_NAMES = {
 };
 const ALL_MODULE_IDS = Object.keys(MODULE_NAMES);
 
+const EDGE_FN_URL = 'https://qvamdopwbjlccazchoer.supabase.co/functions/v1/bitrix-sync';
+const EDGE_FN_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF2YW1kb3B3YmpsY2NhemNob2VyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMTA4ODQsImV4cCI6MjA5Nzg4Njg4NH0.F2VmsQUyBDWXgX_kh8soWOv6W59wWaDRFMlmg6kzHY4';
+window._pendingCourses = {};
+
 let allUsers    = [];
 let allActivity = [];
 const userMap   = new Map();
@@ -595,23 +599,15 @@ function showPage(id) {
 }
 
 // ===== PENDING APPROVALS =====
-const COURSE_NAMES = {
-  'allstate':          'Allstate Health Solutions',
-  'american-amicable': 'American Amicable',
-  'cica':              'CICA Citizens',
-  'corebr':            'Corebridge Financial',
-  'gtl':               'Guarantee Trust Life',
-  'liberty-bankers':   'Liberty Bankers Life',
-  'undecided':         'Not sure yet',
-};
 
 async function loadPending() {
   const tbody = document.getElementById('pending-tbody');
   tbody.innerHTML = '<tr class="loading-row"><td colspan="5"><span class="spinner"></span></td></tr>';
+  window._pendingCourses = {};
   try {
     const { data, error } = await AZ.db
       .from('profiles')
-      .select('id, email, full_name, phone, course_interest, created_at, role, status')
+      .select('id, email, full_name, phone, created_at, role, status')
       .eq('status', 'pending')
       .order('created_at', { ascending: false });
     if (error) throw error;
@@ -620,52 +616,73 @@ async function loadPending() {
     if (pending.length > 0) { badge.textContent = pending.length; badge.style.display = 'inline'; }
     else { badge.style.display = 'none'; }
 
-    tbody.innerHTML = pending.map(u => `
+    // Fetch course interests from Bitrix for all pending users in parallel
+    await Promise.all(pending.map(async u => {
+      try {
+        const res = await fetch(EDGE_FN_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + EDGE_FN_KEY },
+          body: JSON.stringify({ action: 'get_courses_by_email', email: u.email }),
+        });
+        const d = await res.json();
+        window._pendingCourses[u.id] = d.modules || [];
+      } catch {
+        window._pendingCourses[u.id] = [];
+      }
+    }));
+
+    tbody.innerHTML = pending.map(u => {
+      const courses = window._pendingCourses[u.id] || [];
+      const hasBitrix = courses.length > 0;
+
+      const coursesCell = `
+        ${hasBitrix
+          ? `<div style="margin-bottom:5px">${courses.map(m => `<span class="badge" style="background:${MODULE_COLORS[m]||'#aaa'}22;color:${MODULE_COLORS[m]||'#555'};margin:2px 2px 2px 0">${escHtml(MODULE_NAMES[m]||m)}</span>`).join('')}</div>
+             <div style="font-size:.72rem;color:var(--text2);margin-bottom:3px">Assign (edit if needed):</div>`
+          : `<div style="font-size:.72rem;color:var(--text2);margin-bottom:4px">No deal in Bitrix — select modules to assign:</div>`
+        }
+        <div style="display:flex;flex-wrap:wrap;gap:3px">
+          ${ALL_MODULE_IDS.map(m => `
+            <label style="font-size:.73rem;display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border:1px solid var(--border);border-radius:4px;cursor:pointer;background:var(--surface);color:var(--text)">
+              <input type="checkbox" class="mod-sel-${u.id}" value="${m}" ${courses.includes(m) ? 'checked' : ''}> ${escHtml(MODULE_NAMES[m]||m)}
+            </label>`).join('')}
+        </div>`;
+
+      return `
       <tr>
         <td>
           <div style="font-weight:600">${escHtml(u.full_name || '—')}</div>
           <div style="font-size:.78rem;color:var(--text2)">${escHtml(u.email)}</div>
         </td>
         <td>${escHtml(u.phone || '—')}</td>
-        <td>
-          ${u.course_interest
-            ? `<span class="badge" style="background:var(--accent)22;color:var(--accent)">${escHtml(COURSE_NAMES[u.course_interest] || u.course_interest)}</span>`
-            : '<span style="color:var(--text2)">—</span>'}
-        </td>
+        <td>${coursesCell}</td>
         <td style="font-size:.8rem;color:var(--text2);white-space:nowrap">${relTime(u.created_at)}</td>
-        <td>
-          <select id="approve-module-${u.id}" style="font-size:.8rem;padding:4px 8px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text);margin-right:6px">
-            <option value="">Select module…</option>
-            <option value="allstate" ${u.course_interest==='allstate'?'selected':''}>Allstate</option>
-            <option value="american-amicable" ${u.course_interest==='american-amicable'?'selected':''}>American Amicable</option>
-            <option value="cica" ${u.course_interest==='cica'?'selected':''}>CICA</option>
-            <option value="corebr" ${u.course_interest==='corebr'?'selected':''}>Corebridge</option>
-            <option value="gtl" ${u.course_interest==='gtl'?'selected':''}>GTL</option>
-            <option value="liberty-bankers" ${u.course_interest==='liberty-bankers'?'selected':''}>Liberty Bankers</option>
-          </select>
+        <td style="white-space:nowrap">
           <label style="font-size:.78rem;display:inline-flex;align-items:center;gap:4px;margin-right:6px;cursor:pointer;color:var(--text2)" title="Grant access to full-access-only files">
             <input type="checkbox" id="full-access-${u.id}"> Full Access
           </label>
           <button class="btn-sm" style="background:var(--accent);color:#fff;border:none"
             onclick="approvePending('${u.id}')">Approve</button>
         </td>
-      </tr>`).join('') || '<tr><td colspan="5" class="loading-row">No pending users.</td></tr>';
+      </tr>`;
+    }).join('') || '<tr><td colspan="5" class="loading-row">No pending users.</td></tr>';
   } catch(e) {
     tbody.innerHTML = `<tr><td colspan="5" class="loading-row">Error: ${escHtml(e.message)}</td></tr>`;
   }
 }
 
 async function approvePending(userId) {
-  const select = document.getElementById(`approve-module-${userId}`);
-  const moduleId = select.value;
-  if (!moduleId) { alert('Please select a module first.'); return; }
+  const courses = [...document.querySelectorAll(`.mod-sel-${userId}:checked`)].map(cb => cb.value);
+  if (!courses.length) { alert('Select at least one module before approving.'); return; }
   const fullAccess = document.getElementById(`full-access-${userId}`)?.checked || false;
   try {
     await AZ.db.from('profiles').update({ status: 'active', role: 'agent', full_access: fullAccess }).eq('id', userId);
-    await AZ.db.from('user_modules').upsert(
-      { user_id: userId, module_id: moduleId, active: true },
-      { onConflict: 'user_id,module_id' }
-    );
+    for (const moduleId of courses) {
+      await AZ.db.from('user_modules').upsert(
+        { user_id: userId, module_id: moduleId, active: true },
+        { onConflict: 'user_id,module_id' }
+      );
+    }
     allUsers = [];
     loadPending();
   } catch(e) { alert('Error: ' + e.message); }
