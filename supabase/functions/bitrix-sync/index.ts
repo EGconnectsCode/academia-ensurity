@@ -66,12 +66,19 @@ Deno.serve(async (req: Request) => {
       const contacts: Array<{ ID: string }> = contactRes.result || [];
       if (!contacts.length) return jsonResp({ modules: [] });
 
-      const dealRes = await bxCall(webhookUrl, 'crm.deal.list', {
-        filter: { CONTACT_ID: contacts[0].ID, CATEGORY_ID: 90 },
-        select: ['ID', BITRIX_COURSES_FIELD],
-        order: { DATE_CREATE: 'DESC' },
-      });
-      const deals: Array<Record<string, unknown>> = dealRes.result || [];
+      // Search deals across ALL contacts with this email (duplicates are common)
+      let deals: Array<Record<string, unknown>> = [];
+      for (const contact of contacts) {
+        const dealRes = await bxCall(webhookUrl, 'crm.deal.list', {
+          filter: { CONTACT_ID: contact.ID },
+          select: ['ID', BITRIX_COURSES_FIELD],
+          order: { DATE_CREATE: 'DESC' },
+        });
+        const found = (dealRes.result || []).filter((d: Record<string, unknown>) =>
+          Array.isArray(d[BITRIX_COURSES_FIELD]) && (d[BITRIX_COURSES_FIELD] as string[]).length > 0
+        );
+        if (found.length) { deals = found; break; }
+      }
       if (!deals.length) return jsonResp({ modules: [] });
 
       const courseIds: string[] = (deals[0][BITRIX_COURSES_FIELD] as string[]) || [];
