@@ -149,8 +149,14 @@ Deno.serve(async (req: Request) => {
         .insert({ email, code, expires_at: expiresAt });
       if (insertErr) throw new Error(insertErr.message);
 
-      // Write code to Bitrix entity field (triggers automation → sends email)
+      // Clear field first so Bitrix automation fires every time (empty → value triggers it)
       const updateMethod = bxEntity === 'contact' ? 'crm.contact.update' : 'crm.lead.update';
+      await bxCall(webhookUrl, updateMethod, {
+        id: bxEntityId,
+        fields: { [BITRIX_RESET_CODE_FIELD]: '' },
+      });
+      // Small pause so Bitrix registers the change before writing the new code
+      await new Promise(resolve => setTimeout(resolve, 1500));
       await bxCall(webhookUrl, updateMethod, {
         id: bxEntityId,
         fields: { [BITRIX_RESET_CODE_FIELD]: code },

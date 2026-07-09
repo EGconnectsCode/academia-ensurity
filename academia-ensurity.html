@@ -793,6 +793,7 @@ async function doRegister(e) {
     await AZ.Auth.signUp(email, pass, name, phone);
     sendToBitrix({ name, email, phone });
     sendRegistrationNotification(name, email, phone);
+    document.getElementById('form-register').reset();
     showMsg('msg-register',
       currentLang === 'es'
         ? '¡Cuenta creada! Tu solicitud está pendiente de aprobación. Te notificaremos pronto.'
@@ -826,10 +827,20 @@ async function doForgot(e) {
     });
     const d = await res.json();
     if (d.error) throw new Error(d.error);
-    const msg = d.method === 'email'
-      ? (currentLang === 'es' ? 'Enlace enviado. Revisa tu correo.' : 'Reset link sent. Check your email.')
-      : (currentLang === 'es' ? 'Código enviado. Revisa tu correo de Ensurity Group.' : 'Code sent. Check your email from Ensurity Group.');
-    showMsg('msg-forgot', msg, 'success');
+    if (d.method === 'email') {
+      showMsg('msg-forgot',
+        currentLang === 'es' ? 'Enlace enviado. Revisa tu correo.' : 'Reset link sent. Check your email.',
+        'success'
+      );
+    } else {
+      showMsg('msg-forgot',
+        currentLang === 'es' ? 'Código enviado. Redirigiendo...' : 'Code sent. Redirecting...',
+        'success'
+      );
+      setTimeout(function () {
+        window.location.href = '/reset-password?email=' + encodeURIComponent(email);
+      }, 1200);
+    }
   } catch (err) {
     showMsg('msg-forgot', err.message || 'Error sending code.', 'error');
   } finally {
