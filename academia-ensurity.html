@@ -1379,7 +1379,6 @@ function openCulture() {
 function closeCulture() {
   document.getElementById('culture-overlay').classList.remove('active');
   document.body.style.overflow = '';
-  localStorage.setItem('eg_culture_seen', '1');
 }
 
 document.getElementById('culture-overlay').addEventListener('click', function(e) {
@@ -1404,9 +1403,7 @@ function cultureGo(idx) {
 }
 
 function checkCultureAutoShow() {
-  if (!localStorage.getItem('eg_culture_seen')) {
-    setTimeout(openCulture, 900);
-  }
+  setTimeout(openCulture, 900);
 }
 
 // ===== COURSE PICKER =====
