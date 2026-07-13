@@ -494,6 +494,42 @@ body {
 .culture-slide.active .principio-pill:nth-child(15) { animation-delay:.62s; }
 .culture-slide.active .principio-pill:nth-child(16) { animation-delay:.66s; }
 
+/* Slide 3 — Primeros Pasos */
+.primeros-pasos-header { font-size:.78rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:#7B1212; background:#FEF2F2; border-radius:8px; padding:7px 14px; display:inline-block; margin-bottom:18px; }
+.primeros-pasos-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.paso-card { background:#fff; border:1.5px solid #E2E8F0; border-radius:14px; padding:16px 16px 14px; display:flex; flex-direction:column; gap:8px; transition:box-shadow .15s; }
+.paso-card:hover { box-shadow:0 4px 16px rgba(0,0,0,.08); }
+.paso-num { width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg,#7B1212,#C0392B); color:#fff; font-size:.78rem; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.paso-title { font-size:.88rem; font-weight:700; color:#0F172A; }
+.paso-desc { font-size:.78rem; color:#64748B; line-height:1.5; }
+.paso-link { display:inline-flex; align-items:center; gap:5px; font-size:.76rem; font-weight:700; color:#7B1212; text-decoration:none; margin-top:auto; }
+.paso-link:hover { text-decoration:underline; }
+.culture-slide.active .paso-card:nth-child(1) { animation:culture-fade-up .42s ease .08s both; }
+.culture-slide.active .paso-card:nth-child(2) { animation:culture-fade-up .42s ease .16s both; }
+.culture-slide.active .paso-card:nth-child(3) { animation:culture-fade-up .42s ease .24s both; }
+.culture-slide.active .paso-card:nth-child(4) { animation:culture-fade-up .42s ease .32s both; }
+
+/* Pasos modal (small) */
+.pasos-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:9999; align-items:center; justify-content:center; padding:16px; }
+.pasos-overlay.active { display:flex; }
+.pasos-modal { background:#fff; border-radius:20px; width:100%; max-width:560px; max-height:90vh; overflow-y:auto; box-shadow:0 24px 64px rgba(0,0,0,.22); }
+.pasos-modal-top { background:linear-gradient(135deg,#7B1212 0%,#A31515 60%,#C0392B 100%); border-radius:20px 20px 0 0; padding:18px 22px; display:flex; align-items:center; justify-content:space-between; }
+.pasos-modal-top h2 { font-size:1rem; font-weight:800; color:#fff; margin:0; }
+.pasos-modal-top p { font-size:.75rem; color:rgba(255,255,255,.78); margin:3px 0 0; }
+.pasos-close { background:rgba(255,255,255,.18); border:none; color:#fff; width:30px; height:30px; border-radius:50%; font-size:1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+.pasos-body { padding:20px 22px; display:flex; flex-direction:column; gap:12px; }
+.pasos-step { display:flex; gap:12px; align-items:flex-start; background:#F8FAFC; border-radius:12px; padding:14px; border:1px solid #E2E8F0; }
+.pasos-step-num { width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg,#7B1212,#C0392B); color:#fff; font-size:.78rem; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.pasos-step-content { flex:1; }
+.pasos-step-content h4 { font-size:.88rem; font-weight:700; color:#0F172A; margin:0 0 4px; }
+.pasos-step-content p { font-size:.78rem; color:#64748B; margin:0 0 6px; line-height:1.5; }
+.pasos-step-content a { font-size:.76rem; font-weight:700; color:#7B1212; text-decoration:none; }
+.pasos-step-content a:hover { text-decoration:underline; }
+
+/* Pasos reopen btn */
+.pasos-reopen-btn { width:100%; display:flex; align-items:center; gap:14px; background:linear-gradient(135deg,#1E3A5F 0%,#2563EB 60%,#0EA5E9 100%); color:#fff; border:none; border-radius:14px; padding:14px 18px; cursor:pointer; text-align:left; margin-bottom:20px; box-shadow:0 4px 16px rgba(30,58,95,.22); transition:filter .15s,transform .15s; }
+.pasos-reopen-btn:hover { filter:brightness(1.1); transform:translateY(-1px); }
+
 @media (max-width: 560px) {
   .pilares-layout { grid-template-columns: 1fr; }
   .pilares-center { padding: 8px 0; }
@@ -877,6 +913,16 @@ body {
     <svg style="margin-left:auto;flex-shrink:0;opacity:.7" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
   </button>
 
+  <!-- Pasos para Licencias button -->
+  <button class="pasos-reopen-btn" onclick="openPasos()">
+    <div style="font-size:1.8rem;flex-shrink:0">🪪</div>
+    <div style="flex:1;min-width:0">
+      <h4 style="font-size:.92rem;font-weight:800;margin:0 0 2px;color:#fff">Pasos para tu Licencia</h4>
+      <p style="font-size:.76rem;margin:0;opacity:.85;color:#fff">Examen · Fingerprints · Aplicación · $50</p>
+    </div>
+    <svg style="margin-left:auto;flex-shrink:0;opacity:.8" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+  </button>
+
   <!-- Texas Life & Health featured preview -->
   <div id="tlh-preview-card" style="margin-bottom:24px;border-radius:18px;overflow:hidden;box-shadow:0 4px 24px rgba(30,58,95,.15);border:1.5px solid rgba(30,58,95,.14)">
     <!-- Header -->
@@ -924,6 +970,53 @@ body {
     <!-- Cards injected by JS -->
   </div>
 </section>
+
+<!-- PASOS MODAL -->
+<div class="pasos-overlay" id="pasos-overlay">
+  <div class="pasos-modal">
+    <div class="pasos-modal-top">
+      <div>
+        <h2>🪪 Pasos para tu Licencia</h2>
+        <p>Sigue estos pasos para obtener tu licencia en Texas</p>
+      </div>
+      <button class="pasos-close" onclick="closePasos()">✕</button>
+    </div>
+    <div class="pasos-body">
+      <div class="pasos-step">
+        <div class="pasos-step-num">1</div>
+        <div class="pasos-step-content">
+          <h4>Completar Educación Pre-Licencia</h4>
+          <p>Muchos tipos de licencia requieren educación previa. Revisa el handbook de Pearson VUE Texas Insurance para los requisitos de tu línea de autoridad.</p>
+          <a href="https://wsr.pearsonvue.com/testtaker/profile/create/SignUp.htm?clientCode=TXINS" target="_blank" rel="noopener">Registrarse en Pearson VUE →</a>
+        </div>
+      </div>
+      <div class="pasos-step">
+        <div class="pasos-step-num">2</div>
+        <div class="pasos-step-content">
+          <h4>Pasar el Examen de Licencia</h4>
+          <p>Agenda y pasa el examen estatal antes de aplicar para tu licencia. Los temarios y la programación están disponibles en Pearson VUE Texas Insurance.</p>
+          <a href="https://wsr.pearsonvue.com/testtaker/profile/create/SignUp.htm?clientCode=TXINS" target="_blank" rel="noopener">Agendar Examen →</a>
+        </div>
+      </div>
+      <div class="pasos-step">
+        <div class="pasos-step-num">3</div>
+        <div class="pasos-step-content">
+          <h4>Agendar Fingerprints</h4>
+          <p>Inicia tu solicitud en el portal TDI para obtener tu código de servicio, luego agenda tu cita de huellas digitales con IdentoGO.</p>
+          <a href="https://www.identogo.com/services/live-scan-fingerprinting" target="_blank" rel="noopener">Agendar con IdentoGO →</a>
+        </div>
+      </div>
+      <div class="pasos-step">
+        <div class="pasos-step-num">4</div>
+        <div class="pasos-step-content">
+          <h4>Aplicar para la Licencia</h4>
+          <p>Una vez que pasaste el examen y completaste los fingerprints, envía tu solicitud en línea. Costo estándar: $50 (más cargos de procesamiento).</p>
+          <a href="https://www.sircon.com" target="_blank" rel="noopener">Aplicar vía Sircon →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- CULTURE MODAL -->
 <div class="culture-overlay" id="culture-overlay">
@@ -1027,11 +1120,44 @@ body {
       </div>
     </div>
 
+      <!-- Slide 3: Primeros Pasos -->
+      <div class="culture-slide" id="culture-slide-2">
+        <div class="primeros-pasos-header">🪪 PRIMEROS PASOS — OBTÉN TU LICENCIA</div>
+        <div class="primeros-pasos-grid">
+          <div class="paso-card">
+            <div class="paso-num">1</div>
+            <div class="paso-title">Completar Educación Pre-Licencia</div>
+            <div class="paso-desc">Muchos tipos de licencia requieren educación previa (como General Lines). Revisa el candidato handbook de Pearson VUE Texas Insurance para ver los requisitos de tu línea.</div>
+            <a class="paso-link" href="https://wsr.pearsonvue.com/testtaker/profile/create/SignUp.htm?clientCode=TXINS" target="_blank" rel="noopener">Registrarse en Pearson VUE →</a>
+          </div>
+          <div class="paso-card">
+            <div class="paso-num">2</div>
+            <div class="paso-title">Pasar el Examen de Licencia</div>
+            <div class="paso-desc">Debes agendar y pasar el examen estatal antes de solicitar tu licencia. Programa tu prueba y encuentra los temarios en Pearson VUE Texas Insurance.</div>
+            <a class="paso-link" href="https://wsr.pearsonvue.com/testtaker/profile/create/SignUp.htm?clientCode=TXINS" target="_blank" rel="noopener">Agendar Examen →</a>
+          </div>
+          <div class="paso-card">
+            <div class="paso-num">3</div>
+            <div class="paso-title">Agendar Fingerprints</div>
+            <div class="paso-desc">Debes completar una verificación de antecedentes con huellas digitales. Inicia tu solicitud en el portal TDI para obtener tu código de servicio, luego agenda con IdentoGO.</div>
+            <a class="paso-link" href="https://www.identogo.com/services/live-scan-fingerprinting" target="_blank" rel="noopener">Agendar con IdentoGO →</a>
+          </div>
+          <div class="paso-card">
+            <div class="paso-num">4</div>
+            <div class="paso-title">Aplicar para la Licencia</div>
+            <div class="paso-desc">Una vez que pasaste el examen y completaste los fingerprints, envía tu solicitud en línea vía Sircon o NIPR. El costo estándar es $50 (más cargos de procesamiento).</div>
+            <a class="paso-link" href="https://www.sircon.com" target="_blank" rel="noopener">Aplicar vía Sircon →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="culture-nav">
       <button class="culture-nav-btn" id="culture-prev" onclick="cultureNav(-1)" disabled>← Anterior</button>
       <div class="culture-nav-dots">
         <div class="culture-dot active" onclick="cultureGo(0)"></div>
         <div class="culture-dot" onclick="cultureGo(1)"></div>
+        <div class="culture-dot" onclick="cultureGo(2)"></div>
       </div>
       <button class="culture-nav-btn" id="culture-next" onclick="cultureNav(1)">Siguiente →</button>
     </div>
@@ -1368,7 +1494,7 @@ async function showModules(profile) {
 
 // ===== CULTURE MODAL =====
 let _cultureSlide = 0;
-const CULTURE_TOTAL = 2;
+const CULTURE_TOTAL = 3;
 
 function openCulture() {
   cultureGo(0);
@@ -1405,6 +1531,18 @@ function cultureGo(idx) {
 function checkCultureAutoShow() {
   setTimeout(openCulture, 900);
 }
+
+function openPasos() {
+  document.getElementById('pasos-overlay').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function closePasos() {
+  document.getElementById('pasos-overlay').classList.remove('active');
+  document.body.style.overflow = '';
+}
+document.getElementById('pasos-overlay').addEventListener('click', function(e) {
+  if (e.target === this) closePasos();
+});
 
 // ===== COURSE PICKER =====
 // ===== BITRIX INTEGRATION =====
