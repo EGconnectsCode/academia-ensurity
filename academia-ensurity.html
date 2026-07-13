@@ -878,22 +878,46 @@ body {
   </button>
 
   <!-- Texas Life & Health featured preview -->
-  <a href="modules/texas-life-health/texas-life-health.html" id="tlh-preview-card" style="display:block;margin-bottom:24px;text-decoration:none;border-radius:18px;overflow:hidden;box-shadow:0 4px 24px rgba(30,58,95,.18);border:1.5px solid rgba(30,58,95,.18);background:linear-gradient(135deg,#1E3A5F 0%,#2563EB 60%,#0EA5E9 100%);color:#fff;transition:transform .18s,box-shadow .18s" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 32px rgba(30,58,95,.28)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 24px rgba(30,58,95,.18)'">
-    <div style="padding:22px 24px;display:flex;align-items:center;gap:18px;flex-wrap:wrap">
-      <div style="font-size:2.6rem;flex-shrink:0">📋</div>
-      <div style="flex:1;min-width:0">
-        <div style="font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;opacity:.75;margin-bottom:4px" data-en="FEATURED MODULE" data-es="MÓDULO DESTACADO">MÓDULO DESTACADO</div>
-        <h3 style="font-size:1.15rem;font-weight:800;margin:0 0 4px" data-en="Texas Life &amp; Health Licensing" data-es="Licencia Texas Life &amp; Health">Licencia Texas Life &amp; Health</h3>
-        <p style="font-size:.82rem;opacity:.88;margin:0" data-en="Survival guide · Mock exams · Flashcards · Advanced library" data-es="Guía de supervivencia · Exámenes mock · Flashcards · Biblioteca avanzada">Guía de supervivencia · Exámenes mock · Flashcards · Biblioteca avanzada</p>
-        <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
-          <span style="background:rgba(255,255,255,.18);border-radius:20px;padding:3px 12px;font-size:.73rem;font-weight:600">Vida</span>
-          <span style="background:rgba(255,255,255,.18);border-radius:20px;padding:3px 12px;font-size:.73rem;font-weight:600">Salud</span>
-          <span style="background:rgba(255,255,255,.18);border-radius:20px;padding:3px 12px;font-size:.73rem;font-weight:600">Licencia Texas</span>
+  <div id="tlh-preview-card" style="margin-bottom:24px;border-radius:18px;overflow:hidden;box-shadow:0 4px 24px rgba(30,58,95,.15);border:1.5px solid rgba(30,58,95,.14)">
+    <!-- Header -->
+    <div style="background:linear-gradient(135deg,#1E3A5F 0%,#2563EB 65%,#0EA5E9 100%);padding:18px 22px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:12px">
+        <span style="font-size:2rem">📋</span>
+        <div>
+          <div style="font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.7);margin-bottom:2px">MÓDULO DESTACADO</div>
+          <h3 style="font-size:1.05rem;font-weight:800;color:#fff;margin:0">Licencia Texas Life &amp; Health</h3>
         </div>
       </div>
-      <div style="flex-shrink:0;display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.15);border-radius:12px;padding:10px 16px;font-weight:700;font-size:.9rem" data-en="Open Module →" data-es="Abrir Módulo →">Abrir Módulo →</div>
+      <a href="modules/texas-life-health/texas-life-health.html" style="flex-shrink:0;display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.18);border:1.5px solid rgba(255,255,255,.3);border-radius:10px;padding:8px 16px;font-weight:700;font-size:.85rem;color:#fff;text-decoration:none;transition:background .15s" onmouseover="this.style.background='rgba(255,255,255,.28)'" onmouseout="this.style.background='rgba(255,255,255,.18)'">Abrir Módulo <span style="font-size:1rem">→</span></a>
     </div>
-  </a>
+    <!-- Steps -->
+    <div style="background:#F8FAFC;padding:16px 20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px">
+      <div style="display:flex;align-items:flex-start;gap:10px;background:#fff;border-radius:12px;padding:12px 14px;border:1px solid #E2E8F0">
+        <div style="flex-shrink:0;width:26px;height:26px;border-radius:50%;background:#1E3A5F;color:#fff;font-size:.72rem;font-weight:800;display:flex;align-items:center;justify-content:center">1</div>
+        <div><div style="font-size:.8rem;font-weight:700;color:#0F172A">Fundamentos del Seguro</div><div style="font-size:.73rem;color:#64748B;margin-top:2px">Contratos, interés asegurable y principios base</div></div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:10px;background:#fff;border-radius:12px;padding:12px 14px;border:1px solid #E2E8F0">
+        <div style="flex-shrink:0;width:26px;height:26px;border-radius:50%;background:#2563EB;color:#fff;font-size:.72rem;font-weight:800;display:flex;align-items:center;justify-content:center">2</div>
+        <div><div style="font-size:.8rem;font-weight:700;color:#0F172A">Tipos de Pólizas</div><div style="font-size:.73rem;color:#64748B;margin-top:2px">Term, Whole Life, Universal y Variable Life</div></div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:10px;background:#fff;border-radius:12px;padding:12px 14px;border:1px solid #E2E8F0">
+        <div style="flex-shrink:0;width:26px;height:26px;border-radius:50%;background:#0EA5E9;color:#fff;font-size:.72rem;font-weight:800;display:flex;align-items:center;justify-content:center">3</div>
+        <div><div style="font-size:.8rem;font-weight:700;color:#0F172A">Riders y Provisiones</div><div style="font-size:.73rem;color:#64748B;margin-top:2px">Waiver, Grace Period, Beneficiarios</div></div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:10px;background:#fff;border-radius:12px;padding:12px 14px;border:1px solid #E2E8F0">
+        <div style="flex-shrink:0;width:26px;height:26px;border-radius:50%;background:#7C3AED;color:#fff;font-size:.72rem;font-weight:800;display:flex;align-items:center;justify-content:center">4</div>
+        <div><div style="font-size:.8rem;font-weight:700;color:#0F172A">Disability y Medicare</div><div style="font-size:.73rem;color:#64748B;margin-top:2px">Own Occ, Partes A/B/C/D, Medicaid</div></div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:10px;background:#fff;border-radius:12px;padding:12px 14px;border:1px solid #E2E8F0">
+        <div style="flex-shrink:0;width:26px;height:26px;border-radius:50%;background:#059669;color:#fff;font-size:.72rem;font-weight:800;display:flex;align-items:center;justify-content:center">5</div>
+        <div><div style="font-size:.8rem;font-weight:700;color:#0F172A">Mock Exam</div><div style="font-size:.73rem;color:#64748B;margin-top:2px">27 preguntas mezcladas con revisión de score</div></div>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:10px;background:#fff;border-radius:12px;padding:12px 14px;border:1px solid #E2E8F0">
+        <div style="flex-shrink:0;width:26px;height:26px;border-radius:50%;background:#DC2626;color:#fff;font-size:.72rem;font-weight:800;display:flex;align-items:center;justify-content:center">6</div>
+        <div><div style="font-size:.8rem;font-weight:700;color:#0F172A">Repaso Final</div><div style="font-size:.73rem;color:#64748B;margin-top:2px">Flashcards, exam traps y cram sheets</div></div>
+      </div>
+    </div>
+  </div>
 
   <p class="section-title" id="modules-heading" data-en="YOUR MODULES" data-es="TUS MÓDULOS">YOUR MODULES</p>
   <div class="modules-grid" id="modules-grid">
