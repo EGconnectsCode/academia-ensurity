@@ -50,7 +50,6 @@
 <script>
 // Auth gate — show app only after verifying session
 let _activeTab = 0;
-let _roots = [null, null, null];
 
 function setTab(idx) {
   _activeTab = idx;
@@ -766,21 +765,19 @@ function BibliotecaAvanzadaTexasLifeHealth() {
 }
 
 // ════════════════════════════════════════════════════════════════════════════
-// TABS ROUTER — renders active tab into its own root
+// TABS ROUTER — single root, swap component on tab change
 // ════════════════════════════════════════════════════════════════════════════
 const TABS_COMPONENTS = [PlataformaTexasLifeHealthEspanolEspejo, TexasLifeHealthDeepDiveLibrary, BibliotecaAvanzadaTexasLifeHealth];
-const ROOTS = [null, null, null];
+let _singleRoot = null;
 
 window.renderActiveTab = function() {
   const idx = window._activeTab || 0;
-  if (!ROOTS[idx]) {
-    const el = document.getElementById('react-root');
-    ROOTS[idx] = ReactDOM.createRoot(el);
+  const el = document.getElementById('react-root');
+  if (!_singleRoot) {
+    _singleRoot = ReactDOM.createRoot(el);
   }
-  // unmount others
-  ROOTS.forEach((r, i) => { if (r && i !== idx) r.render(null); });
   const Comp = TABS_COMPONENTS[idx];
-  ROOTS[idx].render(<Comp />);
+  _singleRoot.render(<Comp />);
 };
 </script>
 </body>
