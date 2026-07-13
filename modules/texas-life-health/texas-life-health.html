@@ -49,12 +49,12 @@
 
 <script>
 // Auth gate — show app only after verifying session
-let _activeTab = 0;
+window._activeTab = 0;
 
 function setTab(idx) {
-  _activeTab = idx;
+  window._activeTab = idx;
   document.querySelectorAll('.tlh-tab').forEach((t, i) => t.classList.toggle('active', i === idx));
-  renderActiveTab();
+  window.renderActiveTab();
 }
 
 async function boot() {
