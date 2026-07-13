@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Texas Life & Health | Academia Ensurity</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  #auth-gate { display:flex; align-items:center; justify-content:center; min-height:100vh; font-family:system-ui,sans-serif; background:#F8FAFC; }
+  .tlh-topbar { position:sticky; top:0; z-index:50; background:#fff; border-bottom:1px solid #E2E8F0; padding:12px 24px; display:flex; align-items:center; justify-content:space-between; box-shadow:0 1px 4px rgba(0,0,0,.06); }
+  .tlh-back { display:inline-flex; align-items:center; gap:8px; font-size:.84rem; font-weight:600; color:#2563EB; text-decoration:none; background:#EFF6FF; border:1px solid #BFDBFE; border-radius:8px; padding:7px 14px; transition:background .15s; }
+  .tlh-back:hover { background:#DBEAFE; }
+  .tlh-brand { font-size:.9rem; font-weight:700; color:#0F172A; }
+  .tlh-tabs { display:flex; gap:4px; background:#F1F5F9; border-radius:12px; padding:4px; }
+  .tlh-tab { padding:9px 18px; border-radius:9px; font-size:.83rem; font-weight:600; cursor:pointer; border:none; background:transparent; color:#64748B; transition:all .15s; white-space:nowrap; }
+  .tlh-tab.active { background:#fff; color:#0F172A; box-shadow:0 1px 4px rgba(0,0,0,.1); }
+  .tlh-tab:hover:not(.active) { color:#0F172A; background:rgba(255,255,255,.6); }
+  #react-root { min-height:calc(100vh - 60px); }
+</style>
+</head>
+<body>
+
+<div id="auth-gate" style="display:none">
+  <div style="text-align:center;color:#64748B">
+    <div style="font-size:2rem;margin-bottom:12px">🔒</div>
+    <p>Verificando acceso…</p>
+  </div>
+</div>
+
+<div id="app-shell" style="display:none">
+  <div class="tlh-topbar">
+    <a href="/" class="tlh-back">← Dashboard</a>
+    <span class="tlh-brand">Academia Ensurity</span>
+    <div class="tlh-tabs" id="tab-bar">
+      <button class="tlh-tab active" onclick="setTab(0)">🚀 Plataforma ES</button>
+      <button class="tlh-tab" onclick="setTab(1)">📚 Deep Dive EN</button>
+      <button class="tlh-tab" onclick="setTab(2)">🔍 Biblioteca ES</button>
+    </div>
+  </div>
+  <div id="react-root"></div>
+</div>
+
+<!-- Supabase + React + Babel CDN -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../../shared/supabase-config.js"></script>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+<script>
+// Auth gate — show app only after verifying session
+let _activeTab = 0;
+let _roots = [null, null, null];
+
+function setTab(idx) {
+  _activeTab = idx;
+  document.querySelectorAll('.tlh-tab').forEach((t, i) => t.classList.toggle('active', i === idx));
+  renderActiveTab();
+}
+
+async function boot() {
+  document.getElementById('auth-gate').style.display = 'flex';
+  const waitAZ = () => new Promise(r => { const t = setInterval(() => { if (window.AZ) { clearInterval(t); r(); } }, 80); });
+  await waitAZ();
+  const user = await window.AZ.Auth.getCurrentUser();
+  if (!user) { window.location.href = '/'; return; }
+  document.getElementById('auth-gate').style.display = 'none';
+  document.getElementById('app-shell').style.display = 'block';
+  renderActiveTab();
+}
+boot();
+</script>
+
+<script type="text/babel">
+const { useState, useMemo } = React;
+
+// ── Shared helper ────────────────────────────────────────────────────────────
+function cx(...items) { return items.filter(Boolean).join(' '); }
+
+// ════════════════════════════════════════════════════════════════════════════
+// FILE 1 — PLATAFORMA ESPAÑOL DATA
+// ════════════════════════════════════════════════════════════════════════════
+const modosEstudio = [
+  { id:"supervivencia", title:"Guía de Supervivencia", description:"Conceptos clave de alto rendimiento diseñados para ayudar a los agentes a pasar rápido.", icon:"🔥" },
+  { id:"unidades", title:"Estudio por Unidades", description:"Estudia por capítulo/unidad como los libros y PDFs escaneados.", icon:"📖" },
+  { id:"repaso-rapido", title:"Modo Repaso Rápido", description:"Cram sheets, flashcards y trampas del examen para último repaso.", icon:"⚡" },
+  { id:"mock-exam", title:"Mock Exam", description:"Preguntas mezcladas de todas las unidades con revisión de score.", icon:"📝" },
+  { id:"biblioteca", title:"Biblioteca Avanzada", description:"Explicaciones adicionales y notas de referencia para agentes que necesitan refuerzo.", icon:"📚" },
+];
+
+const lecciones = [
+  { id:"fundamentos-seguro", unit:"Fundamentos del Seguro", title:"Fundamentos del Seguro", icon:"📘", color:"from-sky-600 to-blue-400", summary:"Conceptos básicos del seguro y contract law que aparecen mucho en el examen de Texas.", keyPoints:["El interés asegurable debe existir cuando se compra o emite la póliza.","Adhesión significa que la aseguradora redacta el contrato.","Aleatorio significa que hay un intercambio desigual.","Indemnización intenta restaurar financieramente a una persona después de una pérdida.","Representaciones son declaraciones que se creen verdaderas.","La Ley de los Grandes Números ayuda a las aseguradoras a predecir pérdidas."], quickTable:[["Adhesión","Aseguradora redacta","Ambigüedad favorece al asegurado"],["Aleatorio","Intercambio desigual","Prima vs beneficio grande"],["Interés Asegurable","Relación financiera/emocional","Requerido al inicio"],["Representación","Se cree verdadera","No es garantía absoluta"]], examTrap:"El interés asegurable en seguro de vida se requiere al emitir/comprar la póliza, no necesariamente al momento de la muerte." },
+  { id:"basicos-vida", unit:"Tipos de Pólizas de Vida", title:"Fundamentos del Seguro de Vida", icon:"🛡️", color:"from-blue-500 to-cyan-400", summary:"Aprende los tipos principales de pólizas y cómo el examen las compara.", keyPoints:["Term Life es protección temporal sin cash value.","Whole Life es cobertura permanente con primas fijas y cash value garantizado.","Universal Life es flexible: primas flexibles y death benefit ajustable.","Variable Life involucra inversiones, separate accounts y regulación de securities."], quickTable:[["Term Life","Temporal","Sin cash value","Protección pura por fallecimiento"],["Whole Life","Permanente","Cash value","Prima fija"],["Universal Life","Permanente","Cash value","Prima flexible"],["Variable Life","Permanente","Separate account","Riesgo de inversión"]], examTrap:"Universal = flexibilidad. Variable = inversiones. No los confundas." },
+  { id:"riders", unit:"Riders", title:"Riders de Seguro de Vida", icon:"📑", color:"from-purple-500 to-pink-400", summary:"Los riders modifican una póliza agregando beneficios o cobertura extra.", keyPoints:["Waiver of Premium exonera primas si el asegurado queda discapacitado.","Guaranteed Insurability permite aumentos futuros sin prueba de insurability.","Payor Rider es común en pólizas juveniles si el adulto pagador muere o queda discapacitado.","Accidental Death Benefit paga un beneficio adicional por muerte accidental cubierta.","Long-Term Care Rider puede acelerar el death benefit para necesidades de cuidado prolongado."], quickTable:[["Waiver of Premium","Discapacidad","Primas exoneradas"],["Guaranteed Insurability","Cobertura futura","Sin preguntas médicas"],["Payor Rider","Póliza juvenil","Protege si el adulto pagador muere/discapacita"],["ADB","Muerte accidental","Beneficio adicional"]], examTrap:"Un rider no es una póliza separada. Se agrega a una póliza para modificarla." },
+  { id:"provisiones", unit:"Provisiones de Póliza", title:"Provisiones y Beneficiarios", icon:"👥", color:"from-rose-500 to-red-400", summary:"Las provisiones explican cómo funciona el contrato y quién controla los beneficios.", keyPoints:["El policyowner controla derechos de la póliza salvo limitaciones como beneficiario irrevocable.","Beneficiarios revocables pueden cambiarse sin permiso.","Beneficiarios irrevocables requieren consentimiento escrito para cambios.","Incontestability normalmente limita disputas después de dos años, excepto fraude u otras excepciones.","Grace Period ocurre antes del lapse; Reinstatement ocurre después del lapse."], quickTable:[["Beneficiario Primario","Primero","Recibe el death benefit primero"],["Beneficiario Contingente","Respaldo","Cobra si el primario no puede"],["Revocable","Se puede cambiar","No necesita permiso"],["Irrevocable","Protegido","Requiere permiso"]], examTrap:"Las preguntas de beneficiarios casi siempre preguntan quién cobra o si se necesita permiso." },
+  { id:"opciones-poliza", unit:"Opciones de Póliza", title:"Opciones de la Póliza", icon:"💰", color:"from-indigo-500 to-violet-400", summary:"Opciones que explican cómo se usan cash values, dividendos y death benefits.", keyPoints:["Settlement options determinan cómo se pagan los proceeds del death benefit.","Fixed Period paga durante un período seleccionado.","Fixed Amount paga una cantidad seleccionada hasta que se acaben los fondos.","Extended Term da la mayor cantidad de protección.","Reduced Paid-Up da la mayor duración de protección."], quickTable:[["Cash Surrender","Toma cash value","La póliza termina"],["Extended Term","Mayor cantidad","Cobertura term temporal"],["Reduced Paid-Up","Mayor duración","Póliza permanente más pequeña"],["Dividendos","Pólizas participantes","No garantizados"]], examTrap:"Extended Term = mayor cantidad. Reduced Paid-Up = mayor duración." },
+  { id:"discapacidad", unit:"Disability Income", title:"Disability Income Insurance", icon:"💼", color:"from-amber-500 to-orange-400", summary:"Disability Income reemplaza ingresos perdidos cuando alguien no puede trabajar por enfermedad o lesión.", keyPoints:["Own Occupation es más liberal porque se enfoca en si puede hacer su propio trabajo.","Any Occupation es más restrictivo porque evalúa cualquier trabajo razonable.","Elimination Period es el tiempo de espera antes de que empiecen los beneficios.","Benefit Period es cuánto tiempo se pagan los beneficios.","Residual Disability se basa en pérdida de ingresos al regresar al trabajo."], quickTable:[["Own Occupation","Más liberal","No puede hacer su propio trabajo"],["Any Occupation","Más restrictivo","No puede hacer ningún trabajo adecuado"],["Elimination Period","Tiempo de espera","Antes de beneficios"],["Residual Disability","Pérdida de ingreso","Ingresos reducidos"]], examTrap:"Partial Disability trata sobre tareas reducidas. Residual Disability se enfoca en ingresos reducidos." },
+  { id:"medicare", unit:"Medicare y Medicaid", title:"Medicare y Medicaid", icon:"🏥", color:"from-emerald-500 to-green-400", summary:"Medicare normalmente prueba qué cubre cada parte y cómo difieren supplements/Medicaid.", keyPoints:["Parte A cubre atención relacionada con hospital.","Parte B cubre servicios médicos y outpatient.","Parte C es Medicare Advantage mediante compañías privadas.","Parte D cubre medicamentos recetados.","Medicaid se basa en necesidad y es financiado por estado y gobierno federal."], quickTable:[["Parte A","Hospital","Hospital, SNF, hospice"],["Parte B","Médico","Doctores, outpatient, DME"],["Parte C","Advantage","Alternativa privada"],["Parte D","Medicamentos","Cobertura Rx"]], examTrap:"Parte C no es un supplement. Es Medicare Advantage, una forma alternativa de recibir beneficios Medicare." },
+  { id:"underwriting-ley", unit:"Underwriting y Ley de Texas", title:"Underwriting y Ley de Texas", icon:"⚖️", color:"from-slate-700 to-slate-500", summary:"Aplicaciones, representations, MIB y prácticas injustas como rebating y twisting.", keyPoints:["Underwriting determina riesgo y elegibilidad.","Las declaraciones de aplicación suelen ser representations.","MIB ayuda a revisar información médica/underwriting previa.","Rebating es ofrecer incentivos no incluidos en la póliza.","Twisting es reemplazo engañoso de una póliza existente."], quickTable:[["Representation","Se cree verdadera","Declaración de aplicación"],["MIB","Información médica","Fuente de underwriting"],["Rebating","Incentivo ilegal","No está en póliza"],["Twisting","Reemplazo engañoso","Práctica injusta"]], examTrap:"Rebating = incentivo extra. Twisting = reemplazo engañoso." },
+];
+
+const preguntasMock = [
+  { unit:"Provisiones de Póliza", question:"¿Qué tipo de beneficiario puede cambiarse sin permiso?", choices:["Irrevocable","Revocable","Primario","Contingente"], answer:"Revocable", explanation:"Un beneficiario revocable puede cambiarse por el policyowner en cualquier momento." },
+  { unit:"Tipos de Pólizas de Vida", question:"¿Qué póliza ofrece primas flexibles y death benefit ajustable?", choices:["Whole Life","Term Life","Universal Life","Variable Life"], answer:"Universal Life", explanation:"Universal Life se conoce por flexibilidad en primas y death benefit." },
+  { unit:"Medicare y Medicaid", question:"¿Qué parte de Medicare cubre medicamentos recetados?", choices:["Parte A","Parte B","Parte C","Parte D"], answer:"Parte D", explanation:"Parte D ofrece cobertura de medicamentos recetados." },
+  { unit:"Disability Income", question:"¿Cómo se llama el período de espera antes de que empiecen beneficios por discapacidad?", choices:["Probationary Period","Grace Period","Benefit Period","Elimination Period"], answer:"Elimination Period", explanation:"Elimination Period es el tiempo de espera antes de que empiecen los beneficios." },
+  { unit:"Opciones de Póliza", question:"¿Qué opción de nonforfeiture da la mayor cantidad de seguro?", choices:["Reduced Paid-Up","Extended Term","Cash Surrender","Interest Only"], answer:"Extended Term", explanation:"Extended Term usa cash value para comprar term insurance con el mayor face amount posible." },
+  { unit:"Riders", question:"¿Qué rider exonera primas si el asegurado queda discapacitado?", choices:["Payor Rider","Waiver of Premium","Guaranteed Insurability","Cost of Living Rider"], answer:"Waiver of Premium", explanation:"Waiver of Premium exonera pagos de prima durante una discapacidad calificada." },
+  { unit:"Tipos de Pólizas de Vida", question:"¿Qué póliza de vida es protección pura por fallecimiento y no tiene cash value?", choices:["Term Life","Whole Life","Universal Life","Variable Life"], answer:"Term Life", explanation:"Term Life es temporal y no acumula cash value." },
+  { unit:"Tipos de Pólizas de Vida", question:"¿Qué tipo de seguro de vida requiere licencia de securities?", choices:["Term Life","Whole Life","Variable Life","Ordinary Life"], answer:"Variable Life", explanation:"Variable Life involucra securities y separate accounts." },
+  { unit:"Provisiones de Póliza", question:"El policyowner necesita consentimiento escrito para cambiar un beneficiario. ¿Qué tipo es?", choices:["Revocable","Irrevocable","Contingente","Tertiary"], answer:"Irrevocable", explanation:"Beneficiarios irrevocables generalmente requieren consentimiento para ciertos cambios." },
+  { unit:"Provisiones de Póliza", question:"¿Qué provisión permite restaurar una póliza lapsed después de cumplir requisitos?", choices:["Grace Period","Reinstatement","Free Look","Consideration"], answer:"Reinstatement", explanation:"Reinstatement restaura una póliza lapsed después de cumplir los requisitos." },
+  { unit:"Provisiones de Póliza", question:"¿Qué provisión limita que la aseguradora niegue claims por misstatements después de cierto tiempo?", choices:["Incontestability","Entire Contract","Assignment","Ownership"], answer:"Incontestability", explanation:"Incontestability limita la habilidad de disputar la póliza después del período." },
+  { unit:"Opciones de Póliza", question:"¿Qué opción crea una póliza permanente más pequeña sin más primas?", choices:["Cash Surrender","Extended Term","Reduced Paid-Up","Life Income"], answer:"Reduced Paid-Up", explanation:"Reduced Paid-Up compra una póliza permanente menor usando cash value existente." },
+  { unit:"Opciones de Póliza", question:"¿Qué settlement option paga proceeds por un número seleccionado de años?", choices:["Fixed Amount","Fixed Period","Interest Only","Cash Surrender"], answer:"Fixed Period", explanation:"Fixed Period paga proceeds durante un período de tiempo seleccionado." },
+  { unit:"Riders", question:"¿Qué rider se usa comúnmente en pólizas juveniles si el adulto pagador muere o queda discapacitado?", choices:["Payor Rider","Waiver of Cost Rider","Guaranteed Insurability","Term Rider"], answer:"Payor Rider", explanation:"Payor Rider protege pólizas juveniles si el adulto pagador muere o queda discapacitado." },
+  { unit:"Riders", question:"¿Qué rider permite comprar cobertura adicional en el futuro sin demostrar insurability?", choices:["Waiver of Premium","Guaranteed Insurability","Accidental Death","Return of Premium"], answer:"Guaranteed Insurability", explanation:"Guaranteed Insurability permite aumentos futuros sin nuevo medical underwriting." },
+  { unit:"Disability Income", question:"¿Qué definición de discapacidad es más liberal y fácil para calificar?", choices:["Any Occupation","Own Occupation","Residual Disability","Partial Disability"], answer:"Own Occupation", explanation:"Own Occupation solo pregunta si el asegurado puede realizar su propia ocupación." },
+  { unit:"Disability Income", question:"¿Qué concepto se basa principalmente en pérdida de ingresos después de regresar al trabajo?", choices:["Residual Disability","Presumptive Disability","Total Disability","Probationary Period"], answer:"Residual Disability", explanation:"Residual Disability se enfoca en ingresos reducidos." },
+  { unit:"Disability Income", question:"¿Qué término describe cuánto tiempo se pagarán los beneficios?", choices:["Elimination Period","Benefit Period","Probationary Period","Grace Period"], answer:"Benefit Period", explanation:"Benefit Period es cuánto tiempo son pagaderos los beneficios." },
+  { unit:"Medicare y Medicaid", question:"¿Qué parte de Medicare se asocia con hospital insurance?", choices:["Parte A","Parte B","Parte C","Parte D"], answer:"Parte A", explanation:"Parte A es hospital insurance." },
+  { unit:"Medicare y Medicaid", question:"¿Qué parte de Medicare es Medicare Advantage?", choices:["Parte A","Parte B","Parte C","Parte D"], answer:"Parte C", explanation:"Parte C es Medicare Advantage mediante planes privados aprobados por Medicare." },
+  { unit:"Medicare y Medicaid", question:"Medicaid se describe mejor como qué tipo de programa?", choices:["Programa basado en necesidad","Solo para retirados","Solo para personas con seguro de empleador","Un Medicare supplement"], answer:"Programa basado en necesidad", explanation:"Medicaid se basa en necesidad/elegibilidad financiera y es financiado por estado y gobierno federal." },
+  { unit:"Underwriting y Ley de Texas", question:"¿Qué fuente se usa comúnmente para reportar información médica de applicants a aseguradoras?", choices:["MIB","FDIC","SEC","NAIC Replacement Register"], answer:"MIB", explanation:"Medical Information Bureau ayuda a detectar misrepresentation y revisar underwriting previo." },
+  { unit:"Underwriting y Ley de Texas", question:"Una declaración en la aplicación que se cree verdadera se llama normalmente qué?", choices:["Warranty","Representation","Concealment","Rebating"], answer:"Representation", explanation:"La mayoría de las declaraciones de aplicación son representations, no warranties." },
+  { unit:"Underwriting y Ley de Texas", question:"Ofrecer un incentivo no declarado en la póliza se conoce como qué?", choices:["Twisting","Rebating","Defamation","Commingling"], answer:"Rebating", explanation:"Rebating implica ofrecer algo de valor no especificado en la póliza como incentivo." },
+  { unit:"Underwriting y Ley de Texas", question:"Usar información engañosa para reemplazar una póliza existente se llama qué?", choices:["Twisting","Rebating","Estoppel","Consideration"], answer:"Twisting", explanation:"Twisting es una práctica engañosa de replacement." },
+  { unit:"Fundamentos del Seguro", question:"¿Qué característica de contrato significa que una parte redacta el contrato y la otra lo acepta como está?", choices:["Aleatory","Conditional","Adhesion","Unilateral"], answer:"Adhesion", explanation:"Los contratos de seguro son de adhesion porque la aseguradora redacta el contrato." },
+  { unit:"Fundamentos del Seguro", question:"¿Qué principio restaura financieramente a una persona después de una pérdida?", choices:["Estoppel","Indemnity","Waiver","Subrogation"], answer:"Indemnity", explanation:"Indemnity intenta restaurar financieramente al asegurado después de una pérdida cubierta." },
+  { unit:"Fundamentos del Seguro", question:"¿Cuándo debe existir interés asegurable en una póliza de vida?", choices:["Al morir","Al claim","En aplicación/emisión","En renovación"], answer:"En aplicación/emisión", explanation:"El interés asegurable debe existir cuando se compra/emite la póliza." },
+];
+
+const pasosRapidos = [
+  { step:"Paso 0", title:"Aprende Fundamentos", description:"Entiende interés asegurable, indemnity, adhesion y contract law antes de policy types." },
+  { step:"Paso 1", title:"Domina Policy Types", description:"Enfócate en Term, Whole Life, Universal y Variable Life primero." },
+  { step:"Paso 2", title:"Aprende Riders y Provisiones", description:"Entiende Waiver of Premium, Guaranteed Insurability, Grace Period, Reinstatement e Incontestability." },
+  { step:"Paso 3", title:"Estudia Disability", description:"Own Occupation vs Any Occupation y Elimination Period son muy preguntados." },
+  { step:"Paso 4", title:"Repasa Medicare y Medicaid", description:"Memoriza Partes A, B, C y D más conceptos básicos de Medigap/Medicaid." },
+  { step:"Paso 5", title:"Usa Quick Pass Mode", description:"Repasa cram cards y memory tricks antes de tomar mock exams." },
+  { step:"Paso 6", title:"Haz Unit Quizzes + Mock Exam", description:"Usa quizzes por unidad para áreas débiles y el mixed mock exam para preparación general." },
+];
+
+const cramCards = [
+  ["Adhesion","La aseguradora redacta el contrato; ambigüedad favorece al asegurado."],
+  ["Aleatory","Intercambio desigual: prima pequeña por posible beneficio grande."],
+  ["Insurable Interest","Debe existir al emitir/comprar la póliza."],
+  ["Universal Life","Prima flexible y death benefit ajustable."],
+  ["Variable Life","Riesgo de inversión, separate account, securities license."],
+  ["Grace Period","Mantiene la póliza activa por tiempo limitado tras prima atrasada."],
+  ["Reinstatement","Restaurar una póliza lapsed cumpliendo requisitos."],
+  ["Incontestability","Después de cierto período, limita disputas por misstatements."],
+  ["Extended Term","Mayor cantidad de protección."],
+  ["Reduced Paid-Up","Mayor duración de protección."],
+];
+
+const deepDiveItemsES = [
+  "Usa la Biblioteca Avanzada para explicaciones más largas.",
+  "Los capítulos escaneados pueden servir como apoyo para agentes con dificultad.",
+  "Agrega preguntas adicionales por cada unidad con el tiempo.",
+  "Usa los resultados del mock exam para identificar temas débiles.",
+];
+
+const revisionesPlataforma = [
+  { name:"Modos de estudio cargados", passed: modosEstudio.length >= 5 },
+  { name:"Lecciones cargadas", passed: lecciones.length >= 7 },
+  { name:"Mock test tiene 20+ preguntas", passed: preguntasMock.length >= 20 },
+  { name:"Cram cards cargadas", passed: cramCards.length >= 8 },
+];
+
+// ════════════════════════════════════════════════════════════════════════════
+// FILE 2 — DEEP DIVE LIBRARY DATA (English)
+// ════════════════════════════════════════════════════════════════════════════
+const chapters = [
+  { id:"fundamentals", title:"Insurance Fundamentals", icon:"📘", color:"from-sky-600 to-blue-500", summary:"Core insurance concepts, contract law, underwriting basics, and exam language.", cards:[
+    { title:"Insurable Interest", tags:["application","ownership","life insurance"], content:"Insurable interest means the policyowner has a valid financial or emotional interest in the insured continuing to live. In life insurance, insurable interest must exist when the policy is purchased or issued.", trap:"For life insurance, insurable interest is required at application/policy issue — not necessarily at death.", usefulFor:"Questions about who can buy insurance on another person." },
+    { title:"Adhesion Contract", tags:["contract law","insurer writes","ambiguity"], content:"Insurance contracts are contracts of adhesion because the insurer writes the contract and the applicant accepts it as written. If wording is unclear, courts usually interpret ambiguity in favor of the insured.", trap:"Adhesion does not mean both parties negotiate equally. The insurer drafts the contract.", usefulFor:"Contract characteristic questions." },
+    { title:"Aleatory Contract", tags:["contract law","unequal exchange","premium"], content:"An aleatory contract involves an unequal exchange. The insured pays a relatively small premium, but the insurer may pay a much larger benefit if a covered loss occurs.", trap:"Aleatory = unequal exchange. Do not confuse it with adhesion.", usefulFor:"Contract law vocabulary questions." },
+    { title:"Representation", tags:["application","underwriting","statements"], content:"A representation is a statement believed to be true to the best of the applicant's knowledge. Most insurance application answers are representations rather than warranties.", trap:"Representation = believed true. Warranty = guaranteed true. Insurance applications usually use representations.", usefulFor:"Application and underwriting questions." },
+  ]},
+  { id:"life-policies", title:"Life Insurance Policy Types", icon:"🛡️", color:"from-blue-600 to-cyan-500", summary:"Term, whole life, universal life, variable life, cash value, premiums, and death benefit comparisons.", cards:[
+    { title:"Term Life", tags:["temporary","no cash value","renewable","convertible"], content:"Term life provides temporary protection for a specific period. It is usually lower cost at first and provides pure death protection with no cash value. It may be renewable or convertible depending on the policy.", trap:"Term life does not build cash value. If a question mentions cash value, it is probably not term life.", usefulFor:"Low-cost temporary protection scenarios." },
+    { title:"Whole Life", tags:["permanent","cash value","fixed premium","guaranteed"], content:"Whole life provides permanent protection, fixed premiums, guaranteed death benefit, and guaranteed cash value. It is predictable but less flexible than universal life.", trap:"Whole life = fixed and guaranteed. Universal life = flexible.", usefulFor:"Permanent coverage and guaranteed cash value questions." },
+    { title:"Universal Life", tags:["flexible","adjustable","cash account","interest sensitive"], content:"Universal life is permanent insurance known for flexible premiums and an adjustable death benefit. It has a cash value account and is interest sensitive.", trap:"Universal = flexible. Variable = investments. Do not mix them up.", usefulFor:"Questions asking which policy is flexible." },
+    { title:"Variable Life", tags:["securities","separate account","investment risk","cash value"], content:"Variable life involves investment options through separate accounts. Cash value and death benefit may vary based on investment performance. Selling variable products requires securities licensing.", trap:"Variable = investment risk. The policyowner carries investment risk.", usefulFor:"Separate account and securities license questions." },
+  ]},
+  { id:"riders", title:"Life Insurance Riders", icon:"📑", color:"from-purple-600 to-pink-500", summary:"Extra benefits added to a policy, including disability, future purchase options, and accidental death benefits.", cards:[
+    { title:"Waiver of Premium", tags:["disability","premium waived","insured"], content:"Waiver of premium waives premiums if the insured becomes totally disabled according to the rider terms. The policy stays in force while premiums are waived.", trap:"Waiver of premium applies when the insured is disabled. Payor rider applies when the payor is disabled or dies.", usefulFor:"Questions where disability prevents premium payments." },
+    { title:"Guaranteed Insurability", tags:["future purchase","no proof","coverage increase"], content:"Guaranteed insurability allows the insured to buy additional coverage at certain future dates or life events without proving insurability again.", trap:"It guarantees the right to buy more coverage, not a cheaper premium.", usefulFor:"Future coverage increase questions." },
+    { title:"Payor Rider", tags:["juvenile","adult payor","premium waived"], content:"A payor rider is commonly used on juvenile policies. If the adult payor dies or becomes disabled, premiums may be waived until the child reaches a specified age.", trap:"Payor rider protects the child's policy if the adult payor has the issue.", usefulFor:"Juvenile life insurance questions." },
+    { title:"Accidental Death Benefit", tags:["accident","extra benefit","double indemnity"], content:"Accidental death benefit pays an additional amount if the insured dies due to a covered accident. Some study materials emphasize a required time period after the accident for the death to qualify.", trap:"Accidental death benefit is not the same as disability income or accidental medical reimbursement.", usefulFor:"Extra death benefit questions." },
+  ]},
+  { id:"provisions", title:"Policy Provisions & Beneficiaries", icon:"👥", color:"from-rose-600 to-red-500", summary:"Beneficiaries, policyowner rights, grace period, reinstatement, incontestability, and suicide clause.", cards:[
+    { title:"Revocable Beneficiary", tags:["beneficiary","change","owner rights"], content:"A revocable beneficiary may be changed by the policyowner without the beneficiary's consent.", trap:"Revocable = can change. Irrevocable = permission required.", usefulFor:"Who can be changed without consent." },
+    { title:"Irrevocable Beneficiary", tags:["beneficiary","permission","consent"], content:"An irrevocable beneficiary has a vested interest. The policyowner generally needs written consent to change this beneficiary or make certain policy changes.", trap:"If the question says written consent is needed, think irrevocable.", usefulFor:"Beneficiary consent questions." },
+    { title:"Grace Period", tags:["late premium","lapse","coverage continues"], content:"The grace period gives the policyowner extra time to pay a late premium while coverage remains in force.", trap:"Grace period happens before lapse. Reinstatement happens after lapse.", usefulFor:"Missed premium questions." },
+    { title:"Incontestability Clause", tags:["two years","misstatement","claim"], content:"After the incontestability period, usually two years, the insurer cannot contest the policy based on most misstatements, except as allowed by law and policy language.", trap:"Do not confuse incontestability with the suicide clause. Both may mention two years but test different issues.", usefulFor:"Claim denial and misstatement questions." },
+  ]},
+  { id:"policy-options", title:"Policy Options", icon:"💰", color:"from-indigo-600 to-violet-500", summary:"Settlement options, nonforfeiture options, dividends, cash value access, and policy loans.", cards:[
+    { title:"Cash Surrender", tags:["nonforfeiture","cash value","policy ends"], content:"Cash surrender lets the policyowner take the available cash value and terminate the policy.", trap:"Cash surrender ends the policy.", usefulFor:"Permanent policy surrender questions." },
+    { title:"Extended Term", tags:["nonforfeiture","highest amount","term"], content:"Extended term uses cash value to buy term insurance, usually for the same face amount, for as long as the cash value can support.", trap:"Extended term = highest amount of coverage.", usefulFor:"Nonforfeiture comparison questions." },
+    { title:"Reduced Paid-Up", tags:["nonforfeiture","longest duration","permanent"], content:"Reduced paid-up uses cash value to buy a smaller permanent paid-up policy with no more premiums.", trap:"Reduced paid-up = longest duration, but smaller benefit.", usefulFor:"Questions asking which option lasts longest." },
+    { title:"Settlement Options", tags:["fixed amount","fixed period","interest only","life income"], content:"Settlement options determine how life insurance proceeds are paid, such as lump sum, interest only, fixed period, fixed amount, or life income.", trap:"Fixed period = time chosen. Fixed amount = dollar amount chosen.", usefulFor:"Death benefit payout questions." },
+  ]},
+  { id:"disability", title:"Disability Income Insurance", icon:"💼", color:"from-amber-600 to-orange-500", summary:"Own occupation, any occupation, elimination period, benefit period, residual disability, and partial disability.", cards:[
+    { title:"Own Occupation", tags:["disability","liberal","own job"], content:"Own occupation means the insured is disabled if they cannot perform their own occupation. This is more favorable to the insured.", trap:"Own occupation = easier to qualify. Any occupation = stricter.", usefulFor:"Disability definition questions." },
+    { title:"Any Occupation", tags:["disability","restrictive","any job"], content:"Any occupation means the insured cannot perform any occupation for which they are reasonably suited by education, training, or experience.", trap:"Any occupation is harder to qualify under than own occupation.", usefulFor:"Definition comparison questions." },
+    { title:"Elimination Period", tags:["waiting period","before benefits","disability"], content:"The elimination period is the waiting period before disability income benefits begin. Longer elimination periods usually reduce premium.", trap:"Elimination period = waiting period. Benefit period = how long payments last.", usefulFor:"When disability benefits begin." },
+    { title:"Residual Disability", tags:["income loss","return to work","partial benefit"], content:"Residual disability benefits are based on reduced income after the insured returns to work but cannot earn the same income as before.", trap:"Residual disability focuses on income loss, not just reduced duties.", usefulFor:"Reduced earnings after disability questions." },
+  ]},
+  { id:"medicare", title:"Medicare & Medicaid", icon:"🏥", color:"from-emerald-600 to-green-500", summary:"Parts A, B, C, D, Medigap, Medicare Advantage, and Medicaid basics.", cards:[
+    { title:"Medicare Part A", tags:["hospital","SNF","hospice","home health"], content:"Part A is hospital insurance. It generally relates to inpatient hospital care, skilled nursing facility care, hospice, and some home health services.", trap:"Part A = hospital. Part B = medical/outpatient.", usefulFor:"What Part A covers." },
+    { title:"Medicare Part B", tags:["medical","doctors","outpatient","DME"], content:"Part B is medical insurance. It covers doctors, outpatient care, preventive services, ambulance, and durable medical equipment.", trap:"Part B is not prescription drug coverage. Prescription drugs are Part D.", usefulFor:"What Part B covers." },
+    { title:"Medicare Part C", tags:["advantage","private plan","HMO","PPO"], content:"Part C is Medicare Advantage, offered by private companies approved by Medicare. It is an alternative way to receive Part A and Part B benefits.", trap:"Part C is not Medigap. It is Medicare Advantage.", usefulFor:"Advantage vs supplement questions." },
+    { title:"Medicaid", tags:["needs based","low income","state federal"], content:"Medicaid is a needs-based program funded by state and federal government to help eligible low-income individuals with health care costs.", trap:"Medicare is mainly age/disability based. Medicaid is needs/income based.", usefulFor:"Low-income assistance questions." },
+  ]},
+];
+
+const memorySheets = [
+  { title:"Medicare", bullets:["Part A = Hospital","Part B = Medical","Part C = Advantage","Part D = Drugs"] },
+  { title:"Beneficiaries", bullets:["Primary = first paid","Contingent = backup","Revocable = can change","Irrevocable = permission required"] },
+  { title:"Disability", bullets:["Elimination period = waiting time","Benefit period = how long benefits pay","Own occupation = easier","Residual = reduced income"] },
+  { title:"Policy Options", bullets:["Extended term = highest amount","Reduced paid-up = longest duration","Cash surrender = policy ends","Dividends are not guaranteed"] },
+];
+
+const resources = [
+  { title:"Official Texas Licensing Info", note:"Use official Texas Department of Insurance resources for current application, fingerprinting, and licensing rules.", icon:"🏛️" },
+  { title:"Deep Review Material", note:"Use scanned chapters for agents who need more detail after missing quiz questions.", icon:"📘" },
+  { title:"Night-Before Review", note:"Use cheat sheets and exam traps the day before testing.", icon:"⚡" },
+  { title:"Practice Questions", note:"Use the main guide's mock exam and unit quizzes to check readiness.", icon:"📝" },
+];
+
+// ════════════════════════════════════════════════════════════════════════════
+// FILE 3 — BIBLIOTECA AVANZADA DATA (Spanish)
+// ════════════════════════════════════════════════════════════════════════════
+const capitulos = [
+  { id:"fundamentos", titulo:"Fundamentos del Seguro", icono:"📘", color:"from-sky-600 to-blue-500", resumen:"Conceptos básicos del seguro, contratos, underwriting y lenguaje común del examen.", tarjetas:[
+    { titulo:"Interés Asegurable", etiquetas:["aplicación","propiedad","seguro de vida"], contenido:"El interés asegurable significa que el dueño de la póliza tiene una razón válida financiera o emocional para que la persona asegurada continúe viva. En seguro de vida, el interés asegurable debe existir cuando la póliza se compra o se emite.", trampa:"En seguro de vida, el interés asegurable se requiere al momento de la aplicación/emisión, no necesariamente al momento de la muerte.", utilPara:"Preguntas sobre quién puede comprar seguro sobre otra persona." },
+    { titulo:"Contrato de Adhesión", etiquetas:["contrato","aseguradora escribe","ambigüedad"], contenido:"Los contratos de seguro son contratos de adhesión porque la aseguradora redacta el contrato y el solicitante lo acepta como está escrito. Si el lenguaje no está claro, normalmente la interpretación favorece al asegurado.", trampa:"Adhesión no significa que ambas partes negocian por igual. La aseguradora redacta el contrato.", utilPara:"Preguntas sobre características de contratos." },
+    { titulo:"Contrato Aleatorio", etiquetas:["contrato","intercambio desigual","prima"], contenido:"Un contrato aleatorio implica un intercambio desigual. El asegurado paga una prima relativamente pequeña, pero la aseguradora puede pagar un beneficio mucho mayor si ocurre una pérdida cubierta.", trampa:"Aleatorio = intercambio desigual. No lo confundas con adhesión.", utilPara:"Preguntas de vocabulario sobre contratos." },
+    { titulo:"Representación", etiquetas:["aplicación","underwriting","declaraciones"], contenido:"Una representación es una declaración que se cree verdadera según el mejor conocimiento del solicitante. La mayoría de las respuestas en una aplicación de seguro son representaciones, no garantías absolutas.", trampa:"Representación = se cree verdadera. Garantía = se garantiza verdadera. Las aplicaciones suelen usar representaciones.", utilPara:"Preguntas de aplicación y underwriting." },
+  ]},
+  { id:"polizas-vida", titulo:"Tipos de Pólizas de Vida", icono:"🛡️", color:"from-blue-600 to-cyan-500", resumen:"Term Life, Whole Life, Universal Life, Variable Life, cash value, primas y comparaciones de death benefit.", tarjetas:[
+    { titulo:"Term Life", etiquetas:["temporal","sin cash value","renewable","convertible"], contenido:"Term Life ofrece protección temporal por un período específico. Normalmente cuesta menos al principio y ofrece protección pura por fallecimiento sin cash value.", trampa:"Term Life no acumula cash value. Si la pregunta menciona cash value, probablemente no es Term Life.", utilPara:"Escenarios de protección temporal de bajo costo." },
+    { titulo:"Whole Life", etiquetas:["permanente","cash value","prima fija","garantizado"], contenido:"Whole Life ofrece protección permanente, primas fijas, death benefit garantizado y cash value garantizado. Es predecible pero menos flexible que Universal Life.", trampa:"Whole Life = fijo y garantizado. Universal Life = flexible.", utilPara:"Preguntas de cobertura permanente y cash value garantizado." },
+    { titulo:"Universal Life", etiquetas:["flexible","ajustable","cuenta de efectivo","interest sensitive"], contenido:"Universal Life es seguro permanente conocido por primas flexibles y death benefit ajustable. Tiene una cuenta de cash value y es sensible a las tasas de interés.", trampa:"Universal = flexible. Variable = inversiones. No los confundas.", utilPara:"Preguntas sobre qué póliza es flexible." },
+    { titulo:"Variable Life", etiquetas:["securities","separate account","riesgo de inversión","cash value"], contenido:"Variable Life involucra opciones de inversión a través de separate accounts. El cash value y death benefit pueden variar según el rendimiento de inversiones. Vender productos variables requiere licencia de securities.", trampa:"Variable = riesgo de inversión. El policyowner lleva el riesgo de inversión.", utilPara:"Preguntas de separate account y licencia de securities." },
+  ]},
+  { id:"riders-es", titulo:"Riders de Seguro de Vida", icono:"📑", color:"from-purple-600 to-pink-500", resumen:"Beneficios adicionales agregados a una póliza, incluyendo discapacidad, opciones de compra futura y beneficios por muerte accidental.", tarjetas:[
+    { titulo:"Waiver of Premium", etiquetas:["discapacidad","prima exonerada","asegurado"], contenido:"Waiver of Premium exonera las primas si el asegurado queda totalmente discapacitado según los términos del rider. La póliza se mantiene en vigor mientras las primas son exoneradas.", trampa:"Waiver of Premium aplica cuando el asegurado está discapacitado. Payor Rider aplica cuando el pagador está discapacitado o muere.", utilPara:"Preguntas donde la discapacidad impide pagar primas." },
+    { titulo:"Guaranteed Insurability", etiquetas:["compra futura","sin prueba","aumento de cobertura"], contenido:"Guaranteed Insurability permite al asegurado comprar cobertura adicional en ciertas fechas futuras o eventos de vida sin volver a probar insurability.", trampa:"Garantiza el derecho a comprar más cobertura, no una prima más barata.", utilPara:"Preguntas de aumento de cobertura futura." },
+    { titulo:"Payor Rider", etiquetas:["juvenil","adulto pagador","prima exonerada"], contenido:"El Payor Rider se usa comúnmente en pólizas juveniles. Si el adulto pagador muere o queda discapacitado, las primas pueden ser exoneradas hasta que el niño alcance una edad específica.", trampa:"Payor Rider protege la póliza del niño si el adulto pagador tiene el problema.", utilPara:"Preguntas de seguro de vida juvenil." },
+    { titulo:"Accidental Death Benefit", etiquetas:["accidente","beneficio extra","doble indemnidad"], contenido:"Accidental Death Benefit paga un monto adicional si el asegurado muere por un accidente cubierto.", trampa:"Accidental Death Benefit no es lo mismo que ingreso por discapacidad o reembolso médico accidental.", utilPara:"Preguntas de beneficio adicional por muerte." },
+  ]},
+  { id:"provisiones-es", titulo:"Provisiones y Beneficiarios", icono:"👥", color:"from-rose-600 to-red-500", resumen:"Beneficiarios, derechos del policyowner, grace period, reinstatement, incontestability y suicide clause.", tarjetas:[
+    { titulo:"Beneficiario Revocable", etiquetas:["beneficiario","cambio","derechos del owner"], contenido:"Un beneficiario revocable puede cambiarse por el policyowner sin el consentimiento del beneficiario.", trampa:"Revocable = puede cambiar. Irrevocable = requiere permiso.", utilPara:"Quién puede cambiarse sin consentimiento." },
+    { titulo:"Beneficiario Irrevocable", etiquetas:["beneficiario","permiso","consentimiento"], contenido:"Un beneficiario irrevocable tiene un interés adquirido. El policyowner generalmente necesita consentimiento escrito para cambiar este beneficiario o hacer ciertos cambios a la póliza.", trampa:"Si la pregunta dice que se necesita consentimiento escrito, piensa irrevocable.", utilPara:"Preguntas de consentimiento del beneficiario." },
+    { titulo:"Grace Period", etiquetas:["prima atrasada","lapse","cobertura continúa"], contenido:"El grace period le da al policyowner tiempo extra para pagar una prima atrasada mientras la cobertura se mantiene en vigor.", trampa:"Grace period ocurre antes del lapse. Reinstatement ocurre después del lapse.", utilPara:"Preguntas de prima omitida." },
+    { titulo:"Cláusula de Incontestabilidad", etiquetas:["dos años","misstatement","claim"], contenido:"Después del período de incontestabilidad, normalmente dos años, la aseguradora no puede impugnar la póliza basándose en la mayoría de los misstatements.", trampa:"No confundas incontestabilidad con la suicide clause. Ambas pueden mencionar dos años pero evalúan problemas diferentes.", utilPara:"Preguntas de negación de claims y misstatements." },
+  ]},
+  { id:"opciones-es", titulo:"Opciones de Póliza", icono:"💰", color:"from-indigo-600 to-violet-500", resumen:"Settlement options, nonforfeiture options, dividendos, acceso a cash value y préstamos de póliza.", tarjetas:[
+    { titulo:"Cash Surrender", etiquetas:["nonforfeiture","cash value","póliza termina"], contenido:"Cash surrender le permite al policyowner tomar el cash value disponible y terminar la póliza.", trampa:"Cash surrender termina la póliza.", utilPara:"Preguntas de rendición de pólizas permanentes." },
+    { titulo:"Extended Term", etiquetas:["nonforfeiture","mayor cantidad","term"], contenido:"Extended term usa el cash value para comprar term insurance, normalmente por el mismo face amount, por el tiempo que el cash value pueda sostener.", trampa:"Extended term = mayor cantidad de cobertura.", utilPara:"Preguntas de comparación de nonforfeiture." },
+    { titulo:"Reduced Paid-Up", etiquetas:["nonforfeiture","mayor duración","permanente"], contenido:"Reduced paid-up usa el cash value para comprar una póliza permanente pagada más pequeña sin más primas.", trampa:"Reduced paid-up = mayor duración, pero beneficio más pequeño.", utilPara:"Preguntas sobre qué opción dura más." },
+    { titulo:"Settlement Options", etiquetas:["fixed amount","fixed period","interest only","life income"], contenido:"Las settlement options determinan cómo se pagan los proceeds del seguro de vida, como suma global, solo intereses, período fijo, monto fijo o ingreso de por vida.", trampa:"Fixed period = tiempo elegido. Fixed amount = monto en dólares elegido.", utilPara:"Preguntas de pago de death benefit." },
+  ]},
+  { id:"discapacidad-es", titulo:"Disability Income Insurance", icono:"💼", color:"from-amber-600 to-orange-500", resumen:"Own occupation, any occupation, elimination period, benefit period, residual disability y partial disability.", tarjetas:[
+    { titulo:"Own Occupation", etiquetas:["discapacidad","liberal","propio trabajo"], contenido:"Own occupation significa que el asegurado está discapacitado si no puede realizar su propia ocupación. Esto es más favorable para el asegurado.", trampa:"Own occupation = más fácil de calificar. Any occupation = más estricto.", utilPara:"Preguntas de definición de discapacidad." },
+    { titulo:"Any Occupation", etiquetas:["discapacidad","restrictivo","cualquier trabajo"], contenido:"Any occupation significa que el asegurado no puede realizar ninguna ocupación para la que esté razonablemente preparado por educación, entrenamiento o experiencia.", trampa:"Any occupation es más difícil de calificar que own occupation.", utilPara:"Preguntas de comparación de definiciones." },
+    { titulo:"Elimination Period", etiquetas:["período de espera","antes de beneficios","discapacidad"], contenido:"El elimination period es el período de espera antes de que empiecen los beneficios de disability income. Períodos de eliminación más largos normalmente reducen la prima.", trampa:"Elimination period = período de espera. Benefit period = cuánto duran los pagos.", utilPara:"Cuándo empiezan los beneficios por discapacidad." },
+    { titulo:"Residual Disability", etiquetas:["pérdida de ingreso","regreso al trabajo","beneficio parcial"], contenido:"Los beneficios de residual disability se basan en ingresos reducidos después de que el asegurado regresa al trabajo pero no puede ganar los mismos ingresos que antes.", trampa:"Residual disability se enfoca en pérdida de ingresos, no solo en tareas reducidas.", utilPara:"Preguntas de ingresos reducidos después de discapacidad." },
+  ]},
+  { id:"medicare-es", titulo:"Medicare y Medicaid", icono:"🏥", color:"from-emerald-600 to-green-500", resumen:"Partes A, B, C, D, Medigap, Medicare Advantage y conceptos básicos de Medicaid.", tarjetas:[
+    { titulo:"Medicare Parte A", etiquetas:["hospital","SNF","hospice","home health"], contenido:"Parte A es hospital insurance. Generalmente cubre atención hospitalaria, cuidado en skilled nursing facility, hospice y algunos servicios de salud en el hogar.", trampa:"Parte A = hospital. Parte B = médico/outpatient.", utilPara:"Qué cubre la Parte A." },
+    { titulo:"Medicare Parte B", etiquetas:["médico","doctores","outpatient","DME"], contenido:"Parte B es medical insurance. Cubre doctores, atención outpatient, servicios preventivos, ambulancia y equipo médico durable.", trampa:"Parte B no cubre medicamentos recetados. Los medicamentos recetados son Parte D.", utilPara:"Qué cubre la Parte B." },
+    { titulo:"Medicare Parte C", etiquetas:["advantage","plan privado","HMO","PPO"], contenido:"Parte C es Medicare Advantage, ofrecida por compañías privadas aprobadas por Medicare. Es una forma alternativa de recibir los beneficios de la Parte A y B.", trampa:"Parte C no es Medigap. Es Medicare Advantage.", utilPara:"Preguntas de Advantage vs supplement." },
+    { titulo:"Medicaid", etiquetas:["basado en necesidad","bajos ingresos","estado federal"], contenido:"Medicaid es un programa basado en necesidad, financiado por el gobierno estatal y federal, para ayudar a personas elegibles de bajos ingresos con costos médicos.", trampa:"Medicare se basa principalmente en edad/discapacidad. Medicaid se basa en necesidad/ingresos.", utilPara:"Preguntas sobre asistencia médica para bajos ingresos." },
+  ]},
+];
+
+const hojasMemoria = [
+  { titulo:"Medicare", puntos:["Parte A = Hospital","Parte B = Médico","Parte C = Advantage","Parte D = Medicamentos"] },
+  { titulo:"Beneficiarios", puntos:["Primario = cobra primero","Contingente = respaldo","Revocable = puede cambiar","Irrevocable = requiere permiso"] },
+  { titulo:"Discapacidad", puntos:["Elimination Period = tiempo de espera","Benefit Period = cuánto duran los pagos","Own Occupation = más fácil","Residual = ingreso reducido"] },
+  { titulo:"Opciones de Póliza", puntos:["Extended Term = mayor cantidad","Reduced Paid-Up = mayor duración","Cash Surrender = póliza termina","Dividendos no son garantizados"] },
+];
+
+const recursos = [
+  { titulo:"Información Oficial de Texas", nota:"Usa recursos oficiales del Texas Department of Insurance para reglas actuales de aplicación, fingerprinting y licencia.", icono:"🏛️" },
+  { titulo:"Material de Repaso Profundo", nota:"Usa capítulos escaneados para agentes que necesitan más detalle después de fallar preguntas.", icono:"📘" },
+  { titulo:"Repaso del Día Antes", nota:"Usa hojas de memoria y trampas del examen antes de tomar el examen real.", icono:"⚡" },
+  { titulo:"Preguntas de Práctica", nota:"Usa el mock exam y quizzes por unidad de la guía principal para medir preparación.", icono:"📝" },
+];
+
+// ════════════════════════════════════════════════════════════════════════════
+// PLATAFORMA ES — COMPONENTS
+// ════════════════════════════════════════════════════════════════════════════
+function StatCard({ value, label }) {
+  return <div className="rounded-2xl bg-white/15 p-4 backdrop-blur-sm"><div className="text-3xl font-bold">{value}</div><div className="text-sm opacity-90">{label}</div></div>;
+}
+
+function MiniQuiz({ pregunta, respuestaSeleccionada, setRespuestaSeleccionada }) {
+  return (
+    <div className="rounded-3xl border border-slate-200 bg-slate-50 p-5">
+      <h3 className="mb-3 text-xl font-bold">Mini Quiz</h3>
+      <p className="mb-4 font-semibold text-slate-800">{pregunta.question}</p>
+      <div className="grid gap-3 md:grid-cols-2">
+        {pregunta.choices.map((choice) => {
+          const selected = respuestaSeleccionada === choice;
+          const correct = choice === pregunta.answer;
+          return <button key={choice} type="button" onClick={() => setRespuestaSeleccionada(choice)} className={cx("rounded-2xl border p-4 text-left font-semibold transition-all", !respuestaSeleccionada && "border-slate-200 bg-white hover:bg-blue-50", respuestaSeleccionada && correct && "border-green-300 bg-green-50 text-green-800", respuestaSeleccionada && selected && !correct && "border-red-300 bg-red-50 text-red-800", respuestaSeleccionada && !selected && !correct && "border-slate-200 bg-white opacity-70")}>{choice}</button>;
+        })}
+      </div>
+      {respuestaSeleccionada && <div className="mt-4 rounded-2xl bg-white p-4"><p className="font-bold text-slate-800">{respuestaSeleccionada === pregunta.answer ? "Correcto 🎉" : "No exactamente — repasa esta."}</p><p className="mt-2 text-slate-700">{pregunta.explanation}</p><button type="button" onClick={() => setRespuestaSeleccionada("")} className="mt-4 rounded-xl bg-slate-900 px-4 py-2 font-semibold text-white">Intentar de nuevo</button></div>}
+    </div>
+  );
+}
+
+function SupervivenciaView({ lecciones, leccionActiva, leccionActivaId, elegirLeccion, preguntaLeccion, respuestaLeccion, setRespuestaLeccion }) {
+  return (
+    <section className="grid gap-6 lg:grid-cols-[320px_1fr]">
+      <aside className="rounded-3xl border border-slate-200 bg-white p-5 shadow-lg">
+        <h2 className="mb-4 text-xl font-bold">Lecciones</h2>
+        <div className="space-y-3">
+          {lecciones.map((leccion) => (
+            <button key={leccion.id} type="button" onClick={() => elegirLeccion(leccion.id)} className={cx("w-full rounded-2xl border p-4 text-left transition-all", leccionActivaId === leccion.id ? "border-blue-400 bg-blue-50" : "border-slate-200 bg-slate-50 hover:bg-slate-100")}>
+              <div className="flex items-center gap-3"><span className="text-2xl">{leccion.icon}</span><span className="font-bold text-slate-800">{leccion.title}</span></div>
+            </button>
+          ))}
+        </div>
+      </aside>
+      <article className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-lg">
+        <div className={cx("bg-gradient-to-r p-6 text-white", leccionActiva.color)}>
+          <div className="flex items-center gap-3"><span className="text-5xl">{leccionActiva.icon}</span><div><h2 className="text-3xl font-bold">{leccionActiva.title}</h2><p className="mt-2 text-white/90">{leccionActiva.summary}</p></div></div>
+        </div>
+        <div className="space-y-6 p-6">
+          <div><h3 className="mb-3 text-xl font-bold">Notas High-Yield</h3><div className="grid gap-3 md:grid-cols-2">{leccionActiva.keyPoints.map((point) => <div key={point} className="rounded-2xl bg-slate-100 p-4 text-slate-700">{point}</div>)}</div></div>
+          <div><h3 className="mb-3 text-xl font-bold">Comparación Rápida</h3><div className="overflow-x-auto rounded-2xl border border-slate-200"><table className="w-full text-left"><tbody>{leccionActiva.quickTable.map((row, index) => <tr key={index} className="border-b border-slate-200 last:border-b-0">{row.map((cell, ci) => <td key={ci} className="p-4 text-sm md:text-base">{cell}</td>)}</tr>)}</tbody></table></div></div>
+          <div className="rounded-2xl border border-red-100 bg-red-50 p-5"><h3 className="mb-2 text-lg font-bold text-red-700">⚠️ Exam Trap</h3><p className="text-slate-700">{leccionActiva.examTrap}</p></div>
+          <MiniQuiz pregunta={preguntaLeccion} respuestaSeleccionada={respuestaLeccion} setRespuestaSeleccionada={setRespuestaLeccion} />
+        </div>
+      </article>
+    </section>
+  );
+}
+
+function UnidadesView({ lecciones, setModoActivo, elegirLeccion, preguntasMock, setFiltroExamen, resetExamen }) {
+  const unidades = Array.from(new Set(lecciones.map((l) => l.unit)));
+  return (
+    <section className="rounded-3xl bg-white p-8 shadow-lg border border-slate-200">
+      <div className="mb-6"><h2 className="text-3xl font-bold text-slate-800">📖 Book-Style Unit Map</h2><p className="mt-2 text-slate-600">Estudia por unidad, luego inicia un quiz específico o el mixed mock exam.</p></div>
+      <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+        {unidades.map((unidad) => {
+          const leccion = lecciones.find((l) => l.unit === unidad);
+          const count = preguntasMock.filter((p) => p.unit === unidad).length;
+          return (
+            <div key={unidad} className="rounded-3xl border border-slate-200 bg-slate-50 p-6 hover:shadow-md transition-all">
+              <h3 className="mb-3 text-xl font-bold text-slate-800">{unidad}</h3>
+              <p className="mb-4 text-slate-600">{leccion?.summary}</p>
+              <div className="mb-4 rounded-full bg-blue-100 px-3 py-2 text-sm font-semibold text-blue-700 inline-flex">{count} practice questions</div>
+              <div className="flex flex-wrap gap-3">
+                <button type="button" onClick={() => { elegirLeccion(leccion?.id || "basicos-vida"); setModoActivo("supervivencia"); }} className="rounded-2xl bg-white px-4 py-3 font-semibold text-slate-700 border border-slate-200 hover:bg-slate-100">Study Unit</button>
+                <button type="button" onClick={() => { setFiltroExamen(unidad); resetExamen(); setModoActivo("mock-exam"); }} className="rounded-2xl bg-blue-600 px-4 py-3 font-semibold text-white hover:bg-blue-700">Unit Quiz</button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+function RepasoRapidoView({ cramCards, cramActual, cramIndex, mostrarCram, setMostrarCram, siguienteCram, anteriorCram }) {
+  return (
+    <section className="grid gap-6 lg:grid-cols-2">
+      <div className="rounded-3xl bg-white p-6 shadow-lg"><div className="mb-6 flex items-center justify-between gap-4"><h2 className="text-2xl font-bold">⚡ Cram Flashcards</h2><span className="rounded-full bg-slate-100 px-3 py-1 text-sm font-semibold text-slate-600">{cramIndex + 1} / {cramCards.length}</span></div><div className="rounded-3xl border border-slate-200 bg-slate-50 p-8 text-center"><p className="text-sm font-semibold uppercase tracking-wider text-slate-500">Concept</p><h3 className="mt-2 text-3xl font-bold text-slate-800">{cramActual[0]}</h3>{mostrarCram ? <p className="mt-6 rounded-2xl bg-green-50 p-5 text-lg font-semibold text-green-800">{cramActual[1]}</p> : <button type="button" onClick={() => setMostrarCram(true)} className="mt-6 rounded-2xl bg-green-600 px-5 py-3 font-semibold text-white">Reveal Answer</button>}</div><div className="mt-4 flex gap-3"><button type="button" onClick={anteriorCram} className="rounded-2xl bg-slate-100 px-4 py-3 font-semibold text-slate-700 hover:bg-slate-200">Previous</button><button type="button" onClick={siguienteCram} className="rounded-2xl bg-blue-600 px-4 py-3 font-semibold text-white hover:bg-blue-700">Next</button></div></div>
+      <div className="rounded-3xl bg-white p-6 shadow-lg"><h2 className="mb-6 text-2xl font-bold">🔥 Night Before Review</h2><div className="space-y-3">{cramCards.map(([term, definition]) => <div key={term} className="rounded-2xl bg-slate-100 p-4"><p className="font-bold text-slate-800">{term}</p><p className="mt-1 text-slate-600">{definition}</p></div>)}</div></div>
+    </section>
+  );
+}
+
+function MockExamView({ unidadesExamen, filtroExamen, setFiltroExamen, resetExamen, examenIniciado, setExamenIniciado, mostrarResultados, poolPreguntas, preguntaActual, preguntaExamen, respuestaExamen, setRespuestaExamen, enviarRespuestaExamen, score, respuestasExamen }) {
+  return (
+    <section className="rounded-3xl bg-white p-8 shadow-lg">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-4"><div><h2 className="text-3xl font-bold">📝 Mock Practice Exam</h2><p className="mt-2 text-slate-600">Elige una unidad o toma un full mixed mock exam.</p></div><div className="rounded-2xl bg-blue-100 px-4 py-2 font-semibold text-blue-700">{poolPreguntas.length} Questions</div></div>
+      {!examenIniciado && !mostrarResultados && <div className="rounded-3xl bg-slate-50 p-8 text-center border border-slate-200"><h3 className="mb-4 text-2xl font-bold text-slate-800">Choose Practice Type</h3><select value={filtroExamen} onChange={(e) => { setFiltroExamen(e.target.value); resetExamen(); }} className="mb-6 w-full max-w-xl rounded-2xl border border-slate-300 bg-white px-5 py-4 text-lg outline-none focus:border-blue-400">{unidadesExamen.map((u) => <option key={u}>{u}</option>)}</select><br /><button type="button" onClick={() => setExamenIniciado(true)} className="rounded-2xl bg-blue-600 px-6 py-4 text-lg font-semibold text-white hover:bg-blue-700">Start Practice Exam</button></div>}
+      {examenIniciado && !mostrarResultados && <div className="space-y-6"><div className="flex items-center justify-between flex-wrap gap-3"><div className="text-sm font-semibold uppercase tracking-wider text-slate-500">Question {preguntaActual + 1} of {poolPreguntas.length}</div><div className="rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700">Score: {score}</div></div><div className="w-full rounded-full bg-slate-200 h-4 overflow-hidden"><div className="h-full bg-gradient-to-r from-blue-500 to-cyan-400 transition-all" style={{ width:`${((preguntaActual+1)/poolPreguntas.length)*100}%` }} /></div><div className="rounded-3xl border border-slate-200 bg-slate-50 p-8"><div className="mb-3 rounded-full bg-indigo-100 px-3 py-2 text-sm font-semibold text-indigo-700 inline-flex">{preguntaExamen.unit}</div><h3 className="mb-6 text-2xl font-bold text-slate-800">{preguntaExamen.question}</h3><div className="grid gap-4 md:grid-cols-2">{preguntaExamen.choices.map((choice) => <button key={choice} type="button" onClick={() => setRespuestaExamen(choice)} className={cx("rounded-2xl border p-5 text-left font-semibold transition-all", respuestaExamen === choice ? "border-blue-400 bg-blue-50 text-blue-800" : "border-slate-200 bg-white hover:bg-slate-100")}>{choice}</button>)}</div><button type="button" onClick={enviarRespuestaExamen} disabled={!respuestaExamen} className="mt-6 rounded-2xl bg-emerald-600 px-6 py-4 font-semibold text-white hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed">Submit Answer</button></div></div>}
+      {mostrarResultados && <div className="rounded-3xl bg-slate-50 border border-slate-200 p-8 text-center"><h3 className="mb-4 text-3xl font-bold text-slate-800">🎉 Exam Complete</h3><div className="mb-4 text-6xl font-bold text-blue-700">{Math.round((score/poolPreguntas.length)*100)}%</div><p className="mb-8 text-lg text-slate-600">{score} of {poolPreguntas.length} correct.</p><button type="button" onClick={resetExamen} className="mb-8 rounded-2xl bg-blue-600 px-5 py-3 font-semibold text-white hover:bg-blue-700">Retake / Choose Another Unit</button><div className="grid gap-4 text-left max-w-4xl mx-auto">{respuestasExamen.map((a, i) => <div key={i} className={cx("rounded-2xl p-5 border", a.isCorrect ? "bg-green-50 border-green-200" : "bg-red-50 border-red-200")}><p className="mb-1 text-sm font-bold text-slate-500">{a.unit}</p><p className="font-bold mb-2">{a.question}</p><p>Your Answer: {a.selected}</p><p>Correct: {a.correct}</p></div>)}</div></div>}
+    </section>
+  );
+}
+
+function PlataformaTexasLifeHealthEspanolEspejo() {
+  const [modoActivo, setModoActivo] = useState("supervivencia");
+  const [leccionActivaId, setLeccionActivaId] = useState("basicos-vida");
+  const [respuestaLeccion, setRespuestaLeccion] = useState("");
+  const [examenIniciado, setExamenIniciado] = useState(false);
+  const [preguntaActual, setPreguntaActual] = useState(0);
+  const [respuestaExamen, setRespuestaExamen] = useState("");
+  const [respuestasExamen, setRespuestasExamen] = useState([]);
+  const [mostrarResultados, setMostrarResultados] = useState(false);
+  const [filtroExamen, setFiltroExamen] = useState("Todas las Unidades");
+  const [cramIndex, setCramIndex] = useState(0);
+  const [mostrarCram, setMostrarCram] = useState(false);
+
+  const modoActivoData = modosEstudio.find((m) => m.id === modoActivo) || modosEstudio[0];
+  const leccionActiva = lecciones.find((l) => l.id === leccionActivaId) || lecciones[0];
+  const unidadesExamen = ["Todas las Unidades", ...Array.from(new Set(preguntasMock.map((p) => p.unit)))];
+  const poolPreguntas = filtroExamen === "Todas las Unidades" ? preguntasMock : preguntasMock.filter((p) => p.unit === filtroExamen);
+  const preguntaExamen = poolPreguntas[preguntaActual] || poolPreguntas[0];
+  const preguntaLeccion = preguntasMock.find((p) => p.unit === leccionActiva.unit) || preguntasMock[0];
+  const cramActual = cramCards[cramIndex];
+  const checksListos = useMemo(() => revisionesPlataforma.filter((r) => r.passed).length, []);
+  const score = respuestasExamen.filter((r) => r.isCorrect).length;
+
+  const resetExamen = () => { setExamenIniciado(false); setPreguntaActual(0); setRespuestaExamen(""); setRespuestasExamen([]); setMostrarResultados(false); };
+  const elegirLeccion = (id) => { setLeccionActivaId(id); setRespuestaLeccion(""); };
+  const enviarRespuestaExamen = () => {
+    if (!respuestaExamen) return;
+    const nuevas = [...respuestasExamen, { unit: preguntaExamen.unit, question: preguntaExamen.question, selected: respuestaExamen, correct: preguntaExamen.answer, isCorrect: respuestaExamen === preguntaExamen.answer }];
+    setRespuestasExamen(nuevas);
+    setRespuestaExamen("");
+    if (preguntaActual + 1 >= poolPreguntas.length) setMostrarResultados(true);
+    else setPreguntaActual(preguntaActual + 1);
+  };
+  const siguienteCram = () => { setMostrarCram(false); setCramIndex((i) => (i + 1) % cramCards.length); };
+  const anteriorCram = () => { setMostrarCram(false); setCramIndex((i) => (i - 1 + cramCards.length) % cramCards.length); };
+
+  return (
+    <main className="min-h-screen bg-slate-100 p-6 text-slate-900">
+      <div className="mx-auto max-w-7xl space-y-8">
+        <section className="rounded-3xl bg-gradient-to-r from-blue-700 to-cyan-500 p-8 text-white shadow-xl">
+          <h2 className="mb-3 text-4xl font-bold">Guía de Supervivencia Texas Life & Health</h2>
+          <p className="max-w-3xl text-lg opacity-90">Sistema interactivo con explicaciones high-yield, lecciones por unidad, exam traps y preguntas de práctica.</p>
+          <div className="mt-8 grid gap-4 md:grid-cols-4">
+            <StatCard value={lecciones.length} label="Unidades" />
+            <StatCard value={preguntasMock.length} label="Mock Questions" />
+            <StatCard value={cramCards.length} label="Cram Cards" />
+            <StatCard value="TX" label="Texas Specific" />
+          </div>
+        </section>
+
+        <section className="rounded-3xl bg-white p-8 shadow-lg border border-slate-200">
+          <h2 className="mb-6 text-3xl font-bold text-slate-800">🚀 Quick Start Roadmap</h2>
+          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {pasosRapidos.map((item) => (
+              <div key={item.step} className="rounded-3xl bg-slate-50 border border-slate-200 p-6 hover:shadow-md transition-all">
+                <div className="mb-4 inline-flex rounded-full bg-blue-100 px-3 py-1 text-sm font-bold text-blue-700">{item.step}</div>
+                <h3 className="mb-3 text-lg font-bold text-slate-800">{item.title}</h3>
+                <p className="leading-relaxed text-slate-600 text-sm">{item.description}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section>
+          <h2 className="mb-4 text-2xl font-bold">Modos de Estudio</h2>
+          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-5">
+            {modosEstudio.map((modo) => (
+              <button key={modo.id} type="button" onClick={() => setModoActivo(modo.id)} className={cx("rounded-3xl border p-5 text-left shadow-lg transition-all hover:-translate-y-1 hover:shadow-2xl", modoActivo === modo.id ? "border-blue-400 bg-blue-50 ring-2 ring-blue-200" : "border-slate-200 bg-white")}>
+                <div className="mb-3 text-4xl">{modo.icon}</div>
+                <h3 className="mb-2 text-lg font-bold text-slate-800">{modo.title}</h3>
+                <p className="text-sm leading-relaxed text-slate-600">{modo.description}</p>
+              </button>
+            ))}
+          </div>
+        </section>
+
+        <section className="rounded-3xl border border-blue-100 bg-blue-50 p-5 shadow-sm">
+          <p className="text-sm font-semibold uppercase tracking-wider text-blue-700">MODO ACTUAL</p>
+          <h2 className="mt-1 text-2xl font-bold text-blue-950">{modoActivoData.icon} {modoActivoData.title}</h2>
+          <p className="mt-1 text-blue-900">{modoActivoData.description}</p>
+        </section>
+
+        {modoActivo === "supervivencia" && <SupervivenciaView lecciones={lecciones} leccionActiva={leccionActiva} leccionActivaId={leccionActivaId} elegirLeccion={elegirLeccion} preguntaLeccion={preguntaLeccion} respuestaLeccion={respuestaLeccion} setRespuestaLeccion={setRespuestaLeccion} />}
+        {modoActivo === "unidades" && <UnidadesView lecciones={lecciones} setModoActivo={setModoActivo} elegirLeccion={elegirLeccion} preguntasMock={preguntasMock} setFiltroExamen={setFiltroExamen} resetExamen={resetExamen} />}
+        {modoActivo === "repaso-rapido" && <RepasoRapidoView cramCards={cramCards} cramActual={cramActual} cramIndex={cramIndex} mostrarCram={mostrarCram} setMostrarCram={setMostrarCram} siguienteCram={siguienteCram} anteriorCram={anteriorCram} />}
+        {modoActivo === "mock-exam" && <MockExamView unidadesExamen={unidadesExamen} filtroExamen={filtroExamen} setFiltroExamen={setFiltroExamen} resetExamen={resetExamen} examenIniciado={examenIniciado} setExamenIniciado={setExamenIniciado} mostrarResultados={mostrarResultados} poolPreguntas={poolPreguntas} preguntaActual={preguntaActual} preguntaExamen={preguntaExamen} respuestaExamen={respuestaExamen} setRespuestaExamen={setRespuestaExamen} enviarRespuestaExamen={enviarRespuestaExamen} score={score} respuestasExamen={respuestasExamen} />}
+        {modoActivo === "biblioteca" && (
+          <section className="rounded-3xl bg-white p-8 shadow-lg">
+            <h2 className="mb-4 text-2xl font-bold">📚 Biblioteca Avanzada</h2>
+            <p className="mb-6 text-slate-600">Usa el tab "Biblioteca ES" arriba para acceder a la biblioteca completa en español.</p>
+            <div className="grid gap-4 md:grid-cols-2">{deepDiveItemsES.map((item) => <div key={item} className="rounded-2xl bg-slate-100 p-5 font-medium text-slate-700">{item}</div>)}</div>
+          </section>
+        )}
+
+        <section className="rounded-3xl bg-gradient-to-r from-slate-900 to-slate-800 p-8 text-white shadow-xl">
+          <h2 className="mb-3 text-3xl font-bold">🎯 Consejos Finales</h2>
+          <div className="space-y-2 text-slate-200 max-w-3xl">
+            <p>• Enfócate en entender conceptos, no solo memorizar definiciones.</p>
+            <p>• Practica comparar pólizas y provisiones similares lado a lado.</p>
+            <p>• Disability y Medicare suelen ser áreas falladas — repásalas varias veces.</p>
+            <p>• Usa Quick Pass Mode la noche antes del examen.</p>
+          </div>
+        </section>
+
+        <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-lg">
+          <h2 className="mb-4 text-2xl font-bold">Revisión Técnica</h2>
+          <p className="mb-4 text-slate-600">{checksListos} de {revisionesPlataforma.length} checks listos.</p>
+          <div className="grid gap-3 md:grid-cols-2">
+            {revisionesPlataforma.map((test) => <div key={test.name} className="flex items-center justify-between rounded-2xl bg-slate-100 p-4"><span className="font-medium text-slate-700">{test.name}</span><span className={test.passed ? "font-bold text-green-700" : "font-bold text-red-700"}>{test.passed ? "Listo" : "Revisar"}</span></div>)}
+          </div>
+        </section>
+      </div>
+    </main>
+  );
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// DEEP DIVE LIBRARY — COMPONENTS (English)
+// ════════════════════════════════════════════════════════════════════════════
+function StatEN({ value, label }) {
+  return <div className="rounded-2xl bg-white/10 p-4 backdrop-blur-sm"><div className="text-3xl font-bold">{value}</div><div className="text-sm text-slate-200">{label}</div></div>;
+}
+
+function ChapterButton({ active, onClick, icon, label, count }) {
+  return (
+    <button type="button" onClick={onClick} className={cx("mb-3 w-full rounded-2xl border p-4 text-left transition-all", active ? "border-blue-400 bg-blue-50" : "border-slate-200 bg-slate-50 hover:bg-slate-100")}>
+      <div className="flex items-center gap-3"><span className="text-2xl">{icon}</span><div><div className="font-bold text-slate-800">{label}</div><div className="text-xs text-slate-500">{count} cards</div></div></div>
+    </button>
+  );
+}
+
+function TexasLifeHealthDeepDiveLibrary() {
+  const [activeChapterId, setActiveChapterId] = useState("all");
+  const [query, setQuery] = useState("");
+  const [selectedCard, setSelectedCard] = useState({ ...chapters[0].cards[0], chapterId: chapters[0].id, chapterTitle: chapters[0].title, chapterIcon: chapters[0].icon, chapterColor: chapters[0].color });
+  const [activeTool, setActiveTool] = useState("library");
+
+  const allCards = useMemo(() => chapters.flatMap((ch) => ch.cards.map((c) => ({ ...c, chapterId: ch.id, chapterTitle: ch.title, chapterIcon: ch.icon, chapterColor: ch.color }))), []);
+  const filteredCards = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return allCards.filter((c) => { const match = activeChapterId === "all" || c.chapterId === activeChapterId; const s = [c.title, c.chapterTitle, c.content, c.trap, c.usefulFor, ...c.tags].join(" ").toLowerCase(); return match && (!q || s.includes(q)); });
+  }, [activeChapterId, query, allCards]);
+
+  const selfChecks = [
+    { name:"Chapters loaded", passed: chapters.length >= 7 },
+    { name:"Reference cards loaded", passed: allCards.length >= 25 },
+    { name:"Search ready", passed: filteredCards.length >= 0 },
+    { name:"Memory sheets ready", passed: memorySheets.length >= 4 },
+  ];
+
+  return (
+    <main className="min-h-screen bg-slate-100 p-6 text-slate-900">
+      <div className="mx-auto max-w-7xl space-y-8">
+        <section className="rounded-3xl bg-gradient-to-r from-slate-900 to-blue-900 p-8 text-white shadow-xl">
+          <div className="flex flex-wrap items-center justify-between gap-6">
+            <div><p className="mb-2 text-sm font-semibold uppercase tracking-wider text-cyan-200">Ensurity Academy</p><h1 className="text-4xl font-bold">Texas Life & Health Deep Dive Library</h1><p className="mt-4 max-w-3xl text-lg text-slate-200">A searchable hub for deeper explanations, chapter browsing, exam traps, and memory sheets.</p></div>
+            <div className="grid grid-cols-2 gap-3 text-center"><StatEN value={chapters.length} label="Chapters" /><StatEN value={allCards.length} label="Cards" /><StatEN value={memorySheets.length} label="Sheets" /><StatEN value="TX" label="Focused" /></div>
+          </div>
+        </section>
+
+        <section className="grid gap-4 md:grid-cols-4">
+          {[["library","📚","Library","Search and open concept cards"],["chapters","🗂️","Chapters","Browse by unit"],["memory","🧠","Memory Sheets","Fast recall tools"],["resources","🔗","Resources","How to use this library"]].map(([id, icon, title, desc]) => (
+            <button key={id} type="button" onClick={() => setActiveTool(id)} className={cx("rounded-3xl border p-5 text-left shadow-lg transition-all hover:-translate-y-1 hover:shadow-xl", activeTool === id ? "border-blue-400 bg-blue-50 ring-2 ring-blue-100" : "border-slate-200 bg-white")}>
+              <div className="text-4xl">{icon}</div><h2 className="mt-3 text-xl font-bold">{title}</h2><p className="mt-2 text-sm text-slate-600">{desc}</p>
+            </button>
+          ))}
+        </section>
+
+        {activeTool === "library" && (
+          <section className="grid gap-6 lg:grid-cols-[300px_1fr]">
+            <aside className="rounded-3xl border border-slate-200 bg-white p-5 shadow-lg">
+              <h2 className="mb-4 text-xl font-bold">Chapters</h2>
+              <ChapterButton active={activeChapterId === "all"} onClick={() => setActiveChapterId("all")} icon="🌎" label="All Chapters" count={allCards.length} />
+              {chapters.map((ch) => <ChapterButton key={ch.id} active={activeChapterId === ch.id} onClick={() => setActiveChapterId(ch.id)} icon={ch.icon} label={ch.title} count={ch.cards.length} />)}
+            </aside>
+            <section className="space-y-6">
+              <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-lg">
+                <label className="mb-3 block text-sm font-semibold uppercase tracking-wider text-slate-500">Search Library</label>
+                <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search: beneficiary, Part D, elimination period..." className="w-full rounded-2xl border border-slate-300 bg-slate-50 px-5 py-4 text-lg outline-none focus:border-blue-400 focus:ring-4 focus:ring-blue-100" />
+                <p className="mt-3 text-sm text-slate-500">Showing {filteredCards.length} matching cards.</p>
+              </div>
+              <div className="grid gap-4 md:grid-cols-2">
+                {filteredCards.map((card) => (
+                  <button key={`${card.chapterId}-${card.title}`} type="button" onClick={() => setSelectedCard(card)} className={cx("rounded-3xl border bg-white p-6 text-left shadow-md transition-all hover:-translate-y-1 hover:shadow-xl", selectedCard.title === card.title ? "border-blue-400 ring-2 ring-blue-100" : "border-slate-200")}>
+                    <div className="mb-4 flex items-center gap-3"><div className={cx("flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-r text-2xl text-white", card.chapterColor)}>{card.chapterIcon}</div><div><h3 className="font-bold text-slate-800">{card.title}</h3><p className="text-sm text-slate-500">{card.chapterTitle}</p></div></div>
+                    <p className="text-sm leading-relaxed text-slate-600">{card.content}</p>
+                    <div className="mt-4 flex flex-wrap gap-2">{card.tags.map((tag) => <span key={tag} className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">{tag}</span>)}</div>
+                  </button>
+                ))}
+              </div>
+            </section>
+          </section>
+        )}
+
+        {activeTool === "chapters" && (
+          <section className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {chapters.map((ch) => (
+              <article key={ch.id} className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-lg">
+                <div className={cx("bg-gradient-to-r p-6 text-white", ch.color)}><div className="text-5xl">{ch.icon}</div><h2 className="mt-4 text-2xl font-bold">{ch.title}</h2><p className="mt-2 text-white/90">{ch.summary}</p></div>
+                <div className="space-y-3 p-5">
+                  {ch.cards.map((card) => (
+                    <button key={card.title} type="button" onClick={() => { setSelectedCard({...card, chapterId:ch.id, chapterTitle:ch.title, chapterIcon:ch.icon, chapterColor:ch.color}); setActiveTool("library"); setActiveChapterId(ch.id); }} className="w-full rounded-2xl bg-slate-50 p-4 text-left font-semibold text-slate-700 transition-all hover:bg-blue-50">{card.title}</button>
+                  ))}
+                </div>
+              </article>
+            ))}
+          </section>
+        )}
+
+        {activeTool === "memory" && (
+          <section className="rounded-3xl border border-emerald-200 bg-emerald-50 p-6 shadow-lg">
+            <h2 className="mb-2 text-3xl font-bold text-emerald-950">🧠 Memory Cheat Sheets</h2>
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+              {memorySheets.map((sheet) => <div key={sheet.title} className="rounded-3xl border border-emerald-200 bg-white p-6 shadow-sm"><h3 className="mb-4 text-xl font-bold text-slate-800">{sheet.title}</h3><div className="space-y-3">{sheet.bullets.map((b) => <div key={b} className="rounded-2xl bg-slate-50 p-3 font-medium text-slate-700">{b}</div>)}</div></div>)}
+            </div>
+          </section>
+        )}
+
+        {activeTool === "resources" && (
+          <section className="rounded-3xl border border-purple-200 bg-purple-50 p-6 shadow-lg">
+            <h2 className="mb-2 text-3xl font-bold text-purple-950">🔗 Extra Study Resources</h2>
+            <div className="grid gap-4 md:grid-cols-2">
+              {resources.map((r) => <div key={r.title} className="rounded-3xl border border-purple-200 bg-white p-6 shadow-sm"><div className="mb-4 flex items-center gap-4"><div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-purple-100 text-3xl">{r.icon}</div><h3 className="text-xl font-bold text-slate-800">{r.title}</h3></div><p className="leading-relaxed text-slate-600">{r.note}</p></div>)}
+            </div>
+          </section>
+        )}
+
+        <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-lg">
+          <div className="mb-4 flex items-center justify-between gap-4"><div><p className="text-sm font-semibold uppercase tracking-wider text-slate-500">Selected Card</p><h2 className="mt-1 text-3xl font-bold text-slate-800">{selectedCard.title}</h2></div><div className="rounded-2xl bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-600">{selectedCard.chapterTitle || "Reference"}</div></div>
+          <div className="grid gap-5 lg:grid-cols-3">
+            <div className="rounded-3xl bg-slate-50 p-5 lg:col-span-2"><h3 className="mb-3 text-xl font-bold">Explanation</h3><p className="leading-relaxed text-slate-700">{selectedCard.content}</p></div>
+            <div className="rounded-3xl border border-red-100 bg-red-50 p-5"><h3 className="mb-3 text-xl font-bold text-red-700">⚠️ Exam Trap</h3><p className="text-slate-700">{selectedCard.trap}</p></div>
+            <div className="rounded-3xl border border-blue-100 bg-blue-50 p-5"><h3 className="mb-3 text-xl font-bold text-blue-800">Useful For</h3><p className="text-slate-700">{selectedCard.usefulFor}</p></div>
+            <div className="rounded-3xl bg-slate-50 p-5 lg:col-span-2"><h3 className="mb-3 text-xl font-bold">Tags</h3><div className="flex flex-wrap gap-2">{selectedCard.tags.map((tag) => <span key={tag} className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm">{tag}</span>)}</div></div>
+          </div>
+        </section>
+
+        <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-lg">
+          <h2 className="mb-4 text-2xl font-bold">Library Self-Checks</h2>
+          <div className="grid gap-3 md:grid-cols-2">{selfChecks.map((t) => <div key={t.name} className="flex items-center justify-between rounded-2xl bg-slate-100 p-4"><span className="font-medium text-slate-700">{t.name}</span><span className={t.passed ? "font-bold text-green-700" : "font-bold text-red-700"}>{t.passed ? "Pass" : "Check"}</span></div>)}</div>
+        </section>
+      </div>
+    </main>
+  );
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// BIBLIOTECA AVANZADA — COMPONENTS (Spanish)
+// ════════════════════════════════════════════════════════════════════════════
+function StatES({ valor, titulo }) {
+  return <div className="rounded-2xl bg-white/10 p-4 backdrop-blur-sm"><div className="text-3xl font-bold">{valor}</div><div className="text-sm text-slate-200">{titulo}</div></div>;
+}
+
+function BotonCapitulo({ activo, onClick, icono, etiqueta, cantidad }) {
+  return (
+    <button type="button" onClick={onClick} className={cx("mb-3 w-full rounded-2xl border p-4 text-left transition-all", activo ? "border-blue-400 bg-blue-50" : "border-slate-200 bg-slate-50 hover:bg-slate-100")}>
+      <div className="flex items-center gap-3"><span className="text-2xl">{icono}</span><div><div className="font-bold text-slate-800">{etiqueta}</div><div className="text-xs text-slate-500">{cantidad} tarjetas</div></div></div>
+    </button>
+  );
+}
+
+function BibliotecaAvanzadaTexasLifeHealth() {
+  const [capituloActivo, setCapituloActivo] = useState("all");
+  const [busqueda, setBusqueda] = useState("");
+  const [tarjetaSeleccionada, setTarjetaSeleccionada] = useState({ ...capitulos[0].tarjetas[0], capituloId: capitulos[0].id, capituloTitulo: capitulos[0].titulo, capituloIcono: capitulos[0].icono, capituloColor: capitulos[0].color });
+  const [herramientaActiva, setHerramientaActiva] = useState("biblioteca");
+
+  const todasTarjetas = useMemo(() => capitulos.flatMap((cap) => cap.tarjetas.map((t) => ({ ...t, capituloId: cap.id, capituloTitulo: cap.titulo, capituloIcono: cap.icono, capituloColor: cap.color }))), []);
+  const tarjetasFiltradas = useMemo(() => {
+    const txt = busqueda.trim().toLowerCase();
+    return todasTarjetas.filter((t) => { const match = capituloActivo === "all" || t.capituloId === capituloActivo; const s = [t.titulo, t.capituloTitulo, t.contenido, t.trampa, t.utilPara, ...t.etiquetas].join(" ").toLowerCase(); return match && (!txt || s.includes(txt)); });
+  }, [capituloActivo, busqueda, todasTarjetas]);
+
+  const revisiones = [
+    { nombre:"Capítulos cargados", aprobado: capitulos.length >= 7 },
+    { nombre:"Tarjetas cargadas", aprobado: todasTarjetas.length >= 25 },
+    { nombre:"Buscador listo", aprobado: tarjetasFiltradas.length >= 0 },
+    { nombre:"Hojas de memoria listas", aprobado: hojasMemoria.length >= 4 },
+  ];
+
+  return (
+    <main className="min-h-screen bg-slate-100 p-6 text-slate-900">
+      <div className="mx-auto max-w-7xl space-y-8">
+        <section className="rounded-3xl bg-gradient-to-r from-slate-900 to-blue-900 p-8 text-white shadow-xl">
+          <div className="flex flex-wrap items-center justify-between gap-6">
+            <div><p className="mb-2 text-sm font-semibold uppercase tracking-wider text-cyan-200">Ensurity Academy</p><h1 className="text-4xl font-bold">Biblioteca Avanzada Texas Life & Health</h1><p className="mt-4 max-w-3xl text-lg text-slate-200">Centro de apoyo en español: explicaciones profundas, búsqueda por tema, hojas de memoria.</p></div>
+            <div className="grid grid-cols-2 gap-3 text-center"><StatES valor={capitulos.length} titulo="Capítulos" /><StatES valor={todasTarjetas.length} titulo="Tarjetas" /><StatES valor={hojasMemoria.length} titulo="Hojas" /><StatES valor="TX" titulo="Enfoque" /></div>
+          </div>
+        </section>
+
+        <section className="grid gap-4 md:grid-cols-4">
+          {[["biblioteca","📚","Biblioteca","Buscar y abrir tarjetas"],["capitulos","🗂️","Capítulos","Explorar por unidad"],["memoria","🧠","Hojas de Memoria","Herramientas de repaso"],["recursos","🔗","Recursos","Cómo usar esta biblioteca"]].map(([id, icono, titulo, descripcion]) => (
+            <button key={id} type="button" onClick={() => setHerramientaActiva(id)} className={cx("rounded-3xl border p-5 text-left shadow-lg transition-all hover:-translate-y-1 hover:shadow-xl", herramientaActiva === id ? "border-blue-400 bg-blue-50 ring-2 ring-blue-100" : "border-slate-200 bg-white")}>
+              <div className="text-4xl">{icono}</div><h2 className="mt-3 text-xl font-bold">{titulo}</h2><p className="mt-2 text-sm text-slate-600">{descripcion}</p>
+            </button>
+          ))}
+        </section>
+
+        {herramientaActiva === "biblioteca" && (
+          <section className="grid gap-6 lg:grid-cols-[300px_1fr]">
+            <aside className="rounded-3xl border border-slate-200 bg-white p-5 shadow-lg">
+              <h2 className="mb-4 text-xl font-bold">Capítulos</h2>
+              <BotonCapitulo activo={capituloActivo === "all"} onClick={() => setCapituloActivo("all")} icono="🌎" etiqueta="Todos los Capítulos" cantidad={todasTarjetas.length} />
+              {capitulos.map((cap) => <BotonCapitulo key={cap.id} activo={capituloActivo === cap.id} onClick={() => setCapituloActivo(cap.id)} icono={cap.icono} etiqueta={cap.titulo} cantidad={cap.tarjetas.length} />)}
+            </aside>
+            <section className="space-y-6">
+              <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-lg">
+                <label className="mb-3 block text-sm font-semibold uppercase tracking-wider text-slate-500">Buscar en Biblioteca</label>
+                <input value={busqueda} onChange={(e) => setBusqueda(e.target.value)} placeholder="Buscar: beneficiario, Parte D, elimination period..." className="w-full rounded-2xl border border-slate-300 bg-slate-50 px-5 py-4 text-lg outline-none focus:border-blue-400 focus:ring-4 focus:ring-blue-100" />
+                <p className="mt-3 text-sm text-slate-500">Mostrando {tarjetasFiltradas.length} tarjetas.</p>
+              </div>
+              <div className="grid gap-4 md:grid-cols-2">
+                {tarjetasFiltradas.map((t) => (
+                  <button key={`${t.capituloId}-${t.titulo}`} type="button" onClick={() => setTarjetaSeleccionada(t)} className={cx("rounded-3xl border bg-white p-6 text-left shadow-md transition-all hover:-translate-y-1 hover:shadow-xl", tarjetaSeleccionada.titulo === t.titulo ? "border-blue-400 ring-2 ring-blue-100" : "border-slate-200")}>
+                    <div className="mb-4 flex items-center gap-3"><div className={cx("flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-r text-2xl text-white", t.capituloColor)}>{t.capituloIcono}</div><div><h3 className="font-bold text-slate-800">{t.titulo}</h3><p className="text-sm text-slate-500">{t.capituloTitulo}</p></div></div>
+                    <p className="text-sm leading-relaxed text-slate-600">{t.contenido}</p>
+                    <div className="mt-4 flex flex-wrap gap-2">{t.etiquetas.map((e) => <span key={e} className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">{e}</span>)}</div>
+                  </button>
+                ))}
+              </div>
+            </section>
+          </section>
+        )}
+
+        {herramientaActiva === "capitulos" && (
+          <section className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {capitulos.map((cap) => (
+              <article key={cap.id} className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-lg">
+                <div className={cx("bg-gradient-to-r p-6 text-white", cap.color)}><div className="text-5xl">{cap.icono}</div><h2 className="mt-4 text-2xl font-bold">{cap.titulo}</h2><p className="mt-2 text-white/90">{cap.resumen}</p></div>
+                <div className="space-y-3 p-5">
+                  {cap.tarjetas.map((t) => (
+                    <button key={t.titulo} type="button" onClick={() => { setTarjetaSeleccionada({...t, capituloId:cap.id, capituloTitulo:cap.titulo, capituloIcono:cap.icono, capituloColor:cap.color}); setHerramientaActiva("biblioteca"); setCapituloActivo(cap.id); }} className="w-full rounded-2xl bg-slate-50 p-4 text-left font-semibold text-slate-700 transition-all hover:bg-blue-50">{t.titulo}</button>
+                  ))}
+                </div>
+              </article>
+            ))}
+          </section>
+        )}
+
+        {herramientaActiva === "memoria" && (
+          <section className="rounded-3xl border border-emerald-200 bg-emerald-50 p-6 shadow-lg">
+            <h2 className="mb-2 text-3xl font-bold text-emerald-950">🧠 Hojas de Memoria</h2>
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+              {hojasMemoria.map((hoja) => <div key={hoja.titulo} className="rounded-3xl border border-emerald-200 bg-white p-6 shadow-sm"><h3 className="mb-4 text-xl font-bold text-slate-800">{hoja.titulo}</h3><div className="space-y-3">{hoja.puntos.map((p) => <div key={p} className="rounded-2xl bg-slate-50 p-3 font-medium text-slate-700">{p}</div>)}</div></div>)}
+            </div>
+          </section>
+        )}
+
+        {herramientaActiva === "recursos" && (
+          <section className="rounded-3xl border border-purple-200 bg-purple-50 p-6 shadow-lg">
+            <h2 className="mb-2 text-3xl font-bold text-purple-950">🔗 Recursos Extra</h2>
+            <div className="grid gap-4 md:grid-cols-2">
+              {recursos.map((r) => <div key={r.titulo} className="rounded-3xl border border-purple-200 bg-white p-6 shadow-sm"><div className="mb-4 flex items-center gap-4"><div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-purple-100 text-3xl">{r.icono}</div><h3 className="text-xl font-bold text-slate-800">{r.titulo}</h3></div><p className="leading-relaxed text-slate-600">{r.nota}</p></div>)}
+            </div>
+          </section>
+        )}
+
+        <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-lg">
+          <div className="mb-4 flex items-center justify-between gap-4"><div><p className="text-sm font-semibold uppercase tracking-wider text-slate-500">Tarjeta Seleccionada</p><h2 className="mt-1 text-3xl font-bold text-slate-800">{tarjetaSeleccionada.titulo}</h2></div><div className="rounded-2xl bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-600">{tarjetaSeleccionada.capituloTitulo || "Referencia"}</div></div>
+          <div className="grid gap-5 lg:grid-cols-3">
+            <div className="rounded-3xl bg-slate-50 p-5 lg:col-span-2"><h3 className="mb-3 text-xl font-bold">Explicación</h3><p className="leading-relaxed text-slate-700">{tarjetaSeleccionada.contenido}</p></div>
+            <div className="rounded-3xl border border-red-100 bg-red-50 p-5"><h3 className="mb-3 text-xl font-bold text-red-700">⚠️ Trampa del Examen</h3><p className="text-slate-700">{tarjetaSeleccionada.trampa}</p></div>
+            <div className="rounded-3xl border border-blue-100 bg-blue-50 p-5"><h3 className="mb-3 text-xl font-bold text-blue-800">Útil Para</h3><p className="text-slate-700">{tarjetaSeleccionada.utilPara}</p></div>
+            <div className="rounded-3xl bg-slate-50 p-5 lg:col-span-2"><h3 className="mb-3 text-xl font-bold">Etiquetas</h3><div className="flex flex-wrap gap-2">{tarjetaSeleccionada.etiquetas.map((e) => <span key={e} className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm">{e}</span>)}</div></div>
+          </div>
+        </section>
+
+        <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-lg">
+          <h2 className="mb-4 text-2xl font-bold">Revisión Técnica</h2>
+          <div className="grid gap-3 md:grid-cols-2">{revisiones.map((r) => <div key={r.nombre} className="flex items-center justify-between rounded-2xl bg-slate-100 p-4"><span className="font-medium text-slate-700">{r.nombre}</span><span className={r.aprobado ? "font-bold text-green-700" : "font-bold text-red-700"}>{r.aprobado ? "Listo" : "Revisar"}</span></div>)}</div>
+        </section>
+      </div>
+    </main>
+  );
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// TABS ROUTER — renders active tab into its own root
+// ════════════════════════════════════════════════════════════════════════════
+const TABS_COMPONENTS = [PlataformaTexasLifeHealthEspanolEspejo, TexasLifeHealthDeepDiveLibrary, BibliotecaAvanzadaTexasLifeHealth];
+const ROOTS = [null, null, null];
+
+window.renderActiveTab = function() {
+  const idx = window._activeTab || 0;
+  if (!ROOTS[idx]) {
+    const el = document.getElementById('react-root');
+    ROOTS[idx] = ReactDOM.createRoot(el);
+  }
+  // unmount others
+  ROOTS.forEach((r, i) => { if (r && i !== idx) r.render(null); });
+  const Comp = TABS_COMPONENTS[idx];
+  ROOTS[idx].render(<Comp />);
+};
+</script>
+</body>
+</html>

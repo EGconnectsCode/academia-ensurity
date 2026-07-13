@@ -368,9 +368,15 @@ body {
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   padding: 8px 14px; gap: 6px;
 }
-.eg-shield { filter: drop-shadow(0 4px 12px rgba(139,0,0,.4)); }
-.eg-name { font-size: .65rem; font-weight: 800; color: #7B1212; letter-spacing: .1em; text-align: center; }
-[data-theme="dark"] .eg-name { color: #E57373; }
+.eg-logo-img {
+  width: 130px; height: auto; object-fit: contain;
+  filter: drop-shadow(0 4px 16px rgba(139,0,0,.35));
+  animation: eg-pulse 3s ease-in-out infinite;
+}
+@keyframes eg-pulse {
+  0%,100% { filter: drop-shadow(0 4px 16px rgba(139,0,0,.3)); transform: scale(1); }
+  50%      { filter: drop-shadow(0 8px 28px rgba(139,0,0,.55)); transform: scale(1.04); }
+}
 .pilares-col-right { grid-column: 3; grid-row: 1 / 3; }
 .pilar-card {
   background: var(--surface); border: 1.5px solid var(--border);
@@ -435,26 +441,64 @@ body {
 .culture-nav-btn:hover:not(:disabled) { border-color: #A31515; color: #A31515; }
 .culture-nav-btn:disabled { opacity: .3; cursor: not-allowed; }
 .culture-reopen-btn {
-  margin-top: 24px; border: 1.5px dashed rgba(163,21,21,.5);
-  border-radius: var(--radius); padding: 16px 20px;
-  background: rgba(163,21,21,.04); cursor: pointer;
-  display: flex; align-items: center; gap: 14px;
-  transition: background .2s, border-color .2s;
-  width: 100%; text-align: left; font-family: inherit; color: inherit;
+  margin-top: 24px; border: none;
+  border-radius: var(--radius); padding: 18px 22px;
+  background: linear-gradient(135deg, #7B1212 0%, #A31515 60%, #C0392B 100%);
+  cursor: pointer; display: flex; align-items: center; gap: 16px;
+  transition: filter .2s, transform .15s;
+  width: 100%; text-align: left; font-family: inherit; color: #fff;
+  box-shadow: 0 6px 20px rgba(139,0,0,.3);
 }
-.culture-reopen-btn:hover { background: rgba(163,21,21,.09); border-color: #A31515; }
-[data-theme="dark"] .culture-reopen-btn { background: rgba(163,21,21,.08); }
-[data-theme="dark"] .culture-reopen-btn:hover { background: rgba(163,21,21,.16); }
+.culture-reopen-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
+.culture-reopen-btn:active { transform: translateY(0); filter: brightness(.95); }
 .culture-reopen-icon {
-  width: 42px; height: 42px; border-radius: 11px; flex-shrink: 0;
-  background: linear-gradient(135deg, #6B1212, #A31515);
-  display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
+  width: 44px; height: 44px; border-radius: 11px; flex-shrink: 0;
+  background: rgba(255,255,255,.18); border: 1.5px solid rgba(255,255,255,.3);
+  display: flex; align-items: center; justify-content: center; font-size: 1.3rem;
 }
-.culture-reopen-text h4 { font-size: .9rem; font-weight: 700; margin-bottom: 2px; }
-.culture-reopen-text p  { font-size: .76rem; color: var(--text2); }
+.culture-reopen-text h4 { font-size: .93rem; font-weight: 700; margin-bottom: 2px; color: #fff; }
+.culture-reopen-text p  { font-size: .76rem; color: rgba(255,255,255,.75); }
+/* ── Entrance animations ── */
+@keyframes culture-fade-up {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes culture-pop {
+  0%   { opacity: 0; transform: scale(.82) translateY(8px); }
+  70%  { transform: scale(1.04) translateY(-2px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+.culture-slide.active .pilares-title-wrap { animation: culture-fade-up .4s ease both; }
+.culture-slide.active .pilares-col-left  .pilar-card:nth-child(1) { animation: culture-fade-up .45s ease .10s both; }
+.culture-slide.active .pilares-col-left  .pilar-card:nth-child(2) { animation: culture-fade-up .45s ease .20s both; }
+.culture-slide.active .pilares-col-right .pilar-card:nth-child(1) { animation: culture-fade-up .45s ease .15s both; }
+.culture-slide.active .pilares-col-right .pilar-card:nth-child(2) { animation: culture-fade-up .45s ease .25s both; }
+.culture-slide.active .pilares-col-right .pilar-card:nth-child(3) { animation: culture-fade-up .45s ease .35s both; }
+.culture-slide.active .eg-logo-img { animation: culture-pop .55s cubic-bezier(.34,1.56,.64,1) .05s both, eg-pulse 3s ease-in-out 1s infinite; }
+.culture-slide.active .principios-header { animation: culture-fade-up .4s ease both; }
+.culture-slide.active .principio-pill { animation: culture-pop .38s cubic-bezier(.34,1.56,.64,1) both; }
+.culture-slide.active .principio-pill:nth-child(1)  { animation-delay:.06s; }
+.culture-slide.active .principio-pill:nth-child(2)  { animation-delay:.10s; }
+.culture-slide.active .principio-pill:nth-child(3)  { animation-delay:.14s; }
+.culture-slide.active .principio-pill:nth-child(4)  { animation-delay:.18s; }
+.culture-slide.active .principio-pill:nth-child(5)  { animation-delay:.22s; }
+.culture-slide.active .principio-pill:nth-child(6)  { animation-delay:.26s; }
+.culture-slide.active .principio-pill:nth-child(7)  { animation-delay:.30s; }
+.culture-slide.active .principio-pill:nth-child(8)  { animation-delay:.34s; }
+.culture-slide.active .principio-pill:nth-child(9)  { animation-delay:.38s; }
+.culture-slide.active .principio-pill:nth-child(10) { animation-delay:.42s; }
+.culture-slide.active .principio-pill:nth-child(11) { animation-delay:.46s; }
+.culture-slide.active .principio-pill:nth-child(12) { animation-delay:.50s; }
+.culture-slide.active .principio-pill:nth-child(13) { animation-delay:.54s; }
+.culture-slide.active .principio-pill:nth-child(14) { animation-delay:.58s; }
+.culture-slide.active .principio-pill:nth-child(15) { animation-delay:.62s; }
+.culture-slide.active .principio-pill:nth-child(16) { animation-delay:.66s; }
+
 @media (max-width: 560px) {
-  .pilares-grid { grid-template-columns: 1fr; }
-  .pilares-grid .pilar-card[style*="grid-column"] { grid-column: auto; }
+  .pilares-layout { grid-template-columns: 1fr; }
+  .pilares-center { padding: 8px 0; }
+  .pilares-col-left, .pilares-col-right { grid-column: 1; grid-row: auto; }
+  .principios-grid { grid-template-columns: 1fr 1fr; }
 }
 
 /* RIGHT FORM PANEL */
@@ -603,17 +647,19 @@ body {
 .module-card-header { height: 5px; }
 .module-card-body { padding: 22px; }
 .module-card-body h3 { font-size: 1rem; font-weight: 700; margin-bottom: 5px; letter-spacing: -.01em; }
-.module-card-body p  { font-size: .83rem; color: var(--text2); line-height: 1.55; }
+.module-card-body p  { font-size: .83rem; color: #475569; line-height: 1.55; }
+[data-theme="dark"] .module-card-body p { color: #94A3B8; }
 .module-card-footer {
   padding: 11px 22px; border-top: 1px solid var(--border);
   display: flex; align-items: center; justify-content: space-between;
   font-size: .79rem; color: var(--text2);
 }
 .module-pill {
-  background: #EFF6FF; color: #1D4ED8; border-radius: 20px;
+  background: #DBEAFE; color: #1E40AF; border-radius: 20px;
   padding: 3px 10px; font-size: .73rem; font-weight: 700;
+  border: 1px solid #BFDBFE;
 }
-[data-theme="dark"] .module-pill { background: rgba(59,130,246,.15); color: #93C5FD; }
+[data-theme="dark"] .module-pill { background: rgba(59,130,246,.2); color: #93C5FD; border-color: rgba(59,130,246,.3); }
 .no-access-msg { text-align: center; padding: 60px 20px; color: var(--text2); }
 .no-access-msg svg { width: 48px; height: 48px; margin-bottom: 12px; opacity: .3; }
 .signout-btn {
@@ -828,8 +874,26 @@ body {
       <h4 data-en="Ensurity Group Culture" data-es="Cultura Ensurity Group">Ensurity Group Culture</h4>
       <p data-en="5 Organizational Pillars · Leadership Principles" data-es="5 Pilares de la Organización · Principios de Liderazgo">5 Pilares de la Organización · Principios de Liderazgo</p>
     </div>
-    <svg style="margin-left:auto;flex-shrink:0;opacity:.5" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    <svg style="margin-left:auto;flex-shrink:0;opacity:.7" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
   </button>
+
+  <!-- Texas Life & Health featured preview -->
+  <a href="modules/texas-life-health/texas-life-health.html" id="tlh-preview-card" style="display:block;margin-bottom:24px;text-decoration:none;border-radius:18px;overflow:hidden;box-shadow:0 4px 24px rgba(30,58,95,.18);border:1.5px solid rgba(30,58,95,.18);background:linear-gradient(135deg,#1E3A5F 0%,#2563EB 60%,#0EA5E9 100%);color:#fff;transition:transform .18s,box-shadow .18s" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 32px rgba(30,58,95,.28)'" onmouseout="this.style.transform='';this.style.boxShadow='0 4px 24px rgba(30,58,95,.18)'">
+    <div style="padding:22px 24px;display:flex;align-items:center;gap:18px;flex-wrap:wrap">
+      <div style="font-size:2.6rem;flex-shrink:0">📋</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;opacity:.75;margin-bottom:4px" data-en="FEATURED MODULE" data-es="MÓDULO DESTACADO">MÓDULO DESTACADO</div>
+        <h3 style="font-size:1.15rem;font-weight:800;margin:0 0 4px" data-en="Texas Life &amp; Health Licensing" data-es="Licencia Texas Life &amp; Health">Licencia Texas Life &amp; Health</h3>
+        <p style="font-size:.82rem;opacity:.88;margin:0" data-en="Survival guide · Mock exams · Flashcards · Advanced library" data-es="Guía de supervivencia · Exámenes mock · Flashcards · Biblioteca avanzada">Guía de supervivencia · Exámenes mock · Flashcards · Biblioteca avanzada</p>
+        <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+          <span style="background:rgba(255,255,255,.18);border-radius:20px;padding:3px 12px;font-size:.73rem;font-weight:600">Vida</span>
+          <span style="background:rgba(255,255,255,.18);border-radius:20px;padding:3px 12px;font-size:.73rem;font-weight:600">Salud</span>
+          <span style="background:rgba(255,255,255,.18);border-radius:20px;padding:3px 12px;font-size:.73rem;font-weight:600">Licencia Texas</span>
+        </div>
+      </div>
+      <div style="flex-shrink:0;display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.15);border-radius:12px;padding:10px 16px;font-weight:700;font-size:.9rem" data-en="Open Module →" data-es="Abrir Módulo →">Abrir Módulo →</div>
+    </div>
+  </a>
 
   <p class="section-title" id="modules-heading" data-en="YOUR MODULES" data-es="TUS MÓDULOS">YOUR MODULES</p>
   <div class="modules-grid" id="modules-grid">
@@ -879,13 +943,7 @@ body {
           </div>
           <!-- Center logo -->
           <div class="pilares-center">
-            <div class="eg-shield">
-              <svg viewBox="0 0 100 120" width="72" height="86" fill="none">
-                <path d="M50 4 L92 22 L92 72 Q92 100 50 116 Q8 100 8 72 L8 22 Z" fill="#8B0000" stroke="#A31515" stroke-width="2"/>
-                <text x="50" y="70" text-anchor="middle" font-family="serif" font-weight="bold" font-size="32" fill="white">EG</text>
-              </svg>
-            </div>
-            <span class="eg-name">ENSURITY GROUP</span>
+            <img src="https://cdn.bitrix24.com/b21945603/landing/898/8989ac3a7b465689d46cb6fd83474a26/Logo_Ensurity_Group_1080_500_px_1x.png" alt="Ensurity Group" class="eg-logo-img">
           </div>
           <!-- Right column -->
           <div class="pilares-col pilares-col-right">
@@ -1154,6 +1212,13 @@ async function doSignOut() {
 
 // ===== MODULE DISPLAY =====
 const MODULE_META = {
+  'texas-life-health': {
+    name:  { en: 'Texas Life & Health Licensing', es: 'Licencia Texas Life & Health' },
+    desc:  { en: 'Complete study platform for the Texas Life & Health exam — survival guide, mock exams, flashcards, and deep-dive library.', es: 'Plataforma completa para el examen Texas Life & Health — guía de supervivencia, exámenes mock, flashcards y biblioteca avanzada.' },
+    color: '#1E3A5F',
+    href:  'modules/texas-life-health/texas-life-health.html',
+    pills: { en: ['Life','Health','Licensing'], es: ['Vida','Salud','Licencia'] },
+  },
   'allstate': {
     name:  { en: 'Allstate Health Solutions', es: 'Allstate Health Solutions' },
     desc:  { en: 'Individual & Senior health plans, life products, agent resources.', es: 'Planes individuales y senior, productos de vida, recursos del agente.' },
@@ -1224,6 +1289,8 @@ async function showModules(profile) {
   } else {
     const userMods = await AZ.Modules.getUserModules(profile.id);
     moduleIds = userMods.map(m => m.module_id);
+    // Texas Life & Health always appears first for agents
+    moduleIds = ['texas-life-health', ...moduleIds.filter(id => id !== 'texas-life-health')];
   }
 
   if (moduleIds.length === 0) {
@@ -1299,7 +1366,14 @@ function cultureNav(dir) { cultureGo(_cultureSlide + dir); }
 
 function cultureGo(idx) {
   _cultureSlide = Math.max(0, Math.min(CULTURE_TOTAL - 1, idx));
-  document.querySelectorAll('.culture-slide').forEach((s, i) => s.classList.toggle('active', i === _cultureSlide));
+  document.querySelectorAll('.culture-slide').forEach((s, i) => {
+    s.classList.remove('active');
+    if (i === _cultureSlide) {
+      // Force reflow so CSS animations restart on every slide change
+      void s.offsetWidth;
+      s.classList.add('active');
+    }
+  });
   document.querySelectorAll('.culture-dot').forEach((d, i) => d.classList.toggle('active', i === _cultureSlide));
   document.getElementById('culture-prev').disabled = _cultureSlide === 0;
   document.getElementById('culture-next').disabled = _cultureSlide === CULTURE_TOTAL - 1;

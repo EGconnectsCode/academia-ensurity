@@ -10,7 +10,8 @@
     { "source": "/corebr",           "destination": "/modules/corebr/COREBR_1.html" },
     { "source": "/gtl",              "destination": "/modules/gtl/gtl-dashboard.html" },
     { "source": "/liberty-bankers",  "destination": "/modules/liberty-bankers/liberty-bankers.html" },
-    { "source": "/reset-password",   "destination": "/reset-password.html" }
+    { "source": "/reset-password",   "destination": "/reset-password.html" },
+    { "source": "/texas-life-health", "destination": "/modules/texas-life-health/texas-life-health.html" }
   ],
   "headers": [
     {
