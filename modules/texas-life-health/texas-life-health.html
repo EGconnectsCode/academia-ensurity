@@ -113,10 +113,9 @@
 <script>
 // Auth gate — show app only after verifying session
 window._activeTab = 0;
-window._libLang = 'en';
+window._libLang = localStorage.getItem('az_lang') === 'es' ? 'es' : 'en';
 
-function setLibLang(lang) {
-  window._libLang = lang;
+function syncLangUI(lang) {
   const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
   const activeColor = isDark ? '#F1F5F9' : '#0F172A';
   const activeBg    = isDark ? '#1E293B' : '#fff';
@@ -130,6 +129,12 @@ function setLibLang(lang) {
   const tabs = document.querySelectorAll('.tlh-tab');
   if (tabs[0]) tabs[0].textContent = lang === 'es' ? 'Plataforma' : 'Platform';
   if (tabs[1]) tabs[1].textContent = lang === 'es' ? 'Biblioteca' : 'Library';
+}
+
+function setLibLang(lang) {
+  window._libLang = lang;
+  localStorage.setItem('az_lang', lang);
+  syncLangUI(lang);
   window.renderActiveTab();
 }
 
@@ -150,6 +155,9 @@ function toggleTLHDark() {
     document.getElementById('tlh-icon-sun').style.display  = 'block';
   }
 })();
+
+// Apply saved language (shared with main dashboard) on load
+syncLangUI(window._libLang);
 
 function setTab(idx) {
   window._activeTab = idx;
@@ -465,11 +473,11 @@ function UnidadesView({ lecciones, setModoActivo, elegirLeccion, preguntasMock, 
   );
 }
 
-function RepasoRapidoView({ cramCards, cramActual, cramIndex, mostrarCram, setMostrarCram, siguienteCram, anteriorCram }) {
+function RepasoRapidoView({ cramCards, cramActual, cramIndex, mostrarCram, setMostrarCram, siguienteCram, anteriorCram, t }) {
   return (
     <section className="grid gap-6 lg:grid-cols-2">
-      <div className="rounded-3xl bg-white p-6 shadow-lg"><div className="mb-6 flex items-center justify-between gap-4"><h2 className="text-2xl font-bold">Cram Flashcards</h2><span className="rounded-full bg-slate-100 px-3 py-1 text-sm font-semibold text-slate-600">{cramIndex + 1} / {cramCards.length}</span></div><div className="rounded-3xl border border-slate-200 bg-slate-50 p-8 text-center"><p className="text-sm font-semibold uppercase tracking-wider text-slate-500">Concept</p><h3 className="mt-2 text-3xl font-bold text-slate-800">{cramActual[0]}</h3>{mostrarCram ? <p className="mt-6 rounded-2xl bg-green-50 p-5 text-lg font-semibold text-green-800">{cramActual[1]}</p> : <button type="button" onClick={() => setMostrarCram(true)} className="mt-6 rounded-2xl bg-green-600 px-5 py-3 font-semibold text-white">Reveal Answer</button>}</div><div className="mt-4 flex gap-3"><button type="button" onClick={anteriorCram} className="rounded-2xl bg-slate-100 px-4 py-3 font-semibold text-slate-700 hover:bg-slate-200">Previous</button><button type="button" onClick={siguienteCram} className="rounded-2xl bg-blue-600 px-4 py-3 font-semibold text-white hover:bg-blue-700">Next</button></div></div>
-      <div className="rounded-3xl bg-white p-6 shadow-lg"><h2 className="mb-6 text-2xl font-bold">Night Before Review</h2><div className="space-y-3">{cramCards.map(([term, definition]) => <div key={term} className="rounded-2xl bg-slate-100 p-4"><p className="font-bold text-slate-800">{term}</p><p className="mt-1 text-slate-600">{definition}</p></div>)}</div></div>
+      <div className="rounded-3xl bg-white p-6 shadow-lg"><div className="mb-6 flex items-center justify-between gap-4"><h2 className="text-2xl font-bold">{t("Tarjetas de Repaso Rápido","Cram Flashcards")}</h2><span className="rounded-full bg-slate-100 px-3 py-1 text-sm font-semibold text-slate-600">{cramIndex + 1} / {cramCards.length}</span></div><div className="rounded-3xl border border-slate-200 bg-slate-50 p-8 text-center"><p className="text-sm font-semibold uppercase tracking-wider text-slate-500">{t("Concepto","Concept")}</p><h3 className="mt-2 text-3xl font-bold text-slate-800">{cramActual[0]}</h3>{mostrarCram ? <p className="mt-6 rounded-2xl bg-green-50 p-5 text-lg font-semibold text-green-800">{cramActual[1]}</p> : <button type="button" onClick={() => setMostrarCram(true)} className="mt-6 rounded-2xl bg-green-600 px-5 py-3 font-semibold text-white">{t("Ver Respuesta","Reveal Answer")}</button>}</div><div className="mt-4 flex gap-3"><button type="button" onClick={anteriorCram} className="rounded-2xl bg-slate-100 px-4 py-3 font-semibold text-slate-700 hover:bg-slate-200">{t("Anterior","Previous")}</button><button type="button" onClick={siguienteCram} className="rounded-2xl bg-blue-600 px-4 py-3 font-semibold text-white hover:bg-blue-700">{t("Siguiente","Next")}</button></div></div>
+      <div className="rounded-3xl bg-white p-6 shadow-lg"><h2 className="mb-6 text-2xl font-bold">{t("Repaso de Último Momento","Night Before Review")}</h2><div className="space-y-3">{cramCards.map(([term, definition]) => <div key={term} className="rounded-2xl bg-slate-100 p-4"><p className="font-bold text-slate-800">{term}</p><p className="mt-1 text-slate-600">{definition}</p></div>)}</div></div>
     </section>
   );
 }
@@ -686,7 +694,7 @@ function PlataformaTexasLifeHealthEspanolEspejo() {
         )}
 
         {tabActivo === TAB_REPASO && (
-          <RepasoRapidoView cramCards={cramCards} cramActual={cramActual} cramIndex={cramIndex} mostrarCram={mostrarCram} setMostrarCram={setMostrarCram} siguienteCram={siguienteCram} anteriorCram={anteriorCram} />
+          <RepasoRapidoView cramCards={cramCards} cramActual={cramActual} cramIndex={cramIndex} mostrarCram={mostrarCram} setMostrarCram={setMostrarCram} siguienteCram={siguienteCram} anteriorCram={anteriorCram} t={t} />
         )}
 
         {tabActivo === TAB_MOCK && (
