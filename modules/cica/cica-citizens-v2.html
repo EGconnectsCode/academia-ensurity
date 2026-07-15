@@ -744,7 +744,7 @@ function dlFromUrl(url, fname) {
 <div class="page" id="page-portal"><div class="ph"><div class="ph-row"><div class="ph-ico">&#128279;</div><div><h1><span class="en">Portal Links</span><span class="es">Enlaces del Portal</span></h1><p><span class="en">Quick access to agent and corporate portals.</span><span class="es">Acceso rapido a portales.</span></p></div></div></div><div class="section-wrap"><div class="pl-grid"><a class="pl-card" href="https://cicaamerica.citizensinc.com/login" target="_blank"><div class="pl-ico">&#128274;</div><div><div class="pl-title"><span class="en">Agent Portal Login</span><span class="es">Portal del Agente</span></div><div class="pl-url">cicaamerica.citizensinc.com</div></div><div class="pl-arrow">&#8594;</div></a><a class="pl-card" href="https://www.citizensinc.com/about/" target="_blank"><div class="pl-ico">&#128226;</div><div><div class="pl-title"><span class="en">About Citizens Inc.</span><span class="es">About Citizens Inc.</span></div><div class="pl-url">citizensinc.com/about</div></div><div class="pl-arrow">&#8594;</div></a></div></div></div><div class="page" id="page-admin-users"><div class="ph"><div class="ph-row"><div class="ph-ico">&#128101;</div><div><h1><span class="en">&#128101; Users</span><span class="es">&#128101; Usuarios</span></h1><p><span class="en">Manage registered users and admin accounts</span><span class="es">Gestiona usuarios registrados y cuentas de administrador</span></p></div></div></div><div id="page-admin-users-body"></div></div><div class="page" id="page-admin-activity"><div class="ph"><div class="ph-row"><div class="ph-ico">&#9989;</div><div><h1><span class="en">&#9989; Activity</span><span class="es">&#9989; Actividad</span></h1><p><span class="en">View user activity, quiz history and session logs</span><span class="es">Actividad, historial de pruebas y sesiones</span></p></div></div></div><div id="page-admin-activity-body"></div></div><div class="page" id="page-admin-ranking"><div class="ph"><div class="ph-row"><div class="ph-ico">&#127942;</div><div><h1><span class="en">&#127942; Ranking</span><span class="es">&#127942; Ranking</span></h1><p><span class="en">Leaderboard of all agents by tests passed and XP</span><span class="es">Tabla de líderes por pruebas y XP</span></p></div></div></div><div id="page-admin-ranking-body"></div></div></div></div></div>
 <script>
 /* Pre-define setLang BEFORE all_js runs so IIFE uses correct version */
-window.LANG='en';
+window.LANG=(function(){try{var s=localStorage.getItem('az_lang')||localStorage.getItem('cica_lang');if(s==='en'||s==='es')return s;}catch(e){}return 'en';})();
 window.setLang=function(l){
   if(l!=='en'&&l!=='es')l='en';
   window.LANG=l;
@@ -752,7 +752,7 @@ window.setLang=function(l){
   root.setAttribute('data-lang',l);
   root.setAttribute('lang-'+l,'');
   root.removeAttribute('lang-'+(l==='en'?'es':'en'));
-  try{localStorage.setItem('cica_lang',l);}catch(e){}
+  try{localStorage.setItem('cica_lang',l);localStorage.setItem('az_lang',l);}catch(e){}
   var lb=document.getElementById('tb-lang-lbl');if(lb)lb.textContent=(l==='en')?'ES':'EN';
   var pb=document.getElementById('pre-lang-lbl');if(pb)pb.textContent=(l==='en')?'ES':'EN';
 };
@@ -760,6 +760,7 @@ window.toggleLang=function(){
   var cur=document.documentElement.getAttribute('data-lang')||'en';
   window.setLang(cur==='en'?'es':'en');
 };
+window.setLang(window.LANG);
 </script>
 <script>
 

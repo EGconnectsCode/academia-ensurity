@@ -3883,7 +3883,8 @@ function addXP(n,r){
 }
 
 // LANG
-var LANG='en';
+var LANG=(function(){try{var s=localStorage.getItem('az_lang')||localStorage.getItem('ahs_lang');if(s==='en'||s==='es')return s;}catch(e){}return 'en';})();
+(function(){var r=document.documentElement;if(LANG==='es'){r.removeAttribute('lang-en');r.setAttribute('lang-es','');}else{r.removeAttribute('lang-es');r.setAttribute('lang-en','');}})();
 
 
 // DARK
@@ -4290,7 +4291,7 @@ function toggleAuthLang(){
   else{root.removeAttribute('lang-es');root.setAttribute('lang-en','');}
   var b=el('auth-lang-btn');if(b)b.textContent=LANG==='es'?'EN':'ES';
   var lb=el('lang-btn');if(lb)lb.textContent=LANG==='es'?'EN':'ES';
-  try{localStorage.setItem('ahs_lang',LANG);}catch(e){}
+  try{localStorage.setItem('ahs_lang',LANG);localStorage.setItem('az_lang',LANG);}catch(e){}
   var app=el('app');
   if(app&&app.classList.contains('visible')){renderAll();syncCounts();}
 }

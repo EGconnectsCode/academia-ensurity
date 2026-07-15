@@ -477,7 +477,7 @@ body.dark .qt-multi-table tr:nth-child(even) td{background:rgba(255,255,255,.03)
 </head>
 <body>
 <script>
-(function(){var l='en';try{var s=localStorage.getItem('cb_lang');if(s==='en'||s==='es')l=s;}catch(e){}document.documentElement.setAttribute('data-lang',l);window.LANG=l;})();
+(function(){var l='en';try{var s=localStorage.getItem('az_lang')||localStorage.getItem('cb_lang');if(s==='en'||s==='es')l=s;}catch(e){}document.documentElement.setAttribute('data-lang',l);window.LANG=l;})();
 </script>
 
 <!-- PDF VIEWER MODAL -->
@@ -2922,7 +2922,7 @@ function toggleLang(){
   var l=document.documentElement.getAttribute('data-lang')==='en'?'es':'en';
   document.documentElement.setAttribute('data-lang',l);
   window.LANG=l;
-  try{localStorage.setItem('cb_lang',l);}catch(e){}
+  try{localStorage.setItem('cb_lang',l);localStorage.setItem('az_lang',l);}catch(e){}
   document.getElementById('tb-lang-lbl').textContent=l==='en'?'ES':'EN';
   document.getElementById('pre-lang-lbl').textContent=l==='en'?'ES':'EN';
 }

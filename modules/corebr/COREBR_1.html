@@ -242,7 +242,7 @@ td{padding:6px 10px;border-bottom:1px solid var(--bdr);color:var(--tx)}
 <script>
 (function(){
   var l='en';
-  try{var s=localStorage.getItem('cb_lang');if(s==='en'||s==='es')l=s;}catch(e){}
+  try{var s=localStorage.getItem('az_lang')||localStorage.getItem('cb_lang');if(s==='en'||s==='es')l=s;}catch(e){}
   document.documentElement.setAttribute('data-lang',l);
   window.LANG=l;
 })();
@@ -1107,7 +1107,7 @@ td{padding:6px 10px;border-bottom:1px solid var(--bdr);color:var(--tx)}
 /* ═══ Language — defined first so it is available immediately ═══ */
 (function(){
   var l='en';
-  try{var s=localStorage.getItem('cb_lang');if(s==='en'||s==='es')l=s;}catch(e){}
+  try{var s=localStorage.getItem('az_lang')||localStorage.getItem('cb_lang');if(s==='en'||s==='es')l=s;}catch(e){}
   document.documentElement.setAttribute('data-lang',l);
   window.LANG=l;
 })();
@@ -1116,7 +1116,7 @@ window.setLang=function(l){
   if(l!=='en'&&l!=='es')l='en';
   window.LANG=l;
   document.documentElement.setAttribute('data-lang',l);
-  try{localStorage.setItem('cb_lang',l);}catch(e){}
+  try{localStorage.setItem('cb_lang',l);localStorage.setItem('az_lang',l);}catch(e){}
   var lb=document.getElementById('tb-lang-lbl');if(lb)lb.textContent=(l==='en')?'ES':'EN';
   var pb=document.getElementById('pre-lang-lbl');if(pb)pb.textContent=(l==='en')?'ES':'EN';
 };
@@ -1683,7 +1683,7 @@ document.addEventListener('DOMContentLoaded',function(){
   initAdminUser();
   // Apply saved language
   var saved='en';
-  try{var s=localStorage.getItem('cb_lang');if(s==='en'||s==='es')saved=s;}catch(e){}
+  try{var s=localStorage.getItem('az_lang')||localStorage.getItem('cb_lang');if(s==='en'||s==='es')saved=s;}catch(e){}
   window.setLang(saved);
   // Dark mode
   try{if(localStorage.getItem('cb_dark')==='1'){document.body.classList.add('dark');}}catch(e){}

@@ -994,7 +994,7 @@ function osAddTab(id){
 
 var ADMIN_EMAIL='nerrafael1@gmail.com';
 var ADMIN_DEFAULT_PW='Admin2024';
-var LANG='en';
+var LANG=(function(){try{var s=localStorage.getItem('az_lang')||localStorage.getItem('aa_lang');if(s==='en'||s==='es')return s;}catch(e){}return 'en';})();
 var DARK=true;
 var ST={name:'',email:'',xp:0,downloads:0};
 var SESSION_START=Date.now();
@@ -1021,7 +1021,7 @@ function setFieldErr(px,f,msg){var e=el(px+'-err-'+f);if(e)e.textContent=msg;var
 function clearField(px,f){var e=el(px+'-err-'+f);if(e)e.textContent='';var i=el(px+'-'+f);if(i)i.classList.remove('auth-err-input');}
 
 /* ── LANGUAGE ── */
-document.documentElement.setAttribute('lang-en','');
+document.documentElement.setAttribute(LANG==='es'?'lang-es':'lang-en','');
 (function(){var s=document.createElement('style');s.textContent='[lang-en] .es{display:none}[lang-es] .en{display:none}';document.head.appendChild(s);})();
 function setLang(lang){
   LANG=lang;
@@ -1036,7 +1036,7 @@ function setLang(lang){
   var aen=el('auth-lang-en'),aes=el('auth-lang-es');
   if(aen)aen.classList.toggle('lang-active',LANG==='en');
   if(aes)aes.classList.toggle('lang-active',LANG==='es');
-  try{localStorage.setItem('aa_lang',LANG);}catch(e){}
+  try{localStorage.setItem('aa_lang',LANG);localStorage.setItem('az_lang',LANG);}catch(e){}
 }
 function toggleAuthLang(){setLang(LANG==='en'?'es':'en');}
 function toggleLang(){setLang(LANG==='en'?'es':'en');}
