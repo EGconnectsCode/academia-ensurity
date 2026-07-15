@@ -1333,7 +1333,7 @@ function osTab(id){
   document.querySelectorAll('.os-tab').forEach(function(b){b.classList.remove('active');});
   var p=el('os-'+id);if(p)p.classList.add('active');
   var btns=document.querySelectorAll('.os-tab');
-  btns.forEach(function(b){if(b.getAttribute('onclick')&&b.getAttribute('onclick').indexOf('"'+id+'"')>=0)b.classList.add('active');});
+  btns.forEach(function(b){if(b.getAttribute('onclick')&&b.getAttribute('onclick').indexOf("'"+id+"'")>=0)b.classList.add('active');});
 }
 
 /* ── METRICS ── */
@@ -2560,7 +2560,7 @@ function renderEligibility(){
 
 <style>#page-state-approval .info-banner{text-align:center}</style>
 <script>
-document.querySelectorAll("a[href*="AgentLogin"],a[href*="agentLogin"]").forEach(function(a){a.href="https://www.americanamicable.com/v4/agentLogin.php";});
+document.querySelectorAll("a[href*='AgentLogin'],a[href*='agentLogin']").forEach(function(a){a.href="https://www.americanamicable.com/v4/agentLogin.php";});
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../../shared/supabase-config.js"></script>

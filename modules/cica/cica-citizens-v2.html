@@ -1062,9 +1062,6 @@ function toggleDark(){
 }
 
 document.addEventListener('DOMContentLoaded',function(){
-  document.querySelectorAll('.sb-item[data-page]').forEach(function(btn){
-    btn.addEventListener('click',function(){navTo(this.getAttribute('data-page'));});
-  });
   var savedLang=localStorage.getItem('cica_lang')||'en';
   setLang(savedLang);
   var savedDark=localStorage.getItem('cica_dark');
@@ -1083,7 +1080,7 @@ document.addEventListener('DOMContentLoaded',function(){
   var _orig = window.loginUser;
   window.loginUser = function(user){
     if(_orig) _orig(user);
-    setTimeout(function(){ if(typeof navTo==='function') navTo('home'); }, 80);
+    if(typeof navTo==='function') navTo('home');
   };
 })();
 
