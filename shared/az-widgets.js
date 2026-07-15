@@ -53,13 +53,13 @@
 
         /* title */
         '<h2 id="az-ob-title" style="' +
-          'font-size:1.2rem;font-weight:800;color:#0f172a;text-align:center;' +
+          'font-size:1.2rem;font-weight:800;color:#0f172a!important;text-align:center;' +
           'margin:0 0 12px;line-height:1.3;' +
         '"></h2>' +
 
         /* body */
         '<p id="az-ob-body" style="' +
-          'font-size:.875rem;line-height:1.72;color:#475569;text-align:center;' +
+          'font-size:.875rem;line-height:1.72;color:#475569!important;text-align:center;' +
           'margin:0 0 32px;' +
         '"></p>' +
 
