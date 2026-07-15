@@ -21,6 +21,43 @@
       }
 
       body { background:var(--az-bg)!important; font-family:'Inter','Segoe UI',system-ui,sans-serif!important; }
+      body.dark {
+        --bg:#0F172A; --sur:#1E293B; --sur2:#1a2540; --bdr:rgba(255,255,255,.1);
+        --tx:#E2E8F0; --tx2:#94A3B8; --tx3:#64748B; --txt:#E2E8F0;
+        --az-bg:#0F172A; --az-surface:#1E293B; --az-border:rgba(255,255,255,.1);
+        --az-text:#E2E8F0; --az-text2:#94A3B8;
+      }
+      body.dark, body.dark #main { background:#0F172A!important; color:#E2E8F0!important; }
+      body.dark .content, body.dark .page, body.dark [id^="page-"] { background:#0F172A!important; }
+      body.dark .card { background:#1E293B!important; border-color:rgba(255,255,255,.1)!important; color:#E2E8F0!important; }
+      body.dark .card-title, body.dark .ctitle { color:#94A3B8!important; }
+      body.dark h1,body.dark h2,body.dark h3,body.dark h4,body.dark h5 { color:#E2E8F0!important; }
+      body.dark p, body.dark li, body.dark label { color:#CBD5E1!important; }
+      body.dark td, body.dark th { color:#E2E8F0!important; border-color:rgba(255,255,255,.08)!important; }
+      body.dark thead, body.dark thead tr { background:#1E293B!important; }
+      body.dark thead th { color:#94A3B8!important; }
+      body.dark tbody tr:nth-child(even) { background:rgba(255,255,255,.03)!important; }
+      body.dark tbody tr:hover { background:rgba(255,255,255,.06)!important; }
+      body.dark table { border-color:rgba(255,255,255,.08)!important; }
+      body.dark input, body.dark textarea, body.dark select {
+        background:#1E293B!important; border-color:rgba(255,255,255,.15)!important; color:#E2E8F0!important;
+      }
+      body.dark input::placeholder, body.dark textarea::placeholder { color:#64748B!important; }
+      body.dark button:not([class*="az-"]) {
+        background:#1E293B!important; color:#E2E8F0!important; border-color:rgba(255,255,255,.12)!important;
+      }
+      body.dark button:not([class*="az-"]):hover { background:#2D3B55!important; }
+      body.dark .pdf-card, body.dark .file-card, body.dark .doc-card {
+        background:#1E293B!important; border-color:rgba(255,255,255,.1)!important;
+      }
+      body.dark .az-pdf-modal { background:#1E293B!important; }
+      body.dark .az-pdf-header { background:#0F172A!important; border-color:rgba(255,255,255,.1)!important; }
+      body.dark .az-pdf-title { color:#E2E8F0!important; }
+      body.dark a.az-pdf-dl { background:#1d4ed8!important; color:#fff!important; }
+      body.dark ::-webkit-scrollbar-track { background:#0F172A!important; }
+      body.dark ::-webkit-scrollbar-thumb { background:#334155!important; }
+      body.dark ::-webkit-scrollbar-thumb:hover { background:#475569!important; }
+      #sb-level,.sb-user-level { display:none!important; }
 
       .topbar { background:var(--az-navy)!important; border-bottom:1px solid rgba(255,255,255,.07)!important;
         box-shadow:0 1px 8px rgba(0,0,0,.25)!important; height:54px!important; padding:0 16px!important;
@@ -56,6 +93,7 @@
       .az-admin-back:hover { background:rgba(251,191,36,.25)!important; }
 
       .sidebar, #sidebar { background:var(--az-navy)!important; border-right:1px solid rgba(255,255,255,.07)!important; }
+      .sb-user-row { display:none!important; }
       .sb-item { color:rgba(255,255,255,.65)!important; font-size:.86rem!important; }
       .sb-item:hover { background:rgba(255,255,255,.06)!important; color:#fff!important; }
       .sb-item.active { background:rgba(37,99,235,.3)!important; color:#fff!important; font-weight:600!important; }
@@ -94,7 +132,7 @@
         var backBtn = document.createElement('a');
         backBtn.className = 'az-admin-back';
         backBtn.href = '/';
-        backBtn.textContent = '← Dashboard';
+        backBtn.innerHTML = '<span class="en">← Dashboard</span><span class="es">← Inicio</span>';
         acts.insertBefore(backBtn, acts.firstChild);
 
         var div = document.createElement('div');
@@ -119,7 +157,7 @@
 
         var soBtn = document.createElement('button');
         soBtn.className = 'az-topbar-signout';
-        soBtn.textContent = 'Cerrar Sesión';
+        soBtn.innerHTML = '<span class="en">Sign Out</span><span class="es">Cerrar Sesión</span>';
         soBtn.onclick = function () { if (window.doSignOut) window.doSignOut(); };
         acts.appendChild(soBtn);
       }
@@ -175,7 +213,7 @@
       <div class="az-pdf-panel">
         <div class="az-pdf-header">
           <span class="az-pdf-title" id="az-pdf-title">Documento</span>
-          <a class="az-pdf-dl" id="az-pdf-dl" target="_blank" download>&#8659; Descargar</a>
+          <a class="az-pdf-dl" id="az-pdf-dl" target="_blank" download><span class="en">&#8659; Download</span><span class="es">&#8659; Descargar</span></a>
           <button class="az-pdf-close" onclick="window.closePdfPreview()">&#10005;</button>
         </div>
         <iframe class="az-pdf-frame" id="az-pdf-frame" src="" frameborder="0"></iframe>
@@ -205,6 +243,27 @@
         window.showPdfPreview(url, fname);
       } else if (_origDlFromUrl) {
         _origDlFromUrl(url, fname);
+      }
+    };
+  })();
+
+  // Override openPdf to handle Supabase URL content (atob fails on URLs)
+  (function patchOpenPdf() {
+    var _origOpenPdf = window.openPdf;
+    window.openPdf = function (key, title) {
+      var el = document.getElementById('pdf_' + key);
+      if (!el) {
+        if (_origOpenPdf) _origOpenPdf(key, title);
+        else alert((window.LANG === 'en' ? 'Document not found: ' : 'Documento no encontrado: ') + key);
+        return;
+      }
+      var content = el.textContent.trim();
+      if (content.startsWith('http')) {
+        if (window.showPdfPreview) window.showPdfPreview(content, title);
+        else window.open(content, '_blank');
+        if (window.trackDownload) window.trackDownload(title);
+      } else {
+        if (_origOpenPdf) _origOpenPdf(key, title);
       }
     };
   })();
@@ -247,12 +306,12 @@
   window._azPreview = function(name, key) {
     _azResolveUrl(key, function(url) {
       if (url && window.showPdfPreview) window.showPdfPreview(url, name);
-      else alert('Preview unavailable');
+      else alert(window.LANG === 'es' ? 'Vista previa no disponible' : 'Preview unavailable');
     });
   };
   window._azDownload = function(name, key, fname) {
     _azResolveUrl(key, function(url) {
-      if (!url) { alert('Download unavailable'); return; }
+      if (!url) { alert(window.LANG === 'es' ? 'Descarga no disponible' : 'Download unavailable'); return; }
       var trigger = function(blobUrl) {
         var a = document.createElement('a');
         a.href = blobUrl; a.download = (fname || name) + '.pdf';
@@ -268,8 +327,8 @@
   };
   function _azMakeButtons(name, key, fname) {
     var wrap = document.createElement('div'); wrap.className = 'az-fb';
-    var prev = document.createElement('button'); prev.className = 'az-fb-prev'; prev.textContent = '👁 Preview';
-    var dl   = document.createElement('button'); dl.className   = 'az-fb-dl';   dl.textContent   = '⬇ Download';
+    var prev = document.createElement('button'); prev.className = 'az-fb-prev'; prev.innerHTML = '<span class="en">👁 Preview</span><span class="es">👁 Vista Previa</span>';
+    var dl   = document.createElement('button'); dl.className   = 'az-fb-dl';   dl.innerHTML   = '<span class="en">⬇ Download</span><span class="es">⬇ Descargar</span>';
     prev.addEventListener('click', function(e) { e.stopPropagation(); window._azPreview(name, key); });
     dl.addEventListener('click',   function(e) { e.stopPropagation(); window._azDownload(name, key, fname); });
     wrap.appendChild(prev); wrap.appendChild(dl); return wrap;
@@ -340,14 +399,9 @@
 
   // ── OVERRIDE SIGN OUT ──
   window.doSignOut = async function () {
-    await AZ.Activity.log(MODULE_ID, 'logout');
+    try { await AZ.Activity.log(MODULE_ID, 'logout'); } catch(e) {}
     await AZ.Auth.signOut();
-    window.CB_AUTH = { email: '', name: '', isAdmin: false };
-    document.body.classList.remove('is-admin');
-    var app = document.getElementById('app');
-    if (app) { app.style.display = 'none'; app.classList.remove('visible'); }
-    var ls = document.getElementById('login-screen');
-    if (ls) ls.style.display = 'flex';
+    window.location.replace('/');
   };
   window.logout = window.doLogout = window.doSignOut;
 
@@ -487,6 +541,19 @@
     document.head.appendChild(s);
   }
 
+  var _ONBOARD_STEPS_EN = [
+    { icon: '🏦', title: 'Welcome to Liberty Bankers Life',
+      body: 'Welcome to the Liberty Bankers Life Agent Training Portal. Here you will find all training resources, forms, and sales materials to grow as an agent.' },
+    { icon: '📚', title: 'Training Modules',
+      body: 'Navigate the modules in the sidebar: Final Expense, SPWL, and more. Complete each module and its assessment to earn XP and advance your level.' },
+    { icon: '📄', title: 'Downloads & Forms',
+      body: 'In the Downloads section you will find application forms, product brochures, and agent guides. Use "Preview" to review or "Download" to save the file.' },
+    { icon: '📊', title: 'Your Progress',
+      body: 'Your XP and level update automatically when you complete quizzes. Check your profile to see your progress history and completed modules.' },
+    { icon: '💬', title: 'Questions or Help?',
+      body: 'Use the chat in the bottom right corner to ask where to find forms, how the platform works, or any questions about the materials.' }
+  ];
+
   var _ONBOARD_STEPS = [
     { icon: '🏦', title: 'Bienvenido a Liberty Bankers Life',
       body: 'Bienvenido al portal de entrenamiento de Liberty Bankers Life. Aquí encontrarás todos los recursos de capacitación, formularios y materiales de venta para crecer como agente.' },
@@ -498,6 +565,33 @@
       body: 'Tu XP y nivel se actualizan automáticamente al completar quizzes. Revisa tu perfil para ver tu historial de progreso y módulos completados.' },
     { icon: '💬', title: '¿Dudas o Preguntas?',
       body: 'Usa el chat en la esquina inferior derecha para preguntar dónde encontrar formularios, cómo funciona la plataforma, o cualquier duda sobre los materiales. ¡Estamos aquí para ayudarte!' }
+  ];
+
+  var _CHAT_FAQS_EN = [
+    { label: '📋 Forms',
+      keywords: ['form', 'forms', 'application', 'document', 'file'],
+      answer: 'Forms and documents are in the "Downloads" section of the sidebar. Find the file and click the blue "Preview" button to view it, or the green "Download" button to save it.' },
+    { label: '📥 Download PDF',
+      keywords: ['download', 'pdf', 'file', 'save'],
+      answer: 'To download a PDF: go to the Downloads section, find the file and click "Download" (green button). To view it first, use "Preview" (blue button).' },
+    { label: '📚 Modules',
+      keywords: ['module', 'course', 'training', 'lesson', 'section'],
+      answer: 'Training modules are in the sidebar menu. Select the one you want, review the material, and complete the quiz at the end to record your progress and earn XP.' },
+    { label: '🏆 My XP / Level',
+      keywords: ['xp', 'level', 'points', 'progress', 'achievement'],
+      answer: 'Your XP and level update automatically when you complete quizzes. View them in your profile (user icon, top right) or in the top navigation bar.' },
+    { label: '❓ Quiz / Assessment',
+      keywords: ['quiz', 'assessment', 'exam', 'test', 'questions'],
+      answer: 'Assessments appear at the end of each module. Select your answers and submit. Your result is saved automatically and adds XP to your profile.' },
+    { label: '🔐 Access / Password',
+      keywords: ['password', 'login', 'access', 'forgot', 'reset'],
+      answer: 'If you have trouble signing in, go to the main page and use "Forgot your password?". For access issues write to it@egconnects.com.' },
+    { label: '📞 Technical Support',
+      keywords: ['support', 'help', 'contact', 'email', 'problem', 'error'],
+      answer: 'For technical support write to it@egconnects.com. For questions about commissions or contracts contact your supervisor or field manager.' },
+    { label: '📦 LBL Products',
+      keywords: ['product', 'policy', 'insurance', 'final expense', 'spwl', 'whole life', 'coverage'],
+      answer: 'Liberty Bankers Life product information (Final Expense, SPWL, etc.) is in the training modules and the Downloads section (agent guides and product brochures).' }
   ];
 
   var _CHAT_FAQS = [
@@ -549,8 +643,10 @@
         window._azLang(profile.lang);
       }
       _withWidgets(function () {
-        window.AZWidgets.initChat(_CHAT_FAQS);
-        setTimeout(function () { window.AZWidgets.initOnboarding(_ONBOARD_STEPS); }, 700);
+        var _faqs  = (window.LANG === 'en') ? _CHAT_FAQS_EN    : _CHAT_FAQS;
+        var _steps = (window.LANG === 'en') ? _ONBOARD_STEPS_EN : _ONBOARD_STEPS;
+        window.AZWidgets.initChat(_faqs);
+        setTimeout(function () { window.AZWidgets.initOnboarding(_steps); }, 700);
       });
       await AZ.Activity.log(MODULE_ID, 'login');
     } catch (e) { console.warn('[LB Patch] auto-login error:', e.message); }

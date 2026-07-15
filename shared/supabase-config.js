@@ -219,18 +219,35 @@ const Progress = {
    * Record a completed quiz with score and XP.
    */
   async complete(userId, moduleId, quizKey, score, xpEarned) {
+    // Check prior completion — prevents XP farming on re-submit
+    const { data: existing } = await db
+      .from('progress')
+      .select('completed')
+      .eq('user_id', userId)
+      .eq('module_id', moduleId)
+      .eq('quiz_key', quizKey)
+      .single();
+    const alreadyCompleted = existing?.completed === true;
+
     const { error } = await db.from('progress').upsert({
       user_id:      userId,
       module_id:    moduleId,
       quiz_key:     quizKey,
       score,
-      xp_earned:   xpEarned,
+      xp_earned:    xpEarned,
       completed:    true,
       completed_at: new Date().toISOString(),
     }, { onConflict: 'user_id,module_id,quiz_key' });
     if (error) throw error;
-    // Add XP to profile
-    await db.rpc('increment_xp', { user_id: userId, amount: xpEarned });
+
+    // Award XP only on first completion
+    if (!alreadyCompleted && xpEarned > 0) {
+      await db.rpc('increment_xp', { user_id: userId, amount: xpEarned });
+    }
+
+    // Log to activity feed (fire-and-forget)
+    Activity.log(moduleId, 'quiz_complete', { quiz_key: quizKey, score, xp_earned: xpEarned })
+      .catch(() => {});
   },
 };
 

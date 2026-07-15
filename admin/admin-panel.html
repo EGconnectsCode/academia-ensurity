@@ -1,5 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
+<script>
+  (function(){
+    var t=localStorage.getItem('az_theme'); if(t) document.documentElement.setAttribute('data-theme',t);
+    var l=localStorage.getItem('az_lang');  if(l) document.documentElement.lang=l;
+  })();
+</script>
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -62,7 +68,7 @@ body {
   display: flex; flex-direction: column; align-items: center; gap: 8px;
 }
 .sidebar-logo-icon {
-  height: 52px; width: auto; object-fit: contain;
+  height: 80px; width: auto; object-fit: contain;
   filter: brightness(0) invert(1);
 }
 .sidebar-logo-text { font-weight: 700; font-size: .95rem; color: white; letter-spacing: -.01em; text-align: center; }
@@ -105,10 +111,16 @@ body {
 /* ── MAIN ───────────────────────────────── */
 .main { flex: 1; padding: 0; overflow-x: hidden; min-width: 0; display: flex; flex-direction: column; }
 .main-topbar {
-  display: flex; align-items: center; justify-content: flex-end;
+  display: flex; align-items: center; justify-content: flex-end; gap: 10px;
   padding: 14px 32px; border-bottom: 1px solid var(--border);
   background: var(--surface); position: sticky; top: 0; z-index: 40;
 }
+.topbar-controls { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+.lang-toggle { display: flex; background: var(--bg); border-radius: 20px; padding: 3px; border: 1px solid var(--border); }
+.lang-btn { background: none; border: none; border-radius: 16px; padding: 4px 10px; font-size: .75rem; font-weight: 700; cursor: pointer; color: var(--text2); font-family: inherit; transition: background var(--tr), color var(--tr); }
+.lang-btn.active { background: var(--navy); color: #fff; }
+.dark-btn { background: none; border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; font-size: .9rem; cursor: pointer; line-height: 1; transition: background var(--tr); }
+.dark-btn:hover { background: var(--bg); }
 .back-btn {
   display: inline-flex; align-items: center; gap: 6px;
   padding: 8px 18px; background: var(--navy); color: #fff;
@@ -278,8 +290,14 @@ tr:hover td { background: var(--surface2); }
   <button class="hamburger" onclick="toggleMobileNav()" aria-label="Menu">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
   </button>
-  <span class="mobile-topbar-title">Admin Panel</span>
-  <a href="../academia-ensurity.html" class="back-btn" style="padding:6px 12px;font-size:.78rem">← Back</a>
+  <span class="mobile-topbar-title" data-en="Admin Panel" data-es="Panel de Admin">Admin Panel</span>
+  <div style="display:flex;align-items:center;gap:6px">
+    <div class="lang-toggle">
+      <button class="lang-btn" id="adm-m-btn-en" onclick="adminSetLang('en')">EN</button>
+      <button class="lang-btn" id="adm-m-btn-es" onclick="adminSetLang('es')">ES</button>
+    </div>
+    <button class="dark-btn" onclick="toggleTheme()">🌙</button>
+  </div>
 </div>
 <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeMobileNav()"></div>
 <div class="layout">
@@ -288,41 +306,41 @@ tr:hover td { background: var(--surface2); }
 <aside class="sidebar">
   <div class="sidebar-logo">
     <img class="sidebar-logo-icon" src="https://cdn.bitrix24.com/b21945603/landing/898/8989ac3a7b465689d46cb6fd83474a26/Logo_Ensurity_Group_1080_500_px_1x.png" alt="Ensurity Group">
-    <span class="sidebar-logo-text">Admin Panel</span>
+    <span class="sidebar-logo-text" data-en="Admin Panel" data-es="Panel de Admin">Admin Panel</span>
   </div>
 
-  <span class="nav-section">Overview</span>
+  <span class="nav-section" data-en="Overview" data-es="Resumen">Overview</span>
   <a class="nav-item active" onclick="showPage('dashboard')" href="#">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-    Dashboard
+    <span data-en="Dashboard" data-es="Dashboard">Dashboard</span>
   </a>
 
-  <span class="nav-section">Users</span>
+  <span class="nav-section" data-en="Users" data-es="Usuarios">Users</span>
   <a class="nav-item" onclick="showPage('pending')" href="#" id="nav-pending">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-    Pending <span id="pending-badge" style="background:#ef4444;color:#fff;border-radius:99px;padding:1px 7px;font-size:.7rem;margin-left:4px;display:none"></span>
+    <span data-en="Pending" data-es="Pendientes">Pending</span> <span id="pending-badge" style="background:#ef4444;color:#fff;border-radius:99px;padding:1px 7px;font-size:.7rem;margin-left:4px;display:none"></span>
   </a>
   <a class="nav-item" onclick="showPage('users')" href="#">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-    All Users
+    <span data-en="All Users" data-es="Todos los Usuarios">All Users</span>
   </a>
   <a class="nav-item" onclick="showPage('access')" href="#">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-    Module Access
+    <span data-en="Module Access" data-es="Acceso a Módulos">Module Access</span>
   </a>
 
-  <span class="nav-section">Analytics</span>
+  <span class="nav-section" data-en="Analytics" data-es="Análisis">Analytics</span>
   <a class="nav-item" onclick="showPage('activity')" href="#">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-    Activity Feed
+    <span data-en="Activity Feed" data-es="Actividad">Activity Feed</span>
   </a>
   <a class="nav-item" onclick="showPage('ranking')" href="#">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
-    Leaderboard
+    <span data-en="Leaderboard" data-es="Ranking">Leaderboard</span>
   </a>
 
   <div class="sidebar-footer">
-    <button class="signout-btn" onclick="doSignOut()">Cerrar Sesión</button>
+    <button class="signout-btn" onclick="doSignOut()" data-en="Sign Out" data-es="Cerrar Sesión">Cerrar Sesión</button>
   </div>
 </aside>
 
@@ -332,8 +350,15 @@ tr:hover td { background: var(--surface2); }
   <div class="main-topbar">
     <a href="../academia-ensurity.html" class="back-btn">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
-      Back to Platform
+      <span data-en="Back to Platform" data-es="Volver a la Plataforma">Back to Platform</span>
     </a>
+    <div class="topbar-controls">
+      <div class="lang-toggle">
+        <button class="lang-btn" id="adm-btn-en" onclick="adminSetLang('en')">EN</button>
+        <button class="lang-btn" id="adm-btn-es" onclick="adminSetLang('es')">ES</button>
+      </div>
+      <button class="dark-btn" onclick="toggleTheme()" title="Toggle dark mode">🌙</button>
+    </div>
   </div>
 
   <div class="main-content">
@@ -341,18 +366,18 @@ tr:hover td { background: var(--surface2); }
   <!-- DASHBOARD PAGE -->
   <div class="page active" id="page-dashboard">
     <div class="page-header">
-      <h1>Dashboard</h1>
-      <p>Academia Ensurity — platform overview</p>
+      <h1 data-en="Dashboard" data-es="Dashboard">Dashboard</h1>
+      <p data-en="Academia Ensurity — platform overview" data-es="Academia Ensurity — vista general">Academia Ensurity — platform overview</p>
     </div>
     <div class="stats-grid" id="stats-grid">
       <div class="stat-card"><div class="spinner"></div></div>
     </div>
     <div class="table-wrap">
       <div class="table-toolbar">
-        <strong style="font-size:.9rem">Recent Activity</strong>
+        <strong style="font-size:.9rem" data-en="Recent Activity" data-es="Actividad Reciente">Recent Activity</strong>
       </div>
       <table>
-        <thead><tr><th>Time</th><th>User</th><th>Module</th><th>Event</th></tr></thead>
+        <thead><tr><th data-en="Time" data-es="Hora">Time</th><th data-en="User" data-es="Usuario">User</th><th data-en="Module" data-es="Módulo">Module</th><th data-en="Event" data-es="Evento">Event</th></tr></thead>
         <tbody id="recent-activity-body">
           <tr class="loading-row"><td colspan="4"><span class="spinner"></span></td></tr>
         </tbody>
@@ -363,17 +388,17 @@ tr:hover td { background: var(--surface2); }
   <!-- PENDING APPROVALS PAGE -->
   <div class="page" id="page-pending">
     <div class="page-header">
-      <h1>Pending Approvals</h1>
-      <p>Users registered but not yet assigned to a module</p>
+      <h1 data-en="Pending Approvals" data-es="Aprobaciones Pendientes">Pending Approvals</h1>
+      <p data-en="Users registered but not yet assigned to a module" data-es="Usuarios registrados sin módulo asignado">Users registered but not yet assigned to a module</p>
     </div>
     <div class="table-wrap">
       <div class="table-toolbar">
-        <strong style="font-size:.9rem">Awaiting access assignment</strong>
+        <strong style="font-size:.9rem" data-en="Awaiting access assignment" data-es="Esperando asignación de acceso">Awaiting access assignment</strong>
       </div>
       <table>
         <thead>
           <tr>
-            <th>User</th><th>Phone</th><th>Bitrix Courses</th><th>Registered</th><th>Action</th>
+            <th data-en="User" data-es="Usuario">User</th><th data-en="Phone" data-es="Teléfono">Phone</th><th data-en="Bitrix Courses" data-es="Cursos Bitrix">Bitrix Courses</th><th data-en="Registered" data-es="Registrado">Registered</th><th data-en="Action" data-es="Acción">Action</th>
           </tr>
         </thead>
         <tbody id="pending-tbody">
@@ -386,15 +411,15 @@ tr:hover td { background: var(--surface2); }
   <!-- USERS PAGE -->
   <div class="page" id="page-users">
     <div class="page-header">
-      <h1>All Users</h1>
-      <p>Manage agent accounts and roles</p>
+      <h1 data-en="All Users" data-es="Todos los Usuarios">All Users</h1>
+      <p data-en="Manage agent accounts and roles" data-es="Gestiona cuentas y roles de agentes">Manage agent accounts and roles</p>
     </div>
     <div class="table-wrap">
       <div class="table-toolbar">
-        <input type="search" id="users-search" placeholder="Search by name or email…" oninput="filterUsers()"/>
+        <input type="search" id="users-search" placeholder="Search by name or email…" data-ph-en="Search by name or email…" data-ph-es="Buscar por nombre o email…" oninput="filterUsers()"/>
         <select class="filter-select" id="users-role-filter" onchange="filterUsers()">
-          <option value="">All roles</option>
-          <option value="agent">Agent</option>
+          <option value="" data-en="All roles" data-es="Todos los roles">All roles</option>
+          <option value="agent" data-en="Agent" data-es="Agente">Agent</option>
           <option value="admin">Admin</option>
           <option value="super_admin">Super Admin</option>
         </select>
@@ -402,7 +427,7 @@ tr:hover td { background: var(--surface2); }
       <table>
         <thead>
           <tr>
-            <th>Name / Email</th><th>Role</th><th>Modules</th><th>XP</th><th>Downloads</th><th>Actions</th>
+            <th data-en="Name / Email" data-es="Nombre / Email">Name / Email</th><th data-en="Role" data-es="Rol">Role</th><th data-en="Modules" data-es="Módulos">Modules</th><th>XP</th><th data-en="Downloads" data-es="Descargas">Downloads</th><th data-en="Actions" data-es="Acciones">Actions</th>
           </tr>
         </thead>
         <tbody id="users-tbody">
@@ -415,13 +440,13 @@ tr:hover td { background: var(--surface2); }
   <!-- MODULE ACCESS PAGE -->
   <div class="page" id="page-access">
     <div class="page-header">
-      <h1>Module Access</h1>
-      <p>Add or remove module access per agent</p>
+      <h1 data-en="Module Access" data-es="Acceso a Módulos">Module Access</h1>
+      <p data-en="Add or remove module access per agent" data-es="Agrega o quita acceso a módulos por agente">Add or remove module access per agent</p>
     </div>
     <div class="table-wrap">
       <div class="table-toolbar">
         <select class="filter-select" id="access-module-filter" onchange="loadAccessTable()">
-          <option value="">All modules</option>
+          <option value="" data-en="All modules" data-es="Todos los módulos">All modules</option>
           <option value="allstate">Allstate Health Solutions</option>
           <option value="american-amicable">American Amicable</option>
           <option value="cica">CICA Citizens</option>
@@ -429,10 +454,10 @@ tr:hover td { background: var(--surface2); }
           <option value="gtl">Guarantee Trust Life</option>
           <option value="liberty-bankers">Liberty Bankers Life</option>
         </select>
-        <input type="search" id="access-search" placeholder="Search user…" oninput="loadAccessTable()"/>
+        <input type="search" id="access-search" placeholder="Search user…" data-ph-en="Search user…" data-ph-es="Buscar usuario…" oninput="loadAccessTable()"/>
       </div>
       <table>
-        <thead><tr><th>Name / Email</th><th>Active Modules</th><th>Add Module</th></tr></thead>
+        <thead><tr><th data-en="Name / Email" data-es="Nombre / Email">Name / Email</th><th data-en="Active Modules" data-es="Módulos Activos">Active Modules</th><th data-en="Add Module" data-es="Agregar Módulo">Add Module</th></tr></thead>
         <tbody id="access-tbody">
           <tr class="loading-row"><td colspan="3"><span class="spinner"></span></td></tr>
         </tbody>
@@ -443,14 +468,14 @@ tr:hover td { background: var(--surface2); }
   <!-- ACTIVITY PAGE -->
   <div class="page" id="page-activity">
     <div class="page-header">
-      <h1>Activity Feed</h1>
-      <p>All user events across modules</p>
+      <h1 data-en="Activity Feed" data-es="Actividad">Activity Feed</h1>
+      <p data-en="All user events across modules" data-es="Todos los eventos de usuarios en módulos">All user events across modules</p>
     </div>
     <div class="table-wrap">
       <div class="table-toolbar">
-        <input type="search" id="activity-search" placeholder="Filter by user or event…" oninput="filterActivity()"/>
+        <input type="search" id="activity-search" placeholder="Filter by user or event…" data-ph-en="Filter by user or event…" data-ph-es="Filtrar por usuario o evento…" oninput="filterActivity()"/>
         <select class="filter-select" id="activity-module-filter" onchange="filterActivity()">
-          <option value="">All modules</option>
+          <option value="" data-en="All modules" data-es="Todos los módulos">All modules</option>
           <option value="allstate">Allstate</option>
           <option value="american-amicable">American Amicable</option>
           <option value="cica">CICA</option>
@@ -459,16 +484,16 @@ tr:hover td { background: var(--surface2); }
           <option value="liberty-bankers">Liberty Bankers</option>
         </select>
         <select class="filter-select" id="activity-event-filter" onchange="filterActivity()">
-          <option value="">All events</option>
+          <option value="" data-en="All events" data-es="Todos los eventos">All events</option>
           <option value="login">Login</option>
           <option value="logout">Logout</option>
-          <option value="page_view">Page View</option>
-          <option value="download">Download</option>
-          <option value="quiz_complete">Quiz Complete</option>
+          <option value="page_view" data-en="Page View" data-es="Vista de Página">Page View</option>
+          <option value="download" data-en="Download" data-es="Descarga">Download</option>
+          <option value="quiz_complete" data-en="Quiz Complete" data-es="Quiz Completado">Quiz Complete</option>
         </select>
       </div>
       <table>
-        <thead><tr><th>Time</th><th>User</th><th>Module</th><th>Event</th><th>Details</th></tr></thead>
+        <thead><tr><th data-en="Time" data-es="Hora">Time</th><th data-en="User" data-es="Usuario">User</th><th data-en="Module" data-es="Módulo">Module</th><th data-en="Event" data-es="Evento">Event</th><th data-en="Details" data-es="Detalles">Details</th></tr></thead>
         <tbody id="activity-tbody">
           <tr class="loading-row"><td colspan="5"><span class="spinner"></span></td></tr>
         </tbody>
@@ -479,13 +504,13 @@ tr:hover td { background: var(--surface2); }
   <!-- RANKING PAGE -->
   <div class="page" id="page-ranking">
     <div class="page-header">
-      <h1>Leaderboard</h1>
-      <p>Top agents by XP across all modules</p>
+      <h1 data-en="Leaderboard" data-es="Ranking">Leaderboard</h1>
+      <p data-en="Top agents by XP across all modules" data-es="Mejores agentes por XP en todos los módulos">Top agents by XP across all modules</p>
     </div>
     <div class="table-wrap">
       <div class="table-toolbar">
         <select class="filter-select" id="ranking-module" onchange="loadRanking()">
-          <option value="">Global (all modules)</option>
+          <option value="" data-en="Global (all modules)" data-es="Global (todos los módulos)">Global (all modules)</option>
           <option value="allstate">Allstate</option>
           <option value="american-amicable">American Amicable</option>
           <option value="cica">CICA</option>
@@ -495,7 +520,7 @@ tr:hover td { background: var(--surface2); }
         </select>
       </div>
       <table>
-        <thead><tr><th>#</th><th>Agent</th><th>XP</th><th>Level</th></tr></thead>
+        <thead><tr><th>#</th><th data-en="Agent" data-es="Agente">Agent</th><th>XP</th><th data-en="Level" data-es="Nivel">Level</th></tr></thead>
         <tbody id="ranking-tbody">
           <tr class="loading-row"><td colspan="4"><span class="spinner"></span></td></tr>
         </tbody>
@@ -510,20 +535,20 @@ tr:hover td { background: var(--surface2); }
 <!-- ROLE MODAL -->
 <div class="modal-overlay" id="role-modal">
   <div class="modal">
-    <h3>Change Role</h3>
+    <h3 data-en="Change Role" data-es="Cambiar Rol">Change Role</h3>
     <p id="role-modal-user" style="color:var(--text2);font-size:.85rem;margin-bottom:14px"></p>
     <div class="form-group">
-      <label>New Role</label>
+      <label data-en="New Role" data-es="Nuevo Rol">New Role</label>
       <select id="role-select">
-        <option value="agent">Agent</option>
+        <option value="agent" data-en="Agent" data-es="Agente">Agent</option>
         <option value="admin">Admin</option>
         <option value="super_admin">Super Admin</option>
       </select>
     </div>
     <input type="hidden" id="role-modal-user-id"/>
     <div class="modal-actions">
-      <button class="btn-sm" onclick="closeRoleModal()" style="background:var(--surface2);border:1px solid var(--border);color:var(--text2)">Cancel</button>
-      <button class="btn-sm btn-primary-sm" onclick="doChangeRole()">Save</button>
+      <button class="btn-sm" onclick="closeRoleModal()" style="background:var(--surface2);border:1px solid var(--border);color:var(--text2)" data-en="Cancel" data-es="Cancelar">Cancel</button>
+      <button class="btn-sm btn-primary-sm" onclick="doChangeRole()" data-en="Save" data-es="Guardar">Save</button>
     </div>
   </div>
 </div>
@@ -560,16 +585,39 @@ const userMap   = new Map();
 // ===== THEME =====
 function toggleTheme() {
   const html = document.documentElement;
-  const isDark = html.dataset.theme === 'dark';
-  html.dataset.theme = isDark ? 'light' : 'dark';
-  localStorage.setItem('az-admin-theme', html.dataset.theme);
-  document.getElementById('theme-label').textContent = isDark ? 'Dark Mode' : 'Light Mode';
+  html.dataset.theme = html.dataset.theme === 'dark' ? 'light' : 'dark';
+  localStorage.setItem('az_theme', html.dataset.theme);
 }
 function initTheme() {
-  const saved = localStorage.getItem('az-admin-theme') || 'light';
+  const saved = localStorage.getItem('az_theme') || 'light';
   document.documentElement.dataset.theme = saved;
-  const label = document.getElementById('theme-label');
-  if (label) label.textContent = saved === 'dark' ? 'Light Mode' : 'Dark Mode';
+}
+
+// ===== LANGUAGE =====
+let adminLang = localStorage.getItem('az_lang') || 'es';
+const t = (en, es) => adminLang === 'es' ? es : en;
+function adminSetLang(lang) {
+  adminLang = lang;
+  localStorage.setItem('az_lang', lang);
+  document.querySelectorAll('[data-en]').forEach(el => {
+    const hasChild = Array.from(el.childNodes).some(n => n.nodeType === Node.ELEMENT_NODE);
+    if (hasChild) {
+      const tn = Array.from(el.childNodes).find(n => n.nodeType === Node.TEXT_NODE);
+      if (tn) tn.textContent = lang === 'es' ? el.dataset.es : el.dataset.en;
+    } else {
+      el.textContent = lang === 'es' ? el.dataset.es : el.dataset.en;
+    }
+  });
+  document.querySelectorAll('[data-ph-en]').forEach(el => {
+    el.placeholder = lang === 'es' ? el.dataset.phEs : el.dataset.phEn;
+  });
+  ['adm-btn-en','adm-m-btn-en'].forEach(id => document.getElementById(id)?.classList.toggle('active', lang === 'en'));
+  ['adm-btn-es','adm-m-btn-es'].forEach(id => document.getElementById(id)?.classList.toggle('active', lang === 'es'));
+  document.documentElement.lang = lang;
+  if (window._currentAdminPage) reRenderPage(window._currentAdminPage);
+}
+function initLang() {
+  adminSetLang(adminLang);
 }
 
 // ===== MOBILE NAV =====
@@ -583,7 +631,16 @@ function closeMobileNav() {
 }
 
 // ===== NAV =====
+function reRenderPage(page) {
+  if (page === 'dashboard') loadDashboard();
+  else if (page === 'pending') loadPending();
+  else if (page === 'users') loadUsers();
+  else if (page === 'access') loadAccessTable();
+  else if (page === 'activity') loadActivity();
+  else if (page === 'ranking') loadRanking();
+}
 function showPage(id) {
+  window._currentAdminPage = id;
   closeMobileNav();
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -591,6 +648,7 @@ function showPage(id) {
   document.querySelectorAll('.nav-item').forEach(n => {
     if (n.getAttribute('onclick')?.includes(id)) n.classList.add('active');
   });
+  if (id === 'dashboard') loadDashboard();
   if (id === 'pending')  loadPending();
   if (id === 'users')    loadUsers();
   if (id === 'access')   loadAccessTable();
@@ -638,8 +696,8 @@ async function loadPending() {
       const coursesCell = `
         ${hasBitrix
           ? `<div style="margin-bottom:5px">${courses.map(m => `<span class="badge" style="background:${MODULE_COLORS[m]||'#aaa'}22;color:${MODULE_COLORS[m]||'#555'};margin:2px 2px 2px 0">${escHtml(MODULE_NAMES[m]||m)}</span>`).join('')}</div>
-             <div style="font-size:.72rem;color:var(--text2);margin-bottom:3px">Assign (edit if needed):</div>`
-          : `<div style="font-size:.72rem;color:var(--text2);margin-bottom:4px">No deal in Bitrix — select modules to assign:</div>`
+             <div style="font-size:.72rem;color:var(--text2);margin-bottom:3px">${t('Assign (edit if needed):','Asignar (edita si es necesario):')}</div>`
+          : `<div style="font-size:.72rem;color:var(--text2);margin-bottom:4px">${t('No deal in Bitrix — select modules to assign:','Sin trato en Bitrix — selecciona módulos a asignar:')}</div>`
         }
         <div style="display:flex;flex-wrap:wrap;gap:3px">
           ${ALL_MODULE_IDS.map(m => `
@@ -659,13 +717,13 @@ async function loadPending() {
         <td style="font-size:.8rem;color:var(--text2);white-space:nowrap">${relTime(u.created_at)}</td>
         <td style="white-space:nowrap">
           <label style="font-size:.78rem;display:inline-flex;align-items:center;gap:4px;margin-right:6px;cursor:pointer;color:var(--text2)" title="Grant access to full-access-only files">
-            <input type="checkbox" id="full-access-${u.id}"> Full Access
+            <input type="checkbox" id="full-access-${u.id}"> ${t('Full Access','Acceso Completo')}
           </label>
           <button class="btn-sm" style="background:var(--accent);color:#fff;border:none"
-            onclick="approvePending('${u.id}')">Approve</button>
+            onclick="approvePending('${u.id}')">${t('Approve','Aprobar')}</button>
         </td>
       </tr>`;
-    }).join('') || '<tr><td colspan="5" class="loading-row">No pending users.</td></tr>';
+    }).join('') || `<tr><td colspan="5" class="loading-row">${t('No pending users.','Sin usuarios pendientes.')}</td></tr>`;
   } catch(e) {
     tbody.innerHTML = `<tr><td colspan="5" class="loading-row">Error: ${escHtml(e.message)}</td></tr>`;
   }
@@ -673,7 +731,7 @@ async function loadPending() {
 
 async function approvePending(userId) {
   const courses = [...document.querySelectorAll(`.mod-sel-${userId}:checked`)].map(cb => cb.value);
-  if (!courses.length) { alert('Select at least one module before approving.'); return; }
+  if (!courses.length) { alert(t('Select at least one module before approving.','Selecciona al menos un módulo antes de aprobar.')); return; }
   const fullAccess = document.getElementById(`full-access-${userId}`)?.checked || false;
   try {
     await AZ.db.from('profiles').update({ status: 'active', role: 'agent', full_access: fullAccess }).eq('id', userId);
@@ -705,15 +763,15 @@ async function loadDashboard() {
   const pendingCount   = users.filter(u => u.role === 'agent' && !(u.active_modules || []).length).length;
 
   document.getElementById('stats-grid').innerHTML = `
-    <div class="stat-card"><div class="stat-num">${totalUsers}</div><div class="stat-label">Total Users</div></div>
-    <div class="stat-card"><div class="stat-num">${totalAgents}</div><div class="stat-label">Active Agents</div></div>
+    <div class="stat-card"><div class="stat-num">${totalUsers}</div><div class="stat-label">${t('Total Users','Total Usuarios')}</div></div>
+    <div class="stat-card"><div class="stat-num">${totalAgents}</div><div class="stat-label">${t('Active Agents','Agentes Activos')}</div></div>
     <div class="stat-card" onclick="showPage('pending')" style="cursor:pointer;border:2px solid ${pendingCount>0?'#ef4444':'var(--border)'}">
       <div class="stat-num" style="color:${pendingCount>0?'#ef4444':'inherit'}">${pendingCount}</div>
-      <div class="stat-label">Pending Approval</div>
+      <div class="stat-label">${t('Pending Approval','Aprobación Pendiente')}</div>
     </div>
-    <div class="stat-card"><div class="stat-num">${totalDownloads}</div><div class="stat-label">Total Downloads</div></div>
-    <div class="stat-card"><div class="stat-num">${totalQuizzes}</div><div class="stat-label">Quizzes Completed</div></div>
-    <div class="stat-card"><div class="stat-num">${totalXP.toLocaleString()}</div><div class="stat-label">Total XP Earned</div></div>
+    <div class="stat-card"><div class="stat-num">${totalDownloads}</div><div class="stat-label">${t('Total Downloads','Total Descargas')}</div></div>
+    <div class="stat-card"><div class="stat-num">${totalQuizzes}</div><div class="stat-label">${t('Quizzes Completed','Quizzes Completados')}</div></div>
+    <div class="stat-card"><div class="stat-num">${totalXP.toLocaleString()}</div><div class="stat-label">${t('Total XP Earned','Total XP Ganado')}</div></div>
   `;
 
   const tbody = document.getElementById('recent-activity-body');
@@ -723,7 +781,7 @@ async function loadDashboard() {
       <td>${escHtml(a.full_name || a.email)}</td>
       <td>${a.module_id ? `<span class="badge" style="background:${MODULE_COLORS[a.module_id]||'#aaa'}22;color:${MODULE_COLORS[a.module_id]||'#aaa'}">${MODULE_NAMES[a.module_id]||escHtml(a.module_id)}</span>` : '—'}</td>
       <td><span class="badge ${eventBadge(a.event_type)}">${escHtml(a.event_type)}</span></td>
-    </tr>`).join('') || '<tr><td colspan="4" class="loading-row">No activity yet.</td></tr>';
+    </tr>`).join('') || `<tr><td colspan="4" class="loading-row">${t('No activity yet.','Sin actividad aún.')}</td></tr>`;
 }
 
 // ===== USERS =====
@@ -752,14 +810,14 @@ function renderUsers(users) {
       <td>${u.total_downloads || 0}</td>
       <td style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
         <button class="btn-sm" style="background:var(--surface2);border:1px solid var(--border);color:var(--text2)"
-          data-action="role" data-id="${u.id}">Role</button>
+          data-action="role" data-id="${u.id}">${t('Role','Rol')}</button>
         <button class="btn-sm" onclick="toggleFullAccess('${u.id}', ${!!u.full_access})"
           style="background:${u.full_access?'#fbbf2420':'var(--surface2)'};border:1px solid ${u.full_access?'#fbbf24':'var(--border)'};color:${u.full_access?'#d97706':'var(--text2)'}"
-          title="${u.full_access?'Revoke full access':'Grant full access'}">
+          title="${u.full_access?t('Revoke full access','Revocar acceso completo'):t('Grant full access','Otorgar acceso completo')}">
           ${u.full_access?'Full ✓':'Full'}
         </button>
       </td>
-    </tr>`).join('') || '<tr><td colspan="6" class="loading-row">No users found.</td></tr>';
+    </tr>`).join('') || `<tr><td colspan="6" class="loading-row">${t('No users found.','Sin usuarios encontrados.')}</td></tr>`;
 }
 
 async function toggleFullAccess(userId, current) {
@@ -796,7 +854,7 @@ async function loadAccessTable() {
 
   const tbody = document.getElementById('access-tbody');
   if (!filtered.length) {
-    tbody.innerHTML = '<tr><td colspan="3" class="loading-row">No users found.</td></tr>';
+    tbody.innerHTML = `<tr><td colspan="3" class="loading-row">${t('No users found.','Sin usuarios encontrados.')}</td></tr>`;
     return;
   }
 
@@ -812,25 +870,25 @@ async function loadAccessTable() {
     const addCell = available.length ? `
       <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
         <select id="add-mod-${u.id}" style="font-size:.78rem;padding:5px 8px;border:1.5px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text)">
-          <option value="">Select module…</option>
+          <option value="">${t('Select module…','Seleccionar módulo…')}</option>
           ${available.map(m => `<option value="${m}">${escHtml(MODULE_NAMES[m]||m)}</option>`).join('')}
         </select>
-        <button class="btn-sm btn-primary-sm" style="padding:5px 12px;font-size:.78rem" onclick="addModule('${u.id}')">+ Add</button>
-      </div>` : `<span style="font-size:.75rem;color:var(--text2)">All modules assigned</span>`;
+        <button class="btn-sm btn-primary-sm" style="padding:5px 12px;font-size:.78rem" onclick="addModule('${u.id}')">${t('+ Add','+ Agregar')}</button>
+      </div>` : `<span style="font-size:.75rem;color:var(--text2)">${t('All modules assigned','Todos los módulos asignados')}</span>`;
 
     return `<tr>
       <td>
         <div style="font-weight:600">${escHtml(u.full_name || '—')}</div>
         <div style="font-size:.78rem;color:var(--text2)">${escHtml(u.email)}</div>
       </td>
-      <td><div style="display:flex;flex-wrap:wrap">${chips || '<span style="font-size:.78rem;color:var(--text2)">No modules</span>'}</div></td>
+      <td><div style="display:flex;flex-wrap:wrap">${chips || `<span style="font-size:.78rem;color:var(--text2)">${t('No modules','Sin módulos')}</span>`}</div></td>
       <td>${addCell}</td>
     </tr>`;
   }).join('');
 }
 
 async function removeModule(userId, moduleId) {
-  if (!confirm(`Remove access to ${MODULE_NAMES[moduleId]||moduleId}?`)) return;
+  if (!confirm(t(`Remove access to ${MODULE_NAMES[moduleId]||moduleId}?`, `¿Quitar acceso a ${MODULE_NAMES[moduleId]||moduleId}?`))) return;
   try {
     await AZ.Modules.revokeAccess(userId, moduleId);
     allUsers = [];
@@ -866,7 +924,7 @@ function renderActivity(rows) {
       <td>${a.module_id ? `<span class="badge" style="background:${MODULE_COLORS[a.module_id]||'#aaa'}22;color:${MODULE_COLORS[a.module_id]||'#555'}">${MODULE_NAMES[a.module_id]||escHtml(a.module_id)}</span>` : '—'}</td>
       <td><span class="badge ${eventBadge(a.event_type)}">${escHtml(a.event_type)}</span></td>
       <td>${fmtEventData(a.event_data)}</td>
-    </tr>`).join('') || '<tr><td colspan="5" class="loading-row">No activity found.</td></tr>';
+    </tr>`).join('') || `<tr><td colspan="5" class="loading-row">${t('No activity found.','Sin actividad encontrada.')}</td></tr>`;
 }
 
 function filterActivity() {
@@ -896,7 +954,7 @@ async function loadRanking() {
       </td>
       <td style="font-weight:700">${r.xp}</td>
       <td><span class="badge badge-agent">L${r.level}</span></td>
-    </tr>`).join('') || '<tr><td colspan="4" class="loading-row">No data.</td></tr>';
+    </tr>`).join('') || `<tr><td colspan="4" class="loading-row">${t('No data.','Sin datos.')}</td></tr>`;
 }
 
 // ===== ROLE MODAL =====
@@ -969,12 +1027,14 @@ function escHtml(str) {
 // ===== INIT =====
 (async () => {
   initTheme();
+  initLang();
   const current = await AZ.Auth.getCurrentUser();
   if (!current || !['admin','super_admin'].includes(current.profile.role)) {
     location.href = '../academia-ensurity.html';
     return;
   }
   document.getElementById('auth-guard').remove();
+  window._currentAdminPage = 'dashboard';
   loadDashboard();
   loadPending();
 })();

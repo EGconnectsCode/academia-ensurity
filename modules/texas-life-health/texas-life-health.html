@@ -1,40 +1,103 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+<script>(function(){var t=localStorage.getItem('az_theme');if(t)document.documentElement.setAttribute('data-theme',t);})();</script>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Texas Life & Health | Academia Ensurity</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
-  #auth-gate { display:flex; align-items:center; justify-content:center; min-height:100vh; font-family:system-ui,sans-serif; background:#F8FAFC; }
-  .tlh-topbar { position:sticky; top:0; z-index:50; background:#fff; border-bottom:1px solid #E2E8F0; padding:12px 24px; display:flex; align-items:center; justify-content:space-between; box-shadow:0 1px 4px rgba(0,0,0,.06); }
-  .tlh-back { display:inline-flex; align-items:center; gap:8px; font-size:.84rem; font-weight:600; color:#2563EB; text-decoration:none; background:#EFF6FF; border:1px solid #BFDBFE; border-radius:8px; padding:7px 14px; transition:background .15s; }
+  .tlh-topbar { position:sticky; top:0; z-index:50; background:#fff; border-bottom:1px solid #E2E8F0; padding:10px 20px; display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:12px; box-shadow:0 1px 4px rgba(0,0,0,.06); }
+  .tlh-topbar-left { display:flex; align-items:center; gap:10px; }
+  .tlh-topbar-right { display:flex; align-items:center; gap:6px; justify-content:flex-end; }
+  .tlh-logo { height:48px; display:block; }
+  .tlh-back { display:inline-flex; align-items:center; gap:8px; font-size:.84rem; font-weight:600; color:#2563EB; text-decoration:none; background:#EFF6FF; border:1px solid #BFDBFE; border-radius:8px; padding:7px 14px; transition:background .15s; white-space:nowrap; }
   .tlh-back:hover { background:#DBEAFE; }
-  .tlh-brand { font-size:.9rem; font-weight:700; color:#0F172A; }
   .tlh-tabs { display:flex; gap:4px; background:#F1F5F9; border-radius:12px; padding:4px; }
   .tlh-tab { padding:9px 18px; border-radius:9px; font-size:.83rem; font-weight:600; cursor:pointer; border:none; background:transparent; color:#64748B; transition:all .15s; white-space:nowrap; }
   .tlh-tab.active { background:#fff; color:#0F172A; box-shadow:0 1px 4px rgba(0,0,0,.1); }
   .tlh-tab:hover:not(.active) { color:#0F172A; background:rgba(255,255,255,.6); }
-  #react-root { min-height:calc(100vh - 60px); }
+  .tlh-ctrl-btn { display:inline-flex; align-items:center; justify-content:center; width:34px; height:34px; border:1px solid #E2E8F0; border-radius:10px; background:#F8FAFC; cursor:pointer; font-size:1rem; transition:all .15s; flex-shrink:0; }
+  .tlh-ctrl-btn:hover { background:#E2E8F0; }
+  .tlh-lang-pill { display:flex; background:#E2E8F0; border-radius:20px; padding:3px; gap:2px; }
+  .tlh-lang-btn { border:none; border-radius:16px; padding:4px 12px; font-size:.75rem; font-weight:700; cursor:pointer; transition:all .15s; }
+  #react-root { min-height:calc(100vh - 58px); }
+
+  /* ── Dark mode ───────────────────────────────────── */
+  [data-theme="dark"] .tlh-topbar { background:#1E293B; border-bottom-color:#334155; }
+  [data-theme="dark"] .tlh-back { background:rgba(30,58,95,.4); border-color:#2563EB; color:#60A5FA; }
+  [data-theme="dark"] .tlh-back:hover { background:rgba(30,64,175,.4); }
+  [data-theme="dark"] .tlh-tabs { background:#0F172A; }
+  [data-theme="dark"] .tlh-tab { color:#64748B; }
+  [data-theme="dark"] .tlh-tab.active { background:#1E293B; color:#F1F5F9; }
+  [data-theme="dark"] .tlh-ctrl-btn { background:#1E293B; border-color:#334155; color:#CBD5E1; }
+  [data-theme="dark"] .tlh-ctrl-btn:hover { background:#334155; }
+  [data-theme="dark"] .tlh-lang-pill { background:#0F172A; }
+  [data-theme="dark"] .tlh-logo { filter:brightness(0) invert(1); }
+  [data-theme="dark"] #react-root main { background:#0F172A !important; color:#F1F5F9 !important; }
+  [data-theme="dark"] #react-root .bg-white { background:#1E293B !important; }
+  [data-theme="dark"] #react-root .bg-slate-100 { background:#0F172A !important; }
+  [data-theme="dark"] #react-root .bg-slate-50 { background:#162032 !important; }
+  [data-theme="dark"] #react-root .text-slate-900, [data-theme="dark"] #react-root .text-slate-800 { color:#E2E8F0 !important; }
+  [data-theme="dark"] #react-root .text-slate-700, [data-theme="dark"] #react-root .text-slate-600 { color:#94A3B8 !important; }
+  [data-theme="dark"] #react-root .border-slate-200, [data-theme="dark"] #react-root .border-slate-100 { border-color:#334155 !important; }
+  [data-theme="dark"] #react-root .bg-red-50 { background:#2D1518 !important; }
+  [data-theme="dark"] #react-root .bg-green-50 { background:#14291E !important; }
+  [data-theme="dark"] #react-root .bg-blue-50 { background:#172444 !important; }
+  [data-theme="dark"] #react-root .bg-blue-100 { background:#1E3A5F !important; }
+  [data-theme="dark"] #react-root .text-slate-500 { color:#64748B !important; }
+  [data-theme="dark"] .tlh-tour-card { background:#1E293B; color:#F1F5F9; box-shadow:0 8px 50px rgba(0,0,0,.5); }
+  [data-theme="dark"] .tlh-tour-dot { background:#334155; }
+
+  @keyframes tlh-backdrop-in { from { opacity:0 } to { opacity:1 } }
+  @keyframes tlh-card-in { from { opacity:0; transform:translateY(48px) scale(.94) } to { opacity:1; transform:translateY(0) scale(1) } }
+  @keyframes tlh-item-in { from { opacity:0; transform:translateX(-14px) } to { opacity:1; transform:translateX(0) } }
+  @keyframes tlh-btn-pulse { 0%,100% { box-shadow:0 0 0 0 rgba(96,165,250,.45) } 60% { box-shadow:0 0 0 10px rgba(96,165,250,0) } }
+  @keyframes tlh-shine { from { background-position:200% center } to { background-position:-200% center } }
+
+  .tlh-modal-backdrop { position:fixed; inset:0; z-index:200; background:rgba(2,6,23,.72); backdrop-filter:blur(4px); display:flex; align-items:center; justify-content:center; padding:20px; animation:tlh-backdrop-in .25s ease both; }
+  .tlh-modal-card { background:linear-gradient(145deg,#0F172A 0%,#1E3A5F 55%,#1e3799 100%); border-radius:24px; padding:36px 32px 28px; max-width:500px; width:100%; color:#fff; position:relative; animation:tlh-card-in .45s cubic-bezier(.34,1.4,.64,1) .08s both; border:1px solid rgba(96,165,250,.22); box-shadow:0 30px 80px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.04) inset; }
+  .tlh-modal-badge { display:inline-flex; align-items:center; gap:6px; font-size:.7rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:#60A5FA; background:rgba(96,165,250,.12); border:1px solid rgba(96,165,250,.25); border-radius:20px; padding:4px 12px; margin-bottom:14px; }
+  .tlh-modal-title { font-size:1.65rem; font-weight:800; margin-bottom:4px; background:linear-gradient(90deg,#fff 0%,#93C5FD 50%,#fff 100%); background-size:200% auto; -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; animation:tlh-shine 3s linear 1s infinite; }
+  .tlh-modal-sub { font-size:.82rem; color:#64748B; margin-bottom:22px; }
+  .tlh-consejo-item { display:flex; gap:12px; align-items:flex-start; padding:11px 14px; border-radius:12px; background:rgba(255,255,255,.055); border:1px solid rgba(255,255,255,.08); margin-bottom:8px; opacity:0; }
+  .tlh-consejo-num { font-size:.72rem; font-weight:800; color:#38BDF8; background:rgba(56,189,248,.14); border-radius:6px; padding:3px 8px; flex-shrink:0; margin-top:2px; }
+  .tlh-consejo-text { font-size:.86rem; color:#CBD5E1; line-height:1.6; }
+  .tlh-modal-btn { margin-top:22px; width:100%; padding:13px; border-radius:12px; background:linear-gradient(90deg,#2563EB,#0EA5E9); font-size:.9rem; font-weight:700; color:#fff; border:none; cursor:pointer; transition:opacity .15s,transform .1s; animation:tlh-btn-pulse 2.2s ease 1.2s infinite; }
+  .tlh-modal-btn:hover { opacity:.9; transform:translateY(-1px); }
+  .tlh-modal-btn:active { transform:translateY(0); }
+
+  @keyframes tlh-tour-pulse { 0%,100% { box-shadow:0 0 0 3px rgba(59,130,246,.5),0 0 12px rgba(59,130,246,.25) } 50% { box-shadow:0 0 0 5px rgba(59,130,246,.25),0 0 20px rgba(59,130,246,.1) } }
+  @keyframes tlh-tour-in { from { opacity:0; transform:translateX(-50%) translateY(16px) } to { opacity:1; transform:translateX(-50%) translateY(0) } }
+  .tlh-tab-highlighted { outline:2px solid #3B82F6 !important; outline-offset:2px !important; animation:tlh-tour-pulse 1.6s ease infinite !important; position:relative; z-index:10; }
+  .tlh-tour-card { position:fixed; bottom:24px; left:50%; transform:translateX(-50%); z-index:151; background:#fff; border-radius:18px; padding:20px 22px 16px; width:calc(100% - 40px); max-width:420px; box-shadow:0 8px 50px rgba(0,0,0,.2),0 0 0 1px rgba(0,0,0,.06); animation:tlh-tour-in .3s cubic-bezier(.34,1.3,.64,1); }
+  .tlh-tour-dots { display:flex; gap:3px; margin-bottom:12px; }
+  .tlh-tour-dot { height:3px; border-radius:2px; background:#E2E8F0; transition:all .25s; flex:1; }
+  .tlh-tour-dot.active { background:#3B82F6; flex:2; }
+  .tlh-tour-overlay { position:fixed; inset:0; z-index:150; background:rgba(0,0,0,.35); pointer-events:none; }
 </style>
 </head>
 <body>
 
-<div id="auth-gate" style="display:none">
-  <div style="text-align:center;color:#64748B">
-    <div style="font-size:2rem;margin-bottom:12px">🔒</div>
-    <p>Verificando acceso…</p>
-  </div>
-</div>
-
 <div id="app-shell" style="display:none">
   <div class="tlh-topbar">
-    <a href="/" class="tlh-back">← Dashboard</a>
-    <span class="tlh-brand">Academia Ensurity</span>
+    <div class="tlh-topbar-left">
+      <a href="/" class="tlh-back">← Dashboard</a>
+      <img class="tlh-logo" src="https://cdn.bitrix24.com/b21945603/landing/898/8989ac3a7b465689d46cb6fd83474a26/Logo_Ensurity_Group_1080_500_px_1x.png" alt="Ensurity Group">
+    </div>
     <div class="tlh-tabs" id="tab-bar">
-      <button class="tlh-tab active" onclick="setTab(0)">🚀 Plataforma ES</button>
-      <button class="tlh-tab" onclick="setTab(1)">📚 Deep Dive EN</button>
-      <button class="tlh-tab" onclick="setTab(2)">🔍 Biblioteca ES</button>
+      <button class="tlh-tab active" onclick="setTab(0)">Plataforma</button>
+      <button class="tlh-tab" onclick="setTab(1)">Biblioteca</button>
+    </div>
+    <div class="tlh-topbar-right">
+      <div class="tlh-lang-pill">
+        <button id="lib-btn-en" class="tlh-lang-btn" onclick="setLibLang('en')" style="background:#fff;color:#0F172A;box-shadow:0 1px 3px rgba(0,0,0,.1)">EN</button>
+        <button id="lib-btn-es" class="tlh-lang-btn" onclick="setLibLang('es')" style="background:transparent;color:#64748B">ES</button>
+      </div>
+      <button id="tlh-dark-btn" class="tlh-ctrl-btn" onclick="toggleTLHDark()" title="Modo noche">
+        <svg id="tlh-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        <svg id="tlh-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
     </div>
   </div>
   <div id="react-root"></div>
@@ -50,6 +113,43 @@
 <script>
 // Auth gate — show app only after verifying session
 window._activeTab = 0;
+window._libLang = 'en';
+
+function setLibLang(lang) {
+  window._libLang = lang;
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  const activeColor = isDark ? '#F1F5F9' : '#0F172A';
+  const activeBg    = isDark ? '#1E293B' : '#fff';
+  const inactiveColor = '#64748B';
+  document.getElementById('lib-btn-en').style.background = lang === 'en' ? activeBg : 'transparent';
+  document.getElementById('lib-btn-en').style.color      = lang === 'en' ? activeColor : inactiveColor;
+  document.getElementById('lib-btn-en').style.boxShadow  = lang === 'en' ? '0 1px 3px rgba(0,0,0,.15)' : 'none';
+  document.getElementById('lib-btn-es').style.background = lang === 'es' ? activeBg : 'transparent';
+  document.getElementById('lib-btn-es').style.color      = lang === 'es' ? activeColor : inactiveColor;
+  document.getElementById('lib-btn-es').style.boxShadow  = lang === 'es' ? '0 1px 3px rgba(0,0,0,.15)' : 'none';
+  const tabs = document.querySelectorAll('.tlh-tab');
+  if (tabs[0]) tabs[0].textContent = lang === 'es' ? 'Plataforma' : 'Platform';
+  if (tabs[1]) tabs[1].textContent = lang === 'es' ? 'Biblioteca' : 'Library';
+  window.renderActiveTab();
+}
+
+function toggleTLHDark() {
+  const current = document.documentElement.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('az_theme', next);
+  document.getElementById('tlh-icon-moon').style.display = next === 'dark' ? 'none' : 'block';
+  document.getElementById('tlh-icon-sun').style.display  = next === 'dark' ? 'block' : 'none';
+  setLibLang(window._libLang);
+}
+
+// Apply saved dark mode icon on load
+(function() {
+  if (localStorage.getItem('az_theme') === 'dark') {
+    document.getElementById('tlh-icon-moon').style.display = 'none';
+    document.getElementById('tlh-icon-sun').style.display  = 'block';
+  }
+})();
 
 function setTab(idx) {
   window._activeTab = idx;
@@ -58,12 +158,10 @@ function setTab(idx) {
 }
 
 async function boot() {
-  document.getElementById('auth-gate').style.display = 'flex';
   const waitAZ = () => new Promise(r => { const t = setInterval(() => { if (window.AZ) { clearInterval(t); r(); } }, 80); });
   await waitAZ();
   const user = await window.AZ.Auth.getCurrentUser();
   if (!user) { window.location.href = '/'; return; }
-  document.getElementById('auth-gate').style.display = 'none';
   document.getElementById('app-shell').style.display = 'block';
   renderActiveTab();
 }
@@ -84,18 +182,17 @@ const modosEstudio = [
   { id:"unidades", title:"Estudio por Unidades", description:"Estudia por capítulo/unidad como los libros y PDFs escaneados.", icon:"📖" },
   { id:"repaso-rapido", title:"Modo Repaso Rápido", description:"Cram sheets, flashcards y trampas del examen para último repaso.", icon:"⚡" },
   { id:"mock-exam", title:"Mock Exam", description:"Preguntas mezcladas de todas las unidades con revisión de score.", icon:"📝" },
-  { id:"biblioteca", title:"Biblioteca Avanzada", description:"Explicaciones adicionales y notas de referencia para agentes que necesitan refuerzo.", icon:"📚" },
 ];
 
 const lecciones = [
-  { id:"fundamentos-seguro", unit:"Fundamentos del Seguro", title:"Fundamentos del Seguro", icon:"📘", color:"from-sky-600 to-blue-400", summary:"Conceptos básicos del seguro y contract law que aparecen mucho en el examen de Texas.", keyPoints:["El interés asegurable debe existir cuando se compra o emite la póliza.","Adhesión significa que la aseguradora redacta el contrato.","Aleatorio significa que hay un intercambio desigual.","Indemnización intenta restaurar financieramente a una persona después de una pérdida.","Representaciones son declaraciones que se creen verdaderas.","La Ley de los Grandes Números ayuda a las aseguradoras a predecir pérdidas."], quickTable:[["Adhesión","Aseguradora redacta","Ambigüedad favorece al asegurado"],["Aleatorio","Intercambio desigual","Prima vs beneficio grande"],["Interés Asegurable","Relación financiera/emocional","Requerido al inicio"],["Representación","Se cree verdadera","No es garantía absoluta"]], examTrap:"El interés asegurable en seguro de vida se requiere al emitir/comprar la póliza, no necesariamente al momento de la muerte." },
-  { id:"basicos-vida", unit:"Tipos de Pólizas de Vida", title:"Fundamentos del Seguro de Vida", icon:"🛡️", color:"from-blue-500 to-cyan-400", summary:"Aprende los tipos principales de pólizas y cómo el examen las compara.", keyPoints:["Term Life es protección temporal sin cash value.","Whole Life es cobertura permanente con primas fijas y cash value garantizado.","Universal Life es flexible: primas flexibles y death benefit ajustable.","Variable Life involucra inversiones, separate accounts y regulación de securities."], quickTable:[["Term Life","Temporal","Sin cash value","Protección pura por fallecimiento"],["Whole Life","Permanente","Cash value","Prima fija"],["Universal Life","Permanente","Cash value","Prima flexible"],["Variable Life","Permanente","Separate account","Riesgo de inversión"]], examTrap:"Universal = flexibilidad. Variable = inversiones. No los confundas." },
-  { id:"riders", unit:"Riders", title:"Riders de Seguro de Vida", icon:"📑", color:"from-purple-500 to-pink-400", summary:"Los riders modifican una póliza agregando beneficios o cobertura extra.", keyPoints:["Waiver of Premium exonera primas si el asegurado queda discapacitado.","Guaranteed Insurability permite aumentos futuros sin prueba de insurability.","Payor Rider es común en pólizas juveniles si el adulto pagador muere o queda discapacitado.","Accidental Death Benefit paga un beneficio adicional por muerte accidental cubierta.","Long-Term Care Rider puede acelerar el death benefit para necesidades de cuidado prolongado."], quickTable:[["Waiver of Premium","Discapacidad","Primas exoneradas"],["Guaranteed Insurability","Cobertura futura","Sin preguntas médicas"],["Payor Rider","Póliza juvenil","Protege si el adulto pagador muere/discapacita"],["ADB","Muerte accidental","Beneficio adicional"]], examTrap:"Un rider no es una póliza separada. Se agrega a una póliza para modificarla." },
-  { id:"provisiones", unit:"Provisiones de Póliza", title:"Provisiones y Beneficiarios", icon:"👥", color:"from-rose-500 to-red-400", summary:"Las provisiones explican cómo funciona el contrato y quién controla los beneficios.", keyPoints:["El policyowner controla derechos de la póliza salvo limitaciones como beneficiario irrevocable.","Beneficiarios revocables pueden cambiarse sin permiso.","Beneficiarios irrevocables requieren consentimiento escrito para cambios.","Incontestability normalmente limita disputas después de dos años, excepto fraude u otras excepciones.","Grace Period ocurre antes del lapse; Reinstatement ocurre después del lapse."], quickTable:[["Beneficiario Primario","Primero","Recibe el death benefit primero"],["Beneficiario Contingente","Respaldo","Cobra si el primario no puede"],["Revocable","Se puede cambiar","No necesita permiso"],["Irrevocable","Protegido","Requiere permiso"]], examTrap:"Las preguntas de beneficiarios casi siempre preguntan quién cobra o si se necesita permiso." },
-  { id:"opciones-poliza", unit:"Opciones de Póliza", title:"Opciones de la Póliza", icon:"💰", color:"from-indigo-500 to-violet-400", summary:"Opciones que explican cómo se usan cash values, dividendos y death benefits.", keyPoints:["Settlement options determinan cómo se pagan los proceeds del death benefit.","Fixed Period paga durante un período seleccionado.","Fixed Amount paga una cantidad seleccionada hasta que se acaben los fondos.","Extended Term da la mayor cantidad de protección.","Reduced Paid-Up da la mayor duración de protección."], quickTable:[["Cash Surrender","Toma cash value","La póliza termina"],["Extended Term","Mayor cantidad","Cobertura term temporal"],["Reduced Paid-Up","Mayor duración","Póliza permanente más pequeña"],["Dividendos","Pólizas participantes","No garantizados"]], examTrap:"Extended Term = mayor cantidad. Reduced Paid-Up = mayor duración." },
-  { id:"discapacidad", unit:"Disability Income", title:"Disability Income Insurance", icon:"💼", color:"from-amber-500 to-orange-400", summary:"Disability Income reemplaza ingresos perdidos cuando alguien no puede trabajar por enfermedad o lesión.", keyPoints:["Own Occupation es más liberal porque se enfoca en si puede hacer su propio trabajo.","Any Occupation es más restrictivo porque evalúa cualquier trabajo razonable.","Elimination Period es el tiempo de espera antes de que empiecen los beneficios.","Benefit Period es cuánto tiempo se pagan los beneficios.","Residual Disability se basa en pérdida de ingresos al regresar al trabajo."], quickTable:[["Own Occupation","Más liberal","No puede hacer su propio trabajo"],["Any Occupation","Más restrictivo","No puede hacer ningún trabajo adecuado"],["Elimination Period","Tiempo de espera","Antes de beneficios"],["Residual Disability","Pérdida de ingreso","Ingresos reducidos"]], examTrap:"Partial Disability trata sobre tareas reducidas. Residual Disability se enfoca en ingresos reducidos." },
-  { id:"medicare", unit:"Medicare y Medicaid", title:"Medicare y Medicaid", icon:"🏥", color:"from-emerald-500 to-green-400", summary:"Medicare normalmente prueba qué cubre cada parte y cómo difieren supplements/Medicaid.", keyPoints:["Parte A cubre atención relacionada con hospital.","Parte B cubre servicios médicos y outpatient.","Parte C es Medicare Advantage mediante compañías privadas.","Parte D cubre medicamentos recetados.","Medicaid se basa en necesidad y es financiado por estado y gobierno federal."], quickTable:[["Parte A","Hospital","Hospital, SNF, hospice"],["Parte B","Médico","Doctores, outpatient, DME"],["Parte C","Advantage","Alternativa privada"],["Parte D","Medicamentos","Cobertura Rx"]], examTrap:"Parte C no es un supplement. Es Medicare Advantage, una forma alternativa de recibir beneficios Medicare." },
-  { id:"underwriting-ley", unit:"Underwriting y Ley de Texas", title:"Underwriting y Ley de Texas", icon:"⚖️", color:"from-slate-700 to-slate-500", summary:"Aplicaciones, representations, MIB y prácticas injustas como rebating y twisting.", keyPoints:["Underwriting determina riesgo y elegibilidad.","Las declaraciones de aplicación suelen ser representations.","MIB ayuda a revisar información médica/underwriting previa.","Rebating es ofrecer incentivos no incluidos en la póliza.","Twisting es reemplazo engañoso de una póliza existente."], quickTable:[["Representation","Se cree verdadera","Declaración de aplicación"],["MIB","Información médica","Fuente de underwriting"],["Rebating","Incentivo ilegal","No está en póliza"],["Twisting","Reemplazo engañoso","Práctica injusta"]], examTrap:"Rebating = incentivo extra. Twisting = reemplazo engañoso." },
+  { id:"fundamentos-seguro", unit:"Fundamentos del Seguro", title:"Fundamentos del Seguro", titleEN:"Insurance Fundamentals", icon:"📘", color:"from-sky-600 to-blue-400", summary:"Conceptos básicos del seguro y contract law que aparecen mucho en el examen de Texas.", keyPoints:["El interés asegurable debe existir cuando se compra o emite la póliza.","Adhesión significa que la aseguradora redacta el contrato.","Aleatorio significa que hay un intercambio desigual.","Indemnización intenta restaurar financieramente a una persona después de una pérdida.","Representaciones son declaraciones que se creen verdaderas.","La Ley de los Grandes Números ayuda a las aseguradoras a predecir pérdidas."], quickTable:[["Adhesión","Aseguradora redacta","Ambigüedad favorece al asegurado"],["Aleatorio","Intercambio desigual","Prima vs beneficio grande"],["Interés Asegurable","Relación financiera/emocional","Requerido al inicio"],["Representación","Se cree verdadera","No es garantía absoluta"]], examTrap:"El interés asegurable en seguro de vida se requiere al emitir/comprar la póliza, no necesariamente al momento de la muerte." },
+  { id:"basicos-vida", unit:"Tipos de Pólizas de Vida", title:"Fundamentos del Seguro de Vida", titleEN:"Life Insurance Basics", icon:"🛡️", color:"from-blue-500 to-cyan-400", summary:"Aprende los tipos principales de pólizas y cómo el examen las compara.", keyPoints:["Term Life es protección temporal sin cash value.","Whole Life es cobertura permanente con primas fijas y cash value garantizado.","Universal Life es flexible: primas flexibles y death benefit ajustable.","Variable Life involucra inversiones, separate accounts y regulación de securities."], quickTable:[["Term Life","Temporal","Sin cash value","Protección pura por fallecimiento"],["Whole Life","Permanente","Cash value","Prima fija"],["Universal Life","Permanente","Cash value","Prima flexible"],["Variable Life","Permanente","Separate account","Riesgo de inversión"]], examTrap:"Universal = flexibilidad. Variable = inversiones. No los confundas." },
+  { id:"riders", unit:"Riders", title:"Riders de Seguro de Vida", titleEN:"Life Insurance Riders", icon:"📑", color:"from-purple-500 to-pink-400", summary:"Los riders modifican una póliza agregando beneficios o cobertura extra.", keyPoints:["Waiver of Premium exonera primas si el asegurado queda discapacitado.","Guaranteed Insurability permite aumentos futuros sin prueba de insurability.","Payor Rider es común en pólizas juveniles si el adulto pagador muere o queda discapacitado.","Accidental Death Benefit paga un beneficio adicional por muerte accidental cubierta.","Long-Term Care Rider puede acelerar el death benefit para necesidades de cuidado prolongado."], quickTable:[["Waiver of Premium","Discapacidad","Primas exoneradas"],["Guaranteed Insurability","Cobertura futura","Sin preguntas médicas"],["Payor Rider","Póliza juvenil","Protege si el adulto pagador muere/discapacita"],["ADB","Muerte accidental","Beneficio adicional"]], examTrap:"Un rider no es una póliza separada. Se agrega a una póliza para modificarla." },
+  { id:"provisiones", unit:"Provisiones de Póliza", title:"Provisiones y Beneficiarios", titleEN:"Provisions & Beneficiaries", icon:"👥", color:"from-rose-500 to-red-400", summary:"Las provisiones explican cómo funciona el contrato y quién controla los beneficios.", keyPoints:["El policyowner controla derechos de la póliza salvo limitaciones como beneficiario irrevocable.","Beneficiarios revocables pueden cambiarse sin permiso.","Beneficiarios irrevocables requieren consentimiento escrito para cambios.","Incontestability normalmente limita disputas después de dos años, excepto fraude u otras excepciones.","Grace Period ocurre antes del lapse; Reinstatement ocurre después del lapse."], quickTable:[["Beneficiario Primario","Primero","Recibe el death benefit primero"],["Beneficiario Contingente","Respaldo","Cobra si el primario no puede"],["Revocable","Se puede cambiar","No necesita permiso"],["Irrevocable","Protegido","Requiere permiso"]], examTrap:"Las preguntas de beneficiarios casi siempre preguntan quién cobra o si se necesita permiso." },
+  { id:"opciones-poliza", unit:"Opciones de Póliza", title:"Opciones de la Póliza", titleEN:"Policy Options", icon:"💰", color:"from-indigo-500 to-violet-400", summary:"Opciones que explican cómo se usan cash values, dividendos y death benefits.", keyPoints:["Settlement options determinan cómo se pagan los proceeds del death benefit.","Fixed Period paga durante un período seleccionado.","Fixed Amount paga una cantidad seleccionada hasta que se acaben los fondos.","Extended Term da la mayor cantidad de protección.","Reduced Paid-Up da la mayor duración de protección."], quickTable:[["Cash Surrender","Toma cash value","La póliza termina"],["Extended Term","Mayor cantidad","Cobertura term temporal"],["Reduced Paid-Up","Mayor duración","Póliza permanente más pequeña"],["Dividendos","Pólizas participantes","No garantizados"]], examTrap:"Extended Term = mayor cantidad. Reduced Paid-Up = mayor duración." },
+  { id:"discapacidad", unit:"Disability Income", title:"Disability Income Insurance", titleEN:"Disability Income Insurance", icon:"💼", color:"from-amber-500 to-orange-400", summary:"Disability Income reemplaza ingresos perdidos cuando alguien no puede trabajar por enfermedad o lesión.", keyPoints:["Own Occupation es más liberal porque se enfoca en si puede hacer su propio trabajo.","Any Occupation es más restrictivo porque evalúa cualquier trabajo razonable.","Elimination Period es el tiempo de espera antes de que empiecen los beneficios.","Benefit Period es cuánto tiempo se pagan los beneficios.","Residual Disability se basa en pérdida de ingresos al regresar al trabajo."], quickTable:[["Own Occupation","Más liberal","No puede hacer su propio trabajo"],["Any Occupation","Más restrictivo","No puede hacer ningún trabajo adecuado"],["Elimination Period","Tiempo de espera","Antes de beneficios"],["Residual Disability","Pérdida de ingreso","Ingresos reducidos"]], examTrap:"Partial Disability trata sobre tareas reducidas. Residual Disability se enfoca en ingresos reducidos." },
+  { id:"medicare", unit:"Medicare y Medicaid", title:"Medicare y Medicaid", titleEN:"Medicare & Medicaid", icon:"🏥", color:"from-emerald-500 to-green-400", summary:"Medicare normalmente prueba qué cubre cada parte y cómo difieren supplements/Medicaid.", keyPoints:["Parte A cubre atención relacionada con hospital.","Parte B cubre servicios médicos y outpatient.","Parte C es Medicare Advantage mediante compañías privadas.","Parte D cubre medicamentos recetados.","Medicaid se basa en necesidad y es financiado por estado y gobierno federal."], quickTable:[["Parte A","Hospital","Hospital, SNF, hospice"],["Parte B","Médico","Doctores, outpatient, DME"],["Parte C","Advantage","Alternativa privada"],["Parte D","Medicamentos","Cobertura Rx"]], examTrap:"Parte C no es un supplement. Es Medicare Advantage, una forma alternativa de recibir beneficios Medicare." },
+  { id:"underwriting-ley", unit:"Underwriting y Ley de Texas", title:"Underwriting y Ley de Texas", titleEN:"Underwriting & TX Law", icon:"⚖️", color:"from-slate-700 to-slate-500", summary:"Aplicaciones, representations, MIB y prácticas injustas como rebating y twisting.", keyPoints:["Underwriting determina riesgo y elegibilidad.","Las declaraciones de aplicación suelen ser representations.","MIB ayuda a revisar información médica/underwriting previa.","Rebating es ofrecer incentivos no incluidos en la póliza.","Twisting es reemplazo engañoso de una póliza existente."], quickTable:[["Representation","Se cree verdadera","Declaración de aplicación"],["MIB","Información médica","Fuente de underwriting"],["Rebating","Incentivo ilegal","No está en póliza"],["Twisting","Reemplazo engañoso","Práctica injusta"]], examTrap:"Rebating = incentivo extra. Twisting = reemplazo engañoso." },
 ];
 
 const preguntasMock = [
@@ -371,8 +468,8 @@ function UnidadesView({ lecciones, setModoActivo, elegirLeccion, preguntasMock, 
 function RepasoRapidoView({ cramCards, cramActual, cramIndex, mostrarCram, setMostrarCram, siguienteCram, anteriorCram }) {
   return (
     <section className="grid gap-6 lg:grid-cols-2">
-      <div className="rounded-3xl bg-white p-6 shadow-lg"><div className="mb-6 flex items-center justify-between gap-4"><h2 className="text-2xl font-bold">⚡ Cram Flashcards</h2><span className="rounded-full bg-slate-100 px-3 py-1 text-sm font-semibold text-slate-600">{cramIndex + 1} / {cramCards.length}</span></div><div className="rounded-3xl border border-slate-200 bg-slate-50 p-8 text-center"><p className="text-sm font-semibold uppercase tracking-wider text-slate-500">Concept</p><h3 className="mt-2 text-3xl font-bold text-slate-800">{cramActual[0]}</h3>{mostrarCram ? <p className="mt-6 rounded-2xl bg-green-50 p-5 text-lg font-semibold text-green-800">{cramActual[1]}</p> : <button type="button" onClick={() => setMostrarCram(true)} className="mt-6 rounded-2xl bg-green-600 px-5 py-3 font-semibold text-white">Reveal Answer</button>}</div><div className="mt-4 flex gap-3"><button type="button" onClick={anteriorCram} className="rounded-2xl bg-slate-100 px-4 py-3 font-semibold text-slate-700 hover:bg-slate-200">Previous</button><button type="button" onClick={siguienteCram} className="rounded-2xl bg-blue-600 px-4 py-3 font-semibold text-white hover:bg-blue-700">Next</button></div></div>
-      <div className="rounded-3xl bg-white p-6 shadow-lg"><h2 className="mb-6 text-2xl font-bold">🔥 Night Before Review</h2><div className="space-y-3">{cramCards.map(([term, definition]) => <div key={term} className="rounded-2xl bg-slate-100 p-4"><p className="font-bold text-slate-800">{term}</p><p className="mt-1 text-slate-600">{definition}</p></div>)}</div></div>
+      <div className="rounded-3xl bg-white p-6 shadow-lg"><div className="mb-6 flex items-center justify-between gap-4"><h2 className="text-2xl font-bold">Cram Flashcards</h2><span className="rounded-full bg-slate-100 px-3 py-1 text-sm font-semibold text-slate-600">{cramIndex + 1} / {cramCards.length}</span></div><div className="rounded-3xl border border-slate-200 bg-slate-50 p-8 text-center"><p className="text-sm font-semibold uppercase tracking-wider text-slate-500">Concept</p><h3 className="mt-2 text-3xl font-bold text-slate-800">{cramActual[0]}</h3>{mostrarCram ? <p className="mt-6 rounded-2xl bg-green-50 p-5 text-lg font-semibold text-green-800">{cramActual[1]}</p> : <button type="button" onClick={() => setMostrarCram(true)} className="mt-6 rounded-2xl bg-green-600 px-5 py-3 font-semibold text-white">Reveal Answer</button>}</div><div className="mt-4 flex gap-3"><button type="button" onClick={anteriorCram} className="rounded-2xl bg-slate-100 px-4 py-3 font-semibold text-slate-700 hover:bg-slate-200">Previous</button><button type="button" onClick={siguienteCram} className="rounded-2xl bg-blue-600 px-4 py-3 font-semibold text-white hover:bg-blue-700">Next</button></div></div>
+      <div className="rounded-3xl bg-white p-6 shadow-lg"><h2 className="mb-6 text-2xl font-bold">Night Before Review</h2><div className="space-y-3">{cramCards.map(([term, definition]) => <div key={term} className="rounded-2xl bg-slate-100 p-4"><p className="font-bold text-slate-800">{term}</p><p className="mt-1 text-slate-600">{definition}</p></div>)}</div></div>
     </section>
   );
 }
@@ -380,39 +477,58 @@ function RepasoRapidoView({ cramCards, cramActual, cramIndex, mostrarCram, setMo
 function MockExamView({ unidadesExamen, filtroExamen, setFiltroExamen, resetExamen, examenIniciado, setExamenIniciado, mostrarResultados, poolPreguntas, preguntaActual, preguntaExamen, respuestaExamen, setRespuestaExamen, enviarRespuestaExamen, score, respuestasExamen }) {
   return (
     <section className="rounded-3xl bg-white p-8 shadow-lg">
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-4"><div><h2 className="text-3xl font-bold">📝 Mock Practice Exam</h2><p className="mt-2 text-slate-600">Elige una unidad o toma un full mixed mock exam.</p></div><div className="rounded-2xl bg-blue-100 px-4 py-2 font-semibold text-blue-700">{poolPreguntas.length} Questions</div></div>
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-4"><div><h2 className="text-3xl font-bold">Mock Practice Exam</h2><p className="mt-2 text-slate-600">Elige una unidad o toma un full mixed mock exam.</p></div><div className="rounded-2xl bg-blue-100 px-4 py-2 font-semibold text-blue-700">{poolPreguntas.length} Questions</div></div>
       {!examenIniciado && !mostrarResultados && <div className="rounded-3xl bg-slate-50 p-8 text-center border border-slate-200"><h3 className="mb-4 text-2xl font-bold text-slate-800">Choose Practice Type</h3><select value={filtroExamen} onChange={(e) => { setFiltroExamen(e.target.value); resetExamen(); }} className="mb-6 w-full max-w-xl rounded-2xl border border-slate-300 bg-white px-5 py-4 text-lg outline-none focus:border-blue-400">{unidadesExamen.map((u) => <option key={u}>{u}</option>)}</select><br /><button type="button" onClick={() => setExamenIniciado(true)} className="rounded-2xl bg-blue-600 px-6 py-4 text-lg font-semibold text-white hover:bg-blue-700">Start Practice Exam</button></div>}
       {examenIniciado && !mostrarResultados && <div className="space-y-6"><div className="flex items-center justify-between flex-wrap gap-3"><div className="text-sm font-semibold uppercase tracking-wider text-slate-500">Question {preguntaActual + 1} of {poolPreguntas.length}</div><div className="rounded-full bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700">Score: {score}</div></div><div className="w-full rounded-full bg-slate-200 h-4 overflow-hidden"><div className="h-full bg-gradient-to-r from-blue-500 to-cyan-400 transition-all" style={{ width:`${((preguntaActual+1)/poolPreguntas.length)*100}%` }} /></div><div className="rounded-3xl border border-slate-200 bg-slate-50 p-8"><div className="mb-3 rounded-full bg-indigo-100 px-3 py-2 text-sm font-semibold text-indigo-700 inline-flex">{preguntaExamen.unit}</div><h3 className="mb-6 text-2xl font-bold text-slate-800">{preguntaExamen.question}</h3><div className="grid gap-4 md:grid-cols-2">{preguntaExamen.choices.map((choice) => <button key={choice} type="button" onClick={() => setRespuestaExamen(choice)} className={cx("rounded-2xl border p-5 text-left font-semibold transition-all", respuestaExamen === choice ? "border-blue-400 bg-blue-50 text-blue-800" : "border-slate-200 bg-white hover:bg-slate-100")}>{choice}</button>)}</div><button type="button" onClick={enviarRespuestaExamen} disabled={!respuestaExamen} className="mt-6 rounded-2xl bg-emerald-600 px-6 py-4 font-semibold text-white hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed">Submit Answer</button></div></div>}
-      {mostrarResultados && <div className="rounded-3xl bg-slate-50 border border-slate-200 p-8 text-center"><h3 className="mb-4 text-3xl font-bold text-slate-800">🎉 Exam Complete</h3><div className="mb-4 text-6xl font-bold text-blue-700">{Math.round((score/poolPreguntas.length)*100)}%</div><p className="mb-8 text-lg text-slate-600">{score} of {poolPreguntas.length} correct.</p><button type="button" onClick={resetExamen} className="mb-8 rounded-2xl bg-blue-600 px-5 py-3 font-semibold text-white hover:bg-blue-700">Retake / Choose Another Unit</button><div className="grid gap-4 text-left max-w-4xl mx-auto">{respuestasExamen.map((a, i) => <div key={i} className={cx("rounded-2xl p-5 border", a.isCorrect ? "bg-green-50 border-green-200" : "bg-red-50 border-red-200")}><p className="mb-1 text-sm font-bold text-slate-500">{a.unit}</p><p className="font-bold mb-2">{a.question}</p><p>Your Answer: {a.selected}</p><p>Correct: {a.correct}</p></div>)}</div></div>}
+      {mostrarResultados && <div className="rounded-3xl bg-slate-50 border border-slate-200 p-8 text-center"><h3 className="mb-4 text-3xl font-bold text-slate-800">Exam Complete</h3><div className="mb-4 text-6xl font-bold text-blue-700">{Math.round((score/poolPreguntas.length)*100)}%</div><p className="mb-8 text-lg text-slate-600">{score} of {poolPreguntas.length} correct.</p><button type="button" onClick={resetExamen} className="mb-8 rounded-2xl bg-blue-600 px-5 py-3 font-semibold text-white hover:bg-blue-700">Retake / Choose Another Unit</button><div className="grid gap-4 text-left max-w-4xl mx-auto">{respuestasExamen.map((a, i) => <div key={i} className={cx("rounded-2xl p-5 border", a.isCorrect ? "bg-green-50 border-green-200" : "bg-red-50 border-red-200")}><p className="mb-1 text-sm font-bold text-slate-500">{a.unit}</p><p className="font-bold mb-2">{a.question}</p><p>Your Answer: {a.selected}</p><p>Correct: {a.correct}</p></div>)}</div></div>}
     </section>
   );
 }
 
 function PlataformaTexasLifeHealthEspanolEspejo() {
-  const [modoActivo, setModoActivo] = useState("supervivencia");
-  const [leccionActivaId, setLeccionActivaId] = useState("basicos-vida");
+  const TAB_INICIO = 0;
+  const TAB_REPASO = lecciones.length + 1;
+  const TAB_MOCK   = lecciones.length + 2;
+
+  const t = (es, en) => window._libLang === 'es' ? es : en;
+
+  const consejos = [
+    t("Enfócate en entender conceptos, no solo memorizar definiciones.", "Focus on understanding concepts, not just memorizing definitions."),
+    t("Practica comparar pólizas y provisiones similares lado a lado.", "Practice comparing similar policies and provisions side by side."),
+    t("Disability y Medicare suelen ser áreas donde más se falla — repásalas varias veces.", "Disability and Medicare are the most-failed areas — review them multiple times."),
+    t("Usa el Mock Exam la noche antes del examen para medir tu nivel.", "Use the Mock Exam the night before your test to gauge your readiness."),
+  ];
+
+  const tourSteps = [
+    { tab: TAB_INICIO, label: t("Inicio","Home"), desc: t("Tu pantalla de bienvenida con consejos prácticos y el botón de primeros pasos.","Your welcome screen with practical tips and the first-steps button.") },
+    ...lecciones.map((l, i) => ({ tab: i + 1, label: t(l.title, l.titleEN), desc: l.summary })),
+    { tab: TAB_REPASO, label: t("Repaso Rápido","Quick Review"), desc: t("Cram cards y Night Before Review para repasar antes del examen.","Cram cards and Night Before Review to recap before your exam.") },
+    { tab: TAB_MOCK,   label: "Mock Exam", desc: t("Practica con preguntas de todas las unidades y revisa tu score al finalizar.","Practice with questions from all units and review your score when done.") },
+  ];
+
+  const [showConsejos, setShowConsejos] = useState(() => !sessionStorage.getItem('tlh_consejos_shown'));
+  const [tabActivo, setTabActivo]       = useState(TAB_INICIO);
+  const [tourStep, setTourStep]         = useState(null);
   const [respuestaLeccion, setRespuestaLeccion] = useState("");
-  const [examenIniciado, setExamenIniciado] = useState(false);
-  const [preguntaActual, setPreguntaActual] = useState(0);
-  const [respuestaExamen, setRespuestaExamen] = useState("");
+  const [examenIniciado, setExamenIniciado]     = useState(false);
+  const [preguntaActual, setPreguntaActual]     = useState(0);
+  const [respuestaExamen, setRespuestaExamen]   = useState("");
   const [respuestasExamen, setRespuestasExamen] = useState([]);
   const [mostrarResultados, setMostrarResultados] = useState(false);
   const [filtroExamen, setFiltroExamen] = useState("Todas las Unidades");
-  const [cramIndex, setCramIndex] = useState(0);
+  const [cramIndex, setCramIndex]   = useState(0);
   const [mostrarCram, setMostrarCram] = useState(false);
 
-  const modoActivoData = modosEstudio.find((m) => m.id === modoActivo) || modosEstudio[0];
-  const leccionActiva = lecciones.find((l) => l.id === leccionActivaId) || lecciones[0];
+  const isLeccion   = tabActivo >= 1 && tabActivo <= lecciones.length;
+  const leccionActiva = lecciones[tabActivo - 1] || lecciones[0];
+  const preguntaLeccion = useMemo(() => preguntasMock.find((p) => p.unit === (lecciones[tabActivo - 1] || lecciones[0]).unit) || preguntasMock[0], [tabActivo]);
+  const cramActual  = cramCards[cramIndex];
   const unidadesExamen = ["Todas las Unidades", ...Array.from(new Set(preguntasMock.map((p) => p.unit)))];
-  const poolPreguntas = filtroExamen === "Todas las Unidades" ? preguntasMock : preguntasMock.filter((p) => p.unit === filtroExamen);
+  const poolPreguntas  = useMemo(() => filtroExamen === "Todas las Unidades" ? preguntasMock : preguntasMock.filter((p) => p.unit === filtroExamen), [filtroExamen]);
   const preguntaExamen = poolPreguntas[preguntaActual] || poolPreguntas[0];
-  const preguntaLeccion = preguntasMock.find((p) => p.unit === leccionActiva.unit) || preguntasMock[0];
-  const cramActual = cramCards[cramIndex];
-  const checksListos = useMemo(() => revisionesPlataforma.filter((r) => r.passed).length, []);
   const score = respuestasExamen.filter((r) => r.isCorrect).length;
 
   const resetExamen = () => { setExamenIniciado(false); setPreguntaActual(0); setRespuestaExamen(""); setRespuestasExamen([]); setMostrarResultados(false); };
-  const elegirLeccion = (id) => { setLeccionActivaId(id); setRespuestaLeccion(""); };
   const enviarRespuestaExamen = () => {
     if (!respuestaExamen) return;
     const nuevas = [...respuestasExamen, { unit: preguntaExamen.unit, question: preguntaExamen.question, selected: respuestaExamen, correct: preguntaExamen.answer, isCorrect: respuestaExamen === preguntaExamen.answer }];
@@ -422,83 +538,161 @@ function PlataformaTexasLifeHealthEspanolEspejo() {
     else setPreguntaActual(preguntaActual + 1);
   };
   const siguienteCram = () => { setMostrarCram(false); setCramIndex((i) => (i + 1) % cramCards.length); };
-  const anteriorCram = () => { setMostrarCram(false); setCramIndex((i) => (i - 1 + cramCards.length) % cramCards.length); };
+  const anteriorCram  = () => { setMostrarCram(false); setCramIndex((i) => (i - 1 + cramCards.length) % cramCards.length); };
+
+  const startTour = () => { sessionStorage.setItem('tlh_consejos_shown','1'); setShowConsejos(false); setTourStep(0); setTabActivo(tourSteps[0].tab); };
+  const tourNext  = () => {
+    if (tourStep + 1 < tourSteps.length) { const n = tourStep + 1; setTourStep(n); setTabActivo(tourSteps[n].tab); }
+    else endTour();
+  };
+  const endTour = () => { setTourStep(null); setTabActivo(TAB_INICIO); localStorage.setItem('tlh_tour_done','1'); };
+
+  const handleEntendido = () => {
+    sessionStorage.setItem('tlh_consejos_shown','1');
+    if (!localStorage.getItem('tlh_tour_done')) startTour();
+    else setShowConsejos(false);
+  };
+
+  const tourHighlight = (idx) => tourStep !== null && tourSteps[tourStep].tab === idx ? "tlh-tab-highlighted" : "";
 
   return (
     <main className="min-h-screen bg-slate-100 p-6 text-slate-900">
-      <div className="mx-auto max-w-7xl space-y-8">
-        <section className="rounded-3xl bg-gradient-to-r from-blue-700 to-cyan-500 p-8 text-white shadow-xl">
-          <h2 className="mb-3 text-4xl font-bold">Guía de Supervivencia Texas Life & Health</h2>
-          <p className="max-w-3xl text-lg opacity-90">Sistema interactivo con explicaciones high-yield, lecciones por unidad, exam traps y preguntas de práctica.</p>
-          <div className="mt-8 grid gap-4 md:grid-cols-4">
-            <StatCard value={lecciones.length} label="Unidades" />
-            <StatCard value={preguntasMock.length} label="Mock Questions" />
-            <StatCard value={cramCards.length} label="Cram Cards" />
-            <StatCard value="TX" label="Texas Specific" />
-          </div>
-        </section>
 
-        <section className="rounded-3xl bg-white p-8 shadow-lg border border-slate-200">
-          <h2 className="mb-6 text-3xl font-bold text-slate-800">🚀 Quick Start Roadmap</h2>
-          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {pasosRapidos.map((item) => (
-              <div key={item.step} className="rounded-3xl bg-slate-50 border border-slate-200 p-6 hover:shadow-md transition-all">
-                <div className="mb-4 inline-flex rounded-full bg-blue-100 px-3 py-1 text-sm font-bold text-blue-700">{item.step}</div>
-                <h3 className="mb-3 text-lg font-bold text-slate-800">{item.title}</h3>
-                <p className="leading-relaxed text-slate-600 text-sm">{item.description}</p>
+      {showConsejos && (
+        <div className="tlh-modal-backdrop" onClick={() => { sessionStorage.setItem('tlh_consejos_shown','1'); setShowConsejos(false); }}>
+          <div className="tlh-modal-card" onClick={(e) => e.stopPropagation()}>
+            <div className="tlh-modal-badge">Academia Ensurity</div>
+            <h2 className="tlh-modal-title">{t("Consejos Prácticos","Practical Tips")}</h2>
+            <p className="tlh-modal-sub">{t("Antes de comenzar, ten esto en mente","Before starting, keep these in mind")}</p>
+            {consejos.map((c, i) => (
+              <div key={i} className="tlh-consejo-item" style={{ animation:`tlh-item-in .35s ease ${.18 + i * .09}s forwards` }}>
+                <span className="tlh-consejo-num">0{i + 1}</span>
+                <p className="tlh-consejo-text">{c}</p>
               </div>
             ))}
+            <button className="tlh-modal-btn" onClick={handleEntendido}>{t("Entendido, comenzar","Got it, let's start")}</button>
           </div>
-        </section>
+        </div>
+      )}
 
-        <section>
-          <h2 className="mb-4 text-2xl font-bold">Modos de Estudio</h2>
-          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-5">
-            {modosEstudio.map((modo) => (
-              <button key={modo.id} type="button" onClick={() => setModoActivo(modo.id)} className={cx("rounded-3xl border p-5 text-left shadow-lg transition-all hover:-translate-y-1 hover:shadow-2xl", modoActivo === modo.id ? "border-blue-400 bg-blue-50 ring-2 ring-blue-200" : "border-slate-200 bg-white")}>
-                <div className="mb-3 text-4xl">{modo.icon}</div>
-                <h3 className="mb-2 text-lg font-bold text-slate-800">{modo.title}</h3>
-                <p className="text-sm leading-relaxed text-slate-600">{modo.description}</p>
+      {tourStep !== null && <div className="tlh-tour-overlay" />}
+
+      {tourStep !== null && (
+        <div className="tlh-tour-card">
+          <div className="tlh-tour-dots">
+            {tourSteps.map((_, i) => <div key={i} className={cx("tlh-tour-dot", tourStep === i ? "active" : "")} />)}
+          </div>
+          <p className="text-xs font-bold uppercase tracking-wider text-blue-500 mb-1">{tourStep + 1} / {tourSteps.length} — {tourSteps[tourStep].label}</p>
+          <p className="text-sm text-slate-700 leading-relaxed mb-4">{tourSteps[tourStep].desc}</p>
+          <div className="flex gap-2 items-center">
+            <button type="button" onClick={endTour} className="text-sm text-slate-400 hover:text-slate-600 px-3 py-2 rounded-xl hover:bg-slate-100 transition-all">{t("Omitir tour","Skip tour")}</button>
+            <button type="button" onClick={tourNext} className="flex-1 rounded-xl bg-blue-600 text-white font-semibold text-sm py-2 hover:bg-blue-700 transition-all">
+              {tourStep + 1 < tourSteps.length ? t("Siguiente →","Next →") : t("Finalizar tour","Finish tour")}
+            </button>
+          </div>
+        </div>
+      )}
+
+      <div className="mx-auto max-w-7xl space-y-6">
+
+        <div className="flex flex-wrap gap-2" style={{ position:'relative', zIndex: tourStep !== null ? 160 : 'auto' }}>
+          <button type="button" onClick={() => setTabActivo(TAB_INICIO)}
+            className={cx("rounded-xl px-4 py-2 text-sm font-semibold whitespace-nowrap transition-all border",
+              tabActivo === TAB_INICIO ? "bg-blue-600 text-white border-blue-600 shadow" : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50",
+              tourHighlight(TAB_INICIO))}>
+            {t("Inicio","Home")}
+          </button>
+          {lecciones.map((l, i) => (
+            <button key={l.id} type="button" onClick={() => { setTabActivo(i + 1); setRespuestaLeccion(""); }}
+              className={cx("rounded-xl px-4 py-2 text-sm font-semibold whitespace-nowrap transition-all border",
+                tabActivo === i + 1 ? "bg-blue-600 text-white border-blue-600 shadow" : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50",
+                tourHighlight(i + 1))}>
+              {t(l.title, l.titleEN)}
+            </button>
+          ))}
+          <button type="button" onClick={() => setTabActivo(TAB_REPASO)}
+            className={cx("rounded-xl px-4 py-2 text-sm font-semibold whitespace-nowrap transition-all border",
+              tabActivo === TAB_REPASO ? "bg-blue-600 text-white border-blue-600 shadow" : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50",
+              tourHighlight(TAB_REPASO))}>
+            {t("Repaso Rápido","Quick Review")}
+          </button>
+          <button type="button" onClick={() => setTabActivo(TAB_MOCK)}
+            className={cx("rounded-xl px-4 py-2 text-sm font-semibold whitespace-nowrap transition-all border",
+              tabActivo === TAB_MOCK ? "bg-blue-600 text-white border-blue-600 shadow" : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50",
+              tourHighlight(TAB_MOCK))}>
+            Mock Exam
+          </button>
+        </div>
+
+        {tabActivo === TAB_INICIO && (
+          <div className="space-y-6">
+            <div className="rounded-3xl bg-gradient-to-r from-blue-700 to-cyan-500 p-8 text-white shadow-xl">
+              <p className="text-sm font-semibold uppercase tracking-wider text-white/70 mb-2">Texas Life &amp; Health Licensing</p>
+              <h2 className="text-3xl font-bold mb-2">{t("Bienvenido al Módulo","Welcome to the Module")}</h2>
+              <p className="text-white/85 max-w-xl mb-6">{t("Todo lo que necesitas para pasar tu examen: lecciones por unidad, flashcards de repaso y mock exam completo.","Everything you need to pass your exam: unit lessons, review flashcards, and a full mock exam.")}</p>
+              <button type="button" onClick={startTour}
+                className="rounded-2xl bg-white/15 border border-white/30 px-5 py-3 font-semibold text-white hover:bg-white/25 transition-all">
+                {t("Comenzar Primeros Pasos →","Start First Steps →")}
               </button>
-            ))}
+            </div>
+            <div className="rounded-3xl bg-white border border-slate-200 p-8 shadow-lg">
+              <h3 className="text-xl font-bold text-slate-800 mb-5">{t("Consejos Prácticos","Practical Tips")}</h3>
+              <div className="grid gap-4 md:grid-cols-2">
+                {consejos.map((c, i) => (
+                  <div key={i} className="flex gap-3 rounded-2xl bg-slate-50 border border-slate-100 p-4">
+                    <span className="text-xs font-bold text-blue-600 bg-blue-100 rounded-lg px-2 py-1 h-fit shrink-0 mt-0.5">0{i + 1}</span>
+                    <p className="text-sm text-slate-700 leading-relaxed">{c}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
-        </section>
-
-        <section className="rounded-3xl border border-blue-100 bg-blue-50 p-5 shadow-sm">
-          <p className="text-sm font-semibold uppercase tracking-wider text-blue-700">MODO ACTUAL</p>
-          <h2 className="mt-1 text-2xl font-bold text-blue-950">{modoActivoData.icon} {modoActivoData.title}</h2>
-          <p className="mt-1 text-blue-900">{modoActivoData.description}</p>
-        </section>
-
-        {modoActivo === "supervivencia" && <SupervivenciaView lecciones={lecciones} leccionActiva={leccionActiva} leccionActivaId={leccionActivaId} elegirLeccion={elegirLeccion} preguntaLeccion={preguntaLeccion} respuestaLeccion={respuestaLeccion} setRespuestaLeccion={setRespuestaLeccion} />}
-        {modoActivo === "unidades" && <UnidadesView lecciones={lecciones} setModoActivo={setModoActivo} elegirLeccion={elegirLeccion} preguntasMock={preguntasMock} setFiltroExamen={setFiltroExamen} resetExamen={resetExamen} />}
-        {modoActivo === "repaso-rapido" && <RepasoRapidoView cramCards={cramCards} cramActual={cramActual} cramIndex={cramIndex} mostrarCram={mostrarCram} setMostrarCram={setMostrarCram} siguienteCram={siguienteCram} anteriorCram={anteriorCram} />}
-        {modoActivo === "mock-exam" && <MockExamView unidadesExamen={unidadesExamen} filtroExamen={filtroExamen} setFiltroExamen={setFiltroExamen} resetExamen={resetExamen} examenIniciado={examenIniciado} setExamenIniciado={setExamenIniciado} mostrarResultados={mostrarResultados} poolPreguntas={poolPreguntas} preguntaActual={preguntaActual} preguntaExamen={preguntaExamen} respuestaExamen={respuestaExamen} setRespuestaExamen={setRespuestaExamen} enviarRespuestaExamen={enviarRespuestaExamen} score={score} respuestasExamen={respuestasExamen} />}
-        {modoActivo === "biblioteca" && (
-          <section className="rounded-3xl bg-white p-8 shadow-lg">
-            <h2 className="mb-4 text-2xl font-bold">📚 Biblioteca Avanzada</h2>
-            <p className="mb-6 text-slate-600">Usa el tab "Biblioteca ES" arriba para acceder a la biblioteca completa en español.</p>
-            <div className="grid gap-4 md:grid-cols-2">{deepDiveItemsES.map((item) => <div key={item} className="rounded-2xl bg-slate-100 p-5 font-medium text-slate-700">{item}</div>)}</div>
-          </section>
         )}
 
-        <section className="rounded-3xl bg-gradient-to-r from-slate-900 to-slate-800 p-8 text-white shadow-xl">
-          <h2 className="mb-3 text-3xl font-bold">🎯 Consejos Finales</h2>
-          <div className="space-y-2 text-slate-200 max-w-3xl">
-            <p>• Enfócate en entender conceptos, no solo memorizar definiciones.</p>
-            <p>• Practica comparar pólizas y provisiones similares lado a lado.</p>
-            <p>• Disability y Medicare suelen ser áreas falladas — repásalas varias veces.</p>
-            <p>• Usa Quick Pass Mode la noche antes del examen.</p>
-          </div>
-        </section>
+        {isLeccion && (
+          <article className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-lg">
+            <div className={cx("bg-gradient-to-r p-6 text-white", leccionActiva.color)}>
+              <h2 className="text-3xl font-bold">{leccionActiva.title}</h2>
+              <p className="mt-2 text-white/90">{leccionActiva.summary}</p>
+            </div>
+            <div className="space-y-6 p-6">
+              <div>
+                <h3 className="mb-3 text-xl font-bold">{t("Notas High-Yield","High-Yield Notes")}</h3>
+                <div className="grid gap-3 md:grid-cols-2">
+                  {leccionActiva.keyPoints.map((point) => <div key={point} className="rounded-2xl bg-slate-100 p-4 text-slate-700">{point}</div>)}
+                </div>
+              </div>
+              <div>
+                <h3 className="mb-3 text-xl font-bold">{t("Comparación Rápida","Quick Comparison")}</h3>
+                <div className="overflow-x-auto rounded-2xl border border-slate-200">
+                  <table className="w-full text-left">
+                    <tbody>
+                      {leccionActiva.quickTable.map((row, index) => (
+                        <tr key={index} className="border-b border-slate-200 last:border-b-0">
+                          {row.map((cell, ci) => <td key={ci} className="p-4 text-sm md:text-base">{cell}</td>)}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div className="rounded-2xl border border-red-100 bg-red-50 p-5">
+                <h3 className="mb-2 text-lg font-bold text-red-700">{t("Trampa del Examen","Exam Trap")}</h3>
+                <p className="text-slate-700">{leccionActiva.examTrap}</p>
+              </div>
+              <MiniQuiz pregunta={preguntaLeccion} respuestaSeleccionada={respuestaLeccion} setRespuestaSeleccionada={setRespuestaLeccion} />
+            </div>
+          </article>
+        )}
 
-        <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-lg">
-          <h2 className="mb-4 text-2xl font-bold">Revisión Técnica</h2>
-          <p className="mb-4 text-slate-600">{checksListos} de {revisionesPlataforma.length} checks listos.</p>
-          <div className="grid gap-3 md:grid-cols-2">
-            {revisionesPlataforma.map((test) => <div key={test.name} className="flex items-center justify-between rounded-2xl bg-slate-100 p-4"><span className="font-medium text-slate-700">{test.name}</span><span className={test.passed ? "font-bold text-green-700" : "font-bold text-red-700"}>{test.passed ? "Listo" : "Revisar"}</span></div>)}
-          </div>
-        </section>
+        {tabActivo === TAB_REPASO && (
+          <RepasoRapidoView cramCards={cramCards} cramActual={cramActual} cramIndex={cramIndex} mostrarCram={mostrarCram} setMostrarCram={setMostrarCram} siguienteCram={siguienteCram} anteriorCram={anteriorCram} />
+        )}
+
+        {tabActivo === TAB_MOCK && (
+          <MockExamView unidadesExamen={unidadesExamen} filtroExamen={filtroExamen} setFiltroExamen={setFiltroExamen} resetExamen={resetExamen} examenIniciado={examenIniciado} setExamenIniciado={setExamenIniciado} mostrarResultados={mostrarResultados} poolPreguntas={poolPreguntas} preguntaActual={preguntaActual} preguntaExamen={preguntaExamen} respuestaExamen={respuestaExamen} setRespuestaExamen={setRespuestaExamen} enviarRespuestaExamen={enviarRespuestaExamen} score={score} respuestasExamen={respuestasExamen} />
+        )}
+
       </div>
     </main>
   );
@@ -520,115 +714,134 @@ function ChapterButton({ active, onClick, icon, label, count }) {
 }
 
 function TexasLifeHealthDeepDiveLibrary() {
-  const [activeChapterId, setActiveChapterId] = useState("all");
+  const TAB_INICIO = "inicio";
+  const TAB_MEMORY = "memory";
+  const TAB_RESOURCES = "resources";
+
+  const [activeTab, setActiveTab] = useState(TAB_INICIO);
   const [query, setQuery] = useState("");
-  const [selectedCard, setSelectedCard] = useState({ ...chapters[0].cards[0], chapterId: chapters[0].id, chapterTitle: chapters[0].title, chapterIcon: chapters[0].icon, chapterColor: chapters[0].color });
-  const [activeTool, setActiveTool] = useState("library");
+  const [selectedCard, setSelectedCard] = useState({ ...chapters[0].cards[0], chapterId: chapters[0].id, chapterTitle: chapters[0].title, chapterColor: chapters[0].color });
+  const [tourStep, setTourStep] = useState(null);
 
-  const allCards = useMemo(() => chapters.flatMap((ch) => ch.cards.map((c) => ({ ...c, chapterId: ch.id, chapterTitle: ch.title, chapterIcon: ch.icon, chapterColor: ch.color }))), []);
-  const filteredCards = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    return allCards.filter((c) => { const match = activeChapterId === "all" || c.chapterId === activeChapterId; const s = [c.title, c.chapterTitle, c.content, c.trap, c.usefulFor, ...c.tags].join(" ").toLowerCase(); return match && (!q || s.includes(q)); });
-  }, [activeChapterId, query, allCards]);
-
-  const selfChecks = [
-    { name:"Chapters loaded", passed: chapters.length >= 7 },
-    { name:"Reference cards loaded", passed: allCards.length >= 25 },
-    { name:"Search ready", passed: filteredCards.length >= 0 },
-    { name:"Memory sheets ready", passed: memorySheets.length >= 4 },
+  const tourSteps = [
+    ...chapters.map((ch) => ({ tab: ch.id, label: ch.title, desc: ch.summary })),
+    { tab: TAB_MEMORY,    label: "Memory Sheets", desc: "Quick-reference sheets to memorize key numbers, definitions, and comparisons before your exam." },
+    { tab: TAB_RESOURCES, label: "Resources",     desc: "Extra study materials and tips to help you prepare for the Texas Life & Health exam." },
   ];
+
+  const startTour    = () => { setTourStep(0); setActiveTab(tourSteps[0].tab); };
+  const tourNext     = () => { const n = tourStep + 1; if (n < tourSteps.length) { setTourStep(n); setActiveTab(tourSteps[n].tab); } else endTour(); };
+  const endTour      = () => { setTourStep(null); setActiveTab(TAB_INICIO); };
+  const tourHighlight = (id) => tourStep !== null && tourSteps[tourStep].tab === id ? "tlh-tab-highlighted" : "";
+
+  const allCards = useMemo(() => chapters.flatMap((ch) => ch.cards.map((c) => ({ ...c, chapterId: ch.id, chapterTitle: ch.title, chapterColor: ch.color }))), []);
+  const isChapterTab = activeTab !== TAB_INICIO && activeTab !== TAB_MEMORY && activeTab !== TAB_RESOURCES;
+  const filteredCards = useMemo(() => {
+    if (!isChapterTab) return [];
+    const q = query.trim().toLowerCase();
+    return allCards.filter((c) => c.chapterId === activeTab && (!q || [c.title, c.chapterTitle, c.content, c.trap, ...c.tags].join(" ").toLowerCase().includes(q)));
+  }, [activeTab, query, allCards, isChapterTab]);
 
   return (
     <main className="min-h-screen bg-slate-100 p-6 text-slate-900">
-      <div className="mx-auto max-w-7xl space-y-8">
-        <section className="rounded-3xl bg-gradient-to-r from-slate-900 to-blue-900 p-8 text-white shadow-xl">
-          <div className="flex flex-wrap items-center justify-between gap-6">
-            <div><p className="mb-2 text-sm font-semibold uppercase tracking-wider text-cyan-200">Ensurity Academy</p><h1 className="text-4xl font-bold">Texas Life & Health Deep Dive Library</h1><p className="mt-4 max-w-3xl text-lg text-slate-200">A searchable hub for deeper explanations, chapter browsing, exam traps, and memory sheets.</p></div>
-            <div className="grid grid-cols-2 gap-3 text-center"><StatEN value={chapters.length} label="Chapters" /><StatEN value={allCards.length} label="Cards" /><StatEN value={memorySheets.length} label="Sheets" /><StatEN value="TX" label="Focused" /></div>
-          </div>
-        </section>
+      <div className="mx-auto max-w-7xl space-y-6">
 
-        <section className="grid gap-4 md:grid-cols-4">
-          {[["library","📚","Library","Search and open concept cards"],["chapters","🗂️","Chapters","Browse by unit"],["memory","🧠","Memory Sheets","Fast recall tools"],["resources","🔗","Resources","How to use this library"]].map(([id, icon, title, desc]) => (
-            <button key={id} type="button" onClick={() => setActiveTool(id)} className={cx("rounded-3xl border p-5 text-left shadow-lg transition-all hover:-translate-y-1 hover:shadow-xl", activeTool === id ? "border-blue-400 bg-blue-50 ring-2 ring-blue-100" : "border-slate-200 bg-white")}>
-              <div className="text-4xl">{icon}</div><h2 className="mt-3 text-xl font-bold">{title}</h2><p className="mt-2 text-sm text-slate-600">{desc}</p>
-            </button>
+        {tourStep !== null && <div className="tlh-tour-overlay" />}
+
+        <div className="flex flex-wrap gap-2" style={{ position:'relative', zIndex: tourStep !== null ? 160 : 'auto' }}>
+          <button type="button" onClick={() => { setActiveTab(TAB_INICIO); setQuery(""); }} className={cx("rounded-xl px-4 py-2 text-sm font-semibold whitespace-nowrap transition-all border", activeTab === TAB_INICIO ? "bg-blue-600 text-white border-blue-600 shadow" : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50")}>Home</button>
+          {chapters.map((ch) => (
+            <button key={ch.id} type="button" onClick={() => { setActiveTab(ch.id); setQuery(""); }} className={cx("rounded-xl px-4 py-2 text-sm font-semibold whitespace-nowrap transition-all border", activeTab === ch.id ? "bg-blue-600 text-white border-blue-600 shadow" : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50", tourHighlight(ch.id))}>{ch.title}</button>
           ))}
-        </section>
+          <button type="button" onClick={() => setActiveTab(TAB_MEMORY)} className={cx("rounded-xl px-4 py-2 text-sm font-semibold whitespace-nowrap transition-all border", activeTab === TAB_MEMORY ? "bg-blue-600 text-white border-blue-600 shadow" : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50", tourHighlight(TAB_MEMORY))}>Memory Sheets</button>
+          <button type="button" onClick={() => setActiveTab(TAB_RESOURCES)} className={cx("rounded-xl px-4 py-2 text-sm font-semibold whitespace-nowrap transition-all border", activeTab === TAB_RESOURCES ? "bg-blue-600 text-white border-blue-600 shadow" : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50", tourHighlight(TAB_RESOURCES))}>Resources</button>
+        </div>
 
-        {activeTool === "library" && (
-          <section className="grid gap-6 lg:grid-cols-[300px_1fr]">
-            <aside className="rounded-3xl border border-slate-200 bg-white p-5 shadow-lg">
-              <h2 className="mb-4 text-xl font-bold">Chapters</h2>
-              <ChapterButton active={activeChapterId === "all"} onClick={() => setActiveChapterId("all")} icon="🌎" label="All Chapters" count={allCards.length} />
-              {chapters.map((ch) => <ChapterButton key={ch.id} active={activeChapterId === ch.id} onClick={() => setActiveChapterId(ch.id)} icon={ch.icon} label={ch.title} count={ch.cards.length} />)}
-            </aside>
-            <section className="space-y-6">
-              <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-lg">
-                <label className="mb-3 block text-sm font-semibold uppercase tracking-wider text-slate-500">Search Library</label>
-                <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search: beneficiary, Part D, elimination period..." className="w-full rounded-2xl border border-slate-300 bg-slate-50 px-5 py-4 text-lg outline-none focus:border-blue-400 focus:ring-4 focus:ring-blue-100" />
-                <p className="mt-3 text-sm text-slate-500">Showing {filteredCards.length} matching cards.</p>
-              </div>
+        {tourStep !== null && (
+          <div className="tlh-tour-card">
+            <div className="tlh-tour-dots">{tourSteps.map((_, i) => <div key={i} className={cx("tlh-tour-dot", tourStep === i ? "active" : "")} />)}</div>
+            <p className="text-xs font-bold uppercase tracking-wider text-blue-500 mb-1">{tourStep + 1} / {tourSteps.length} — {tourSteps[tourStep].label}</p>
+            <p className="text-sm text-slate-700 leading-relaxed mb-4">{tourSteps[tourStep].desc}</p>
+            <div className="flex gap-2">
+              <button type="button" onClick={endTour} className="text-sm text-slate-400 hover:text-slate-600 px-3 py-2 rounded-xl hover:bg-slate-100 transition-all">Skip tour</button>
+              <button type="button" onClick={tourNext} className="flex-1 rounded-xl bg-blue-600 text-white font-semibold text-sm py-2 hover:bg-blue-700 transition-all">{tourStep + 1 < tourSteps.length ? "Next →" : "Finish tour"}</button>
+            </div>
+          </div>
+        )}
+
+        {activeTab === TAB_INICIO && (
+          <div className="space-y-6">
+            <div className="rounded-3xl bg-gradient-to-r from-slate-800 to-blue-900 p-8 text-white shadow-xl">
+              <p className="text-sm font-semibold uppercase tracking-wider text-white/70 mb-2">Texas Life &amp; Health</p>
+              <h2 className="text-3xl font-bold mb-2">Deep Dive Library</h2>
+              <p className="text-white/85 max-w-xl mb-6">Deeper explanations, exam traps, memory sheets, and extra resources — organized by chapter.</p>
+              <button type="button" onClick={startTour} className="rounded-2xl bg-white/15 border border-white/30 px-5 py-3 font-semibold text-white hover:bg-white/25 transition-all">Browse Chapters →</button>
+            </div>
+            <div className="rounded-3xl bg-white border border-slate-200 p-8 shadow-lg">
+              <h3 className="text-xl font-bold text-slate-800 mb-5">Study Tips</h3>
               <div className="grid gap-4 md:grid-cols-2">
-                {filteredCards.map((card) => (
-                  <button key={`${card.chapterId}-${card.title}`} type="button" onClick={() => setSelectedCard(card)} className={cx("rounded-3xl border bg-white p-6 text-left shadow-md transition-all hover:-translate-y-1 hover:shadow-xl", selectedCard.title === card.title ? "border-blue-400 ring-2 ring-blue-100" : "border-slate-200")}>
-                    <div className="mb-4 flex items-center gap-3"><div className={cx("flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-r text-2xl text-white", card.chapterColor)}>{card.chapterIcon}</div><div><h3 className="font-bold text-slate-800">{card.title}</h3><p className="text-sm text-slate-500">{card.chapterTitle}</p></div></div>
-                    <p className="text-sm leading-relaxed text-slate-600">{card.content}</p>
-                    <div className="mt-4 flex flex-wrap gap-2">{card.tags.map((tag) => <span key={tag} className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">{tag}</span>)}</div>
-                  </button>
+                {[
+                  "Start with the chapter you're currently studying in class.",
+                  "Use the search bar to quickly find any concept or keyword.",
+                  "Memory Sheets are perfect for reviewing the night before your exam.",
+                  "Read the Exam Trap on each card carefully — those are the most tested points.",
+                ].map((tip, i) => (
+                  <div key={i} className="flex gap-3 rounded-2xl bg-slate-50 border border-slate-100 p-4">
+                    <span className="text-xs font-bold text-blue-600 bg-blue-100 rounded-lg px-2 py-1 h-fit shrink-0 mt-0.5">0{i + 1}</span>
+                    <p className="text-sm text-slate-700 leading-relaxed">{tip}</p>
+                  </div>
                 ))}
               </div>
-            </section>
-          </section>
-        )}
-
-        {activeTool === "chapters" && (
-          <section className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {chapters.map((ch) => (
-              <article key={ch.id} className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-lg">
-                <div className={cx("bg-gradient-to-r p-6 text-white", ch.color)}><div className="text-5xl">{ch.icon}</div><h2 className="mt-4 text-2xl font-bold">{ch.title}</h2><p className="mt-2 text-white/90">{ch.summary}</p></div>
-                <div className="space-y-3 p-5">
-                  {ch.cards.map((card) => (
-                    <button key={card.title} type="button" onClick={() => { setSelectedCard({...card, chapterId:ch.id, chapterTitle:ch.title, chapterIcon:ch.icon, chapterColor:ch.color}); setActiveTool("library"); setActiveChapterId(ch.id); }} className="w-full rounded-2xl bg-slate-50 p-4 text-left font-semibold text-slate-700 transition-all hover:bg-blue-50">{card.title}</button>
-                  ))}
-                </div>
-              </article>
-            ))}
-          </section>
-        )}
-
-        {activeTool === "memory" && (
-          <section className="rounded-3xl border border-emerald-200 bg-emerald-50 p-6 shadow-lg">
-            <h2 className="mb-2 text-3xl font-bold text-emerald-950">🧠 Memory Cheat Sheets</h2>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-              {memorySheets.map((sheet) => <div key={sheet.title} className="rounded-3xl border border-emerald-200 bg-white p-6 shadow-sm"><h3 className="mb-4 text-xl font-bold text-slate-800">{sheet.title}</h3><div className="space-y-3">{sheet.bullets.map((b) => <div key={b} className="rounded-2xl bg-slate-50 p-3 font-medium text-slate-700">{b}</div>)}</div></div>)}
             </div>
-          </section>
-        )}
-
-        {activeTool === "resources" && (
-          <section className="rounded-3xl border border-purple-200 bg-purple-50 p-6 shadow-lg">
-            <h2 className="mb-2 text-3xl font-bold text-purple-950">🔗 Extra Study Resources</h2>
-            <div className="grid gap-4 md:grid-cols-2">
-              {resources.map((r) => <div key={r.title} className="rounded-3xl border border-purple-200 bg-white p-6 shadow-sm"><div className="mb-4 flex items-center gap-4"><div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-purple-100 text-3xl">{r.icon}</div><h3 className="text-xl font-bold text-slate-800">{r.title}</h3></div><p className="leading-relaxed text-slate-600">{r.note}</p></div>)}
-            </div>
-          </section>
-        )}
-
-        <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-lg">
-          <div className="mb-4 flex items-center justify-between gap-4"><div><p className="text-sm font-semibold uppercase tracking-wider text-slate-500">Selected Card</p><h2 className="mt-1 text-3xl font-bold text-slate-800">{selectedCard.title}</h2></div><div className="rounded-2xl bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-600">{selectedCard.chapterTitle || "Reference"}</div></div>
-          <div className="grid gap-5 lg:grid-cols-3">
-            <div className="rounded-3xl bg-slate-50 p-5 lg:col-span-2"><h3 className="mb-3 text-xl font-bold">Explanation</h3><p className="leading-relaxed text-slate-700">{selectedCard.content}</p></div>
-            <div className="rounded-3xl border border-red-100 bg-red-50 p-5"><h3 className="mb-3 text-xl font-bold text-red-700">⚠️ Exam Trap</h3><p className="text-slate-700">{selectedCard.trap}</p></div>
-            <div className="rounded-3xl border border-blue-100 bg-blue-50 p-5"><h3 className="mb-3 text-xl font-bold text-blue-800">Useful For</h3><p className="text-slate-700">{selectedCard.usefulFor}</p></div>
-            <div className="rounded-3xl bg-slate-50 p-5 lg:col-span-2"><h3 className="mb-3 text-xl font-bold">Tags</h3><div className="flex flex-wrap gap-2">{selectedCard.tags.map((tag) => <span key={tag} className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm">{tag}</span>)}</div></div>
           </div>
-        </section>
+        )}
 
-        <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-lg">
-          <h2 className="mb-4 text-2xl font-bold">Library Self-Checks</h2>
-          <div className="grid gap-3 md:grid-cols-2">{selfChecks.map((t) => <div key={t.name} className="flex items-center justify-between rounded-2xl bg-slate-100 p-4"><span className="font-medium text-slate-700">{t.name}</span><span className={t.passed ? "font-bold text-green-700" : "font-bold text-red-700"}>{t.passed ? "Pass" : "Check"}</span></div>)}</div>
-        </section>
+        {isChapterTab && (
+          <>
+            <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+              <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search: beneficiary, Part D, elimination period..." className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100" />
+              <p className="mt-2 text-xs text-slate-400">{filteredCards.length} cards</p>
+            </div>
+            <div className="grid gap-4 md:grid-cols-2">
+              {filteredCards.map((card) => (
+                <button key={`${card.chapterId}-${card.title}`} type="button" onClick={() => setSelectedCard(card)} className={cx("rounded-3xl border bg-white p-6 text-left shadow-md transition-all hover:-translate-y-1 hover:shadow-xl", selectedCard.title === card.title ? "border-blue-400 ring-2 ring-blue-100" : "border-slate-200")}>
+                  <h3 className="font-bold text-slate-800 mb-1">{card.title}</h3>
+                  <p className="text-xs font-semibold text-slate-400 mb-3">{card.chapterTitle}</p>
+                  <p className="text-sm leading-relaxed text-slate-600 line-clamp-3">{card.content}</p>
+                </button>
+              ))}
+            </div>
+            <article className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-lg">
+              <div className={cx("bg-gradient-to-r p-6 text-white", selectedCard.chapterColor)}>
+                <h2 className="text-2xl font-bold">{selectedCard.title}</h2>
+                <p className="mt-1 text-sm text-white/80">{selectedCard.chapterTitle}</p>
+              </div>
+              <div className="space-y-5 p-6">
+                <div><h3 className="mb-2 text-lg font-bold">Explanation</h3><p className="leading-relaxed text-slate-700">{selectedCard.content}</p></div>
+                <div className="rounded-2xl border border-red-100 bg-red-50 p-5"><h3 className="mb-2 text-lg font-bold text-red-700">Exam Trap</h3><p className="text-slate-700">{selectedCard.trap}</p></div>
+              </div>
+            </article>
+          </>
+        )}
+
+        {activeTab === TAB_MEMORY && (
+          <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-lg">
+            <h2 className="mb-5 text-2xl font-bold text-slate-800">Memory Sheets</h2>
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+              {memorySheets.map((sheet) => <div key={sheet.title} className="rounded-2xl border border-slate-200 bg-slate-50 p-5"><h3 className="mb-4 text-lg font-bold text-slate-800">{sheet.title}</h3><div className="space-y-2">{sheet.bullets.map((b) => <div key={b} className="rounded-xl bg-white border border-slate-100 p-3 text-sm font-medium text-slate-700">{b}</div>)}</div></div>)}
+            </div>
+          </section>
+        )}
+
+        {activeTab === TAB_RESOURCES && (
+          <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-lg">
+            <h2 className="mb-5 text-2xl font-bold text-slate-800">Resources</h2>
+            <div className="grid gap-4 md:grid-cols-2">
+              {resources.map((r) => <div key={r.title} className="rounded-2xl border border-slate-200 bg-slate-50 p-5"><h3 className="mb-2 text-lg font-bold text-slate-800">{r.title}</h3><p className="text-sm leading-relaxed text-slate-600">{r.note}</p></div>)}
+            </div>
+          </section>
+        )}
+
       </div>
     </main>
   );
@@ -650,115 +863,134 @@ function BotonCapitulo({ activo, onClick, icono, etiqueta, cantidad }) {
 }
 
 function BibliotecaAvanzadaTexasLifeHealth() {
-  const [capituloActivo, setCapituloActivo] = useState("all");
+  const TAB_INICIO = "inicio";
+  const TAB_MEMORIA = "memoria";
+  const TAB_RECURSOS = "recursos";
+
+  const [tabActivo, setTabActivo] = useState(TAB_INICIO);
   const [busqueda, setBusqueda] = useState("");
-  const [tarjetaSeleccionada, setTarjetaSeleccionada] = useState({ ...capitulos[0].tarjetas[0], capituloId: capitulos[0].id, capituloTitulo: capitulos[0].titulo, capituloIcono: capitulos[0].icono, capituloColor: capitulos[0].color });
-  const [herramientaActiva, setHerramientaActiva] = useState("biblioteca");
+  const [tarjetaSeleccionada, setTarjetaSeleccionada] = useState({ ...capitulos[0].tarjetas[0], capituloId: capitulos[0].id, capituloTitulo: capitulos[0].titulo, capituloColor: capitulos[0].color });
+  const [tourStep, setTourStep] = useState(null);
 
-  const todasTarjetas = useMemo(() => capitulos.flatMap((cap) => cap.tarjetas.map((t) => ({ ...t, capituloId: cap.id, capituloTitulo: cap.titulo, capituloIcono: cap.icono, capituloColor: cap.color }))), []);
-  const tarjetasFiltradas = useMemo(() => {
-    const txt = busqueda.trim().toLowerCase();
-    return todasTarjetas.filter((t) => { const match = capituloActivo === "all" || t.capituloId === capituloActivo; const s = [t.titulo, t.capituloTitulo, t.contenido, t.trampa, t.utilPara, ...t.etiquetas].join(" ").toLowerCase(); return match && (!txt || s.includes(txt)); });
-  }, [capituloActivo, busqueda, todasTarjetas]);
-
-  const revisiones = [
-    { nombre:"Capítulos cargados", aprobado: capitulos.length >= 7 },
-    { nombre:"Tarjetas cargadas", aprobado: todasTarjetas.length >= 25 },
-    { nombre:"Buscador listo", aprobado: tarjetasFiltradas.length >= 0 },
-    { nombre:"Hojas de memoria listas", aprobado: hojasMemoria.length >= 4 },
+  const tourSteps = [
+    ...capitulos.map((cap) => ({ tab: cap.id, label: cap.titulo, desc: cap.resumen })),
+    { tab: TAB_MEMORIA,  label: "Hojas de Memoria", desc: "Hojas de referencia rápida para memorizar números clave, definiciones y comparaciones antes del examen." },
+    { tab: TAB_RECURSOS, label: "Recursos",         desc: "Material extra y consejos para prepararte mejor para el examen de Texas Life & Health." },
   ];
+
+  const startTour     = () => { setTourStep(0); setTabActivo(tourSteps[0].tab); };
+  const tourNext      = () => { const n = tourStep + 1; if (n < tourSteps.length) { setTourStep(n); setTabActivo(tourSteps[n].tab); } else endTour(); };
+  const endTour       = () => { setTourStep(null); setTabActivo(TAB_INICIO); };
+  const tourHighlight  = (id) => tourStep !== null && tourSteps[tourStep].tab === id ? "tlh-tab-highlighted" : "";
+
+  const todasTarjetas = useMemo(() => capitulos.flatMap((cap) => cap.tarjetas.map((t) => ({ ...t, capituloId: cap.id, capituloTitulo: cap.titulo, capituloColor: cap.color }))), []);
+  const esCapitulo = tabActivo !== TAB_INICIO && tabActivo !== TAB_MEMORIA && tabActivo !== TAB_RECURSOS;
+  const tarjetasFiltradas = useMemo(() => {
+    if (!esCapitulo) return [];
+    const txt = busqueda.trim().toLowerCase();
+    return todasTarjetas.filter((t) => t.capituloId === tabActivo && (!txt || [t.titulo, t.capituloTitulo, t.contenido, t.trampa, ...t.etiquetas].join(" ").toLowerCase().includes(txt)));
+  }, [tabActivo, busqueda, todasTarjetas, esCapitulo]);
 
   return (
     <main className="min-h-screen bg-slate-100 p-6 text-slate-900">
-      <div className="mx-auto max-w-7xl space-y-8">
-        <section className="rounded-3xl bg-gradient-to-r from-slate-900 to-blue-900 p-8 text-white shadow-xl">
-          <div className="flex flex-wrap items-center justify-between gap-6">
-            <div><p className="mb-2 text-sm font-semibold uppercase tracking-wider text-cyan-200">Ensurity Academy</p><h1 className="text-4xl font-bold">Biblioteca Avanzada Texas Life & Health</h1><p className="mt-4 max-w-3xl text-lg text-slate-200">Centro de apoyo en español: explicaciones profundas, búsqueda por tema, hojas de memoria.</p></div>
-            <div className="grid grid-cols-2 gap-3 text-center"><StatES valor={capitulos.length} titulo="Capítulos" /><StatES valor={todasTarjetas.length} titulo="Tarjetas" /><StatES valor={hojasMemoria.length} titulo="Hojas" /><StatES valor="TX" titulo="Enfoque" /></div>
-          </div>
-        </section>
+      <div className="mx-auto max-w-7xl space-y-6">
 
-        <section className="grid gap-4 md:grid-cols-4">
-          {[["biblioteca","📚","Biblioteca","Buscar y abrir tarjetas"],["capitulos","🗂️","Capítulos","Explorar por unidad"],["memoria","🧠","Hojas de Memoria","Herramientas de repaso"],["recursos","🔗","Recursos","Cómo usar esta biblioteca"]].map(([id, icono, titulo, descripcion]) => (
-            <button key={id} type="button" onClick={() => setHerramientaActiva(id)} className={cx("rounded-3xl border p-5 text-left shadow-lg transition-all hover:-translate-y-1 hover:shadow-xl", herramientaActiva === id ? "border-blue-400 bg-blue-50 ring-2 ring-blue-100" : "border-slate-200 bg-white")}>
-              <div className="text-4xl">{icono}</div><h2 className="mt-3 text-xl font-bold">{titulo}</h2><p className="mt-2 text-sm text-slate-600">{descripcion}</p>
-            </button>
+        {tourStep !== null && <div className="tlh-tour-overlay" />}
+
+        <div className="flex flex-wrap gap-2" style={{ position:'relative', zIndex: tourStep !== null ? 160 : 'auto' }}>
+          <button type="button" onClick={() => { setTabActivo(TAB_INICIO); setBusqueda(""); }} className={cx("rounded-xl px-4 py-2 text-sm font-semibold whitespace-nowrap transition-all border", tabActivo === TAB_INICIO ? "bg-blue-600 text-white border-blue-600 shadow" : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50")}>Inicio</button>
+          {capitulos.map((cap) => (
+            <button key={cap.id} type="button" onClick={() => { setTabActivo(cap.id); setBusqueda(""); }} className={cx("rounded-xl px-4 py-2 text-sm font-semibold whitespace-nowrap transition-all border", tabActivo === cap.id ? "bg-blue-600 text-white border-blue-600 shadow" : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50", tourHighlight(cap.id))}>{cap.titulo}</button>
           ))}
-        </section>
+          <button type="button" onClick={() => setTabActivo(TAB_MEMORIA)} className={cx("rounded-xl px-4 py-2 text-sm font-semibold whitespace-nowrap transition-all border", tabActivo === TAB_MEMORIA ? "bg-blue-600 text-white border-blue-600 shadow" : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50", tourHighlight(TAB_MEMORIA))}>Hojas de Memoria</button>
+          <button type="button" onClick={() => setTabActivo(TAB_RECURSOS)} className={cx("rounded-xl px-4 py-2 text-sm font-semibold whitespace-nowrap transition-all border", tabActivo === TAB_RECURSOS ? "bg-blue-600 text-white border-blue-600 shadow" : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50", tourHighlight(TAB_RECURSOS))}>Recursos</button>
+        </div>
 
-        {herramientaActiva === "biblioteca" && (
-          <section className="grid gap-6 lg:grid-cols-[300px_1fr]">
-            <aside className="rounded-3xl border border-slate-200 bg-white p-5 shadow-lg">
-              <h2 className="mb-4 text-xl font-bold">Capítulos</h2>
-              <BotonCapitulo activo={capituloActivo === "all"} onClick={() => setCapituloActivo("all")} icono="🌎" etiqueta="Todos los Capítulos" cantidad={todasTarjetas.length} />
-              {capitulos.map((cap) => <BotonCapitulo key={cap.id} activo={capituloActivo === cap.id} onClick={() => setCapituloActivo(cap.id)} icono={cap.icono} etiqueta={cap.titulo} cantidad={cap.tarjetas.length} />)}
-            </aside>
-            <section className="space-y-6">
-              <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-lg">
-                <label className="mb-3 block text-sm font-semibold uppercase tracking-wider text-slate-500">Buscar en Biblioteca</label>
-                <input value={busqueda} onChange={(e) => setBusqueda(e.target.value)} placeholder="Buscar: beneficiario, Parte D, elimination period..." className="w-full rounded-2xl border border-slate-300 bg-slate-50 px-5 py-4 text-lg outline-none focus:border-blue-400 focus:ring-4 focus:ring-blue-100" />
-                <p className="mt-3 text-sm text-slate-500">Mostrando {tarjetasFiltradas.length} tarjetas.</p>
-              </div>
+        {tourStep !== null && (
+          <div className="tlh-tour-card">
+            <div className="tlh-tour-dots">{tourSteps.map((_, i) => <div key={i} className={cx("tlh-tour-dot", tourStep === i ? "active" : "")} />)}</div>
+            <p className="text-xs font-bold uppercase tracking-wider text-blue-500 mb-1">{tourStep + 1} / {tourSteps.length} — {tourSteps[tourStep].label}</p>
+            <p className="text-sm text-slate-700 leading-relaxed mb-4">{tourSteps[tourStep].desc}</p>
+            <div className="flex gap-2">
+              <button type="button" onClick={endTour} className="text-sm text-slate-400 hover:text-slate-600 px-3 py-2 rounded-xl hover:bg-slate-100 transition-all">Omitir</button>
+              <button type="button" onClick={tourNext} className="flex-1 rounded-xl bg-blue-600 text-white font-semibold text-sm py-2 hover:bg-blue-700 transition-all">{tourStep + 1 < tourSteps.length ? "Siguiente →" : "Finalizar"}</button>
+            </div>
+          </div>
+        )}
+
+        {tabActivo === TAB_INICIO && (
+          <div className="space-y-6">
+            <div className="rounded-3xl bg-gradient-to-r from-slate-800 to-blue-900 p-8 text-white shadow-xl">
+              <p className="text-sm font-semibold uppercase tracking-wider text-white/70 mb-2">Texas Life &amp; Health</p>
+              <h2 className="text-3xl font-bold mb-2">Biblioteca Avanzada</h2>
+              <p className="text-white/85 max-w-xl mb-6">Explicaciones profundas, trampas del examen, hojas de memoria y recursos — organizados por capítulo.</p>
+              <button type="button" onClick={startTour} className="rounded-2xl bg-white/15 border border-white/30 px-5 py-3 font-semibold text-white hover:bg-white/25 transition-all">Explorar Capítulos →</button>
+            </div>
+            <div className="rounded-3xl bg-white border border-slate-200 p-8 shadow-lg">
+              <h3 className="text-xl font-bold text-slate-800 mb-5">Consejos de Estudio</h3>
               <div className="grid gap-4 md:grid-cols-2">
-                {tarjetasFiltradas.map((t) => (
-                  <button key={`${t.capituloId}-${t.titulo}`} type="button" onClick={() => setTarjetaSeleccionada(t)} className={cx("rounded-3xl border bg-white p-6 text-left shadow-md transition-all hover:-translate-y-1 hover:shadow-xl", tarjetaSeleccionada.titulo === t.titulo ? "border-blue-400 ring-2 ring-blue-100" : "border-slate-200")}>
-                    <div className="mb-4 flex items-center gap-3"><div className={cx("flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-r text-2xl text-white", t.capituloColor)}>{t.capituloIcono}</div><div><h3 className="font-bold text-slate-800">{t.titulo}</h3><p className="text-sm text-slate-500">{t.capituloTitulo}</p></div></div>
-                    <p className="text-sm leading-relaxed text-slate-600">{t.contenido}</p>
-                    <div className="mt-4 flex flex-wrap gap-2">{t.etiquetas.map((e) => <span key={e} className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">{e}</span>)}</div>
-                  </button>
+                {[
+                  "Comienza con el capítulo que estás estudiando en clase.",
+                  "Usa el buscador para encontrar rápidamente cualquier concepto o término.",
+                  "Las Hojas de Memoria son perfectas para repasar la noche antes del examen.",
+                  "Presta atención a la Trampa del Examen en cada tarjeta — son los puntos más evaluados.",
+                ].map((tip, i) => (
+                  <div key={i} className="flex gap-3 rounded-2xl bg-slate-50 border border-slate-100 p-4">
+                    <span className="text-xs font-bold text-blue-600 bg-blue-100 rounded-lg px-2 py-1 h-fit shrink-0 mt-0.5">0{i + 1}</span>
+                    <p className="text-sm text-slate-700 leading-relaxed">{tip}</p>
+                  </div>
                 ))}
               </div>
-            </section>
-          </section>
-        )}
-
-        {herramientaActiva === "capitulos" && (
-          <section className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {capitulos.map((cap) => (
-              <article key={cap.id} className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-lg">
-                <div className={cx("bg-gradient-to-r p-6 text-white", cap.color)}><div className="text-5xl">{cap.icono}</div><h2 className="mt-4 text-2xl font-bold">{cap.titulo}</h2><p className="mt-2 text-white/90">{cap.resumen}</p></div>
-                <div className="space-y-3 p-5">
-                  {cap.tarjetas.map((t) => (
-                    <button key={t.titulo} type="button" onClick={() => { setTarjetaSeleccionada({...t, capituloId:cap.id, capituloTitulo:cap.titulo, capituloIcono:cap.icono, capituloColor:cap.color}); setHerramientaActiva("biblioteca"); setCapituloActivo(cap.id); }} className="w-full rounded-2xl bg-slate-50 p-4 text-left font-semibold text-slate-700 transition-all hover:bg-blue-50">{t.titulo}</button>
-                  ))}
-                </div>
-              </article>
-            ))}
-          </section>
-        )}
-
-        {herramientaActiva === "memoria" && (
-          <section className="rounded-3xl border border-emerald-200 bg-emerald-50 p-6 shadow-lg">
-            <h2 className="mb-2 text-3xl font-bold text-emerald-950">🧠 Hojas de Memoria</h2>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-              {hojasMemoria.map((hoja) => <div key={hoja.titulo} className="rounded-3xl border border-emerald-200 bg-white p-6 shadow-sm"><h3 className="mb-4 text-xl font-bold text-slate-800">{hoja.titulo}</h3><div className="space-y-3">{hoja.puntos.map((p) => <div key={p} className="rounded-2xl bg-slate-50 p-3 font-medium text-slate-700">{p}</div>)}</div></div>)}
             </div>
-          </section>
-        )}
-
-        {herramientaActiva === "recursos" && (
-          <section className="rounded-3xl border border-purple-200 bg-purple-50 p-6 shadow-lg">
-            <h2 className="mb-2 text-3xl font-bold text-purple-950">🔗 Recursos Extra</h2>
-            <div className="grid gap-4 md:grid-cols-2">
-              {recursos.map((r) => <div key={r.titulo} className="rounded-3xl border border-purple-200 bg-white p-6 shadow-sm"><div className="mb-4 flex items-center gap-4"><div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-purple-100 text-3xl">{r.icono}</div><h3 className="text-xl font-bold text-slate-800">{r.titulo}</h3></div><p className="leading-relaxed text-slate-600">{r.nota}</p></div>)}
-            </div>
-          </section>
-        )}
-
-        <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-lg">
-          <div className="mb-4 flex items-center justify-between gap-4"><div><p className="text-sm font-semibold uppercase tracking-wider text-slate-500">Tarjeta Seleccionada</p><h2 className="mt-1 text-3xl font-bold text-slate-800">{tarjetaSeleccionada.titulo}</h2></div><div className="rounded-2xl bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-600">{tarjetaSeleccionada.capituloTitulo || "Referencia"}</div></div>
-          <div className="grid gap-5 lg:grid-cols-3">
-            <div className="rounded-3xl bg-slate-50 p-5 lg:col-span-2"><h3 className="mb-3 text-xl font-bold">Explicación</h3><p className="leading-relaxed text-slate-700">{tarjetaSeleccionada.contenido}</p></div>
-            <div className="rounded-3xl border border-red-100 bg-red-50 p-5"><h3 className="mb-3 text-xl font-bold text-red-700">⚠️ Trampa del Examen</h3><p className="text-slate-700">{tarjetaSeleccionada.trampa}</p></div>
-            <div className="rounded-3xl border border-blue-100 bg-blue-50 p-5"><h3 className="mb-3 text-xl font-bold text-blue-800">Útil Para</h3><p className="text-slate-700">{tarjetaSeleccionada.utilPara}</p></div>
-            <div className="rounded-3xl bg-slate-50 p-5 lg:col-span-2"><h3 className="mb-3 text-xl font-bold">Etiquetas</h3><div className="flex flex-wrap gap-2">{tarjetaSeleccionada.etiquetas.map((e) => <span key={e} className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm">{e}</span>)}</div></div>
           </div>
-        </section>
+        )}
 
-        <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-lg">
-          <h2 className="mb-4 text-2xl font-bold">Revisión Técnica</h2>
-          <div className="grid gap-3 md:grid-cols-2">{revisiones.map((r) => <div key={r.nombre} className="flex items-center justify-between rounded-2xl bg-slate-100 p-4"><span className="font-medium text-slate-700">{r.nombre}</span><span className={r.aprobado ? "font-bold text-green-700" : "font-bold text-red-700"}>{r.aprobado ? "Listo" : "Revisar"}</span></div>)}</div>
-        </section>
+        {esCapitulo && (
+          <>
+            <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+              <input value={busqueda} onChange={(e) => setBusqueda(e.target.value)} placeholder="Buscar: beneficiario, Parte D, elimination period..." className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100" />
+              <p className="mt-2 text-xs text-slate-400">{tarjetasFiltradas.length} tarjetas</p>
+            </div>
+            <div className="grid gap-4 md:grid-cols-2">
+              {tarjetasFiltradas.map((t) => (
+                <button key={`${t.capituloId}-${t.titulo}`} type="button" onClick={() => setTarjetaSeleccionada(t)} className={cx("rounded-3xl border bg-white p-6 text-left shadow-md transition-all hover:-translate-y-1 hover:shadow-xl", tarjetaSeleccionada.titulo === t.titulo ? "border-blue-400 ring-2 ring-blue-100" : "border-slate-200")}>
+                  <h3 className="font-bold text-slate-800 mb-1">{t.titulo}</h3>
+                  <p className="text-xs font-semibold text-slate-400 mb-3">{t.capituloTitulo}</p>
+                  <p className="text-sm leading-relaxed text-slate-600 line-clamp-3">{t.contenido}</p>
+                </button>
+              ))}
+            </div>
+            <article className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-lg">
+              <div className={cx("bg-gradient-to-r p-6 text-white", tarjetaSeleccionada.capituloColor)}>
+                <h2 className="text-2xl font-bold">{tarjetaSeleccionada.titulo}</h2>
+                <p className="mt-1 text-sm text-white/80">{tarjetaSeleccionada.capituloTitulo}</p>
+              </div>
+              <div className="space-y-5 p-6">
+                <div><h3 className="mb-2 text-lg font-bold">Explicación</h3><p className="leading-relaxed text-slate-700">{tarjetaSeleccionada.contenido}</p></div>
+                <div className="rounded-2xl border border-red-100 bg-red-50 p-5"><h3 className="mb-2 text-lg font-bold text-red-700">Trampa del Examen</h3><p className="text-slate-700">{tarjetaSeleccionada.trampa}</p></div>
+              </div>
+            </article>
+          </>
+        )}
+
+        {tabActivo === TAB_MEMORIA && (
+          <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-lg">
+            <h2 className="mb-5 text-2xl font-bold text-slate-800">Hojas de Memoria</h2>
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+              {hojasMemoria.map((hoja) => <div key={hoja.titulo} className="rounded-2xl border border-slate-200 bg-slate-50 p-5"><h3 className="mb-4 text-lg font-bold text-slate-800">{hoja.titulo}</h3><div className="space-y-2">{hoja.puntos.map((p) => <div key={p} className="rounded-xl bg-white border border-slate-100 p-3 text-sm font-medium text-slate-700">{p}</div>)}</div></div>)}
+            </div>
+          </section>
+        )}
+
+        {tabActivo === TAB_RECURSOS && (
+          <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-lg">
+            <h2 className="mb-5 text-2xl font-bold text-slate-800">Recursos</h2>
+            <div className="grid gap-4 md:grid-cols-2">
+              {recursos.map((r) => <div key={r.titulo} className="rounded-2xl border border-slate-200 bg-slate-50 p-5"><h3 className="mb-2 text-lg font-bold text-slate-800">{r.titulo}</h3><p className="text-sm leading-relaxed text-slate-600">{r.nota}</p></div>)}
+            </div>
+          </section>
+        )}
+
       </div>
     </main>
   );
@@ -767,7 +999,6 @@ function BibliotecaAvanzadaTexasLifeHealth() {
 // ════════════════════════════════════════════════════════════════════════════
 // TABS ROUTER — single root, swap component on tab change
 // ════════════════════════════════════════════════════════════════════════════
-const TABS_COMPONENTS = [PlataformaTexasLifeHealthEspanolEspejo, TexasLifeHealthDeepDiveLibrary, BibliotecaAvanzadaTexasLifeHealth];
 let _singleRoot = null;
 
 window.renderActiveTab = function() {
@@ -776,7 +1007,12 @@ window.renderActiveTab = function() {
   if (!_singleRoot) {
     _singleRoot = ReactDOM.createRoot(el);
   }
-  const Comp = TABS_COMPONENTS[idx];
+  let Comp;
+  if (idx === 0) {
+    Comp = PlataformaTexasLifeHealthEspanolEspejo;
+  } else {
+    Comp = window._libLang === 'es' ? BibliotecaAvanzadaTexasLifeHealth : TexasLifeHealthDeepDiveLibrary;
+  }
   _singleRoot.render(<Comp />);
 };
 </script>

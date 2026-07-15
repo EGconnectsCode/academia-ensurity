@@ -21,6 +21,43 @@
       }
 
       body { background:var(--az-bg)!important; font-family:'Inter','Segoe UI',system-ui,sans-serif!important; }
+      body.dark {
+        --bg:#0F172A; --sur:#1E293B; --sur2:#1a2540; --bdr:rgba(255,255,255,.1);
+        --tx:#E2E8F0; --tx2:#94A3B8; --tx3:#64748B; --txt:#E2E8F0;
+        --az-bg:#0F172A; --az-surface:#1E293B; --az-border:rgba(255,255,255,.1);
+        --az-text:#E2E8F0; --az-text2:#94A3B8;
+      }
+      body.dark, body.dark #main { background:#0F172A!important; color:#E2E8F0!important; }
+      body.dark .content, body.dark .page, body.dark [id^="page-"] { background:#0F172A!important; }
+      body.dark .card { background:#1E293B!important; border-color:rgba(255,255,255,.1)!important; color:#E2E8F0!important; }
+      body.dark .card-title, body.dark .ctitle { color:#94A3B8!important; }
+      body.dark h1,body.dark h2,body.dark h3,body.dark h4,body.dark h5 { color:#E2E8F0!important; }
+      body.dark p, body.dark li, body.dark label { color:#CBD5E1!important; }
+      body.dark td, body.dark th { color:#E2E8F0!important; border-color:rgba(255,255,255,.08)!important; }
+      body.dark thead, body.dark thead tr { background:#1E293B!important; }
+      body.dark thead th { color:#94A3B8!important; }
+      body.dark tbody tr:nth-child(even) { background:rgba(255,255,255,.03)!important; }
+      body.dark tbody tr:hover { background:rgba(255,255,255,.06)!important; }
+      body.dark table { border-color:rgba(255,255,255,.08)!important; }
+      body.dark input, body.dark textarea, body.dark select {
+        background:#1E293B!important; border-color:rgba(255,255,255,.15)!important; color:#E2E8F0!important;
+      }
+      body.dark input::placeholder, body.dark textarea::placeholder { color:#64748B!important; }
+      body.dark button:not([class*="az-"]) {
+        background:#1E293B!important; color:#E2E8F0!important; border-color:rgba(255,255,255,.12)!important;
+      }
+      body.dark button:not([class*="az-"]):hover { background:#2D3B55!important; }
+      body.dark .pdf-card, body.dark .file-card, body.dark .doc-card {
+        background:#1E293B!important; border-color:rgba(255,255,255,.1)!important;
+      }
+      body.dark .az-pdf-modal { background:#1E293B!important; }
+      body.dark .az-pdf-header { background:#0F172A!important; border-color:rgba(255,255,255,.1)!important; }
+      body.dark .az-pdf-title { color:#E2E8F0!important; }
+      body.dark a.az-pdf-dl { background:#1d4ed8!important; color:#fff!important; }
+      body.dark ::-webkit-scrollbar-track { background:#0F172A!important; }
+      body.dark ::-webkit-scrollbar-thumb { background:#334155!important; }
+      body.dark ::-webkit-scrollbar-thumb:hover { background:#475569!important; }
+      #sb-level,.sb-user-level { display:none!important; }
 
       .topbar { background:var(--az-navy)!important; border-bottom:1px solid rgba(255,255,255,.07)!important;
         box-shadow:0 1px 8px rgba(0,0,0,.25)!important; height:54px!important; padding:0 16px!important;
@@ -55,6 +92,7 @@
       .az-admin-back:hover { background:rgba(251,191,36,.25)!important; }
 
       .sidebar, #sidebar { background:var(--az-navy)!important; border-right:1px solid rgba(255,255,255,.07)!important; }
+      .sb-user-row { display:none!important; }
       .sb-item { color:rgba(255,255,255,.65)!important; font-size:.86rem!important; }
       .sb-item:hover { background:rgba(255,255,255,.06)!important; color:#fff!important; }
       .sb-item.active { background:rgba(37,99,235,.3)!important; color:#fff!important; font-weight:600!important; }
@@ -84,7 +122,7 @@
         var backBtn = document.createElement('a');
         backBtn.className = 'az-admin-back';
         backBtn.href = '/';
-        backBtn.textContent = '← Dashboard';
+        backBtn.innerHTML = '<span class="en">← Dashboard</span><span class="es">← Inicio</span>';
         acts.insertBefore(backBtn, acts.firstChild);
 
         var div = document.createElement('div');
@@ -109,7 +147,7 @@
 
         var soBtn = document.createElement('button');
         soBtn.className = 'az-topbar-signout';
-        soBtn.textContent = 'Cerrar Sesión';
+        soBtn.innerHTML = '<span class="en">Sign Out</span><span class="es">Cerrar Sesión</span>';
         soBtn.onclick = function () { if (window.doSignOut) window.doSignOut(); };
         acts.appendChild(soBtn);
       }
@@ -126,6 +164,63 @@
           if (node.nodeType === 3) node.textContent = node.textContent.replace(/[\u{1F000}-\u{1FFFF}\u{2600}-\u{27FF}\u{2700}-\u{27BF}\u{FE00}-\u{FE0F}]|️/gu, '').trim();
         });
       });
+    });
+  })();
+
+  // ── Video Modal (Vimeo inline player) ──
+  (function injectVidModal() {
+    var s = document.createElement('style');
+    s.textContent =
+      '#gtl-vid-modal{display:none;position:fixed;inset:0;z-index:9999;align-items:center;justify-content:center;padding:16px}' +
+      '#gtl-vid-modal.open{display:flex}' +
+      '.gtl-vid-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.82)}' +
+      '.gtl-vid-box{position:relative;z-index:1;width:min(860px,96vw);border-radius:14px;overflow:hidden;background:#0a1520;box-shadow:0 24px 64px rgba(0,0,0,.7)}' +
+      '.gtl-vid-header{display:flex;align-items:center;gap:12px;padding:12px 16px;background:#1b2249}' +
+      '.gtl-vid-header span{color:#fff;font-size:.88rem;font-weight:700;flex:1;line-height:1.3}' +
+      '.gtl-vid-close{background:none;border:none;color:rgba(255,255,255,.6);font-size:1.2rem;cursor:pointer;padding:2px 8px;border-radius:6px;line-height:1;font-family:inherit}' +
+      '.gtl-vid-close:hover{background:rgba(255,255,255,.12);color:#fff}' +
+      '.gtl-vid-player{position:relative;padding-bottom:56.25%;height:0}' +
+      '.gtl-vid-player iframe{position:absolute;inset:0;width:100%;height:100%;border:0}';
+    document.head.appendChild(s);
+
+    var modal = document.createElement('div');
+    modal.id = 'gtl-vid-modal';
+    modal.innerHTML =
+      '<div class="gtl-vid-backdrop"></div>' +
+      '<div class="gtl-vid-box">' +
+        '<div class="gtl-vid-header">' +
+          '<span id="gtl-vid-title"></span>' +
+          '<button class="gtl-vid-close" title="Cerrar">✕</button>' +
+        '</div>' +
+        '<div class="gtl-vid-player">' +
+          '<iframe id="gtl-vid-iframe" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>' +
+        '</div>' +
+      '</div>';
+    document.body.appendChild(modal);
+
+    function closeVid() {
+      document.getElementById('gtl-vid-iframe').src = '';
+      modal.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    modal.querySelector('.gtl-vid-backdrop').addEventListener('click', closeVid);
+    modal.querySelector('.gtl-vid-close').addEventListener('click', closeVid);
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeVid(); });
+
+    document.addEventListener('click', function(e) {
+      var card = e.target.closest('.vid-card');
+      if (!card) return;
+      var href = card.getAttribute('href');
+      if (!href || href.indexOf('vimeo.com') === -1) return;
+      e.preventDefault();
+      var m = href.match(/vimeo\.com\/(\d+)\/([a-f0-9]+)/);
+      if (!m) { window.open(href, '_blank'); return; }
+      var embedUrl = 'https://player.vimeo.com/video/' + m[1] + '?h=' + m[2] + '&autoplay=1&color=1565c0&title=0&byline=0&portrait=0';
+      var titleEl = card.querySelector('.vid-card-title');
+      document.getElementById('gtl-vid-title').textContent = titleEl ? titleEl.textContent : 'Video';
+      document.getElementById('gtl-vid-iframe').src = embedUrl;
+      modal.classList.add('open');
+      document.body.style.overflow = 'hidden';
     });
   })();
 
@@ -154,7 +249,7 @@
       <div class="az-pdf-panel">
         <div class="az-pdf-header">
           <span class="az-pdf-title" id="az-pdf-title">Documento</span>
-          <a class="az-pdf-dl" id="az-pdf-dl" target="_blank" download>&#8659; Descargar</a>
+          <a class="az-pdf-dl" id="az-pdf-dl" target="_blank" download><span class="en">&#8659; Download</span><span class="es">&#8659; Descargar</span></a>
           <button class="az-pdf-close" onclick="window.closePdfPreview()">&#10005;</button>
         </div>
         <iframe class="az-pdf-frame" id="az-pdf-frame" src="" frameborder="0"></iframe>
@@ -186,6 +281,135 @@
         _origDlFromUrl(url, fname);
       }
     };
+  })();
+
+  // Override GTL-specific PDF openers + inject buttons on all file cards
+  (function patchGtlFileFunctions() {
+    // Decode base64 PDF → blob → show in modal
+    function _b64ToModal(b64, title) {
+      try {
+        var bin = atob(b64), arr = new Uint8Array(bin.length);
+        for (var i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+        var url = URL.createObjectURL(new Blob([arr], { type: 'application/pdf' }));
+        if (window.showPdfPreview) window.showPdfPreview(url, title);
+        else window.open(url, '_blank');
+      } catch(e) { alert('Error: ' + e.message); }
+    }
+
+    function _b64Download(b64, filename) {
+      try {
+        var bin = atob(b64), arr = new Uint8Array(bin.length);
+        for (var i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+        var url = URL.createObjectURL(new Blob([arr], { type: 'application/pdf' }));
+        var a = document.createElement('a'); a.href = url; a.download = filename + '.pdf';
+        document.body.appendChild(a); a.click();
+        setTimeout(function() { URL.revokeObjectURL(url); if (a.parentNode) a.parentNode.removeChild(a); }, 500);
+      } catch(e) { alert('Error: ' + e.message); }
+    }
+
+    function _urlDownload(url, name) {
+      fetch(url).then(function(r) { return r.blob(); })
+        .then(function(b) {
+          var u = URL.createObjectURL(b), a = document.createElement('a');
+          a.href = u; a.download = name + '.pdf'; document.body.appendChild(a); a.click();
+          setTimeout(function() { URL.revokeObjectURL(u); if (a.parentNode) a.parentNode.removeChild(a); }, 500);
+        }).catch(function() { window.open(url, '_blank'); });
+    }
+
+    // Override the three GTL PDF functions to open in modal
+    var _origOpenStatePdf = window.openStatePdf;
+    window.openStatePdf = function() {
+      if (window._STATE_PDF_B64) _b64ToModal(window._STATE_PDF_B64, 'All States Combined');
+      else if (_origOpenStatePdf) _origOpenStatePdf();
+    };
+
+    var _origOpenCommPdf = window.openCommPdf;
+    window.openCommPdf = function(key) {
+      var titles = { cs: 'Commission Schedule', dd: 'Direct Deposit Form' };
+      if (window._COMM_PDFS && window._COMM_PDFS[key])
+        _b64ToModal(window._COMM_PDFS[key], titles[key] || key);
+      else if (_origOpenCommPdf) _origOpenCommPdf(key);
+    };
+
+    var _origOpenVerifPdf = window.openVerifPdf;
+    window.openVerifPdf = function() {
+      if (window._VERIF_B64) _b64ToModal(window._VERIF_B64, 'Verification Call Information');
+      else if (_origOpenVerifPdf) _origOpenVerifPdf();
+    };
+
+    // Inject button CSS (guard against duplicate)
+    if (!document.getElementById('az-fb-css')) {
+    var fbStyle = document.createElement('style'); fbStyle.id = 'az-fb-css';
+    fbStyle.textContent =
+      '.az-fb{display:flex;gap:6px;width:100%;margin-top:8px}' +
+      '.az-fb-prev,.az-fb-dl{flex:1;padding:7px 6px;border:none;border-radius:8px;font-size:.76rem;font-weight:700;cursor:pointer;font-family:inherit;transition:background .15s;white-space:nowrap;text-align:center}' +
+      '.az-fb-prev{background:#1e40af;color:#fff}.az-fb-prev:hover{background:#1d4ed8}' +
+      '.az-fb-dl{background:#059669;color:#fff}.az-fb-dl:hover{background:#047857}' +
+      '.pdf-card[data-azp]{cursor:default!important}';
+    document.head.appendChild(fbStyle);
+    }
+
+    function _makeGtlButtons(onPreview, onDownload) {
+      var wrap = document.createElement('div'); wrap.className = 'az-fb';
+      var p = document.createElement('button'); p.className = 'az-fb-prev'; p.innerHTML = '<span class="en">Preview</span><span class="es">Vista Previa</span>';
+      var d = document.createElement('button'); d.className = 'az-fb-dl';   d.innerHTML = '<span class="en">Download</span><span class="es">Descargar</span>';
+      p.addEventListener('click', function(e) { e.stopPropagation(); onPreview(); });
+      d.addEventListener('click', function(e) { e.stopPropagation(); onDownload(); });
+      wrap.appendChild(p); wrap.appendChild(d);
+      return wrap;
+    }
+
+    function _injectCard(card, btns) {
+      card.setAttribute('data-azp', '1');
+      card.removeAttribute('onclick');
+      card.style.cursor = 'default';
+      var dlEl = card.querySelector('.pdf-dl');
+      if (dlEl) dlEl.replaceWith(btns); else card.appendChild(btns);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('.pdf-card').forEach(function(card) {
+        if (card.hasAttribute('data-azp')) return;
+        var oc = card.getAttribute('onclick') || '';
+        var nameEl = card.querySelector('.pdf-name');
+        var name = nameEl ? nameEl.textContent.trim() : 'Documento';
+
+        var mComm  = oc.match(/openCommPdf\('(\w+)'\)/);
+        var mUrl   = oc.match(/window\.open\('([^']+)'/);
+
+        if (mComm) {
+          var key = mComm[1];
+          var titles = { cs: 'Commission Schedule', dd: 'Direct Deposit Form' };
+          var title = titles[key] || name;
+          _injectCard(card, _makeGtlButtons(
+            function() { window.openCommPdf(key); },
+            function() { if (window._COMM_PDFS && window._COMM_PDFS[key]) _b64Download(window._COMM_PDFS[key], title); }
+          ));
+        } else if (/openStatePdf\(\)/.test(oc)) {
+          _injectCard(card, _makeGtlButtons(
+            function() { window.openStatePdf(); },
+            function() { if (window._STATE_PDF_B64) _b64Download(window._STATE_PDF_B64, 'All States Combined'); }
+          ));
+        } else if (/openVerifPdf\(\)/.test(oc)) {
+          _injectCard(card, _makeGtlButtons(
+            function() { window.openVerifPdf(); },
+            function() { if (window._VERIF_B64) _b64Download(window._VERIF_B64, 'Verification Call Information'); }
+          ));
+        } else if (mUrl && mUrl[1].endsWith('.pdf')) {
+          var url = mUrl[1];
+          var isHttps = url.startsWith('https://');
+          _injectCard(card, _makeGtlButtons(
+            function() {
+              if (isHttps && window.showPdfPreview) window.showPdfPreview(url, name);
+              else window.open(url, '_blank');
+            },
+            function() {
+              if (isHttps) _urlDownload(url, name); else window.open(url, '_blank');
+            }
+          ));
+        }
+      });
+    });
   })();
 
   // Patch window.dl() to show preview
@@ -226,12 +450,12 @@
   window._azPreview = function(name, key) {
     _azResolveUrl(key, function(url) {
       if (url && window.showPdfPreview) window.showPdfPreview(url, name);
-      else alert('Preview unavailable');
+      else alert(window.LANG === 'es' ? 'Vista previa no disponible' : 'Preview unavailable');
     });
   };
   window._azDownload = function(name, key, fname) {
     _azResolveUrl(key, function(url) {
-      if (!url) { alert('Download unavailable'); return; }
+      if (!url) { alert(window.LANG === 'es' ? 'Descarga no disponible' : 'Download unavailable'); return; }
       var trigger = function(blobUrl) {
         var a = document.createElement('a');
         a.href = blobUrl; a.download = (fname || name) + '.pdf';
@@ -247,8 +471,8 @@
   };
   function _azMakeButtons(name, key, fname) {
     var wrap = document.createElement('div'); wrap.className = 'az-fb';
-    var prev = document.createElement('button'); prev.className = 'az-fb-prev'; prev.textContent = '👁 Preview';
-    var dl   = document.createElement('button'); dl.className   = 'az-fb-dl';   dl.textContent   = '⬇ Download';
+    var prev = document.createElement('button'); prev.className = 'az-fb-prev'; prev.innerHTML = '<span class="en">👁 Preview</span><span class="es">👁 Vista Previa</span>';
+    var dl   = document.createElement('button'); dl.className   = 'az-fb-dl';   dl.innerHTML   = '<span class="en">⬇ Download</span><span class="es">⬇ Descargar</span>';
     prev.addEventListener('click', function(e) { e.stopPropagation(); window._azPreview(name, key); });
     dl.addEventListener('click',   function(e) { e.stopPropagation(); window._azDownload(name, key, fname); });
     wrap.appendChild(prev); wrap.appendChild(dl); return wrap;
@@ -319,14 +543,9 @@
 
   // ── OVERRIDE SIGN OUT ──
   window.doSignOut = async function () {
-    await AZ.Activity.log(MODULE_ID, 'logout');
+    try { await AZ.Activity.log(MODULE_ID, 'logout'); } catch(e) {}
     await AZ.Auth.signOut();
-    window.CUR_USER = null; window.ST = {};
-    document.body.classList.remove('is-admin');
-    var app = document.getElementById('app');
-    if (app) { app.style.display = 'none'; app.classList.remove('visible'); }
-    var ls = document.getElementById('login-screen');
-    if (ls) ls.style.display = 'flex';
+    window.location.replace('/');
   };
   window.logout = window.doLogout = window.doSignOut;
 
@@ -468,6 +687,19 @@
     document.head.appendChild(s);
   }
 
+  var _ONBOARD_STEPS_EN = [
+    { icon: '🛡️', title: 'Welcome to Guarantee Trust Life',
+      body: 'Welcome to the GTL Agent Training Portal. Here you will find training modules on life and supplemental insurance, forms, and sales resources to grow as an agent.' },
+    { icon: '📚', title: 'Training Modules',
+      body: 'Explore the modules in the sidebar: Medicare Supplement, Cancer Coverage, and more. Complete the assessments at the end of each module to earn XP.' },
+    { icon: '📄', title: 'Downloads & Forms',
+      body: 'In the Downloads section you will find application forms, brochures, and field guides. Use "Preview" (blue) to review or "Download" (green) to save the file.' },
+    { icon: '📊', title: 'Your Progress',
+      body: 'Your progress is saved automatically. Each completed quiz adds XP to your profile. View your level and achievements in the top bar or your user profile.' },
+    { icon: '💬', title: 'Need Help?',
+      body: 'The support chat in the bottom right corner answers quick questions about forms, downloads, and more.' }
+  ];
+
   var _ONBOARD_STEPS = [
     { icon: '🛡️', title: 'Bienvenido a Guarantee Trust Life',
       body: 'Bienvenido al portal de entrenamiento de GTL. Aquí encontrarás módulos de capacitación sobre seguros de vida y suplementarios, formularios y recursos de ventas.' },
@@ -479,6 +711,33 @@
       body: 'Tu progreso se guarda automáticamente. Cada quiz completado suma XP a tu perfil. Mira tu nivel y logros en la barra superior o en tu perfil de usuario.' },
     { icon: '💬', title: '¿Necesitas Ayuda?',
       body: 'El chat de soporte en la esquina inferior derecha responde preguntas rápidas sobre dónde encontrar formularios, cómo descargar archivos y mucho más.' }
+  ];
+
+  var _CHAT_FAQS_EN = [
+    { label: '📋 Forms',
+      keywords: ['form', 'forms', 'application', 'document', 'file'],
+      answer: 'Forms and documents are in the "Downloads" section of the sidebar. Find the file and click the blue "Preview" button to view it, or the green "Download" button to save it.' },
+    { label: '📥 Download PDF',
+      keywords: ['download', 'pdf', 'file', 'save'],
+      answer: 'To download a PDF: go to the Downloads section, find the file and click "Download" (green button). To view it first, use "Preview" (blue button).' },
+    { label: '📚 Modules',
+      keywords: ['module', 'course', 'training', 'lesson', 'section'],
+      answer: 'Training modules are in the sidebar menu. Select the one you want, review the material, and complete the quiz at the end to record your progress and earn XP.' },
+    { label: '🏆 My XP / Level',
+      keywords: ['xp', 'level', 'points', 'progress', 'achievement'],
+      answer: 'Your XP and level update automatically when you complete quizzes. View them in your profile (user icon, top right) or in the top navigation bar.' },
+    { label: '❓ Quiz / Assessment',
+      keywords: ['quiz', 'assessment', 'exam', 'test', 'questions'],
+      answer: 'Assessments appear at the end of each module. Select your answers and submit. Your result is saved automatically and adds XP to your profile.' },
+    { label: '🔐 Access / Password',
+      keywords: ['password', 'login', 'access', 'forgot', 'reset'],
+      answer: 'If you have trouble signing in, go to the main page and use "Forgot your password?". For access issues write to it@egconnects.com.' },
+    { label: '📞 Technical Support',
+      keywords: ['support', 'help', 'contact', 'email', 'problem', 'error'],
+      answer: 'For technical support write to it@egconnects.com. For questions about commissions or contracts contact your supervisor or field manager.' },
+    { label: '📦 GTL Products',
+      keywords: ['product', 'policy', 'insurance', 'medicare', 'supplement', 'cancer', 'coverage'],
+      answer: 'GTL product information (Medicare Supplement, Cancer Coverage, etc.) is in the training modules and Downloads section (agent guides and brochures).' }
   ];
 
   var _CHAT_FAQS = [
@@ -530,8 +789,10 @@
         window._azLang(profile.lang);
       }
       _withWidgets(function () {
-        window.AZWidgets.initChat(_CHAT_FAQS);
-        setTimeout(function () { window.AZWidgets.initOnboarding(_ONBOARD_STEPS); }, 700);
+        var _faqs  = (window.LANG === 'en') ? _CHAT_FAQS_EN    : _CHAT_FAQS;
+        var _steps = (window.LANG === 'en') ? _ONBOARD_STEPS_EN : _ONBOARD_STEPS;
+        window.AZWidgets.initChat(_faqs);
+        setTimeout(function () { window.AZWidgets.initOnboarding(_steps); }, 700);
       });
       await AZ.Activity.log(MODULE_ID, 'login');
     } catch (e) { console.warn('[GTL Patch] auto-login error:', e.message); }

@@ -24,6 +24,42 @@
         --az-shadow:0 1px 3px rgba(0,0,0,.07),0 4px 12px rgba(0,0,0,.06);
       }
       body { background:var(--az-bg)!important; font-family:'Inter','Segoe UI',system-ui,sans-serif!important; }
+      body.dark {
+        --bg:#0F172A; --sur:#1E293B; --sur2:#1a2540; --bdr:rgba(255,255,255,.1);
+        --tx:#E2E8F0; --tx2:#94A3B8; --tx3:#64748B; --txt:#E2E8F0;
+        --az-bg:#0F172A; --az-surface:#1E293B; --az-border:rgba(255,255,255,.1);
+        --az-text:#E2E8F0; --az-text2:#94A3B8;
+      }
+      body.dark, body.dark #main { background:#0F172A!important; color:#E2E8F0!important; }
+      body.dark .content, body.dark .page, body.dark [id^="page-"] { background:#0F172A!important; }
+      body.dark .card { background:#1E293B!important; border-color:rgba(255,255,255,.1)!important; color:#E2E8F0!important; }
+      body.dark .card-title, body.dark .ctitle { color:#94A3B8!important; }
+      body.dark h1,body.dark h2,body.dark h3,body.dark h4,body.dark h5 { color:#E2E8F0!important; }
+      body.dark p, body.dark li, body.dark label { color:#CBD5E1!important; }
+      body.dark td, body.dark th { color:#E2E8F0!important; border-color:rgba(255,255,255,.08)!important; }
+      body.dark thead, body.dark thead tr { background:#1E293B!important; }
+      body.dark thead th { color:#94A3B8!important; }
+      body.dark tbody tr:nth-child(even) { background:rgba(255,255,255,.03)!important; }
+      body.dark tbody tr:hover { background:rgba(255,255,255,.06)!important; }
+      body.dark table { border-color:rgba(255,255,255,.08)!important; }
+      body.dark input, body.dark textarea, body.dark select {
+        background:#1E293B!important; border-color:rgba(255,255,255,.15)!important; color:#E2E8F0!important;
+      }
+      body.dark input::placeholder, body.dark textarea::placeholder { color:#64748B!important; }
+      body.dark button:not([class*="az-"]) {
+        background:#1E293B!important; color:#E2E8F0!important; border-color:rgba(255,255,255,.12)!important;
+      }
+      body.dark button:not([class*="az-"]):hover { background:#2D3B55!important; }
+      body.dark .pdf-card, body.dark .file-card, body.dark .doc-card {
+        background:#1E293B!important; border-color:rgba(255,255,255,.1)!important;
+      }
+      body.dark .az-pdf-modal { background:#1E293B!important; }
+      body.dark .az-pdf-header { background:#0F172A!important; border-color:rgba(255,255,255,.1)!important; }
+      body.dark .az-pdf-title { color:#E2E8F0!important; }
+      body.dark a.az-pdf-dl { background:#1d4ed8!important; color:#fff!important; }
+      body.dark ::-webkit-scrollbar-track { background:#0F172A!important; }
+      body.dark ::-webkit-scrollbar-thumb { background:#334155!important; }
+      body.dark ::-webkit-scrollbar-thumb:hover { background:#475569!important; }
 
       /* ── Topbar ── */
       .topbar { background:var(--az-navy)!important; border-bottom:1px solid rgba(255,255,255,.07)!important;
@@ -58,7 +94,8 @@
       .sb-brand { padding:12px 16px 10px!important; border-bottom:1px solid rgba(255,255,255,.08)!important; }
       .sb-logo-wrap { display:none!important; }
       .sb-avatar-wrap { display:none!important; }
-      .sb-user-row { padding:10px 16px!important; }
+      .sb-user-row { display:none!important; }
+      .sb-bottom { display:none!important; }
       .sb-user-name { font-size:.88rem!important; }
       .sb-label { font-size:.62rem!important; font-weight:700!important; text-transform:uppercase!important;
         letter-spacing:.1em!important; color:rgba(255,255,255,.3)!important; padding:14px 16px 5px!important; }
@@ -111,6 +148,7 @@
       .sb-badge { background:#3B82F6!important; color:#fff!important; font-size:.62rem!important;
         font-weight:700!important; border-radius:99px!important; padding:1px 6px!important; margin-left:auto!important; }
       .sb-footer { padding:12px 14px!important; border-top:1px solid rgba(255,255,255,.08)!important; }
+      #sb-level { display:none!important; }
       .sb-bottom .sb-item { color:rgba(255,255,255,.5)!important; }
       .sb-bottom .sb-item:hover { color:#fff!important; }
       body.is-admin .admin-only   { display:flex!important; }
@@ -217,7 +255,7 @@
         var backBtn = document.createElement('a');
         backBtn.className = 'az-admin-back';
         backBtn.href = '/';
-        backBtn.textContent = '← Dashboard';
+        backBtn.innerHTML = '<span class="en">← Dashboard</span><span class="es">← Inicio</span>';
         acts.appendChild(backBtn);
 
         var div = document.createElement('div');
@@ -236,7 +274,7 @@
 
         var soBtn = document.createElement('button');
         soBtn.className = 'az-topbar-signout';
-        soBtn.textContent = 'Cerrar Sesión';
+        soBtn.innerHTML = '<span class="en">Sign Out</span><span class="es">Cerrar Sesión</span>';
         soBtn.onclick = function () { if (window.logout) window.logout(); };
         acts.appendChild(soBtn);
       }
@@ -367,7 +405,7 @@
           }
         });
         // Update button label
-        card.querySelectorAll('.vm-btn .en').forEach(function (e) { e.textContent = '▶ Ver aquí'; });
+        card.querySelectorAll('.vm-btn .en').forEach(function (e) { e.textContent = '▶ Watch here'; });
         card.querySelectorAll('.vm-btn .es').forEach(function (e) { e.textContent = '▶ Ver aquí'; });
         card.querySelectorAll('.vm-btn').forEach(function (b) {
           if (!b.querySelector('.en') && !b.querySelector('.es')) b.textContent = '▶ Ver aquí';
@@ -403,7 +441,7 @@
           });
           var stepNum = document.createElement('span');
           stepNum.className = 'az-et-step-num';
-          stepNum.textContent = 'Paso ' + (i + 1);
+          stepNum.textContent = (window.LANG === 'es' ? 'Paso ' : 'Step ') + (i + 1);
           tab.insertBefore(stepNum, tab.firstChild);
           if (i < etTabBtns.length - 1) {
             var arrow = document.createElement('div');
@@ -460,7 +498,7 @@
       <div class="az-pdf-panel">
         <div class="az-pdf-hdr">
           <span class="az-pdf-title" id="az-pdf-title">Documento</span>
-          <button class="az-pdf-dl" id="az-pdf-dl-btn" onclick="window.azDownloadPdf()">&#8659; Descargar</button>
+          <button class="az-pdf-dl" id="az-pdf-dl-btn" onclick="window.azDownloadPdf()"><span class="en">&#8659; Download</span><span class="es">&#8659; Descargar</span></button>
           <button class="az-pdf-x" onclick="window.azClosePdf()">&#10005;</button>
         </div>
         <iframe class="az-pdf-frame" id="az-pdf-frame" src="" frameborder="0"></iframe>
@@ -665,12 +703,12 @@
   window._azPreview = function(name, key) {
     _azResolveUrl(key, function(url) {
       if (url && window.showPdfPreview) window.showPdfPreview(url, name);
-      else alert('Preview unavailable');
+      else alert(window.LANG === 'es' ? 'Vista previa no disponible' : 'Preview unavailable');
     });
   };
   window._azDownload = function(name, key, fname) {
     _azResolveUrl(key, function(url) {
-      if (!url) { alert('Download unavailable'); return; }
+      if (!url) { alert(window.LANG === 'es' ? 'Descarga no disponible' : 'Download unavailable'); return; }
       var trigger = function(blobUrl) {
         var a = document.createElement('a');
         a.href = blobUrl; a.download = (fname || name) + '.pdf';
@@ -686,8 +724,8 @@
   };
   function _azMakeButtons(name, key, fname) {
     var wrap = document.createElement('div'); wrap.className = 'az-fb';
-    var prev = document.createElement('button'); prev.className = 'az-fb-prev'; prev.textContent = '👁 Preview';
-    var dl   = document.createElement('button'); dl.className   = 'az-fb-dl';   dl.textContent   = '⬇ Download';
+    var prev = document.createElement('button'); prev.className = 'az-fb-prev'; prev.innerHTML = '<span class="en">👁 Preview</span><span class="es">👁 Vista Previa</span>';
+    var dl   = document.createElement('button'); dl.className   = 'az-fb-dl';   dl.innerHTML   = '<span class="en">⬇ Download</span><span class="es">⬇ Descargar</span>';
     prev.addEventListener('click', function(e) { e.stopPropagation(); window._azPreview(name, key); });
     dl.addEventListener('click',   function(e) { e.stopPropagation(); window._azDownload(name, key, fname); });
     wrap.appendChild(prev); wrap.appendChild(dl); return wrap;
@@ -1033,6 +1071,19 @@
     document.head.appendChild(s);
   }
 
+  var _ONBOARD_STEPS_EN = [
+    { icon: '🦅', title: 'Welcome to CICA Citizens Portal',
+      body: 'Welcome to the CICA Citizens Agent Training Portal. Your hub for training resources, contract forms, and sales tools to grow your agency.' },
+    { icon: '📚', title: 'Training Modules',
+      body: 'Explore the training modules in the sidebar: videos, presentations, and quizzes. Complete each assessment to earn XP and advance your level.' },
+    { icon: '📄', title: 'Downloads & Forms',
+      body: 'In the Downloads section you will find contract forms, claim forms, and product guides. Use "Preview" to view or "Download" to save.' },
+    { icon: '📊', title: 'Your Progress',
+      body: 'Your XP and level update automatically as you complete assessments. View your history and achievements in your profile or the top navigation bar.' },
+    { icon: '💬', title: 'Questions or Help?',
+      body: 'Use the support chat in the bottom right corner for quick answers about training, downloads, and platform navigation.' }
+  ];
+
   var _ONBOARD_STEPS = [
     { icon: '🏛️', title: 'Bienvenido a CICA',
       body: 'Bienvenido al portal de entrenamiento de Citizens Insurance Carriers of America. Aquí encontrarás módulos de capacitación, formularios de campo y recursos para agentes.' },
@@ -1044,6 +1095,33 @@
       body: 'Cada módulo y quiz completado suma XP a tu perfil. Tu nivel refleja tu avance en la plataforma. Consulta tus logros en el perfil de usuario.' },
     { icon: '💬', title: '¿Tienes Dudas?',
       body: 'El asistente de chat en la esquina inferior derecha puede ayudarte a localizar formularios, descargar documentos y navegar la plataforma. ¡Disponible en todo momento!' }
+  ];
+
+  var _CHAT_FAQS_EN = [
+    { label: '📋 Forms',
+      keywords: ['form', 'forms', 'application', 'document', 'file'],
+      answer: 'Forms and documents are in the "Downloads" section of the sidebar. Find the file and click the blue "Preview" button to view it, or the green "Download" button to save it.' },
+    { label: '📥 Download PDF',
+      keywords: ['download', 'pdf', 'file', 'save'],
+      answer: 'To download a PDF: go to the Downloads section, find the file and click "Download" (green button). To view it first, use "Preview" (blue button).' },
+    { label: '📚 Modules',
+      keywords: ['module', 'course', 'training', 'lesson', 'section'],
+      answer: 'Training modules are in the sidebar menu. Select the one you want, review the material, and complete the quiz at the end to record your progress and earn XP.' },
+    { label: '🏆 My XP / Level',
+      keywords: ['xp', 'level', 'points', 'progress', 'achievement'],
+      answer: 'Your XP and level update automatically when you complete quizzes. View them in your profile (user icon, top right) or in the top navigation bar.' },
+    { label: '❓ Quiz / Assessment',
+      keywords: ['quiz', 'assessment', 'exam', 'test', 'questions'],
+      answer: 'Assessments appear at the end of each module. Select your answers and submit. Your result is saved automatically and adds XP to your profile.' },
+    { label: '🔐 Access / Password',
+      keywords: ['password', 'login', 'access', 'forgot', 'reset'],
+      answer: 'If you have trouble signing in, go to the main page and use "Forgot your password?". For access issues write to it@egconnects.com.' },
+    { label: '📞 Technical Support',
+      keywords: ['support', 'help', 'contact', 'email', 'problem', 'error'],
+      answer: 'For technical support write to it@egconnects.com. For questions about commissions or contracts contact your supervisor or field manager.' },
+    { label: '📦 CICA Products',
+      keywords: ['product', 'policy', 'insurance', 'whole', 'life', 'coverage', 'citizens'],
+      answer: 'CICA Citizens product information is in the training modules and the Downloads section (contracts, forms, and agent resources).' }
   ];
 
   var _CHAT_FAQS = [
@@ -1124,8 +1202,10 @@
       }
 
       _withWidgets(function () {
-        window.AZWidgets.initChat(_CHAT_FAQS);
-        setTimeout(function () { window.AZWidgets.initOnboarding(_ONBOARD_STEPS); }, 700);
+        var _faqs  = (window.LANG === 'en') ? _CHAT_FAQS_EN    : _CHAT_FAQS;
+        var _steps = (window.LANG === 'en') ? _ONBOARD_STEPS_EN : _ONBOARD_STEPS;
+        window.AZWidgets.initChat(_faqs);
+        setTimeout(function () { window.AZWidgets.initOnboarding(_steps); }, 700);
       });
 
     } catch (e) { console.warn('[CICA Patch] auto-login error:', e.message); }

@@ -1,5 +1,11 @@
 ﻿<!DOCTYPE html>
 <html lang="en" data-theme="light">
+<script>
+  (function(){
+    var t=localStorage.getItem('az_theme'); if(t) document.documentElement.setAttribute('data-theme',t);
+    var l=localStorage.getItem('az_lang');  if(l) document.documentElement.lang=l;
+  })();
+</script>
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -66,6 +72,18 @@ body {
 }
 .logo-icon {
   height: 62px; width: auto; flex-shrink: 0; object-fit: contain;
+}
+[data-theme="dark"] .topbar-logo {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1px 6px;
+  box-shadow: 0 2px 0 #b0b8c8, 0 4px 10px rgba(0,0,0,.35);
+  transform: translateY(-1px);
+}
+[data-theme="dark"] .pilares-center {
+  background: rgba(255,255,255,.9);
+  border-radius: 12px;
+  padding: 10px 16px;
 }
 .topbar-actions { display: flex; align-items: center; gap: 10px; justify-self: end; }
 .btn-icon {
@@ -348,12 +366,15 @@ body {
 /* Slide 1 — 5 Pilares layout */
 .pilares-layout {
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  grid-template-rows: auto 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: 12px; align-items: start;
 }
+.pilares-center {
+  grid-column: 1 / -1;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 0 4px;
+}
 .pilares-title-wrap {
-  grid-column: 1; grid-row: 1;
   background: #7B1212; border-radius: 22px;
   padding: 10px 16px; align-self: start;
 }
@@ -362,12 +383,8 @@ body {
   text-transform: uppercase; letter-spacing: .03em; line-height: 1.3;
 }
 .pilares-col { display: flex; flex-direction: column; gap: 10px; }
-.pilares-col-left { grid-column: 1; grid-row: 2; }
-.pilares-center {
-  grid-column: 2; grid-row: 1 / 3;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  padding: 8px 14px; gap: 6px;
-}
+.pilares-col-left { grid-column: 1; }
+.pilares-col-right { grid-column: 2; }
 .eg-logo-img {
   width: 130px; height: auto; object-fit: contain;
   filter: drop-shadow(0 4px 16px rgba(139,0,0,.35));
@@ -377,7 +394,6 @@ body {
   0%,100% { filter: drop-shadow(0 4px 16px rgba(139,0,0,.3)); transform: scale(1); }
   50%      { filter: drop-shadow(0 8px 28px rgba(139,0,0,.55)); transform: scale(1.04); }
 }
-.pilares-col-right { grid-column: 3; grid-row: 1 / 3; }
 .pilar-card {
   background: var(--surface); border: 1.5px solid var(--border);
   border-radius: 10px; overflow: hidden;
@@ -416,11 +432,9 @@ body {
   min-height: 42px;
 }
 @media (max-width: 600px) {
-  .pilares-layout { grid-template-columns: 1fr; grid-template-rows: auto; }
-  .pilares-title-wrap, .pilares-col-left, .pilares-center, .pilares-col-right {
-    grid-column: 1; grid-row: auto;
-  }
-  .pilares-center { flex-direction: row; justify-content: center; padding: 4px 0; }
+  .pilares-layout { grid-template-columns: 1fr; }
+  .pilares-col-right { grid-column: 1; grid-row: auto; }
+  .pilares-center { padding: 4px 0 8px; }
   .principios-grid { grid-template-columns: 1fr; }
 }
 .culture-nav {
@@ -681,6 +695,7 @@ body {
   text-decoration: none; color: inherit; display: block;
 }
 .module-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); border-color: var(--accent); }
+[data-theme="dark"] .module-card { background: #1E293B; border-color: #334155; color: #F1F5F9; }
 .module-card-header { height: 5px; }
 .module-card-body { padding: 22px; }
 .module-card-body h3 { font-size: 1rem; font-weight: 700; margin-bottom: 5px; letter-spacing: -.01em; }
@@ -765,7 +780,7 @@ body {
   <a href="#" class="topbar-logo">
     <img class="logo-icon" src="https://cdn.bitrix24.com/b21945603/landing/898/8989ac3a7b465689d46cb6fd83474a26/Logo_Ensurity_Group_1080_500_px_1x.png" alt="Ensurity Group">
   </a>
-  <span class="topbar-brand">Academia Ensurity Group</span>
+  <span class="topbar-brand" data-en="Ensurity Group Academy" data-es="Academia Ensurity Group">Academia Ensurity Group</span>
   <div class="topbar-actions">
     <div class="lang-toggle">
       <button class="lang-btn" id="btn-lang-en" onclick="setLang('en')">EN</button>
@@ -834,6 +849,7 @@ body {
   <div class="auth-form-panel">
   <div class="auth-card">
     <div class="auth-card-logo">
+      <h1 data-en="Ensurity Group Academy" data-es="Academia Ensurity Group">Academia Ensurity Group</h1>
       <p id="auth-subtitle" data-en="Insurance Agent Training Platform" data-es="Plataforma de Capacitación para Agentes">Insurance Agent Training Platform</p>
     </div>
 
@@ -847,7 +863,7 @@ body {
     <form id="form-signin" onsubmit="doSignIn(event)">
       <div class="form-group">
         <label id="lbl-email-si" data-en="Email" data-es="Correo electrónico">Email</label>
-        <input type="email" id="si-email" required autocomplete="email" placeholder="you@example.com"/>
+        <input type="email" id="si-email" required autocomplete="email" placeholder="you@example.com" data-ph-en="you@example.com" data-ph-es="tú@ejemplo.com"/>
       </div>
       <div class="form-group">
         <label id="lbl-pass-si" data-en="Password" data-es="Contraseña">Password</label>
@@ -869,11 +885,11 @@ body {
     <form id="form-register" onsubmit="doRegister(event)" style="display:none">
       <div class="form-group">
         <label data-en="Full Name" data-es="Nombre completo" id="lbl-name">Full Name<span class="req">*</span></label>
-        <input type="text" id="reg-name" required placeholder="John Doe"/>
+        <input type="text" id="reg-name" required placeholder="John Doe" data-ph-en="John Doe" data-ph-es="Nombre Apellido"/>
       </div>
       <div class="form-group">
         <label data-en="Email" data-es="Correo electrónico" id="lbl-email-reg">Email<span class="req">*</span></label>
-        <input type="email" id="reg-email" required placeholder="you@example.com"/>
+        <input type="email" id="reg-email" required placeholder="you@example.com" data-ph-en="you@example.com" data-ph-es="tú@ejemplo.com"/>
       </div>
       <div class="form-group">
         <label data-en="Phone" data-es="Teléfono" id="lbl-phone">Phone<span class="req">*</span></label>
@@ -911,7 +927,7 @@ body {
     <form id="form-forgot" onsubmit="doForgot(event)" style="display:none">
       <div class="form-group">
         <label data-en="Your email address" data-es="Tu correo electrónico" id="lbl-email-fp">Your email address<span class="req">*</span></label>
-        <input type="email" id="fp-email" required placeholder="you@example.com"/>
+        <input type="email" id="fp-email" required placeholder="you@example.com" data-ph-en="you@example.com" data-ph-es="tú@ejemplo.com"/>
       </div>
       <button type="submit" class="btn-primary" id="btn-forgot">
         <span id="forgot-label" data-en="Request Code" data-es="Solicitar Código">Request Code</span>
@@ -932,7 +948,7 @@ body {
     </div>
     <div class="xp-badge">
       <div class="xp-num" id="xp-display">0</div>
-      <div class="xp-label">XP • Level <span id="level-display">1</span></div>
+      <div class="xp-label" data-en="XP • Level " data-es="XP • Nivel ">XP • Level <span id="level-display">1</span></div>
     </div>
   </div>
 
@@ -943,25 +959,25 @@ body {
       <h4 data-en="Ensurity Group Culture" data-es="Cultura Ensurity Group">Ensurity Group Culture</h4>
       <p data-en="5 Organizational Pillars · Leadership Principles" data-es="5 Pilares de la Organización · Principios de Liderazgo">5 Pilares de la Organización · Principios de Liderazgo</p>
     </div>
-    <span style="margin-left:auto;flex-shrink:0;background:rgba(255,255,255,.22);border-radius:8px;padding:5px 12px;font-size:.75rem;font-weight:700;color:#fff">Ver</span>
+    <span style="margin-left:auto;flex-shrink:0;background:rgba(255,255,255,.22);border-radius:8px;padding:5px 12px;font-size:.75rem;font-weight:700;color:#fff" data-en="View" data-es="Ver">Ver</span>
   </button>
 
   <!-- Pasos para Licencias button -->
   <button class="pasos-reopen-btn" onclick="openPasos()" style="margin-bottom:12px">
     <div style="flex:1;min-width:0">
-      <h4 style="font-size:.92rem;font-weight:800;margin:0 0 2px;color:#fff">Pasos para tu Licencia</h4>
-      <p style="font-size:.76rem;margin:0;opacity:.85;color:#fff">Examen · Fingerprints · Aplicación</p>
+      <h4 style="font-size:.92rem;font-weight:800;margin:0 0 2px;color:#fff" data-en="License Steps" data-es="Pasos para tu Licencia">Pasos para tu Licencia</h4>
+      <p style="font-size:.76rem;margin:0;opacity:.85;color:#fff" data-en="Exam · Fingerprints · Application" data-es="Examen · Huellas Digitales · Aplicación">Examen · Huellas Digitales · Aplicación</p>
     </div>
-    <span style="margin-left:auto;flex-shrink:0;background:rgba(255,255,255,.22);border-radius:8px;padding:5px 12px;font-size:.75rem;font-weight:700;color:#fff">Ver</span>
+    <span style="margin-left:auto;flex-shrink:0;background:rgba(255,255,255,.22);border-radius:8px;padding:5px 12px;font-size:.75rem;font-weight:700;color:#fff" data-en="View" data-es="Ver">Ver</span>
   </button>
 
   <!-- Texas Life & Health featured preview -->
   <div id="tlh-preview-card" style="margin-bottom:20px;border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(30,58,95,.14);border:1.5px solid rgba(30,58,95,.13);background:linear-gradient(135deg,#1E3A5F 0%,#2563EB 65%,#0EA5E9 100%);padding:18px 22px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap">
     <div>
-      <div style="font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.7);margin-bottom:2px">MÓDULO DESTACADO</div>
-      <h3 style="font-size:1.05rem;font-weight:800;color:#fff;margin:0">Become a AOR TX</h3>
+      <div style="font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.7);margin-bottom:2px" data-en="FEATURED MODULE" data-es="MÓDULO DESTACADO">MÓDULO DESTACADO</div>
+      <h3 style="font-size:1.05rem;font-weight:800;color:#fff;margin:0" data-en="Become a AOR TX" data-es="Conviértete en AOR TX">Become a AOR TX</h3>
     </div>
-    <a href="modules/texas-life-health/texas-life-health.html" style="flex-shrink:0;display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.18);border:1.5px solid rgba(255,255,255,.3);border-radius:10px;padding:8px 16px;font-weight:700;font-size:.85rem;color:#fff;text-decoration:none;transition:background .15s" onmouseover="this.style.background='rgba(255,255,255,.28)'" onmouseout="this.style.background='rgba(255,255,255,.18)'">Abrir Módulo →</a>
+    <a href="modules/texas-life-health/texas-life-health.html" style="flex-shrink:0;display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.18);border:1.5px solid rgba(255,255,255,.3);border-radius:10px;padding:8px 16px;font-weight:700;font-size:.85rem;color:#fff;text-decoration:none;transition:background .15s" onmouseover="this.style.background='rgba(255,255,255,.28)'" onmouseout="this.style.background='rgba(255,255,255,.18)'" data-en="Open Module →" data-es="Abrir Módulo →">Abrir Módulo →</a>
   </div>
 
   <p class="section-title" id="modules-heading" data-en="YOUR MODULES" data-es="TUS MÓDULOS">YOUR MODULES</p>
@@ -975,8 +991,8 @@ body {
   <div class="pasos-modal">
     <div class="pasos-modal-top">
       <div>
-        <h2>🪪 Pasos para tu Licencia</h2>
-        <p>Sigue estos pasos para obtener tu licencia en Texas</p>
+        <h2 data-en="🪪 License Steps" data-es="🪪 Pasos para tu Licencia">🪪 Pasos para tu Licencia</h2>
+        <p data-en="Follow these steps to get your Texas insurance license" data-es="Sigue estos pasos para obtener tu licencia en Texas">Sigue estos pasos para obtener tu licencia en Texas</p>
       </div>
       <button class="pasos-close" onclick="closePasos()">✕</button>
     </div>
@@ -984,33 +1000,33 @@ body {
       <div class="pasos-step">
         <div class="pasos-step-num">1</div>
         <div class="pasos-step-content">
-          <h4>Completar Educación Pre-Licencia</h4>
-          <p>Muchos tipos de licencia requieren educación previa. Revisa el handbook de Pearson VUE Texas Insurance para los requisitos de tu línea de autoridad.</p>
-          <a href="https://wsr.pearsonvue.com/testtaker/profile/create/SignUp.htm?clientCode=TXINS" target="_blank" rel="noopener">Registrarse en Pearson VUE →</a>
+          <h4 data-en="Complete Pre-License Education" data-es="Completar Educación Pre-Licencia">Completar Educación Pre-Licencia</h4>
+          <p data-en="Many license types require prior education. Check the Pearson VUE Texas Insurance handbook for your line of authority requirements." data-es="Muchos tipos de licencia requieren educación previa. Revisa el handbook de Pearson VUE Texas Insurance para los requisitos de tu línea de autoridad.">Muchos tipos de licencia requieren educación previa. Revisa el handbook de Pearson VUE Texas Insurance para los requisitos de tu línea de autoridad.</p>
+          <a href="https://wsr.pearsonvue.com/testtaker/profile/create/SignUp.htm?clientCode=TXINS" target="_blank" rel="noopener" data-en="Register at Pearson VUE →" data-es="Registrarse en Pearson VUE →">Registrarse en Pearson VUE →</a>
         </div>
       </div>
       <div class="pasos-step">
         <div class="pasos-step-num">2</div>
         <div class="pasos-step-content">
-          <h4>Pasar el Examen de Licencia</h4>
-          <p>Agenda y pasa el examen estatal antes de aplicar para tu licencia. Los temarios y la programación están disponibles en Pearson VUE Texas Insurance.</p>
-          <a href="https://wsr.pearsonvue.com/testtaker/profile/create/SignUp.htm?clientCode=TXINS" target="_blank" rel="noopener">Agendar Examen →</a>
+          <h4 data-en="Pass the License Exam" data-es="Pasar el Examen de Licencia">Pasar el Examen de Licencia</h4>
+          <p data-en="Schedule and pass the state exam before applying for your license. Topics and scheduling are available at Pearson VUE Texas Insurance." data-es="Agenda y pasa el examen estatal antes de aplicar para tu licencia. Los temarios y la programación están disponibles en Pearson VUE Texas Insurance.">Agenda y pasa el examen estatal antes de aplicar para tu licencia. Los temarios y la programación están disponibles en Pearson VUE Texas Insurance.</p>
+          <a href="https://wsr.pearsonvue.com/testtaker/profile/create/SignUp.htm?clientCode=TXINS" target="_blank" rel="noopener" data-en="Schedule Exam →" data-es="Agendar Examen →">Agendar Examen →</a>
         </div>
       </div>
       <div class="pasos-step">
         <div class="pasos-step-num">3</div>
         <div class="pasos-step-content">
-          <h4>Agendar Fingerprints</h4>
-          <p>Inicia tu solicitud en el portal TDI para obtener tu código de servicio, luego agenda tu cita de huellas digitales con IdentoGO.</p>
-          <a href="https://www.identogo.com/services/live-scan-fingerprinting" target="_blank" rel="noopener">Agendar con IdentoGO →</a>
+          <h4 data-en="Schedule Fingerprints" data-es="Agendar Huellas Digitales">Agendar Huellas Digitales</h4>
+          <p data-en="Start your application at the TDI portal to get your service code, then schedule your fingerprinting appointment with IdentoGO." data-es="Inicia tu solicitud en el portal TDI para obtener tu código de servicio, luego agenda tu cita de huellas digitales con IdentoGO.">Inicia tu solicitud en el portal TDI para obtener tu código de servicio, luego agenda tu cita de huellas digitales con IdentoGO.</p>
+          <a href="https://www.identogo.com/services/live-scan-fingerprinting" target="_blank" rel="noopener" data-en="Schedule with IdentoGO →" data-es="Agendar con IdentoGO →">Agendar con IdentoGO →</a>
         </div>
       </div>
       <div class="pasos-step">
         <div class="pasos-step-num">4</div>
         <div class="pasos-step-content">
-          <h4>Aplicar para la Licencia</h4>
-          <p>Una vez que pasaste el examen y completaste los fingerprints, envía tu solicitud en línea. Costo estándar: $50 (más cargos de procesamiento).</p>
-          <a href="https://www.sircon.com" target="_blank" rel="noopener">Aplicar vía Sircon →</a>
+          <h4 data-en="Apply for the License" data-es="Aplicar para la Licencia">Aplicar para la Licencia</h4>
+          <p data-en="Once you've passed the exam and completed fingerprints, submit your application online. Standard cost: $50 (plus processing fees)." data-es="Una vez que pasaste el examen y completaste los fingerprints, envía tu solicitud en línea. Costo estándar: $50 (más cargos de procesamiento).">Una vez que pasaste el examen y completaste los fingerprints, envía tu solicitud en línea. Costo estándar: $50 (más cargos de procesamiento).</p>
+          <a href="https://www.sircon.com" target="_blank" rel="noopener" data-en="Apply via Sircon →" data-es="Aplicar vía Sircon →">Aplicar vía Sircon →</a>
         </div>
       </div>
     </div>
@@ -1021,7 +1037,7 @@ body {
 <div class="culture-overlay" id="culture-overlay">
   <div class="culture-modal" id="culture-modal">
     <div class="culture-modal-top">
-      <h2>Ensurity Group</h2>
+      <h2 data-en="Ensurity Group" data-es="Ensurity Group">Ensurity Group</h2>
       <p data-en="Organizational Culture & Values" data-es="Cultura y Valores de la Organización">Cultura y Valores de la Organización</p>
       <button class="culture-close" onclick="closeCulture()">✕</button>
     </div>
@@ -1030,63 +1046,62 @@ body {
       <!-- Slide 1: 5 Pilares -->
       <div class="culture-slide active" id="culture-slide-0">
         <div class="pilares-layout">
-          <!-- Title -->
-          <div class="pilares-title-wrap">
-            <span class="pilares-main-title">5 PILARES DE LA<br>ORGANIZACIÓN</span>
-          </div>
-          <!-- Left column -->
-          <div class="pilares-col pilares-col-left">
-            <div class="pilar-card">
-              <div class="pilar-card-head">Círculo de Crecimiento</div>
-              <ul>
-                <li>Selección de productos</li>
-                <li>Servicio al cliente</li>
-                <li>Tráfico</li>
-                <li>Vendedores</li>
-                <li>Infraestructura de bajo costo y precios más bajos</li>
-              </ul>
-            </div>
-            <div class="pilar-card">
-              <div class="pilar-card-head">Comunicación</div>
-              <ul>
-                <li>Toma de decisiones analíticas</li>
-                <li>Planificación estratégica</li>
-                <li>Hacer preguntas profundas</li>
-                <li>Sentido común</li>
-                <li>Reflexión</li>
-              </ul>
-            </div>
-          </div>
-          <!-- Center logo -->
+          <!-- Logo top — full width -->
           <div class="pilares-center">
             <img src="https://cdn.bitrix24.com/b21945603/landing/898/8989ac3a7b465689d46cb6fd83474a26/Logo_Ensurity_Group_1080_500_px_1x.png" alt="Ensurity Group" class="eg-logo-img">
+          </div>
+          <!-- Left column: title + cards -->
+          <div class="pilares-col pilares-col-left">
+            <div class="pilares-title-wrap">
+              <span class="pilares-main-title" data-en="5 ORGANIZATIONAL PILLARS" data-es="5 PILARES DE LA ORGANIZACIÓN">5 PILARES DE LA ORGANIZACIÓN</span>
+            </div>
+            <div class="pilar-card">
+              <div class="pilar-card-head" data-en="Growth Circle" data-es="Círculo de Crecimiento">Círculo de Crecimiento</div>
+              <ul>
+                <li data-en="Product selection" data-es="Selección de productos">Selección de productos</li>
+                <li data-en="Customer service" data-es="Servicio al cliente">Servicio al cliente</li>
+                <li data-en="Traffic" data-es="Tráfico">Tráfico</li>
+                <li data-en="Salespeople" data-es="Vendedores">Vendedores</li>
+                <li data-en="Low-cost infrastructure and lower prices" data-es="Infraestructura de bajo costo y precios más bajos">Infraestructura de bajo costo y precios más bajos</li>
+              </ul>
+            </div>
+            <div class="pilar-card">
+              <div class="pilar-card-head" data-en="Communication" data-es="Comunicación">Comunicación</div>
+              <ul>
+                <li data-en="Analytical decision-making" data-es="Toma de decisiones analíticas">Toma de decisiones analíticas</li>
+                <li data-en="Strategic planning" data-es="Planificación estratégica">Planificación estratégica</li>
+                <li data-en="Asking deep questions" data-es="Hacer preguntas profundas">Hacer preguntas profundas</li>
+                <li data-en="Common sense" data-es="Sentido común">Sentido común</li>
+                <li data-en="Reflection" data-es="Reflexión">Reflexión</li>
+              </ul>
+            </div>
           </div>
           <!-- Right column -->
           <div class="pilares-col pilares-col-right">
             <div class="pilar-card">
-              <div class="pilar-card-head">Equipos</div>
+              <div class="pilar-card-head" data-en="Teams" data-es="Equipos">Equipos</div>
               <ul>
-                <li>Equipo 2–7</li>
-                <li>Escuadrón 10</li>
-                <li>División 36+</li>
-                <li>Tropas 100+</li>
-                <li>Compañía 200+</li>
-                <li>Legión 500+</li>
+                <li data-en="Team 2–7" data-es="Equipo 2–7">Equipo 2–7</li>
+                <li data-en="Squad 10" data-es="Escuadrón 10">Escuadrón 10</li>
+                <li data-en="Division 36+" data-es="División 36+">División 36+</li>
+                <li data-en="Troops 100+" data-es="Tropas 100+">Tropas 100+</li>
+                <li data-en="Company 200+" data-es="Compañía 200+">Compañía 200+</li>
+                <li data-en="Legion 500+" data-es="Legión 500+">Legión 500+</li>
               </ul>
             </div>
             <div class="pilar-card">
-              <div class="pilar-card-head">Calendarios</div>
+              <div class="pilar-card-head" data-en="Calendars" data-es="Calendarios">Calendarios</div>
               <ul>
-                <li>12 semanas = 12 meses</li>
+                <li data-en="12 weeks = 12 months" data-es="12 semanas = 12 meses">12 semanas = 12 meses</li>
                 <li>(EGC 1, 2, 3, 4)</li>
               </ul>
             </div>
             <div class="pilar-card">
               <div class="pilar-card-head">PPR / CPR</div>
               <ul>
-                <li><b>PPR:</b> Colocación | Persistencia | Retención</li>
-                <li><b>CPR:</b> Colocación | Persistencia | Retención</li>
-                <li><b>C²:</b> Capacidad / Carácter / Conectividad = Influencia</li>
+                <li><b>PPR:</b> <span data-en="Placement | Persistence | Retention" data-es="Colocación | Persistencia | Retención">Colocación | Persistencia | Retención</span></li>
+                <li><b>CPR:</b> <span data-en="Placement | Persistence | Retention" data-es="Colocación | Persistencia | Retención">Colocación | Persistencia | Retención</span></li>
+                <li><b>C²:</b> <span data-en="Capacity / Character / Connectivity = Influence" data-es="Capacidad / Carácter / Conectividad = Influencia">Capacidad / Carácter / Conectividad = Influencia</span></li>
               </ul>
             </div>
           </div>
@@ -1096,57 +1111,56 @@ body {
       <!-- Slide 2: Principios de Liderazgo -->
       <div class="culture-slide" id="culture-slide-1">
         <div class="principios-layout">
-          <div class="principios-header">PRINCIPIOS DE LIDERAZGO</div>
+          <div class="principios-header" data-en="LEADERSHIP PRINCIPLES" data-es="PRINCIPIOS DE LIDERAZGO">PRINCIPIOS DE LIDERAZGO</div>
           <div class="principios-grid">
-            <div class="principio-pill">Obsesión por el Cliente</div>
-            <div class="principio-pill">Contratar y Desarrollar a los Mejores</div>
-            <div class="principio-pill">Profundizar</div>
-            <div class="principio-pill">Responsabilidad</div>
-            <div class="principio-pill">Insistir en los Estándares más Altos</div>
-            <div class="principio-pill">Tener Carácter; Discrepar y Comprometerse</div>
-            <div class="principio-pill">Inventar y Simplificar</div>
-            <div class="principio-pill">Pensar en Grande</div>
-            <div class="principio-pill">Entregar Resultados</div>
-            <div class="principio-pill">Estar Acertado, con Frecuencia</div>
-            <div class="principio-pill">Tendencia a la Acción</div>
-            <div class="principio-pill">Esforzarse por ser el Mejor Empleador del Mundo</div>
-            <div class="principio-pill">Aprender y ser Curioso</div>
-            <div class="principio-pill">Frugalidad</div>
-            <div class="principio-pill">Ganar la Confianza</div>
-            <div class="principio-pill">El Éxito y la Escala Traen una Amplia Responsabilidad</div>
+            <div class="principio-pill" data-en="Customer Obsession" data-es="Obsesión por el Cliente">Obsesión por el Cliente</div>
+            <div class="principio-pill" data-en="Hire and Develop the Best" data-es="Contratar y Desarrollar a los Mejores">Contratar y Desarrollar a los Mejores</div>
+            <div class="principio-pill" data-en="Dive Deep" data-es="Profundizar">Profundizar</div>
+            <div class="principio-pill" data-en="Ownership" data-es="Responsabilidad">Responsabilidad</div>
+            <div class="principio-pill" data-en="Insist on the Highest Standards" data-es="Insistir en los Estándares más Altos">Insistir en los Estándares más Altos</div>
+            <div class="principio-pill" data-en="Have Backbone; Disagree and Commit" data-es="Tener Carácter; Discrepar y Comprometerse">Tener Carácter; Discrepar y Comprometerse</div>
+            <div class="principio-pill" data-en="Invent and Simplify" data-es="Inventar y Simplificar">Inventar y Simplificar</div>
+            <div class="principio-pill" data-en="Think Big" data-es="Pensar en Grande">Pensar en Grande</div>
+            <div class="principio-pill" data-en="Deliver Results" data-es="Entregar Resultados">Entregar Resultados</div>
+            <div class="principio-pill" data-en="Are Right, A Lot" data-es="Estar Acertado, con Frecuencia">Estar Acertado, con Frecuencia</div>
+            <div class="principio-pill" data-en="Bias for Action" data-es="Tendencia a la Acción">Tendencia a la Acción</div>
+            <div class="principio-pill" data-en="Strive to be Earth's Best Employer" data-es="Esforzarse por ser el Mejor Empleador del Mundo">Esforzarse por ser el Mejor Empleador del Mundo</div>
+            <div class="principio-pill" data-en="Learn and Be Curious" data-es="Aprender y ser Curioso">Aprender y ser Curioso</div>
+            <div class="principio-pill" data-en="Frugality" data-es="Frugalidad">Frugalidad</div>
+            <div class="principio-pill" data-en="Earn Trust" data-es="Ganar la Confianza">Ganar la Confianza</div>
+            <div class="principio-pill" data-en="Success and Scale Bring Broad Responsibility" data-es="El Éxito y la Escala Traen una Amplia Responsabilidad">El Éxito y la Escala Traen una Amplia Responsabilidad</div>
           </div>
         </div>
       </div>
-    </div>
 
       <!-- Slide 3: Módulo TX Life & Health -->
       <div class="culture-slide" id="culture-slide-2">
-        <div class="primeros-pasos-header">📋 MÓDULO — BECOME A AOR TX</div>
-        <p style="font-size:.84rem;color:var(--text2);margin-bottom:16px;line-height:1.6">Tu plataforma de estudio completa para el examen Texas Life &amp; Health. Domina los conceptos clave, practica con preguntas reales y repasa antes del examen.</p>
+        <div class="primeros-pasos-header" data-en="MODULE — BECOME A AOR TX" data-es="MÓDULO — BECOME A AOR TX">MÓDULO — BECOME A AOR TX</div>
+        <p style="font-size:.84rem;color:var(--text2);margin-bottom:16px;line-height:1.6" data-en="Your complete study platform for the Texas Life &amp; Health exam. Master key concepts, practice with real questions, and review before the exam." data-es="Tu plataforma de estudio completa para el examen Texas Life &amp; Health. Domina los conceptos clave, practica con preguntas reales y repasa antes del examen.">Tu plataforma de estudio completa para el examen Texas Life &amp; Health. Domina los conceptos clave, practica con preguntas reales y repasa antes del examen.</p>
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px">
-          <span style="background:#EFF6FF;color:#1D4ED8;border-radius:20px;padding:4px 12px;font-size:.75rem;font-weight:700">8 Lecciones</span>
-          <span style="background:#F0FDF4;color:#15803D;border-radius:20px;padding:4px 12px;font-size:.75rem;font-weight:700">27 Preguntas Mock</span>
-          <span style="background:#FDF4FF;color:#7E22CE;border-radius:20px;padding:4px 12px;font-size:.75rem;font-weight:700">10 Flashcards</span>
-          <span style="background:#FFF7ED;color:#C2410C;border-radius:20px;padding:4px 12px;font-size:.75rem;font-weight:700">Biblioteca Avanzada</span>
+          <span style="background:#EFF6FF;color:#1D4ED8;border-radius:20px;padding:4px 12px;font-size:.75rem;font-weight:700" data-en="8 Lessons" data-es="8 Lecciones">8 Lecciones</span>
+          <span style="background:#F0FDF4;color:#15803D;border-radius:20px;padding:4px 12px;font-size:.75rem;font-weight:700" data-en="27 Mock Questions" data-es="27 Preguntas Mock">27 Preguntas Mock</span>
+          <span style="background:#FDF4FF;color:#7E22CE;border-radius:20px;padding:4px 12px;font-size:.75rem;font-weight:700" data-en="10 Flashcards" data-es="10 Flashcards">10 Flashcards</span>
+          <span style="background:#FFF7ED;color:#C2410C;border-radius:20px;padding:4px 12px;font-size:.75rem;font-weight:700" data-en="Advanced Library" data-es="Biblioteca Avanzada">Biblioteca Avanzada</span>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px">
-          <div class="paso-card" style="padding:10px 12px"><div class="paso-title" style="font-size:.8rem">Fundamentos del Seguro</div><div class="paso-desc">Contratos, interés asegurable</div></div>
-          <div class="paso-card" style="padding:10px 12px"><div class="paso-title" style="font-size:.8rem">Tipos de Pólizas</div><div class="paso-desc">Term, Whole, Universal, Variable</div></div>
-          <div class="paso-card" style="padding:10px 12px"><div class="paso-title" style="font-size:.8rem">Riders y Provisiones</div><div class="paso-desc">Waiver, Beneficiarios, Grace Period</div></div>
-          <div class="paso-card" style="padding:10px 12px"><div class="paso-title" style="font-size:.8rem">Disability y Medicare</div><div class="paso-desc">Own Occ, Partes A/B/C/D</div></div>
+          <div class="paso-card" style="padding:10px 12px"><div class="paso-title" style="font-size:.8rem" data-en="Insurance Fundamentals" data-es="Fundamentos del Seguro">Fundamentos del Seguro</div><div class="paso-desc" data-en="Contracts, insurable interest" data-es="Contratos, interés asegurable">Contratos, interés asegurable</div></div>
+          <div class="paso-card" style="padding:10px 12px"><div class="paso-title" style="font-size:.8rem" data-en="Policy Types" data-es="Tipos de Pólizas">Tipos de Pólizas</div><div class="paso-desc" data-en="Term, Whole, Universal, Variable" data-es="Term, Whole, Universal, Variable">Term, Whole, Universal, Variable</div></div>
+          <div class="paso-card" style="padding:10px 12px"><div class="paso-title" style="font-size:.8rem" data-en="Riders &amp; Provisions" data-es="Riders y Provisiones">Riders y Provisiones</div><div class="paso-desc" data-en="Waiver, Beneficiaries, Grace Period" data-es="Waiver, Beneficiarios, Grace Period">Waiver, Beneficiarios, Grace Period</div></div>
+          <div class="paso-card" style="padding:10px 12px"><div class="paso-title" style="font-size:.8rem" data-en="Disability &amp; Medicare" data-es="Disability y Medicare">Disability y Medicare</div><div class="paso-desc" data-en="Own Occ, Parts A/B/C/D" data-es="Own Occ, Partes A/B/C/D">Own Occ, Partes A/B/C/D</div></div>
         </div>
-        <a href="modules/texas-life-health/texas-life-health.html" style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#1E3A5F,#2563EB);color:#fff;text-decoration:none;border-radius:10px;padding:10px 20px;font-weight:700;font-size:.88rem">Abrir Módulo →</a>
+        <a href="modules/texas-life-health/texas-life-health.html" style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#1E3A5F,#2563EB);color:#fff;text-decoration:none;border-radius:10px;padding:10px 20px;font-weight:700;font-size:.88rem" data-en="Open Module →" data-es="Abrir Módulo →">Abrir Módulo →</a>
       </div>
-    </div>
+    </div><!-- /culture-body -->
 
     <div class="culture-nav">
-      <button class="culture-nav-btn" id="culture-prev" onclick="cultureNav(-1)" disabled>← Anterior</button>
+      <button class="culture-nav-btn" id="culture-prev" onclick="cultureNav(-1)" disabled data-en="← Previous" data-es="← Anterior">← Anterior</button>
       <div class="culture-nav-dots">
         <div class="culture-dot active" onclick="cultureGo(0)"></div>
         <div class="culture-dot" onclick="cultureGo(1)"></div>
         <div class="culture-dot" onclick="cultureGo(2)"></div>
       </div>
-      <button class="culture-nav-btn" id="culture-next" onclick="cultureNav(1)">Siguiente →</button>
+      <button class="culture-nav-btn" id="culture-next" onclick="cultureNav(1)" data-en="Next →" data-es="Siguiente →">Siguiente →</button>
     </div>
   </div>
 </div>
@@ -1161,8 +1175,19 @@ let currentLang  = localStorage.getItem('az_lang')  || 'en';
 let currentTheme = localStorage.getItem('az_theme') || 'light';
 
 function applyLang() {
+  const txt = lang => currentLang === 'es' ? lang.dataset.es : lang.dataset.en;
   document.querySelectorAll('[data-en]').forEach(el => {
-    el.textContent = currentLang === 'es' ? el.dataset.es : el.dataset.en;
+    // If element has child ELEMENT nodes (e.g. <span class="req">), only update the first text node
+    const hasChildEl = Array.from(el.childNodes).some(n => n.nodeType === Node.ELEMENT_NODE);
+    if (hasChildEl) {
+      const textNode = Array.from(el.childNodes).find(n => n.nodeType === Node.TEXT_NODE);
+      if (textNode) textNode.textContent = txt(el);
+    } else {
+      el.textContent = txt(el);
+    }
+  });
+  document.querySelectorAll('[data-ph-en]').forEach(el => {
+    el.placeholder = currentLang === 'es' ? el.dataset.phEs : el.dataset.phEn;
   });
   document.getElementById('btn-lang-en')?.classList.toggle('active', currentLang === 'en');
   document.getElementById('btn-lang-es')?.classList.toggle('active', currentLang === 'es');
@@ -1251,6 +1276,7 @@ async function doSignIn(e) {
   try {
     const { profile } = await AZ.Auth.signIn(email, password);
     await showModules(profile);
+    checkCultureAutoShow();
   } catch (err) {
     let msg;
     if (err.message === 'PENDING_APPROVAL')
@@ -1310,12 +1336,9 @@ async function doForgot(e) {
   const btn = document.getElementById('btn-forgot');
   btn.disabled = true;
   try {
-    const res = await fetch('https://qvamdopwbjlccazchoer.supabase.co/functions/v1/bitrix-sync', {
+    const res = await fetch(LAMBDA_URL, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + (window.ENV_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF2YW1kb3B3YmpsY2NhemNob2VyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMTA4ODQsImV4cCI6MjA5Nzg4Njg4NH0.F2VmsQUyBDWXgX_kh8soWOv6W59wWaDRFMlmg6kzHY4'),
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ action: 'password_reset_request', email }),
     });
     const d = await res.json();
@@ -1413,6 +1436,7 @@ function renderModuleCards(profile) {
   grid.innerHTML = '';
   const lang = currentLang;
   cached.forEach(moduleId => {
+    if (moduleId === 'texas-life-health') return;
     const meta = MODULE_META[moduleId];
     if (!meta) return;
     const pills = (meta.pills[lang] || meta.pills.en).map(p => `<span class="module-pill">${p}</span>`).join(' ');
@@ -1440,7 +1464,6 @@ async function showModules(profile) {
   if (mSignout) mSignout.style.display = '';
   document.getElementById('auth-section').style.display = 'none';
   document.getElementById('modules-section').style.display = 'block';
-  checkCultureAutoShow();
 
   const name = profile.full_name || profile.email;
   const greeting = currentLang === 'es' ? `¡Bienvenido, ${name.split(' ')[0]}!` : `Welcome back, ${name.split(' ')[0]}!`;
@@ -1476,6 +1499,7 @@ async function showModules(profile) {
   }
 
   moduleIds.forEach(moduleId => {
+    if (moduleId === 'texas-life-health') return;
     const meta = MODULE_META[moduleId];
     if (!meta) return;
     const lang = currentLang;
@@ -1523,6 +1547,7 @@ const CULTURE_TOTAL = 3;
 function openCulture() {
   _cultureManual = false;
   cultureGo(0);
+  applyLang();
   document.getElementById('culture-overlay').classList.add('active');
   document.body.style.overflow = 'hidden';
 }
@@ -1552,10 +1577,7 @@ function cultureGo(idx) {
 }
 
 function checkCultureAutoShow() {
-  if (!sessionStorage.getItem('eg_culture_shown')) {
-    sessionStorage.setItem('eg_culture_shown', '1');
-    setTimeout(openCulture, 900);
-  }
+  setTimeout(openCulture, 900);
 }
 
 // Manual open (from dashboard button) — only slides 1-2, no TX summary
@@ -1592,14 +1614,13 @@ document.getElementById('pasos-overlay').addEventListener('click', function(e) {
 
 // ===== COURSE PICKER =====
 // ===== BITRIX INTEGRATION =====
+const LAMBDA_URL = 'https://7smqi3olbhvohkkgw5pvkoz3ym0lqlug.lambda-url.us-east-1.on.aws/';
+
 async function sendRegistrationNotification(name, email, phone) {
   try {
-    await fetch('https://qvamdopwbjlccazchoer.supabase.co/functions/v1/bitrix-sync', {
+    await fetch(LAMBDA_URL, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + (window.ENV_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF2YW1kb3B3YmpsY2NhemNob2VyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMTA4ODQsImV4cCI6MjA5Nzg4Njg4NH0.F2VmsQUyBDWXgX_kh8soWOv6W59wWaDRFMlmg6kzHY4'),
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ action: 'academia_registration', name, email, phone }),
     });
   } catch(e) {
@@ -1609,12 +1630,9 @@ async function sendRegistrationNotification(name, email, phone) {
 
 async function sendToBitrix(data) {
   try {
-    await fetch('https://qvamdopwbjlccazchoer.supabase.co/functions/v1/bitrix-sync', {
+    await fetch(LAMBDA_URL, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + (window.ENV_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF2YW1kb3B3YmpsY2NhemNob2VyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzMTA4ODQsImV4cCI6MjA5Nzg4Njg4NH0.F2VmsQUyBDWXgX_kh8soWOv6W59wWaDRFMlmg6kzHY4'),
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
     });
   } catch(e) {
