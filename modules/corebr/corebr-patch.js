@@ -43,10 +43,10 @@
         background:#1E293B!important; border-color:rgba(255,255,255,.15)!important; color:#E2E8F0!important;
       }
       body.dark input::placeholder, body.dark textarea::placeholder { color:#64748B!important; }
-      body.dark button:not([class*="az-"]) {
+      body.dark button:not([class*="az-"]):not(.sb-item):not(.et-tab):not(.st-tab) {
         background:#1E293B!important; color:#E2E8F0!important; border-color:rgba(255,255,255,.12)!important;
       }
-      body.dark button:not([class*="az-"]):hover { background:#2D3B55!important; }
+      body.dark button:not([class*="az-"]):not(.sb-item):not(.et-tab):not(.st-tab):hover { background:#2D3B55!important; }
       body.dark .pdf-card, body.dark .file-card, body.dark .doc-card {
         background:#1E293B!important; border-color:rgba(255,255,255,.1)!important;
       }
