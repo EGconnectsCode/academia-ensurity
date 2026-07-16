@@ -609,7 +609,7 @@ html[data-lang="es"] .es{display:inline}
               </div>
               </div>
             </div>
-            <button onclick="gfSearch()" style="width:100%;background:#1565c0;color:#fff;border:none;border-radius:7px;padding:10px;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.3px;">Search</button>
+            <button onclick="gfSearch()" style="width:100%;background:#1565c0;color:#fff;border:none;border-radius:7px;padding:10px;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.3px;"><span class="en">Search</span><span class="es">Buscar</span></button>
           </div>
 
           <div id="gf-results" style="margin-top:14px;"></div>
@@ -5212,22 +5212,22 @@ function loadQuiz(view,product){
       h+="<div class=\"qz-prod-card\" onclick=\"qzStart(this)\" data-p=\""+p+"\">"+
          "<div class=\"qz-prod-ico\">"+QUIZ_DATA[p].ico+"</div>"+
          "<div class=\"qz-prod-name\">"+p+"</div>"+
-         "<div style=\"font-size:10px;color:var(--tx3);margin-top:4px;\">10 questions</div></div>";
+         "<div style=\"font-size:10px;color:var(--tx3);margin-top:4px;\">"+(window.LANG==='es'?'10 preguntas':'10 questions')+"</div></div>";
     });
     h+="</div>";c.innerHTML=h;
   } else if(view==="start"){
     var qs=QUIZ_DATA[product].q;
-    var h="<div class=\"qz-header\"><button class=\"qz-back\" onclick=\"loadQuiz('products')\" >← Back</button><div class=\"qz-title\">"+QUIZ_DATA[product].ico+" "+product+"</div></div>";
+    var h="<div class=\"qz-header\"><button class=\"qz-back\" onclick=\"loadQuiz('products')\" >"+(window.LANG==='es'?'← Volver':'← Back')+"</button><div class=\"qz-title\">"+QUIZ_DATA[product].ico+" "+product+"</div></div>";
     h+="<form id=\"qz-form\">";
     qs.forEach(function(q,i){
-      h+="<div class=\"qz-question\" id=\"qq-"+i+"\"><div class=\"qz-q-num\">Question "+(i+1)+" of "+qs.length+"</div>"+
+      h+="<div class=\"qz-question\" id=\"qq-"+i+"\"><div class=\"qz-q-num\">"+(window.LANG==='es'?('Pregunta '+(i+1)+' de '+qs.length):('Question '+(i+1)+' of '+qs.length))+"</div>"+
          "<div class=\"qz-q-text\">"+q.q+"</div><div class=\"qz-opts\">";
       q.o.forEach(function(opt,j){
         h+="<label><input type=\"radio\" name=\"q"+i+"\" value=\""+j+"\"> "+opt+"</label>";
       });
       h+="</div></div>";
     });
-    h+="</form><button class=\"qz-submit\" onclick=\"qzSubmit(this)\" data-p=\""+product+"\">Submit Quiz</button>";
+    h+="</form><button class=\"qz-submit\" onclick=\"qzSubmit(this)\" data-p=\""+product+"\">"+(window.LANG==='es'?'Enviar Quiz':'Submit Quiz')+"</button>";
     c.innerHTML=h;
   }
 }
@@ -5241,13 +5241,13 @@ function submitQuiz(product){
     if(parseInt(sel.value)===q.a){score++;if(box)box.classList.add("qz-correct");}
     else{if(box)box.classList.add("qz-wrong");}
   });
-  if(unanswered>0){alert("Please answer all "+unanswered+" remaining question(s).");return;}
+  if(unanswered>0){alert(window.LANG==='es'?("Por favor responde las "+unanswered+" pregunta(s) restantes."):("Please answer all "+unanswered+" remaining question(s)."));return;}
   var pass=score>=8;var pct=Math.round(score/qs.length*100);
   var r="<div class=\"qz-result "+(pass?"pass":"fail")+"\">"+
     "<div class=\"qz-result-score\">"+score+"/"+qs.length+"</div>"+
-    "<div class=\"qz-result-label\">"+(pass?"✅ PASSED — "+pct+"%":"❌ FAILED — "+pct+"% (Need 80%)")+"</div>"+
-    "<button class=\"qz-retry\" onclick=\"qzRetry(this)\" data-p=\""+product+"\">Retry Quiz</button>"+
-    "<button class=\"qz-retry\" onclick=\"loadQuiz('products')\">All Products</button></div>";
+    "<div class=\"qz-result-label\">"+(window.LANG==='es'?(pass?"✅ APROBADO — "+pct+"%":"❌ REPROBADO — "+pct+"% (Necesitas 80%)"):(pass?"✅ PASSED — "+pct+"%":"❌ FAILED — "+pct+"% (Need 80%)"))+"</div>"+
+    "<button class=\"qz-retry\" onclick=\"qzRetry(this)\" data-p=\""+product+"\">"+(window.LANG==='es'?'Reintentar Quiz':'Retry Quiz')+"</button>"+
+    "<button class=\"qz-retry\" onclick=\"loadQuiz('products')\">"+(window.LANG==='es'?'Todos los Productos':'All Products')+"</button></div>";
   var ex=document.querySelector(".qz-result");if(ex)ex.parentNode.removeChild(ex);
   document.getElementById("quiz-container").insertAdjacentHTML("beforeend",r);
   document.querySelector(".qz-result").scrollIntoView({behavior:"smooth",block:"center"});
@@ -5265,8 +5265,8 @@ function loadDisq(view,product){
     h+="</div>";c.innerHTML=h;
   } else {
     var items=DISQ_DATA[product]||[];
-    var h="<div class=\"qz-header\"><button class=\"qz-back\" onclick=\"loadDisq('products')\">← Back</button>"+
-      "<div class=\"qz-title\">"+(QUIZ_DATA[product]?QUIZ_DATA[product].ico:"⚠️")+" "+product+" — Disqualifiers</div></div>"+
+    var h="<div class=\"qz-header\"><button class=\"qz-back\" onclick=\"loadDisq('products')\">"+(window.LANG==='es'?'← Volver':'← Back')+"</button>"+
+      "<div class=\"qz-title\">"+(QUIZ_DATA[product]?QUIZ_DATA[product].ico:"⚠️")+" "+product+(window.LANG==='es'?' — Descalificadores':' — Disqualifiers')+"</div></div>"+
       "<div style=\"background:var(--sur2);border:1px solid var(--bdr);border-radius:8px;padding:8px 4px;\">"+
       "<ul class=\"disq-list\">";
     items.forEach(function(item){h+="<li>"+item+"</li>";});

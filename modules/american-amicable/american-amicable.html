@@ -634,10 +634,10 @@ function dlFromUrl(url, fname) {
   <div style="display:flex;flex-direction:column;gap:6px">
     <button class="os-tab active" onclick="nbTab('bank-draft')"><span class="en">CWA Bank Draft</span><span class="es">CWA Banco</span></button>
     <button class="os-tab" onclick="nbTab('prod-trans')"><span class="en">Production Transmittal</span><span class="es">Transmision</span></button>
-    <button class="os-tab" onclick="nbTab('appdrop')">AppDrop</button>
-    <button class="os-tab" onclick="nbTab('appfax')">AppFax</button>
+    <button class="os-tab" onclick="nbTab('appdrop')"><span class="en">AppDrop</span><span class="es">AppDrop</span></button>
+    <button class="os-tab" onclick="nbTab('appfax')"><span class="en">AppFax</span><span class="es">AppFax</span></button>
     <button class="os-tab" onclick="nbTab('scanning')"><span class="en">Scanning</span><span class="es">Escaneo</span></button>
-    <button class="os-tab" onclick="nbTab('underwriting')">Underwriting</button>
+    <button class="os-tab" onclick="nbTab('underwriting')"><span class="en">Underwriting</span><span class="es">Suscripción</span></button>
   </div>
 </div>
 
@@ -1350,11 +1350,11 @@ function renderMetrics(){
 function renderProfileBackup(){
   var h=el('prof-backup');if(!h)return;
   h.innerHTML='<div class="backup-card">'
-    +'<h3>Backup &amp; Restore Account Data</h3>'
+    +'<h3>'+(LANG==='es'?'Respaldo y Restauración de Datos':'Backup &amp; Restore Account Data')+'</h3>'
     +'<p><span class="en">Save your registration before downloading a new version. Paste the code in any new version to restore your account.</span>'
     +'<span class="es">Guarda tus datos antes de descargar una nueva version. Pega el codigo para restaurar tu cuenta.</span></p>'
-    +'<button class="backup-btn exp" onclick="exportUserData()">Export Code</button>'
-    +'<button class="backup-btn imp" onclick="importUserData()">Import Code</button>'
+    +'<button class="backup-btn exp" onclick="exportUserData()">'+(LANG==='es'?'Exportar Código':'Export Code')+'</button>'
+    +'<button class="backup-btn imp" onclick="importUserData()">'+(LANG==='es'?'Importar Código':'Import Code')+'</button>'
     +'<br><textarea class="backup-code" id="backup-textarea" placeholder="Paste import code here / Pega el codigo aqui"></textarea>'
     +'</div>';
 }
@@ -1372,26 +1372,26 @@ function renderAdminUsers(){
     rows+='<tr><td><strong>'+u.name+'</strong>'+adminTag+'<br><span style="font-size:10px;color:var(--tx3)">'+u.email+'</span></td>';
     rows+='<td>'+getLevel(st2.xp||0)+'<br><span style="font-size:10px;color:var(--tx3)">'+(st2.xp||0)+' XP</span></td>';
     rows+='<td>'+totalMin+' min</td><td>'+act.downloads.length+'</td><td>';
-    if(!u.isAdmin)rows+='<button class="adm-btn" onclick="adminToggleAdmin(\''+u.email+'\')">Admin</button> ';
-    else if(u.email.toLowerCase()!==ADMIN_EMAIL)rows+='<button class="adm-btn" onclick="adminToggleAdmin(\''+u.email+'\')">Remove</button> ';
-    if(canDel)rows+='<button class="adm-btn danger" onclick="adminDeleteUser(\''+u.email+'\')">Del</button>';
+    if(!u.isAdmin)rows+='<button class="adm-btn" onclick="adminToggleAdmin(\''+u.email+'\')">'+(LANG==='es'?'Admin':'Admin')+'</button> ';
+    else if(u.email.toLowerCase()!==ADMIN_EMAIL)rows+='<button class="adm-btn" onclick="adminToggleAdmin(\''+u.email+'\')">'+(LANG==='es'?'Quitar':'Remove')+'</button> ';
+    if(canDel)rows+='<button class="adm-btn danger" onclick="adminDeleteUser(\''+u.email+'\')">'+(LANG==='es'?'Borrar':'Del')+'</button>';
     rows+='</td></tr>';
   }
   var h='<div class="pcontent">';
   h+='<div class="adm-stat-row">';
-  h+='<div class="adm-stat"><div class="sv">'+users.length+'</div><div class="sl">Registered</div></div>';
-  h+='<div class="adm-stat"><div class="sv">'+totalSessions+'</div><div class="sl">Sessions</div></div>';
-  h+='<div class="adm-stat"><div class="sv">'+totalDL+'</div><div class="sl">Downloads</div></div></div>';
+  h+='<div class="adm-stat"><div class="sv">'+users.length+'</div><div class="sl">'+(LANG==='es'?'Registrados':'Registered')+'</div></div>';
+  h+='<div class="adm-stat"><div class="sv">'+totalSessions+'</div><div class="sl">'+(LANG==='es'?'Sesiones':'Sessions')+'</div></div>';
+  h+='<div class="adm-stat"><div class="sv">'+totalDL+'</div><div class="sl">'+(LANG==='es'?'Descargas':'Downloads')+'</div></div></div>';
   h+='<div class="adm-form">';
-  h+='<div style="font-size:12px;font-weight:700;color:var(--tx);margin-bottom:10px">Add Admin User</div>';
-  h+='<label class="adm-lbl">Full Name</label><input id="adm-new-name" placeholder="Full name"><br>';
+  h+='<div style="font-size:12px;font-weight:700;color:var(--tx);margin-bottom:10px">'+(LANG==='es'?'Agregar Admin':'Add Admin User')+'</div>';
+  h+='<label class="adm-lbl">'+(LANG==='es'?'Nombre Completo':'Full Name')+'</label><input id="adm-new-name" placeholder="Full name"><br>';
   h+='<label class="adm-lbl">Email</label><input id="adm-new-email" placeholder="admin@email.com"><br>';
-  h+='<label class="adm-lbl">Password</label><input id="adm-new-pass" type="password" placeholder="Min 6 chars"><br>';
+  h+='<label class="adm-lbl">'+(LANG==='es'?'Contraseña':'Password')+'</label><input id="adm-new-pass" type="password" placeholder="Min 6 chars"><br>';
   h+='<div id="adm-form-msg" style="font-size:11px;color:#ef4444;margin-bottom:6px"></div>';
-  h+='<button class="adm-create-btn" onclick="adminAddUser()">Create Admin</button></div>';
-  h+='<div class="adm-card"><h3 style="font-size:13px;font-weight:700;margin-bottom:12px">Registered Users</h3>';
-  h+='<div style="overflow-x:auto"><table class="adm-table"><thead><tr><th>User</th><th>Level</th><th>Time</th><th>DL</th><th></th></tr></thead>';
-  h+='<tbody>'+(rows||'<tr><td colspan="5" style="color:var(--tx3);text-align:center;padding:20px">No users yet</td></tr>')+'</tbody></table></div></div></div>';
+  h+='<button class="adm-create-btn" onclick="adminAddUser()">'+(LANG==='es'?'Crear Admin':'Create Admin')+'</button></div>';
+  h+='<div class="adm-card"><h3 style="font-size:13px;font-weight:700;margin-bottom:12px">'+(LANG==='es'?'Usuarios Registrados':'Registered Users')+'</h3>';
+  h+='<div style="overflow-x:auto"><table class="adm-table"><thead><tr><th>'+(LANG==='es'?'Usuario':'User')+'</th><th>'+(LANG==='es'?'Nivel':'Level')+'</th><th>'+(LANG==='es'?'Tiempo':'Time')+'</th><th>DL</th><th></th></tr></thead>';
+  h+='<tbody>'+(rows||('<tr><td colspan="5" style="color:var(--tx3);text-align:center;padding:20px">'+(LANG==='es'?'Aún no hay usuarios':'No users yet')+'</td></tr>'))+'</tbody></table></div></div></div>';
   ht('page-admin-users-body',h);
 }
 function adminAddUser(){
