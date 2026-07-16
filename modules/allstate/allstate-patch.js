@@ -125,12 +125,12 @@
       .sb-item {
         display: flex !important; align-items: center !important; gap: 9px !important;
         padding: 11px 16px !important; width: 100% !important; text-align: left !important;
-        background: none !important; border: none !important; border-radius: 0 !important;
+        background: none !important; border: none !important; border-left: 3px solid transparent !important; border-radius: 0 !important;
         color: rgba(255,255,255,.65) !important; font-size: .86rem !important; font-weight: 500 !important;
-        cursor: pointer !important; transition: background .13s, color .13s !important;
+        cursor: pointer !important; transition: background .13s, color .13s, border-color .13s !important;
       }
       .sb-item:hover { background: rgba(255,255,255,.06) !important; color: #fff !important; }
-      .sb-item.active { background: rgba(37,99,235,.3) !important; color: #fff !important; font-weight: 600 !important; }
+      .sb-item.active { background: rgba(37,99,235,.55) !important; color: #fff !important; font-weight: 700 !important; border-left-color: #60A5FA !important; }
       .sb-icon { display: none !important; }
       .sb-badge { background: #3B82F6 !important; color: #fff !important; font-size: .62rem !important; font-weight: 700 !important; border-radius: 99px !important; padding: 1px 6px !important; margin-left: auto !important; }
       .sb-avatar { width: 30px !important; height: 30px !important; border-radius: 50% !important; background: linear-gradient(135deg,#3B82F6,#0891B2) !important; display: flex !important; align-items: center !important; justify-content: center !important; font-weight: 700 !important; font-size: .72rem !important; color: #fff !important; flex-shrink: 0 !important; }
