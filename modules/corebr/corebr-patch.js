@@ -115,6 +115,15 @@
       @media (max-width:700px) { .g2 { grid-template-columns:1fr!important; } }
       .content { padding:20px!important; background:var(--az-bg)!important; }
       .page { padding:0!important; }
+
+      /* ── Active sub-tab (et-tab/st-tab) — dark mode contrast ──
+         The generic "body.dark button:not([class*='az-'])" rule above would otherwise
+         paint every tab (active or not) with the same flat color, hiding which is selected. */
+      body.dark .et-tab.active, body.dark .st-tab.active {
+        background: linear-gradient(135deg,#0033A0,#0057B8) !important;
+        color: #fff !important;
+        box-shadow: 0 4px 14px rgba(0,51,160,.4) !important;
+      }
     `;
     document.head.appendChild(style);
 
@@ -225,6 +234,65 @@
       } else if (_origDlFromUrl) {
         _origDlFromUrl(url, fname);
       }
+    };
+  })();
+
+  // ── Video Modal (inline playback, no new tab) ──
+  (function injectVideoModal() {
+    const s = document.createElement('style');
+    s.textContent = `
+      #az-vid-modal { display:none; position:fixed; inset:0; z-index:10001; align-items:center; justify-content:center; }
+      #az-vid-modal.active { display:flex; }
+      .az-vid-backdrop { position:absolute; inset:0; background:rgba(0,0,0,.82); backdrop-filter:blur(4px); cursor:pointer; }
+      .az-vid-panel { position:relative; width:min(94vw,960px); background:#000; border-radius:14px; overflow:hidden; box-shadow:0 25px 60px rgba(0,0,0,.5); z-index:1; }
+      .az-vid-header { display:flex; align-items:center; gap:12px; padding:10px 16px; background:#0F172A; color:#fff; }
+      .az-vid-title { font-weight:600; font-size:.88rem; flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+      .az-vid-close { background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.2); color:#fff; width:30px; height:30px; border-radius:50%; cursor:pointer; font-size:.9rem; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+      .az-vid-close:hover { background:rgba(255,255,255,.22); }
+      .az-vid-frame-wrap { position:relative; padding-bottom:56.25%; height:0; }
+      .az-vid-frame { position:absolute; inset:0; width:100%; height:100%; border:none; }
+    `;
+    document.head.appendChild(s);
+
+    const modal = document.createElement('div');
+    modal.id = 'az-vid-modal';
+    modal.innerHTML = `
+      <div class="az-vid-backdrop" onclick="window.azCloseVideo()"></div>
+      <div class="az-vid-panel">
+        <div class="az-vid-header">
+          <span class="az-vid-title" id="az-vid-title">Video</span>
+          <button class="az-vid-close" onclick="window.azCloseVideo()">&#10005;</button>
+        </div>
+        <div class="az-vid-frame-wrap">
+          <iframe class="az-vid-frame" id="az-vid-frame" src="" frameborder="0"
+            allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+        </div>
+      </div>`;
+    document.body.appendChild(modal);
+
+    window.azShowVideo = function (url, title) {
+      document.getElementById('az-vid-title').textContent = title || 'Video';
+      document.getElementById('az-vid-frame').src = url;
+      document.getElementById('az-vid-modal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    };
+    window.azCloseVideo = function () {
+      document.getElementById('az-vid-modal').classList.remove('active');
+      document.getElementById('az-vid-frame').src = '';
+      document.body.style.overflow = '';
+    };
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') window.azCloseVideo();
+    });
+
+    // Override openVideo(url, title) — COREBR_1.html's native version does window.open(url,'_blank')
+    window.openVideo = function (url, title) {
+      var m = url.match(/player\.vimeo\.com\/video\/(\d+)/i);
+      var embedUrl = url;
+      if (m && url.indexOf('autoplay=1') === -1) {
+        embedUrl += (url.indexOf('?') === -1 ? '?' : '&') + 'autoplay=1';
+      }
+      window.azShowVideo(embedUrl, title);
     };
   })();
 
@@ -485,9 +553,23 @@
   var _origToggleLang = window.toggleLang;
   window.toggleLang = async function () {
     if (_origToggleLang) _origToggleLang.call(this);
+    var lang = window.LANG || 'en';
+    if (window.AZWidgets && window.AZWidgets.updateChatLang) {
+      var _faqs = (lang === 'en') ? _CHAT_FAQS_EN : _CHAT_FAQS;
+      window.AZWidgets.updateChatLang(lang, _faqs);
+    }
+    if (window.AZWidgets && window.AZWidgets.updateOnboardingLang) {
+      var _steps = (lang === 'en') ? _ONBOARD_STEPS_EN : _ONBOARD_STEPS;
+      window.AZWidgets.updateOnboardingLang(lang, _steps);
+    }
+    // Quiz question/options are plain rendered text (not .en/.es spans) —
+    // re-render so an open quiz reflects the new language immediately.
+    if (window.renderQuestion && document.getElementById('quiz-container')) {
+      window.renderQuestion();
+    }
     var session = await AZ.Auth.getSession();
     if (!session) return;
-    await AZ.Prefs.save(session.user.id, { lang: window.LANG || 'en' });
+    await AZ.Prefs.save(session.user.id, { lang: lang });
   };
 
   function _removeAdminUI() {
@@ -608,8 +690,8 @@
       _withWidgets(function () {
         var _faqs  = (window.LANG === 'en') ? _CHAT_FAQS_EN    : _CHAT_FAQS;
         var _steps = (window.LANG === 'en') ? _ONBOARD_STEPS_EN : _ONBOARD_STEPS;
-        window.AZWidgets.initChat(_faqs);
-        setTimeout(function () { window.AZWidgets.initOnboarding(_steps); }, 700);
+        window.AZWidgets.initChat(_faqs, window.LANG);
+        setTimeout(function () { window.AZWidgets.initOnboarding(_steps, window.LANG); }, 700);
       });
       await AZ.Activity.log(MODULE_ID, 'login');
     } catch (e) { console.warn('[Corebr Patch] auto-login error:', e.message); }

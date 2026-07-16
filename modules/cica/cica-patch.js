@@ -310,10 +310,7 @@
         });
       });
 
-      // ── Rename home → Inicio and inject page content ──
-      var homeBtn = document.querySelector('.sb-item[data-page="home"]');
-      if (homeBtn) homeBtn.textContent = 'Inicio';
-
+      // ── Inject page content into Home/Inicio ──
       var pageHome = document.getElementById('page-home');
       if (pageHome) {
         var inicioWrap = document.createElement('div');
@@ -321,26 +318,25 @@
         inicioWrap.style.cssText = 'padding:20px;';
         inicioWrap.innerHTML =
           '<div style="background:#fff;border-radius:14px;padding:32px;box-shadow:0 1px 3px rgba(0,0,0,.07),0 4px 12px rgba(0,0,0,.06);max-width:820px;margin:0 auto;">' +
-          '<h2 style="font-size:1.4rem;font-weight:800;color:#0F172A;margin-bottom:8px;">Bienvenido al Portal CICA Citizens</h2>' +
-          '<p style="color:#64748B;font-size:.9rem;line-height:1.6;margin-bottom:24px;">Este portal centraliza todos los recursos que necesitas como agente CICA: materiales de entrenamiento, formularios, guías departamentales y herramientas para gestionar tus clientes y comisiones.</p>' +
+          '<h2 style="font-size:1.4rem;font-weight:800;color:#0F172A;margin-bottom:8px;"><span class="en">Welcome to the CICA Citizens Portal</span><span class="es">Bienvenido al Portal CICA Citizens</span></h2>' +
+          '<p style="color:#64748B;font-size:.9rem;line-height:1.6;margin-bottom:24px;"><span class="en">This portal centralizes all the resources you need as a CICA agent: training materials, forms, department guides, and tools to manage your clients and commissions.</span><span class="es">Este portal centraliza todos los recursos que necesitas como agente CICA: materiales de entrenamiento, formularios, guías departamentales y herramientas para gestionar tus clientes y comisiones.</span></p>' +
           '<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:24px;">' +
-          '<div style="background:#F1F5F9;border-radius:10px;padding:18px;"><div style="font-weight:700;color:#0F172A;margin-bottom:5px;font-size:.9rem;">e-Training</div><div style="font-size:.82rem;color:#64748B;line-height:1.5;">Videos de entrenamiento, quizzes y elegibilidad. Gana hasta 50 XP por quiz perfecto.</div></div>' +
-          '<div style="background:#F1F5F9;border-radius:10px;padding:18px;"><div style="font-weight:700;color:#0F172A;margin-bottom:5px;font-size:.9rem;">Contratos y Comisiones</div><div style="font-size:.82rem;color:#64748B;line-height:1.5;">Tablas de comisiones, formulario ACH y solicitudes de adelanto de comisión.</div></div>' +
-          '<div style="background:#F1F5F9;border-radius:10px;padding:18px;"><div style="font-weight:700;color:#0F172A;margin-bottom:5px;font-size:.9rem;">Formularios de Reclamo</div><div style="font-size:.82rem;color:#64748B;line-height:1.5;">Formularios de reclamo de vida para asegurados y beneficiarios. Previsualiza o descarga.</div></div>' +
-          '<div style="background:#F1F5F9;border-radius:10px;padding:18px;"><div style="font-weight:700;color:#0F172A;margin-bottom:5px;font-size:.9rem;">Recursos Útiles</div><div style="font-size:.82rem;color:#64748B;line-height:1.5;">Links al portal de agentes, guías SS Billing, recursos HIPAA y disponibilidad por estado.</div></div>' +
+          '<div style="background:#F1F5F9;border-radius:10px;padding:18px;"><div style="font-weight:700;color:#0F172A;margin-bottom:5px;font-size:.9rem;">e-Training</div><div style="font-size:.82rem;color:#64748B;line-height:1.5;"><span class="en">Training videos, quizzes and eligibility resources. Earn up to 50 XP for a perfect quiz.</span><span class="es">Videos de entrenamiento, quizzes y elegibilidad. Gana hasta 50 XP por quiz perfecto.</span></div></div>' +
+          '<div style="background:#F1F5F9;border-radius:10px;padding:18px;"><div style="font-weight:700;color:#0F172A;margin-bottom:5px;font-size:.9rem;"><span class="en">Contracts &amp; Commissions</span><span class="es">Contratos y Comisiones</span></div><div style="font-size:.82rem;color:#64748B;line-height:1.5;"><span class="en">Commission schedules, ACH form and commission advance requests.</span><span class="es">Tablas de comisiones, formulario ACH y solicitudes de adelanto de comisión.</span></div></div>' +
+          '<div style="background:#F1F5F9;border-radius:10px;padding:18px;"><div style="font-weight:700;color:#0F172A;margin-bottom:5px;font-size:.9rem;"><span class="en">Claim Forms</span><span class="es">Formularios de Reclamo</span></div><div style="font-size:.82rem;color:#64748B;line-height:1.5;"><span class="en">Life claim forms for policyholders and beneficiaries. Preview or download.</span><span class="es">Formularios de reclamo de vida para asegurados y beneficiarios. Previsualiza o descarga.</span></div></div>' +
+          '<div style="background:#F1F5F9;border-radius:10px;padding:18px;"><div style="font-weight:700;color:#0F172A;margin-bottom:5px;font-size:.9rem;"><span class="en">Helpful Links</span><span class="es">Recursos Útiles</span></div><div style="font-size:.82rem;color:#64748B;line-height:1.5;"><span class="en">Links to the agent portal, SS Billing guides, HIPAA resources and state availability.</span><span class="es">Links al portal de agentes, guías SS Billing, recursos HIPAA y disponibilidad por estado.</span></div></div>' +
           '</div>' +
-          '<button onclick="if(window.azStartTour)window.azStartTour()" style="background:#2563EB;color:#fff;border:none;border-radius:8px;padding:10px 22px;font-size:.88rem;font-weight:600;cursor:pointer;font-family:inherit;">Ver guía del portal</button>' +
+          '<button onclick="if(window.azStartTour)window.azStartTour()" style="background:#2563EB;color:#fff;border:none;border-radius:8px;padding:10px 22px;font-size:.88rem;font-weight:600;cursor:pointer;font-family:inherit;"><span class="en">View portal guide</span><span class="es">Ver guía del portal</span></button>' +
           '</div>';
         pageHome.appendChild(inicioWrap);
         pageHome.querySelector('.home-2col') && (pageHome.querySelector('.home-2col').style.display = 'none');
       }
 
-      // ── "Ir a mi portal" in hero buttons ──
+      // ── "Go to my portal" / "Ir a mi portal" in hero buttons ──
       document.querySelectorAll('.hero-btn .en, .hero-btn .es').forEach(function (el) {
-        if (el.textContent.toLowerCase().includes('agent portal') ||
-            el.textContent.toLowerCase().includes('portal del agente') ||
-            el.textContent.toLowerCase().includes('agent portal login')) {
-          el.textContent = 'Ir a mi portal';
+        var t = el.textContent.toLowerCase();
+        if (t.includes('agent portal') || t.includes('portal del agente')) {
+          el.textContent = el.classList.contains('es') ? 'Ir a mi portal' : 'Go to my portal';
         }
       });
       // Strip emoji text nodes from .hero-btn parent (e.g. 🔒 before span text)
@@ -374,9 +370,9 @@
       }
       // Quick links in home sidebar widget
       document.querySelectorAll('.sec-name .en, .sec-name .es').forEach(function (el) {
-        if (el.textContent.toLowerCase().includes('agent portal') ||
-            el.textContent.toLowerCase().includes('portal del agente')) {
-          el.textContent = 'Ir a mi portal';
+        var t = el.textContent.toLowerCase();
+        if (t.includes('agent portal') || t.includes('portal del agente')) {
+          el.textContent = el.classList.contains('es') ? 'Ir a mi portal' : 'Go to my portal';
         }
       });
 
@@ -1204,8 +1200,8 @@
       _withWidgets(function () {
         var _faqs  = (window.LANG === 'en') ? _CHAT_FAQS_EN    : _CHAT_FAQS;
         var _steps = (window.LANG === 'en') ? _ONBOARD_STEPS_EN : _ONBOARD_STEPS;
-        window.AZWidgets.initChat(_faqs);
-        setTimeout(function () { window.AZWidgets.initOnboarding(_steps); }, 700);
+        window.AZWidgets.initChat(_faqs, window.LANG);
+        setTimeout(function () { window.AZWidgets.initOnboarding(_steps, window.LANG); }, 700);
       });
 
     } catch (e) { console.warn('[CICA Patch] auto-login error:', e.message); }
@@ -1223,6 +1219,14 @@
   var _origSetLang = window.setLang;
   window.setLang = async function (lang) {
     if (_origSetLang) _origSetLang.call(this, lang);
+    if (window.AZWidgets && window.AZWidgets.updateChatLang) {
+      var _faqs = (lang === 'en') ? _CHAT_FAQS_EN : _CHAT_FAQS;
+      window.AZWidgets.updateChatLang(lang, _faqs);
+    }
+    if (window.AZWidgets && window.AZWidgets.updateOnboardingLang) {
+      var _steps = (lang === 'en') ? _ONBOARD_STEPS_EN : _ONBOARD_STEPS;
+      window.AZWidgets.updateOnboardingLang(lang, _steps);
+    }
     var session = await AZ.Auth.getSession();
     if (!session) return;
     await AZ.Prefs.save(session.user.id, { lang });

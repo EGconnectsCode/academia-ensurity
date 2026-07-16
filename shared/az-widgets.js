@@ -12,8 +12,63 @@
    *  ONBOARDING GUIDE
    *  Shows every page load. Skip just closes — no localStorage is written.
    * ══════════════════════════════════════════════════════════════════════════ */
-  function initOnboarding(steps) {
+  var _OB_TXT = {
+    en: { skip: 'Skip guide', prev: '← Previous', next: 'Next →', done: 'Start  ✓',
+      stepLbl: function (i, n) { return 'Step ' + i + ' of ' + n; } },
+    es: { skip: 'Omitir guía', prev: '← Anterior', next: 'Siguiente →', done: 'Comenzar  ✓',
+      stepLbl: function (i, n) { return 'Paso ' + i + ' de ' + n; } }
+  };
+
+  var _obState = null; // { lang, steps, cur, els:{...} }
+
+  function _renderObDots() {
+    var s = _obState;
+    var el = s.els.dots;
+    el.innerHTML = '';
+    s.steps.forEach(function (_, i) {
+      var d = document.createElement('div');
+      d.style.cssText =
+        'height:7px;border-radius:4px;transition:all .28s;background:' +
+        (i === s.cur ? '#2563eb' : '#e2e8f0') + ';width:' + (i === s.cur ? '26px' : '7px') + ';';
+      el.appendChild(d);
+    });
+  }
+
+  function _renderObStep(i) {
+    var s = _obState;
+    var card = s.els.card;
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(10px)';
+    setTimeout(function () {
+      var step = s.steps[i];
+      var t = _OB_TXT[s.lang];
+      s.els.counter.textContent = t.stepLbl(i + 1, s.steps.length);
+      s.els.icon.textContent  = step.icon;
+      s.els.title.textContent = step.title;
+      s.els.body.textContent  = step.body;
+      s.els.prev.style.display = i > 0 ? '' : 'none';
+      s.els.prev.textContent = t.prev;
+      s.els.skip.textContent = t.skip;
+      s.els.next.textContent = (i === s.steps.length - 1) ? t.done : t.next;
+      _renderObDots();
+      card.style.opacity   = '1';
+      card.style.transform = 'translateY(0)';
+    }, 200);
+  }
+
+  /** Update the onboarding modal's language (and optionally its step content) while open. */
+  function updateOnboardingLang(lang, steps) {
+    if (!_obState) return;
+    lang = (lang === 'en') ? 'en' : 'es';
+    _obState.lang = lang;
+    if (steps) _obState.steps = steps;
+    _renderObStep(_obState.cur);
+  }
+
+  function initOnboarding(steps, lang) {
     if (document.getElementById('az-ob-overlay')) return; // guard double-init
+    lang = (lang === 'en') ? 'en' : 'es';
+    var t = _OB_TXT[lang];
 
     var overlay = document.createElement('div');
     overlay.id  = 'az-ob-overlay';
@@ -69,18 +124,18 @@
             'background:none;border:1px solid #e2e8f0;color:#94a3b8;font-size:.8rem;' +
             'padding:9px 18px;border-radius:11px;cursor:pointer;transition:border-color .15s,color .15s;' +
           '" onmouseenter="this.style.borderColor=\'#cbd5e1\';this.style.color=\'#64748b\'" ' +
-             'onmouseleave="this.style.borderColor=\'#e2e8f0\';this.style.color=\'#94a3b8\'">Omitir guía</button>' +
+             'onmouseleave="this.style.borderColor=\'#e2e8f0\';this.style.color=\'#94a3b8\'">' + t.skip + '</button>' +
           '<button id="az-ob-prev" style="' +
             'background:#f8fafc;border:1px solid #e2e8f0;color:#64748b;font-size:.8rem;' +
             'padding:9px 16px;border-radius:11px;cursor:pointer;display:none;transition:background .15s;' +
           '" onmouseenter="this.style.background=\'#f1f5f9\'" ' +
-             'onmouseleave="this.style.background=\'#f8fafc\'">← Anterior</button>' +
+             'onmouseleave="this.style.background=\'#f8fafc\'">' + t.prev + '</button>' +
           '<button id="az-ob-next" style="' +
             'background:linear-gradient(135deg,#1e3a8a 0%,#2563eb 100%);border:none;color:#fff;' +
             'font-size:.88rem;font-weight:700;padding:10px 28px;border-radius:11px;cursor:pointer;' +
             'box-shadow:0 4px 16px rgba(37,99,235,.38);transition:box-shadow .2s,transform .15s;' +
           '" onmouseenter="this.style.boxShadow=\'0 6px 22px rgba(37,99,235,.55)\';this.style.transform=\'translateY(-1px)\'" ' +
-             'onmouseleave="this.style.boxShadow=\'0 4px 16px rgba(37,99,235,.38)\';this.style.transform=\'\'">Siguiente →</button>' +
+             'onmouseleave="this.style.boxShadow=\'0 4px 16px rgba(37,99,235,.38)\';this.style.transform=\'\'">' + t.next + '</button>' +
         '</div>' +
 
       '</div>';
@@ -88,62 +143,123 @@
     document.body.appendChild(overlay);
     requestAnimationFrame(function () { overlay.style.opacity = '1'; });
 
-    var cur = 0;
-
-    function renderDots() {
-      var el = document.getElementById('az-ob-dots');
-      el.innerHTML = '';
-      steps.forEach(function (_, i) {
-        var d = document.createElement('div');
-        d.style.cssText =
-          'height:7px;border-radius:4px;transition:all .28s;background:' +
-          (i === cur ? '#2563eb' : '#e2e8f0') + ';width:' + (i === cur ? '26px' : '7px') + ';';
-        el.appendChild(d);
-      });
-    }
-
-    function show(i) {
-      var card = document.getElementById('az-ob-card');
-      card.style.opacity = '0';
-      card.style.transform = 'translateY(10px)';
-      setTimeout(function () {
-        var s = steps[i];
-        document.getElementById('az-ob-counter').textContent = 'Paso ' + (i + 1) + ' de ' + steps.length;
-        document.getElementById('az-ob-icon').textContent  = s.icon;
-        document.getElementById('az-ob-title').textContent = s.title;
-        document.getElementById('az-ob-body').textContent  = s.body;
-        document.getElementById('az-ob-prev').style.display = i > 0 ? '' : 'none';
-        document.getElementById('az-ob-next').textContent =
-          i === steps.length - 1 ? 'Comenzar  ✓' : 'Siguiente →';
-        renderDots();
-        card.style.opacity   = '1';
-        card.style.transform = 'translateY(0)';
-      }, 200);
-    }
+    _obState = {
+      lang: lang, steps: steps, cur: 0,
+      els: {
+        card:    document.getElementById('az-ob-card'),
+        counter: document.getElementById('az-ob-counter'),
+        dots:    document.getElementById('az-ob-dots'),
+        icon:    document.getElementById('az-ob-icon'),
+        title:   document.getElementById('az-ob-title'),
+        body:    document.getElementById('az-ob-body'),
+        skip:    document.getElementById('az-ob-skip'),
+        prev:    document.getElementById('az-ob-prev'),
+        next:    document.getElementById('az-ob-next')
+      }
+    };
 
     function closeOnboard() {
       overlay.style.opacity = '0';
-      setTimeout(function () { if (overlay.parentNode) overlay.parentNode.removeChild(overlay); }, 420);
+      setTimeout(function () {
+        if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
+        _obState = null;
+      }, 420);
     }
 
-    document.getElementById('az-ob-next').onclick = function () {
-      if (cur < steps.length - 1) { cur++; show(cur); } else closeOnboard();
+    _obState.els.next.onclick = function () {
+      if (_obState.cur < _obState.steps.length - 1) { _obState.cur++; _renderObStep(_obState.cur); }
+      else closeOnboard();
     };
-    document.getElementById('az-ob-prev').onclick = function () {
-      if (cur > 0) { cur--; show(cur); }
+    _obState.els.prev.onclick = function () {
+      if (_obState.cur > 0) { _obState.cur--; _renderObStep(_obState.cur); }
     };
-    document.getElementById('az-ob-skip').onclick = closeOnboard;
-    document.getElementById('az-ob-x').onclick    = closeOnboard;
+    _obState.els.skip.onclick = closeOnboard;
+    document.getElementById('az-ob-x').onclick = closeOnboard;
 
-    show(0);
+    _renderObStep(0);
   }
 
   /* ══════════════════════════════════════════════════════════════════════════
    *  SUPPORT CHAT
    *  Floating button + panel, keyword-matched FAQ responses.
    * ══════════════════════════════════════════════════════════════════════════ */
-  function initChat(faqs) {
+  var _CHAT_TXT = {
+    en: {
+      title: 'Support Assistant', sub: 'Platform questions',
+      placeholder: 'Type your question...',
+      greeting: 'Hi! 👋 I\'m your support assistant. I can help you find forms, documents, modules and more. Use the quick questions above or type your query.',
+      fallback: 'I couldn\'t find a specific answer for that. Try the quick questions above, or write to it@egconnects.com for personalized support.'
+    },
+    es: {
+      title: 'Asistente de Soporte', sub: 'Preguntas sobre la plataforma',
+      placeholder: 'Escribe tu pregunta...',
+      greeting: '¡Hola! 👋 Soy tu asistente de soporte. Puedo ayudarte a encontrar formularios, documentos, módulos y más. Usa las preguntas rápidas de arriba o escribe tu consulta.',
+      fallback: 'No encontré una respuesta específica para eso. Te recomiendo usar las preguntas rápidas de arriba, o escribe a it@egconnects.com para soporte personalizado.'
+    }
+  };
+
+  var _chatState = null; // { lang, faqs, els:{...} }
+
+  function _renderChatChips() {
+    var s = _chatState;
+    s.els.chips.innerHTML = '';
+    s.faqs.slice(0, 6).forEach(function (faq) {
+      var chip = document.createElement('button');
+      chip.textContent = faq.label;
+      chip.style.cssText =
+        'background:#f1f5f9;border:1px solid #e2e8f0;color:#475569;font-size:.71rem;' +
+        'padding:4px 10px;border-radius:20px;cursor:pointer;white-space:nowrap;transition:background .12s;';
+      chip.onmouseenter = function () { chip.style.background = '#e2e8f0'; };
+      chip.onmouseleave = function () { chip.style.background = '#f1f5f9'; };
+      chip.onclick = function () {
+        _postChatMsg(faq.label.replace(/^.+?\s/, ''), true);
+        _postChatMsg(faq.answer, false);
+      };
+      s.els.chips.appendChild(chip);
+    });
+  }
+
+  function _postChatMsg(text, isUser) {
+    var msgs = _chatState.els.msgs;
+    var wrap = document.createElement('div');
+    wrap.style.cssText =
+      'display:flex;' + (isUser ? 'justify-content:flex-end' : 'justify-content:flex-start');
+    var bubble = document.createElement('div');
+    bubble.style.cssText =
+      'max-width:84%;padding:9px 13px;font-size:.83rem;line-height:1.58;word-break:break-word;border-radius:' +
+      (isUser
+        ? '14px 14px 4px 14px;background:#2563eb;color:#fff;'
+        : '14px 14px 14px 4px;background:#f1f5f9;color:#1e293b;');
+    bubble.textContent = text;
+    wrap.appendChild(bubble);
+    if (!isUser) {
+      wrap.style.opacity = '0';
+      setTimeout(function () {
+        wrap.style.transition = 'opacity .3s';
+        wrap.style.opacity    = '1';
+      }, 360);
+    }
+    msgs.appendChild(wrap);
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+
+  /** Update the chat widget's language (and optionally its FAQ set) after init. */
+  function updateChatLang(lang, faqs) {
+    if (!_chatState) return;
+    lang = (lang === 'en') ? 'en' : 'es';
+    _chatState.lang = lang;
+    if (faqs) _chatState.faqs = faqs;
+    var t = _CHAT_TXT[lang];
+    _chatState.els.title.textContent = t.title;
+    _chatState.els.sub.textContent   = t.sub;
+    _chatState.els.inp.placeholder   = t.placeholder;
+    _renderChatChips();
+  }
+
+  function initChat(faqs, lang) {
     if (document.getElementById('az-chat-widget')) return;
+    lang = (lang === 'en') ? 'en' : 'es';
+    var t = _CHAT_TXT[lang];
 
     var widget = document.createElement('div');
     widget.id  = 'az-chat-widget';
@@ -170,8 +286,8 @@
               'display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;' +
             '">💬</div>' +
             '<div>' +
-              '<div style="color:#fff;font-weight:700;font-size:.88rem;line-height:1.2;">Asistente de Soporte</div>' +
-              '<div style="color:rgba(255,255,255,.62);font-size:.7rem;margin-top:1px;">Preguntas sobre la plataforma</div>' +
+              '<div id="az-chat-title" style="color:#fff;font-weight:700;font-size:.88rem;line-height:1.2;">' + t.title + '</div>' +
+              '<div id="az-chat-sub" style="color:rgba(255,255,255,.62);font-size:.7rem;margin-top:1px;">' + t.sub + '</div>' +
             '</div>' +
           '</div>' +
           '<button id="az-chat-close-btn" style="' +
@@ -199,7 +315,7 @@
           'padding:10px 10px 12px;border-top:1px solid #e2e8f0;' +
           'display:flex;gap:7px;background:#fff;flex-shrink:0;' +
         '">' +
-          '<input id="az-chat-inp" type="text" placeholder="Escribe tu pregunta..." autocomplete="off" style="' +
+          '<input id="az-chat-inp" type="text" placeholder="' + t.placeholder + '" autocomplete="off" style="' +
             'flex:1;padding:9px 13px;border:1px solid #e2e8f0;border-radius:10px;' +
             'font-size:.83rem;outline:none;font-family:inherit;color:#1e293b;' +
             'transition:border-color .15s;' +
@@ -235,64 +351,34 @@
     var closeBtn  = document.getElementById('az-chat-close-btn');
     var chipsEl   = document.getElementById('az-chat-chips');
 
-    /* quick chips (first 6) */
-    faqs.slice(0, 6).forEach(function (faq) {
-      var chip = document.createElement('button');
-      chip.textContent = faq.label;
-      chip.style.cssText =
-        'background:#f1f5f9;border:1px solid #e2e8f0;color:#475569;font-size:.71rem;' +
-        'padding:4px 10px;border-radius:20px;cursor:pointer;white-space:nowrap;transition:background .12s;';
-      chip.onmouseenter = function () { chip.style.background = '#e2e8f0'; };
-      chip.onmouseleave = function () { chip.style.background = '#f1f5f9'; };
-      chip.onclick = function () {
-        postMsg(faq.label.replace(/^.+?\s/, ''), true);
-        postMsg(faq.answer, false);
-      };
-      chipsEl.appendChild(chip);
-    });
-
-    function postMsg(text, isUser) {
-      var wrap = document.createElement('div');
-      wrap.style.cssText =
-        'display:flex;' + (isUser ? 'justify-content:flex-end' : 'justify-content:flex-start');
-      var bubble = document.createElement('div');
-      bubble.style.cssText =
-        'max-width:84%;padding:9px 13px;font-size:.83rem;line-height:1.58;word-break:break-word;border-radius:' +
-        (isUser
-          ? '14px 14px 4px 14px;background:#2563eb;color:#fff;'
-          : '14px 14px 14px 4px;background:#f1f5f9;color:#1e293b;');
-      bubble.textContent = text;
-      wrap.appendChild(bubble);
-      if (!isUser) {
-        wrap.style.opacity = '0';
-        setTimeout(function () {
-          wrap.style.transition = 'opacity .3s';
-          wrap.style.opacity    = '1';
-        }, 360);
+    _chatState = {
+      lang: lang, faqs: faqs,
+      els: {
+        title: document.getElementById('az-chat-title'),
+        sub:   document.getElementById('az-chat-sub'),
+        inp:   inp,
+        msgs:  msgs,
+        chips: chipsEl
       }
-      msgs.appendChild(wrap);
-      msgs.scrollTop = msgs.scrollHeight;
-    }
+    };
+
+    _renderChatChips();
 
     function handleSend() {
       var q = inp.value.trim();
       if (!q) return;
-      postMsg(q, true);
+      _postChatMsg(q, true);
       inp.value = '';
-      var ql  = q.toLowerCase();
-      var hit = null;
-      for (var i = 0; i < faqs.length; i++) {
-        for (var j = 0; j < faqs[i].keywords.length; j++) {
-          if (ql.indexOf(faqs[i].keywords[j]) !== -1) { hit = faqs[i]; break; }
+      var ql   = q.toLowerCase();
+      var curFaqs = _chatState.faqs;
+      var hit  = null;
+      for (var i = 0; i < curFaqs.length; i++) {
+        for (var j = 0; j < curFaqs[i].keywords.length; j++) {
+          if (ql.indexOf(curFaqs[i].keywords[j]) !== -1) { hit = curFaqs[i]; break; }
         }
         if (hit) break;
       }
-      postMsg(
-        hit
-          ? hit.answer
-          : 'No encontré una respuesta específica para eso. Te recomiendo usar las preguntas rápidas de arriba, o escribe a it@egconnects.com para soporte personalizado.',
-        false
-      );
+      _postChatMsg(hit ? hit.answer : _CHAT_TXT[_chatState.lang].fallback, false);
     }
 
     document.getElementById('az-chat-send-btn').onclick = handleSend;
@@ -302,7 +388,7 @@
       isOpen = !isOpen;
       panel.style.display = isOpen ? 'flex' : 'none';
       if (isOpen && msgs.children.length === 0) {
-        postMsg('¡Hola! 👋 Soy tu asistente de soporte. Puedo ayudarte a encontrar formularios, documentos, módulos y más. Usa las preguntas rápidas de arriba o escribe tu consulta.', false);
+        _postChatMsg(_CHAT_TXT[_chatState.lang].greeting, false);
       }
     };
 
@@ -312,6 +398,9 @@
     };
   }
 
-  global.AZWidgets = { initOnboarding: initOnboarding, initChat: initChat };
+  global.AZWidgets = {
+    initOnboarding: initOnboarding, updateOnboardingLang: updateOnboardingLang,
+    initChat: initChat, updateChatLang: updateChatLang
+  };
 
 })(window);

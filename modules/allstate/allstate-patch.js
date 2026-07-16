@@ -887,8 +887,8 @@
       _withWidgets(function () {
         var _faqs  = (window.LANG === 'en') ? _CHAT_FAQS_EN    : _CHAT_FAQS;
         var _steps = (window.LANG === 'en') ? _ONBOARD_STEPS_EN : _ONBOARD_STEPS;
-        window.AZWidgets.initChat(_faqs);
-        setTimeout(function () { window.AZWidgets.initOnboarding(_steps); }, 700);
+        window.AZWidgets.initChat(_faqs, window.LANG);
+        setTimeout(function () { window.AZWidgets.initOnboarding(_steps, window.LANG); }, 700);
       });
     } catch (e) { console.warn('[AHS Patch] auto-login error:', e.message); }
   });
@@ -903,10 +903,20 @@
     await AZ.Prefs.save(session.user.id, { theme: isDark ? 'dark' : 'light' });
   };
 
-  const _origSetLang = window.setLang || window.switchLang;
-  if (window.setLang) {
-    window.setLang = async function (lang) {
-      if (_origSetLang) _origSetLang.call(this, lang);
+  // Allstate's language toggle is `toggleAuthLang()` (no window.setLang exists here).
+  const _origToggleAuthLang = window.toggleAuthLang;
+  if (_origToggleAuthLang) {
+    window.toggleAuthLang = async function () {
+      _origToggleAuthLang.call(this);
+      const lang = window.LANG;
+      if (window.AZWidgets && window.AZWidgets.updateChatLang) {
+        const _faqs = (lang === 'en') ? _CHAT_FAQS_EN : _CHAT_FAQS;
+        window.AZWidgets.updateChatLang(lang, _faqs);
+      }
+      if (window.AZWidgets && window.AZWidgets.updateOnboardingLang) {
+        const _steps = (lang === 'en') ? _ONBOARD_STEPS_EN : _ONBOARD_STEPS;
+        window.AZWidgets.updateOnboardingLang(lang, _steps);
+      }
       const session = await AZ.Auth.getSession();
       if (!session) return;
       await AZ.Prefs.save(session.user.id, { lang });

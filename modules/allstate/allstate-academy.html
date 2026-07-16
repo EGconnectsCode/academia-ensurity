@@ -1453,6 +1453,7 @@ body.dark .fcard{background:#0f1e3a!important;border-color:#2a4070!important}
 body.dark .fname{color:#ffffff!important;text-shadow:none!important}
 body.dark .fmeta{color:#b8cfe8!important}
 body.dark .lbadge.lben{background:rgba(59,130,246,.25)!important;color:#93c5fd!important}
+body.dark .lbadge.lbes{background:rgba(219,39,119,.25)!important;color:#f9a8d4!important}
 body.dark .rbadge{background:rgba(255,0,84,.2)!important;color:#ff8099!important}
 
 /* Global scrollbar wider */
@@ -2450,7 +2451,7 @@ function dlFromUrl(url, fname) {
     </div>
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px">
 
-      <div class="vid-card" onclick="window.open('https://www.youtube.com/channel/UC-wRVsdDg4xL2o0SgLwQZcQ/videos','_blank')">
+      <div class="vid-card" onclick="openPlaylistVid('stm_v','Short Term Medical Insurance — Allstate Health Solutions')">
         <div class="vid-thumb" style="background:linear-gradient(135deg,#1e3a5f,#0f2444)">
           <div class="vid-play">▶</div>
           <div class="vid-dur">33:25</div>
@@ -2461,7 +2462,7 @@ function dlFromUrl(url, fname) {
         </div>
       </div>
 
-      <div class="vid-card" onclick="window.open('https://www.youtube.com/channel/UC-wRVsdDg4xL2o0SgLwQZcQ/videos','_blank')">
+      <div class="vid-card" onclick="openPlaylistVid('hospital_v','Hospital Expense Protection Plus — Allstate Health Solutions')">
         <div class="vid-thumb" style="background:linear-gradient(135deg,#1a3a2a,#0d2018)">
           <div class="vid-play">▶</div>
           <div class="vid-dur">17:21</div>
@@ -2472,7 +2473,7 @@ function dlFromUrl(url, fname) {
         </div>
       </div>
 
-      <div class="vid-card" onclick="window.open('https://www.youtube.com/channel/UC-wRVsdDg4xL2o0SgLwQZcQ/videos','_blank')">
+      <div class="vid-card" onclick="openPlaylistVid('dental_v','Select Dental PPO — Allstate Health Solutions')">
         <div class="vid-thumb" style="background:linear-gradient(135deg,#1e3a5f,#0f2444)">
           <div class="vid-play">▶</div>
           <div class="vid-dur">~</div>
@@ -2483,7 +2484,7 @@ function dlFromUrl(url, fname) {
         </div>
       </div>
 
-      <div class="vid-card" onclick="window.open('https://www.youtube.com/channel/UC-wRVsdDg4xL2o0SgLwQZcQ/videos','_blank')">
+      <div class="vid-card" onclick="openPlaylistVid('cancer_v','Cancer Coverage — Allstate Health Solutions')">
         <div class="vid-thumb" style="background:linear-gradient(135deg,#3a1e1e,#2a0f0f)">
           <div class="vid-play">▶</div>
           <div class="vid-dur">9:47</div>
@@ -2494,7 +2495,7 @@ function dlFromUrl(url, fname) {
         </div>
       </div>
 
-      <div class="vid-card" onclick="window.open('https://www.youtube.com/channel/UC-wRVsdDg4xL2o0SgLwQZcQ/videos','_blank')">
+      <div class="vid-card" onclick="openPlaylistVid('mes_v','Medical Expense Shield — Allstate Health Solutions')">
         <div class="vid-thumb" style="background:linear-gradient(135deg,#1e2f3a,#0f1e2a)">
           <div class="vid-play">▶</div>
           <div class="vid-dur">40:38</div>
@@ -3433,6 +3434,21 @@ function dlFromUrl(url, fname) {
   <button class="vid-ext-btn" onclick="openVidExternal()">
     &#x1F517; <span class="es">Abrir en YouTube</span><span class="en">Open in YouTube</span>
   </button>
+</div>
+
+<!-- ═══ TRAINING PLAYLIST VIDEO MODAL (inline, stays on page) ═══════════ -->
+<div id="playlist-vid-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9500;align-items:center;justify-content:center;flex-direction:column;padding:12px" onclick="if(event.target===this)closePlaylistVid()">
+  <div class="vid-box">
+    <div class="vid-head">
+      <div class="vid-head-title" id="playlist-vid-title">Video de Capacitacion</div>
+      <button class="vid-close-btn" onclick="closePlaylistVid()">&#x2715;</button>
+    </div>
+    <div class="vid-ratio">
+      <iframe id="playlist-vid-iframe"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen></iframe>
+    </div>
+  </div>
 </div>
 
 <div class="qzbg" id="qz-modal" onclick="if(event.target===this)closeQZ()">
@@ -4912,13 +4928,29 @@ var VID_CUR_MID = '';
    Short Term Medical (33:25), Cancer (9:47), Hospital Expense (17:21),
    Select Dental PPO, Medical Expense Shield (40:38) */
 var AHS_YTIDS = {
-  stm_v:     'TzgkAf3wBXA',
-  cancer_v:  'TzgkAf3wBXA',
-  hospital_v:'TzgkAf3wBXA',
-  dental_v:  'TzgkAf3wBXA'
+  stm_v:     'k8iJ62cCOfA',
+  cancer_v:  'dO41OWtJL8s',
+  hospital_v:'_B9K5DMS1Wg',
+  dental_v:  'WP2zhdq1AiU',
+  mes_v:     'kNyopfJVB9I'
 };
-/* NOTE: Replace placeholder IDs above with real IDs from the AHS channel.
-   The system will embed the video or show the channel if ID is not yet set. */
+
+function openPlaylistVid(ytKey,title){
+  var modal=document.getElementById('playlist-vid-modal');
+  var titleEl=document.getElementById('playlist-vid-title');
+  var iframe=document.getElementById('playlist-vid-iframe');
+  var ytRealId=AHS_YTIDS[ytKey]||'';
+  if(titleEl)titleEl.textContent=title||'Video de Capacitacion';
+  if(iframe)iframe.src=ytRealId?'https://www.youtube.com/embed/'+ytRealId+'?rel=0&modestbranding=1&autoplay=1':'';
+  if(modal)modal.style.display='flex';
+}
+
+function closePlaylistVid(){
+  var modal=document.getElementById('playlist-vid-modal');
+  if(modal)modal.style.display='none';
+  var iframe=document.getElementById('playlist-vid-iframe');
+  if(iframe)iframe.src='';
+}
 
 function openVidModal(mid){
   var m=null;

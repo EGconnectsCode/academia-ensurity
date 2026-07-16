@@ -522,9 +522,18 @@
   var _origToggleLang = window.toggleLang;
   window.toggleLang = async function () {
     if (_origToggleLang) _origToggleLang.call(this);
+    var lang = window.LANG || 'en';
+    if (window.AZWidgets && window.AZWidgets.updateChatLang) {
+      var _faqs = (lang === 'en') ? _CHAT_FAQS_EN : _CHAT_FAQS;
+      window.AZWidgets.updateChatLang(lang, _faqs);
+    }
+    if (window.AZWidgets && window.AZWidgets.updateOnboardingLang) {
+      var _steps = (lang === 'en') ? _ONBOARD_STEPS_EN : _ONBOARD_STEPS;
+      window.AZWidgets.updateOnboardingLang(lang, _steps);
+    }
     var session = await AZ.Auth.getSession();
     if (!session) return;
-    await AZ.Prefs.save(session.user.id, { lang: window.LANG || 'en' });
+    await AZ.Prefs.save(session.user.id, { lang: lang });
   };
 
   function _removeAdminUI() {
@@ -645,8 +654,8 @@
       _withWidgets(function () {
         var _faqs  = (window.LANG === 'en') ? _CHAT_FAQS_EN    : _CHAT_FAQS;
         var _steps = (window.LANG === 'en') ? _ONBOARD_STEPS_EN : _ONBOARD_STEPS;
-        window.AZWidgets.initChat(_faqs);
-        setTimeout(function () { window.AZWidgets.initOnboarding(_steps); }, 700);
+        window.AZWidgets.initChat(_faqs, window.LANG);
+        setTimeout(function () { window.AZWidgets.initOnboarding(_steps, window.LANG); }, 700);
       });
       await AZ.Activity.log(MODULE_ID, 'login');
     } catch (e) { console.warn('[LB Patch] auto-login error:', e.message); }
