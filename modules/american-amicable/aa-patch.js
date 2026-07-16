@@ -472,19 +472,19 @@
         <div class="ph-sub en">Step-by-step guide to get started with American-Amicable after contracting.</div>
         <div class="ph-sub es">Guía paso a paso para comenzar con American-Amicable después de la contratación.</div>
         <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:20px;">
-          <div class="fcard" style="flex:1;min-width:260px;max-width:340px;padding:20px;border-radius:12px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.08);border:1px solid #E2E8F0;">
+          <div class="fcard" style="flex:1;min-width:260px;max-width:340px;padding:20px;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);">
             <div style="font-size:2rem;margin-bottom:8px;">🇺🇸</div>
             <div style="font-weight:700;font-size:.95rem;margin-bottom:4px;">New Agent Onboarding Guide</div>
-            <div style="font-size:.8rem;color:#64748B;margin-bottom:16px;">English version — Steps 1–3 to access your credentials and portal.</div>
+            <div style="font-size:.8rem;color:var(--tx3);margin-bottom:16px;">English version — Steps 1–3 to access your credentials and portal.</div>
             <div style="display:flex;gap:8px;">
               <button onclick="window.open('${BASE}agent-welcome-guide-v2.pdf','_blank')" style="flex:1;padding:8px;background:#1e40af;color:#fff;border:none;border-radius:8px;font-size:.8rem;font-weight:700;cursor:pointer;">👁 Preview</button>
               <a href="${BASE}agent-welcome-guide-v2.pdf" download style="flex:1;padding:8px;background:#059669;color:#fff;border:none;border-radius:8px;font-size:.8rem;font-weight:700;cursor:pointer;text-align:center;text-decoration:none;">⬇ Download</a>
             </div>
           </div>
-          <div class="fcard" style="flex:1;min-width:260px;max-width:340px;padding:20px;border-radius:12px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.08);border:1px solid #E2E8F0;">
+          <div class="fcard" style="flex:1;min-width:260px;max-width:340px;padding:20px;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);">
             <div style="font-size:2rem;margin-bottom:8px;">🇪🇸</div>
             <div style="font-weight:700;font-size:.95rem;margin-bottom:4px;">Guía de Incorporación para Nuevos Agentes</div>
-            <div style="font-size:.8rem;color:#64748B;margin-bottom:16px;">Versión en español — Pasos 1–3 para acceder a tus credenciales y al portal.</div>
+            <div style="font-size:.8rem;color:var(--tx3);margin-bottom:16px;">Versión en español — Pasos 1–3 para acceder a tus credenciales y al portal.</div>
             <div style="display:flex;gap:8px;">
               <button onclick="window.open('${BASE}agent-welcome-guide-es.pdf','_blank')" style="flex:1;padding:8px;background:#1e40af;color:#fff;border:none;border-radius:8px;font-size:.8rem;font-weight:700;cursor:pointer;">👁 Vista Previa</button>
               <a href="${BASE}agent-welcome-guide-es.pdf" download style="flex:1;padding:8px;background:#059669;color:#fff;border:none;border-radius:8px;font-size:.8rem;font-weight:700;cursor:pointer;text-align:center;text-decoration:none;">⬇ Descargar</a>
