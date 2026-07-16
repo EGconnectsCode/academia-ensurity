@@ -1881,11 +1881,11 @@ body.dark .qt-multi-table tr:nth-child(even) td{background:rgba(255,255,255,.03)
     <div style="display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap">
       <button id="fcatbtn_marketing" onclick="fCatTab('marketing')"
         style="padding:9px 18px;border-radius:9px;border:1.5px solid var(--bdr);font-weight:700;font-size:13px;cursor:pointer;background:var(--sur);color:var(--tx);display:flex;align-items:center;gap:8px;transition:.15s">
-        📢 Marketing Info <span style="background:var(--lb-navy);color:#fff;border-radius:10px;padding:1px 8px;font-size:11px">4</span>
+        <span class="en">📢 Marketing Info</span><span class="es">📢 Info de Marketing</span> <span style="background:var(--lb-navy);color:#fff;border-radius:10px;padding:1px 8px;font-size:11px">4</span>
       </button>
       <button id="fcatbtn_newbusiness" onclick="fCatTab('newbusiness')"
         style="padding:9px 18px;border-radius:9px;border:1.5px solid #1B1464;font-weight:700;font-size:13px;cursor:pointer;background:linear-gradient(90deg,#1B1464,#003087);color:#fff;display:flex;align-items:center;gap:8px;transition:.15s">
-        📁 New Business <span style="background:rgba(255,255,255,.25);border-radius:10px;padding:1px 8px;font-size:11px">58</span>
+        <span class="en">📁 New Business</span><span class="es">📁 Nuevos Negocios</span> <span style="background:rgba(255,255,255,.25);border-radius:10px;padding:1px 8px;font-size:11px">58</span>
       </button>
     </div>
 
@@ -1935,20 +1935,20 @@ body.dark .qt-multi-table tr:nth-child(even) td{background:rgba(255,255,255,.03)
     <div id="fcat_newbusiness">
       <!-- Subcategory tab bar -->
       <div class="fs-tabs-bar">
-          <button class="fs-tab active" data-sub="app_pac" onclick="fSubTab2('app_pac')">📦 APP pac <span class="fs-badge">17</span></button>
-          <button class="fs-tab" data-sub="arbitration_form" onclick="fSubTab2('arbitration_form')">⚖️ Arbitration Form <span class="fs-badge">1</span></button>
-          <button class="fs-tab" data-sub="auto_bank_draft" onclick="fSubTab2('auto_bank_draft')">🏦 Auto Bank Draft <span class="fs-badge">1</span></button>
-          <button class="fs-tab" data-sub="comparison_statement" onclick="fSubTab2('comparison_statement')">📊 Comparison Statement <span class="fs-badge">1</span></button>
-          <button class="fs-tab" data-sub="disclosure" onclick="fSubTab2('disclosure')">📋 Disclosure <span class="fs-badge">5</span></button>
-          <button class="fs-tab" data-sub="endorsement" onclick="fSubTab2('endorsement')">✅ Endorsement <span class="fs-badge">1</span></button>
-          <button class="fs-tab" data-sub="final_expense_app_pac" onclick="fSubTab2('final_expense_app_pac')">🛡️ Final Expense APP Pac <span class="fs-badge">1</span></button>
-          <button class="fs-tab" data-sub="first_steps" onclick="fSubTab2('first_steps')">👶 First Steps <span class="fs-badge">3</span></button>
-          <button class="fs-tab" data-sub="hipaa" onclick="fSubTab2('hipaa')">🔒 HIPAA <span class="fs-badge">3</span></button>
-          <button class="fs-tab" data-sub="other" onclick="fSubTab2('other')">📁 Other <span class="fs-badge">1</span></button>
-          <button class="fs-tab" data-sub="replacement_of_life_insurance_" onclick="fSubTab2('replacement_of_life_insurance_')">🔄 Replacement of Life Insurance <span class="fs-badge">18</span></button>
-          <button class="fs-tab" data-sub="spwl_application" onclick="fSubTab2('spwl_application')">💰 SPWL Application <span class="fs-badge">2</span></button>
-          <button class="fs-tab" data-sub="spwl_exchange__transfer_form" onclick="fSubTab2('spwl_exchange__transfer_form')">↔️ SPWL Exchange & Transfer <span class="fs-badge">1</span></button>
-          <button class="fs-tab" data-sub="supplemental_application" onclick="fSubTab2('supplemental_application')">📝 Supplemental Application <span class="fs-badge">4</span></button>
+          <button class="fs-tab active" data-sub="app_pac" onclick="fSubTab2('app_pac')"><span class="en">📦 APP pac</span><span class="es">📦 APP pac</span> <span class="fs-badge">17</span></button>
+          <button class="fs-tab" data-sub="arbitration_form" onclick="fSubTab2('arbitration_form')"><span class="en">⚖️ Arbitration Form</span><span class="es">⚖️ Formulario de Arbitraje</span> <span class="fs-badge">1</span></button>
+          <button class="fs-tab" data-sub="auto_bank_draft" onclick="fSubTab2('auto_bank_draft')"><span class="en">🏦 Auto Bank Draft</span><span class="es">🏦 Débito Bancario Automático</span> <span class="fs-badge">1</span></button>
+          <button class="fs-tab" data-sub="comparison_statement" onclick="fSubTab2('comparison_statement')"><span class="en">📊 Comparison Statement</span><span class="es">📊 Declaración Comparativa</span> <span class="fs-badge">1</span></button>
+          <button class="fs-tab" data-sub="disclosure" onclick="fSubTab2('disclosure')"><span class="en">📋 Disclosure</span><span class="es">📋 Divulgación</span> <span class="fs-badge">5</span></button>
+          <button class="fs-tab" data-sub="endorsement" onclick="fSubTab2('endorsement')"><span class="en">✅ Endorsement</span><span class="es">✅ Endoso</span> <span class="fs-badge">1</span></button>
+          <button class="fs-tab" data-sub="final_expense_app_pac" onclick="fSubTab2('final_expense_app_pac')"><span class="en">🛡️ Final Expense APP Pac</span><span class="es">🛡️ APP Pac de Gastos Finales</span> <span class="fs-badge">1</span></button>
+          <button class="fs-tab" data-sub="first_steps" onclick="fSubTab2('first_steps')"><span class="en">👶 First Steps</span><span class="es">👶 First Steps</span> <span class="fs-badge">3</span></button>
+          <button class="fs-tab" data-sub="hipaa" onclick="fSubTab2('hipaa')"><span class="en">🔒 HIPAA</span><span class="es">🔒 HIPAA</span> <span class="fs-badge">3</span></button>
+          <button class="fs-tab" data-sub="other" onclick="fSubTab2('other')"><span class="en">📁 Other</span><span class="es">📁 Otro</span> <span class="fs-badge">1</span></button>
+          <button class="fs-tab" data-sub="replacement_of_life_insurance_" onclick="fSubTab2('replacement_of_life_insurance_')"><span class="en">🔄 Replacement of Life Insurance</span><span class="es">🔄 Reemplazo de Seguro de Vida</span> <span class="fs-badge">18</span></button>
+          <button class="fs-tab" data-sub="spwl_application" onclick="fSubTab2('spwl_application')"><span class="en">💰 SPWL Application</span><span class="es">💰 Solicitud SPWL</span> <span class="fs-badge">2</span></button>
+          <button class="fs-tab" data-sub="spwl_exchange__transfer_form" onclick="fSubTab2('spwl_exchange__transfer_form')"><span class="en">↔️ SPWL Exchange & Transfer</span><span class="es">↔️ Intercambio y Transferencia SPWL</span> <span class="fs-badge">1</span></button>
+          <button class="fs-tab" data-sub="supplemental_application" onclick="fSubTab2('supplemental_application')"><span class="en">📝 Supplemental Application</span><span class="es">📝 Solicitud Suplementaria</span> <span class="fs-badge">4</span></button>
       </div>
       <!-- Subcategory panels -->
         <div class="fs-panel  active" id="fs2_app_pac">
