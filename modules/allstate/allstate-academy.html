@@ -1637,7 +1637,7 @@ function dlFromUrl(url, fname) {
         <div class="alert-row"><span><span class="en">Payment past due</span><span class="es">Pago vencido</span></span><span class="badge-red">0</span></div>
         <div class="alert-row"><span><span class="en">Terminating STM policies</span><span class="es">Pólizas STM por vencer</span></span><span class="badge-red">0</span></div>
         <div class="alert-row"><span><span class="en">Attestation not received</span><span class="es">Attestation no recibida</span></span><span class="badge-yellow">0</span></div>
-        <div class="alert-row"><span>NSF policies</span><span class="badge-red">0</span></div>
+        <div class="alert-row"><span><span class="en">NSF policies</span><span class="es">Pólizas NSF</span></span><span class="badge-red">0</span></div>
       </div>
     </div>
     <div class="card"><div class="card-title">📈 <span class="en">Training Progress</span><span class="es">Progreso Capacitación</span></div><div id="dash-progress"></div></div>
@@ -1648,7 +1648,7 @@ function dlFromUrl(url, fname) {
       <div id="dash-sections"></div>
     </div>
     <div>
-      <div class="card-title">🔗 Quick Links</div>
+      <div class="card-title">🔗 <span class="en">Quick Links</span><span class="es">Links Rápidos</span></div>
       <div id="dash-ql"></div>
     </div>
   </div>
@@ -3462,9 +3462,9 @@ function dlFromUrl(url, fname) {
 
 var VER='ahs_v7';
 var LEVELS=[
-  {n:'🌱 Novato',min:0,max:299},{n:'📘 Aprendiz',min:300,max:699},
-  {n:'💼 Agente',min:700,max:1299},{n:'⭐ Agente Pro',min:1300,max:2499},
-  {n:'🔥 Elite',min:2500,max:4499},{n:'🏆 Maestro',min:4500,max:99999}
+  {n:(LANG==='es'?'🌱 Novato':'🌱 Rookie'),min:0,max:299},{n:(LANG==='es'?'📘 Aprendiz':'📘 Learner'),min:300,max:699},
+  {n:(LANG==='es'?'💼 Agente':'💼 Agent'),min:700,max:1299},{n:(LANG==='es'?'⭐ Agente Pro':'⭐ Agent Pro'),min:1300,max:2499},
+  {n:(LANG==='es'?'🔥 Elite':'🔥 Elite'),min:2500,max:4499},{n:(LANG==='es'?'🏆 Maestro':'🏆 Master'),min:4500,max:99999}
 ];
 var RANKING_DATA=[];
 var MODULES=[
@@ -3563,12 +3563,12 @@ function initAdminUser(){
 }
 
 function getDisplayLv(passedCount){
-  if(passedCount>=10)return '🏆 Maestro';
-  if(passedCount>=9) return '🔥 Elite';
-  if(passedCount>=7) return '⭐ Agente Pro';
-  if(passedCount>=5) return '💼 Agente';
-  if(passedCount>=3) return '📘 Aprendiz';
-  return '🌱 Novato';
+  if(passedCount>=10)return LANG==='es'?'🏆 Maestro':'🏆 Master';
+  if(passedCount>=9) return LANG==='es'?'🔥 Elite':'🔥 Elite';
+  if(passedCount>=7) return LANG==='es'?'⭐ Agente Pro':'⭐ Agent Pro';
+  if(passedCount>=5) return LANG==='es'?'💼 Agente':'💼 Agent';
+  if(passedCount>=3) return LANG==='es'?'📘 Aprendiz':'📘 Learner';
+  return LANG==='es'?'🌱 Novato':'🌱 Rookie';
 }
 
 function countPassedQuizzes(st){
@@ -4136,12 +4136,12 @@ function renderDash(){
   prog+='<div class="prow"><div class="plbl">'+docLbl+'</div><div class="pbar"><div class="pfill" style="width:'+docPct+'%;background:var(--green)"></div></div><div class="ppct">'+docPct+'%</div></div>';
   ht('dash-progress',prog);
   var secs=[
-    {ico:'📚',n:'GUIDES',id:'guides',cnt:8},
-    {ico:'🏥',n:'Individual',id:'individual',cnt:41},
-    {ico:'👴',n:'Senior',id:'senior',cnt:13},
-    {ico:'💎',n:'LIFE PLANS',id:'life-plans',cnt:8},
-    {ico:'🗺️',n:'Products by State',id:'products-by-state',cnt:5},
-    {ico:'💳',n:'WellCard',id:'wellcard-docs',cnt:1}
+    {ico:'📚',n:(LANG==='es'?'GUÍAS':'GUIDES'),id:'guides',cnt:8},
+    {ico:'🏥',n:(LANG==='es'?'Individual':'Individual'),id:'individual',cnt:41},
+    {ico:'👴',n:(LANG==='es'?'Senior':'Senior'),id:'senior',cnt:13},
+    {ico:'💎',n:(LANG==='es'?'LIFE PLANS':'LIFE PLANS'),id:'life-plans',cnt:8},
+    {ico:'🗺️',n:(LANG==='es'?'Productos por Estado':'Products by State'),id:'products-by-state',cnt:5},
+    {ico:'💳',n:(LANG==='es'?'WellCard':'WellCard'),id:'wellcard-docs',cnt:1}
   ];
   var secHtml='';
   for(var si=0;si<secs.length;si++){
@@ -4156,7 +4156,7 @@ function renderDash(){
   ht('dash-sections',secHtml);
   var qls=[
     {ico:'🔐',n:(LANG==='es'?'My Agent Login':'My Agent Login'),url:SIMPLE_ABO_URL,bg:'#eff6ff'},
-    {ico:'🛠️',n:'Agent Online Tools',url:'https://allstatehealth.com/agent-tools/',bg:'#f0f4ff'},
+    {ico:'🛠️',n:(LANG==='es'?'Herramientas del Agente':'Agent Online Tools'),url:'https://allstatehealth.com/agent-tools/',bg:'#f0f4ff'},
     {ico:'💰',n:(LANG==='es'?'Comisiones':'Commissions'),url:'https://app.comissio.com/login',bg:'#f0fdf4'},
     {ico:'📋',n:(LANG==='es'?'Formularios Claims':'Claim Forms'),url:'https://allstatehealth.com/claims-help/',bg:'#fff1f2'},
     {ico:'🎨',n:(LANG==='es'?'Materiales Marketing':'Marketing Materials'),url:'https://allstatehealth.com/marketing-materials/',bg:'#fefce8'},
