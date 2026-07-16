@@ -241,6 +241,7 @@
     }
     msgs.appendChild(wrap);
     msgs.scrollTop = msgs.scrollHeight;
+    return bubble;
   }
 
   /** Update the chat widget's language (and optionally its FAQ set) after init. */
@@ -253,6 +254,9 @@
     _chatState.els.title.textContent = t.title;
     _chatState.els.sub.textContent   = t.sub;
     _chatState.els.inp.placeholder   = t.placeholder;
+    if (_chatState.els.greetingBubble) {
+      _chatState.els.greetingBubble.textContent = t.greeting;
+    }
     _renderChatChips();
   }
 
@@ -388,7 +392,7 @@
       isOpen = !isOpen;
       panel.style.display = isOpen ? 'flex' : 'none';
       if (isOpen && msgs.children.length === 0) {
-        _postChatMsg(_CHAT_TXT[_chatState.lang].greeting, false);
+        _chatState.els.greetingBubble = _postChatMsg(_CHAT_TXT[_chatState.lang].greeting, false);
       }
     };
 
