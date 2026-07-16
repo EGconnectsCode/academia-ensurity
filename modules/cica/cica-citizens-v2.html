@@ -926,8 +926,8 @@ function etTab(id){
   var idx={portal:0,eligibility:1,quizzes:2}[id]||0;var tabs=document.querySelectorAll('#et-tabs .os-tab');if(tabs[idx])tabs[idx].classList.add('active');
   if(id==='quizzes')loadQuiz('portal');
 }
-var LEVELS=[{name:'Seed Novice',min:0},{name:'Bronze Agent',min:100},{name:'Silver Agent',min:300},{name:'Gold Agent',min:600},{name:'Platinum Agent',min:1000},{name:'Diamond Agent',min:1500},{name:'Elite Agent',min:2500}];
-function getLevel(xp){var lv='Seed Novice';for(var i=0;i<LEVELS.length;i++){if(xp>=LEVELS[i].min)lv=LEVELS[i].name;}return lv;}
+var LEVELS=[{name:'Seed Novice',es:'Semilla Novato',min:0},{name:'Bronze Agent',es:'Bronce Agente',min:100},{name:'Silver Agent',es:'Plata Agente',min:300},{name:'Gold Agent',es:'Oro Agente',min:600},{name:'Platinum Agent',es:'Platino Agente',min:1000},{name:'Diamond Agent',es:'Diamante Agente',min:1500},{name:'Elite Agent',es:'Elite Agente',min:2500}];
+function getLevel(xp,lang){var lv=LEVELS[0];for(var i=0;i<LEVELS.length;i++){if(xp>=LEVELS[i].min)lv=LEVELS[i];}var useEs=lang?lang==='es':(window.LANG==='es');return useEs?lv.es:lv.name;}
 function updateLevel(xp){if(el('sb-level'))el('sb-level').textContent=getLevel(xp)+' - '+xp+' XP';}
 function trackDownload(name){if(!CUR_USER)return;var st=loadST(CUR_USER.email)||{xp:0,sessions:0,downloads:0};st.downloads=(st.downloads||0)+1;st.xp=(st.xp||0)+10;saveST(CUR_USER.email,st);var act=getActivity(CUR_USER.email);act.downloads.push({name:name,date:new Date().toLocaleString()});saveActivity(CUR_USER.email,act);updateLevel(st.xp);updateDashStats();}
 function updateDashStats(){if(!CUR_USER)return;var st=loadST(CUR_USER.email)||{xp:0,sessions:0,downloads:0};var users=getUsers();if(el('d-reg'))el('d-reg').textContent=users.length;if(el('d-sess'))el('d-sess').textContent=st.sessions||0;if(el('d-dl'))el('d-dl').textContent=st.downloads||0;if(el('d-xp'))el('d-xp').textContent=st.xp||0;}
@@ -992,7 +992,7 @@ function renderMetrics(){
   html+='<div class="met-level-badge">'+cur.ico+'</div>';
   html+='<div><div class="met-level-name"><span class="en">'+cur.eN+'</span><span class="es">'+cur.name+'</span></div>';
   html+='<div class="met-user-name">'+CUR_USER.name+'</div>';
-  html+='<div class="met-sub"><span class="en">'+getLevel(xp)+'</span><span class="es">'+getLevel(xp)+'</span> &middot; <span style="color:#6ee7b7">'+xp+' XP</span>'+(nxt?' &middot; <span style="opacity:.7">'+( nxt.min-xp)+' XP to '+nxt.eN+'</span>':'')+'</div>';
+  html+='<div class="met-sub"><span class="en">'+getLevel(xp,'en')+'</span><span class="es">'+getLevel(xp,'es')+'</span> &middot; <span style="color:#6ee7b7">'+xp+' XP</span>'+(nxt?' &middot; <span style="opacity:.7">'+( nxt.min-xp)+' XP to '+nxt.eN+'</span>':'')+'</div>';
   html+='</div></div>';
   // Progress bars
   html+='<div class="met-section"><div class="met-section-title">&#128218; <span class="en">Training Progress</span><span class="es">Progreso de Entrenamiento</span></div>';

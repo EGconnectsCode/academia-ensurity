@@ -1250,8 +1250,8 @@ function launchApp(){
 
 /* ── XP ── */
 function getLevel(xp){
-  if(xp>=5000)return'Trophy Expert';if(xp>=2500)return'Diamond Advanced';
-  if(xp>=1000)return'Star Intermediate';if(xp>=300)return'Fire Junior';return'Seed Novice';
+  if(xp>=5000)return LANG==='es'?'Experto Trofeo':'Trophy Expert';if(xp>=2500)return LANG==='es'?'Avanzado Diamante':'Diamond Advanced';
+  if(xp>=1000)return LANG==='es'?'Intermedio Estrella':'Star Intermediate';if(xp>=300)return LANG==='es'?'Junior Fuego':'Fire Junior';return LANG==='es'?'Novato Semilla':'Seed Novice';
 }
 function addXP(pts){
   var st=loadST(ST.email)||{xp:0,downloads:0};

@@ -4591,7 +4591,7 @@ function loadST(email){try{return JSON.parse(localStorage.getItem('cb_st_'+email
 function saveST(email,st){try{localStorage.setItem('cb_st_'+email,JSON.stringify(st));}catch(e){}}
 function getActivity(email){try{var a=JSON.parse(localStorage.getItem('cb_act_'+email)||'null');return a||{sessions:[],downloads:[]};}catch(e){return{sessions:[],downloads:[]};}}
 function saveActivity(email,act){try{localStorage.setItem('cb_act_'+email,JSON.stringify(act));}catch(e){}}
-function getLevel(xp){if(xp>=2000)return'Platinum Agent';if(xp>=1000)return'Gold Agent';if(xp>=500)return'Silver Agent';if(xp>=200)return'Bronze Agent';return'Novice';}
+function getLevel(xp){if(xp>=2000)return window.LANG==='es'?'Agente Platino':'Platinum Agent';if(xp>=1000)return window.LANG==='es'?'Agente Oro':'Gold Agent';if(xp>=500)return window.LANG==='es'?'Agente Plata':'Silver Agent';if(xp>=200)return window.LANG==='es'?'Agente Bronce':'Bronze Agent';return window.LANG==='es'?'Novato':'Novice';}
 function countPassed(st){if(!st||!st.quizzes)return 0;return Object.values(st.quizzes||{}).filter(function(q){return q&&q.passed;}).length;}
 function initAdminUser(){
   var users=getUsers();

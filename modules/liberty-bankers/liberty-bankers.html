@@ -3319,10 +3319,10 @@ function updateLevelDisplay(){
     var u=users.find(function(x){return x.email===CB_AUTH.email;});
     if(!u)return;
     var xp=u.xp||0;
-    var level='Rookie';
-    if(xp>=500)level='Expert';
-    else if(xp>=200)level='Pro';
-    else if(xp>=50)level='Learner';
+    var level=window.LANG==='es'?'Novato':'Rookie';
+    if(xp>=500)level=window.LANG==='es'?'Experto':'Expert';
+    else if(xp>=200)level=window.LANG==='es'?'Pro':'Pro';
+    else if(xp>=50)level=window.LANG==='es'?'Aprendiz':'Learner';
     document.getElementById('sb-level').textContent='XP: '+xp+' | '+level;
   }catch(e){}
 }
@@ -3334,10 +3334,10 @@ function loadMetrics(){
     var u=users.find(function(x){return x.email===CB_AUTH.email;});
     if(!u)return;
     var xp=u.xp||0;
-    var level='Rookie';
-    if(xp>=500)level='Expert';
-    else if(xp>=200)level='Pro';
-    else if(xp>=50)level='Learner';
+    var level=window.LANG==='es'?'Novato':'Rookie';
+    if(xp>=500)level=window.LANG==='es'?'Experto':'Expert';
+    else if(xp>=200)level=window.LANG==='es'?'Pro':'Pro';
+    else if(xp>=50)level=window.LANG==='es'?'Aprendiz':'Learner';
     document.getElementById('met-pdfs').textContent=(u.pdfs||[]).length;
     document.getElementById('met-logins').textContent=u.logins||0;
     document.getElementById('met-score').textContent=u.quizBest!=null?u.quizBest+'%':'—';
