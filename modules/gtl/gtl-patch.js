@@ -128,7 +128,7 @@
         var div = document.createElement('div');
         div.className = 'az-lang-toggle';
         div.innerHTML =
-          '<button class="az-lb active" id="az-lb-en" onclick="window._azLang(\'en\')">EN</button>' +
+          '<button class="az-lb" id="az-lb-en" onclick="window._azLang(\'en\')">EN</button>' +
           '<button class="az-lb" id="az-lb-es" onclick="window._azLang(\'es\')">ES</button>';
         acts.appendChild(div);
 
@@ -137,6 +137,7 @@
           document.getElementById('az-lb-es') && document.getElementById('az-lb-es').classList.toggle('active', lang === 'es');
           if (window.toggleLang && window.LANG !== lang) window.toggleLang();
         };
+        window._azLang(window.LANG === 'es' ? 'es' : 'en');
 
         var darkBtn = document.createElement('button');
         darkBtn.className = 'az-topbar-dark';

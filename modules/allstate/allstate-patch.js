@@ -245,13 +245,14 @@
 
       var pill = document.createElement('div');
       pill.className = 'az-lang-pill';
-      pill.innerHTML = '<button class="az-lang-btn active" data-lang="en" onclick="window._azLang(\'en\')">EN</button><button class="az-lang-btn" data-lang="es" onclick="window._azLang(\'es\')">ES</button>';
+      pill.innerHTML = '<button class="az-lang-btn" data-lang="en" onclick="window._azLang(\'en\')">EN</button><button class="az-lang-btn" data-lang="es" onclick="window._azLang(\'es\')">ES</button>';
       acts.insertBefore(pill, acts.firstChild);
       acts.insertBefore(backBtn, pill);
       window._azLang = function(lang) {
         document.querySelectorAll('.az-lang-btn').forEach(function(b) { b.classList.toggle('active', b.dataset.lang === lang); });
         if (window.LANG !== lang && window.toggleLang) window.toggleLang();
       };
+      window._azLang(window.LANG === 'es' ? 'es' : 'en');
       var darkBtn = document.createElement('button');
       darkBtn.className = 'az-topbar-dark';
       darkBtn.title = 'Dark mode / Modo noche';
