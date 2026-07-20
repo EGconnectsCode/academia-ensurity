@@ -2929,7 +2929,7 @@ function toggleLang(){
 // ===== DARK MODE =====
 function toggleDark(){
   document.body.classList.toggle('dark');
-  try{localStorage.setItem('cb_dark',document.body.classList.contains('dark')?'1':'0');}catch(e){}
+  try{localStorage.setItem('cb_dark',document.body.classList.contains('dark')?'1':'0');localStorage.setItem('az_theme',document.body.classList.contains('dark')?'dark':'light');}catch(e){}
 }
 (function(){try{var _at=localStorage.getItem('az_theme');var _isd=(_at!==null)?(_at==='dark'):(localStorage.getItem('cb_dark')==='1');if(_isd)document.body.classList.add('dark');}catch(e){}})();
 (function(){try{var _lbl=window.LANG==='en'?'ES':'EN';var _tb=document.getElementById('tb-lang-lbl');if(_tb)_tb.textContent=_lbl;var _pre=document.getElementById('pre-lang-lbl');if(_pre)_pre.textContent=_lbl;}catch(e){}})();

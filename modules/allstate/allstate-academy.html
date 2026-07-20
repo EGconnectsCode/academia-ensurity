@@ -3909,7 +3909,7 @@ function toggleDark(){
   var isDark=document.body.classList.contains('dark');
   var btn=el('dark-btn');
   if(btn){btn.textContent=isDark?'☀️':'🌙';btn.title=isDark?'Tema claro / Light mode':'Tema oscuro / Dark mode';}
-  try{localStorage.setItem('ahs_dark',document.body.classList.contains('dark')?'1':'0');}catch(e){}
+  try{localStorage.setItem('ahs_dark',document.body.classList.contains('dark')?'1':'0');localStorage.setItem('az_theme',document.body.classList.contains('dark')?'dark':'light');}catch(e){}
 }
 
 // DOWNLOAD

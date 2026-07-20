@@ -774,7 +774,7 @@ function dl(name,key,fname){var sc=el('pdf_'+key);if(!sc){alert('File not found:
 function setLang(lang){LANG=lang;var r=document.documentElement;if(LANG==='es'){r.removeAttribute('lang-en');r.setAttribute('lang-es','');}else{r.removeAttribute('lang-es');r.setAttribute('lang-en','');}var b=el('lang-btn');if(b)b.textContent=LANG==='es'?'EN':'ES';var ab=el('auth-lang-btn');if(ab)ab.textContent=LANG==='es'?'EN':'ES';try{localStorage.setItem('cica_lang',LANG);}catch(e){}}
 function toggleLang(){setLang(LANG==='en'?'es':'en');}
 function toggleAuthLang(){toggleLang();}
-function toggleDark(){DARK=!DARK;document.body.classList.toggle('dark',DARK);var btn=el('dark-btn');if(btn)btn.textContent=DARK?'Sol':'Noche';try{localStorage.setItem('cica_dark',DARK?'1':'0');}catch(e){}}
+function toggleDark(){DARK=!DARK;document.body.classList.toggle('dark',DARK);var btn=el('dark-btn');if(btn)btn.textContent=DARK?'Sol':'Noche';try{localStorage.setItem('cica_dark',DARK?'1':'0');localStorage.setItem('az_theme',DARK?'dark':'light');}catch(e){}}
 function dismissBanner(){var b=el('training-banner');if(b)b.style.display='none';var s=el('banner-show-again');if(s)s.style.display='block';try{localStorage.setItem('cica_banner_dismissed','1');}catch(e){}}
 function showBanner(){var b=el('training-banner');if(b)b.style.display='flex';var s=el('banner-show-again');if(s)s.style.display='none';try{localStorage.removeItem('cica_banner_dismissed');}catch(e){}}
 function toggleInfoPanel(){var p=el('auth-info-panel');if(p)p.classList.toggle('open');}
@@ -1059,6 +1059,7 @@ function toggleDark(){
   DARK=!DARK;
   document.body.classList.toggle('dark',DARK);
   localStorage.setItem('cica_dark',DARK?'1':'0');
+  localStorage.setItem('az_theme',DARK?'dark':'light');
 }
 
 document.addEventListener('DOMContentLoaded',function(){

@@ -4607,7 +4607,7 @@ window.setLang=function(l){
   var pb=g('pre-lang-lbl');if(pb)pb.textContent=(l==='en')?'ES':'EN';
 };
 window.toggleLang=function(){var cur=document.documentElement.getAttribute('data-lang')||'en';window.setLang(cur==='en'?'es':'en');};
-function toggleDark(){document.body.classList.toggle('dark');try{localStorage.setItem('cb_dark',document.body.classList.contains('dark')?'1':'0');}catch(e){}}
+function toggleDark(){document.body.classList.toggle('dark');try{localStorage.setItem('cb_dark',document.body.classList.contains('dark')?'1':'0');localStorage.setItem('az_theme',document.body.classList.contains('dark')?'dark':'light');}catch(e){}}
 function navTo(pageId){
   document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
   document.querySelectorAll('.sb-item').forEach(function(b){b.classList.remove('active');});

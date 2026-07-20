@@ -1046,7 +1046,7 @@ function toggleDark(){
   DARK=!DARK;
   document.body.classList.toggle('dark',DARK);
   var btn=el('dark-btn');if(btn)btn.textContent=DARK?'☀️':'🌙';
-  try{localStorage.setItem('aa_dark',DARK?'1':'0');}catch(e){}
+  try{localStorage.setItem('aa_dark',DARK?'1':'0');localStorage.setItem('az_theme',DARK?'dark':'light');}catch(e){}
 }
 
 /* ── STORAGE ── */
