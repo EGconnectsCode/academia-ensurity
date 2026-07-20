@@ -2815,7 +2815,7 @@ body.dark .qt-multi-table tr:nth-child(even) td{background:rgba(255,255,255,.03)
   <div class="section-wrap">
     <div class="section-title">🧮 <span class="en">LBL Rate Calculators</span><span class="es">Calculadoras de Tarifas LBL</span></div>
     <div style="background:var(--sur);border:1px solid var(--bdr);border-radius:10px;overflow:hidden;margin-bottom:18px">
-      <iframe src="https://www.tappsolutions.com/calculators/calc-lbl-ord/web/index.html" style="width:100%;height:680px;border:none;display:block" title="LBL Rate Calculator"></iframe>
+      <iframe src="https://www.tappsolutions.com/calculators/calc-lbl-ord/web/index.html" style="width:100%;height:680px;border:none;display:block" title="LBL Rate Calculator / Calculadora de Tarifas LBL"></iframe>
     </div>
 
   </div>
@@ -2936,6 +2936,10 @@ function _applyProdCardTooltips(l){
     var en = el.dataset.titleEn;
     el.setAttribute('title', (l==='es' && stateEs[en]) ? stateEs[en] : en);
   });
+  var darkBtn1 = document.querySelector('.ls-lang-pill[onclick="toggleDark()"]');
+  if(darkBtn1) darkBtn1.setAttribute('title', l==='es'?'Modo Claro/Oscuro':'Dark / Light mode');
+  var darkBtn2 = document.querySelector('.tb-dark-btn[onclick="toggleDark()"]');
+  if(darkBtn2) darkBtn2.setAttribute('title', l==='es'?'Claro/Oscuro':'Dark/Light');
 }
 function toggleLang(){
   var l=document.documentElement.getAttribute('data-lang')==='en'?'es':'en';
