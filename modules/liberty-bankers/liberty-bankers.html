@@ -2931,7 +2931,7 @@ function toggleDark(){
   document.body.classList.toggle('dark');
   try{localStorage.setItem('cb_dark',document.body.classList.contains('dark')?'1':'0');}catch(e){}
 }
-(function(){try{var _md=localStorage.getItem('cb_dark');var _isd=(_md!==null)?(_md==='1'):(localStorage.getItem('az_theme')==='dark');if(_isd)document.body.classList.add('dark');}catch(e){}})();
+(function(){try{var _at=localStorage.getItem('az_theme');var _isd=(_at!==null)?(_at==='dark'):(localStorage.getItem('cb_dark')==='1');if(_isd)document.body.classList.add('dark');}catch(e){}})();
 
 // ===== AUTH =====
 var CB_AUTH={email:'',name:'',isAdmin:false};

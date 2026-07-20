@@ -5029,7 +5029,7 @@ document.addEventListener('DOMContentLoaded',function(){var d=document.getElemen
   initAdminUser();
   var saved='en';try{var s=localStorage.getItem('az_lang')||localStorage.getItem('cb_lang');if(s==='en'||s==='es')saved=s;}catch(e){}
   window.setLang(saved);
-  try{var _md=localStorage.getItem('cb_dark');var _isd=(_md!==null)?(_md==='1'):(localStorage.getItem('az_theme')==='dark');if(_isd)document.body.classList.add('dark');}catch(e){}
+  try{var _at=localStorage.getItem('az_theme');var _isd=(_at!==null)?(_at==='dark'):(localStorage.getItem('cb_dark')==='1');if(_isd)document.body.classList.add('dark');}catch(e){}
   setTimeout(function(){window.setLang(saved);},100);
 });
 </script>

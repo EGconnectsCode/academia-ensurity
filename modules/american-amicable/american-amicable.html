@@ -1242,8 +1242,6 @@ function launchApp(){
   var hn2=el('h-name-es');if(hn2)hn2.textContent=name.split(' ')[0];
   var ls=el('login-screen');if(ls)ls.style.display='none';
   var app=el('app');if(app){app.style.display='flex';app.classList.add('visible');}
-  try{var d=localStorage.getItem('aa_dark');if(d==='1'&&!DARK)toggleDark();}catch(e){}
-  try{var l=localStorage.getItem('aa_lang');if(l)setLang(l);else setLang('en');}catch(e){setLang('en');}
   updateProfile();
   navTo('dashboard');
 }
@@ -1485,13 +1483,14 @@ document.addEventListener('DOMContentLoaded',function(){
   // Dark mode default: inherit from the shared az_theme key (set on the landing page), unless this module has its own saved choice
   try{
     var savedDark=localStorage.getItem('aa_dark');
-    DARK = (savedDark !== null) ? (savedDark === '1') : (localStorage.getItem('az_theme') === 'dark');
+    var savedTheme=localStorage.getItem('az_theme');
+    DARK = (savedTheme !== null) ? (savedTheme === 'dark') : (savedDark === '1');
     document.body.classList.toggle('dark', DARK);
     var btn=document.getElementById('dark-btn');
     if(btn) btn.textContent = DARK ? '☀️' : '🌙';
   }catch(e){ DARK=false; document.body.classList.remove('dark'); }
   try{var nc=localStorage.getItem('aa_notice_collapsed');if(nc==='1'){var nb2=document.getElementById('notice-banner');var cb2=document.getElementById('nb-close-btn');var eb2=document.getElementById('nb-expand-btn');if(nb2)nb2.classList.add('collapsed');if(cb2)cb2.style.display='none';if(eb2)eb2.style.display='';}}catch(e){}
-  try{var l=localStorage.getItem('aa_lang');if(l)setLang(l);else setLang('en');}catch(e){setLang('en');}
+  try{var l=localStorage.getItem('az_lang')||localStorage.getItem('aa_lang');if(l)setLang(l);else setLang('en');}catch(e){setLang('en');}
   document.querySelectorAll('.sb-item[data-page]').forEach(function(btn){
     btn.addEventListener('click',function(){navTo(this.getAttribute('data-page'));});
   });
@@ -2394,7 +2393,7 @@ function renderEligibility(){
 <script>
 // Override: ensure setLang sets active states on page load
 (function(){
-  var l;try{l=localStorage.getItem('aa_lang');}catch(e){}
+  var l;try{l=localStorage.getItem('az_lang')||localStorage.getItem('aa_lang');}catch(e){}
   setLang(l||'en');
 })();
 </script>
