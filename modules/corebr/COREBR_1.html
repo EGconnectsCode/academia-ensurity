@@ -1686,7 +1686,7 @@ document.addEventListener('DOMContentLoaded',function(){
   try{var s=localStorage.getItem('az_lang')||localStorage.getItem('cb_lang');if(s==='en'||s==='es')saved=s;}catch(e){}
   window.setLang(saved);
   // Dark mode
-  try{if(localStorage.getItem('cb_dark')==='1'){document.body.classList.add('dark');}}catch(e){}
+  try{var _md=localStorage.getItem('cb_dark');var _isd=(_md!==null)?(_md==='1'):(localStorage.getItem('az_theme')==='dark');if(_isd){document.body.classList.add('dark');}}catch(e){}
   // Re-apply lang after render
   setTimeout(function(){window.setLang(saved);},100);
 });

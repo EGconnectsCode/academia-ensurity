@@ -5144,7 +5144,7 @@ window.addEventListener('DOMContentLoaded', function(){
   try{var _qd=document.getElementById('quiz-data-json');if(_qd)QUIZ_DATA=JSON.parse(_qd.textContent);}catch(e){console.error('Quiz data load error',e);}
   load();
   initAdminUser();
-  try{if(localStorage.getItem('ahs_dark')==='1'){document.body.classList.add('dark');var db=el('dark-btn');if(db)db.textContent='☀️';}}catch(e){}
+  try{var _md=localStorage.getItem('ahs_dark');var _isd=(_md!==null)?(_md==='1'):(localStorage.getItem('az_theme')==='dark');if(_isd){document.body.classList.add('dark');var db=el('dark-btn');if(db)db.textContent='☀️';}}catch(e){}
   try{var sl=localStorage.getItem('ahs_lang');if(sl){LANG=sl;if(sl==='es'){document.documentElement.removeAttribute('lang-en');document.documentElement.setAttribute('lang-es','');var lb=el('lang-btn');if(lb)lb.textContent='EN';var alb=el('auth-lang-btn');if(alb)alb.textContent='EN';}}}catch(e){}
   document.querySelectorAll('.sb-item[data-page],.sbi[data-page]').forEach(function(btn){
     btn.addEventListener('click',function(){navTo(this.getAttribute('data-page'));});

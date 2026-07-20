@@ -1065,7 +1065,8 @@ document.addEventListener('DOMContentLoaded',function(){
   var savedLang=localStorage.getItem('cica_lang')||'en';
   setLang(savedLang);
   var savedDark=localStorage.getItem('cica_dark');
-  if(savedDark==='1'){DARK=true;document.body.classList.add('dark');}
+  var isDark=(savedDark!==null)?(savedDark==='1'):(localStorage.getItem('az_theme')==='dark');
+  if(isDark){DARK=true;document.body.classList.add('dark');}
 });
 
 </script>

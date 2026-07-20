@@ -995,7 +995,7 @@ function osAddTab(id){
 var ADMIN_EMAIL='nerrafael1@gmail.com';
 var ADMIN_DEFAULT_PW='Admin2024';
 var LANG=(function(){try{var s=localStorage.getItem('az_lang')||localStorage.getItem('aa_lang');if(s==='en'||s==='es')return s;}catch(e){}return 'en';})();
-var DARK=true;
+var DARK=false;
 var ST={name:'',email:'',xp:0,downloads:0};
 var SESSION_START=Date.now();
 var EMAILJS_SVC='';var EMAILJS_TPL='';var EMAILJS_KEY='';
@@ -1482,15 +1482,14 @@ function toggleNotice(){
 /* ── INIT ── */
 document.addEventListener('DOMContentLoaded',function(){
   seedAdminUser();
-  // Apply dark mode default (dark=true unless user explicitly chose light)
+  // Dark mode default: inherit from the shared az_theme key (set on the landing page), unless this module has its own saved choice
   try{
     var savedDark=localStorage.getItem('aa_dark');
-    // Default is dark; only switch to light if explicitly saved as '0'
-    DARK = (savedDark === '0') ? false : true;
+    DARK = (savedDark !== null) ? (savedDark === '1') : (localStorage.getItem('az_theme') === 'dark');
     document.body.classList.toggle('dark', DARK);
     var btn=document.getElementById('dark-btn');
     if(btn) btn.textContent = DARK ? '☀️' : '🌙';
-  }catch(e){ DARK=true; document.body.classList.add('dark'); }
+  }catch(e){ DARK=false; document.body.classList.remove('dark'); }
   try{var nc=localStorage.getItem('aa_notice_collapsed');if(nc==='1'){var nb2=document.getElementById('notice-banner');var cb2=document.getElementById('nb-close-btn');var eb2=document.getElementById('nb-expand-btn');if(nb2)nb2.classList.add('collapsed');if(cb2)cb2.style.display='none';if(eb2)eb2.style.display='';}}catch(e){}
   try{var l=localStorage.getItem('aa_lang');if(l)setLang(l);else setLang('en');}catch(e){setLang('en');}
   document.querySelectorAll('.sb-item[data-page]').forEach(function(btn){
