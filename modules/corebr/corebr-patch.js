@@ -409,7 +409,7 @@
     if (!emailEl || !passEl) return;
     var email = emailEl.value.trim();
     var pass  = passEl.value;
-    if (!email || !pass) { if (errEl) errEl.textContent = 'Required'; return; }
+    if (!email || !pass) { if (errEl) errEl.textContent = window.LANG === 'es' ? 'Campos requeridos' : 'Required'; return; }
     try {
       const { user, profile } = await AZ.Auth.signIn(email, pass);
       const hasAccess = await AZ.Modules.hasAccess(profile.id, MODULE_ID);
@@ -551,10 +551,28 @@
     await AZ.Prefs.save(session.user.id, { theme: document.body.classList.contains('dark') ? 'dark' : 'light' });
   };
 
+  function _applyStateMapLang(lang) {
+    document.querySelectorAll('#page-states .sm-cell[title]').forEach(function (el) {
+      if (!el.dataset.titleEn) el.dataset.titleEn = el.getAttribute('title');
+      var en = el.dataset.titleEn;
+      if (lang === 'es') {
+        var es = en
+          .replace('Not Available', 'No Disponible')
+          .replace('Available — Online Sales Only', 'Disponible — Solo Ventas en Línea')
+          .replace('Available', 'Disponible')
+          .replace('(NY/ME excluded)', '(NY/ME excluidos)');
+        el.setAttribute('title', es);
+      } else {
+        el.setAttribute('title', en);
+      }
+    });
+  }
+
   var _origToggleLang = window.toggleLang;
   window.toggleLang = async function () {
     if (_origToggleLang) _origToggleLang.call(this);
     var lang = window.LANG || 'en';
+    _applyStateMapLang(lang);
     if (window.AZWidgets && window.AZWidgets.updateChatLang) {
       var _faqs = (lang === 'en') ? _CHAT_FAQS_EN : _CHAT_FAQS;
       window.AZWidgets.updateChatLang(lang, _faqs);
@@ -672,6 +690,7 @@
     _patchDl();
     _azInjectFileButtons();
     _removeAdminUI();
+    _applyStateMapLang(window.LANG || 'en');
     try {
       var current = await AZ.Auth.getCurrentUser();
       if (!current) { window.location.replace('/'); return; }

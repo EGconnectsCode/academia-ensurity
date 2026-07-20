@@ -133,8 +133,8 @@
       #page-illustrations { display:none!important; }
       body.is-eg-member .sb-item[data-page="order-supply"],
       body.is-eg-member .sb-item[data-page="illustrations"] { display:flex!important; }
-      body.is-eg-member #page-order-supply,
-      body.is-eg-member #page-illustrations { display:block!important; }
+      body.is-eg-member #page-order-supply.active,
+      body.is-eg-member #page-illustrations.active { display:block!important; }
       #dark-btn { display:none!important; }
       button[onclick*="toggleDark"] { display:none!important; }
       .admin-only { display:none!important; }

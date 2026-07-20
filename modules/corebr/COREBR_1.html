@@ -281,20 +281,20 @@ td{padding:6px 10px;border-bottom:1px solid var(--bdr);color:var(--tx)}
     <button class="auth-tab" id="tab-register" onclick="switchTab('register')"><span class="en">Register</span><span class="es">Registrarse</span></button>
   </div>
   <div id="form-login">
-    <div class="auth-field"><label class="auth-label">Email</label><span class="auth-field-icon">✉</span><input class="auth-input" id="li-email" type="email" placeholder="agent@email.com"><div class="auth-err" id="li-err-email"></div></div>
+    <div class="auth-field"><label class="auth-label"><span class="en">Email</span><span class="es">Correo electrónico</span></label><span class="auth-field-icon">✉</span><input class="auth-input" id="li-email" type="email" placeholder="agent@email.com"><div class="auth-err" id="li-err-email"></div></div>
     <div class="auth-field"><label class="auth-label"><span class="en">Password</span><span class="es">Contraseña</span></label><span class="auth-field-icon">🔒</span><input class="auth-input" id="li-pass" type="password" placeholder="Enter your password"><div class="auth-err" id="li-err-pass"></div></div>
     <span class="auth-link" onclick="showForgot()"><span class="en">Forgot password?</span><span class="es">¿Olvidaste tu contraseña?</span></span>
     <button class="auth-submit" onclick="doSignIn()"><span class="en">Sign In &nbsp;→</span><span class="es">Entrar &nbsp;→</span></button>
   </div>
   <div id="form-register" style="display:none">
     <div class="auth-field"><label class="auth-label"><span class="en">Full Name</span><span class="es">Nombre Completo</span></label><input class="auth-input" id="re-name" type="text"><div class="auth-err" id="re-err-name"></div></div>
-    <div class="auth-field"><label class="auth-label">Email</label><input class="auth-input" id="re-email" type="email"><div class="auth-err" id="re-err-email"></div></div>
+    <div class="auth-field"><label class="auth-label"><span class="en">Email</span><span class="es">Correo electrónico</span></label><input class="auth-input" id="re-email" type="email"><div class="auth-err" id="re-err-email"></div></div>
     <div class="auth-field"><label class="auth-label"><span class="en">Password</span><span class="es">Contraseña</span></label><input class="auth-input" id="re-pass" type="password"><div class="auth-err" id="re-err-pass"></div></div>
     <div class="auth-field"><label class="auth-label"><span class="en">Confirm Password</span><span class="es">Confirmar</span></label><input class="auth-input" id="re-pass2" type="password"><div class="auth-err" id="re-err-pass2"></div></div>
     <button class="auth-submit" onclick="doRegister()"><span class="en">Create Account</span><span class="es">Crear Cuenta</span></button>
   </div>
   <div id="form-forgot" style="display:none">
-    <div class="auth-field"><label class="auth-label">Email</label><input class="auth-input" id="fr-email" type="email"></div>
+    <div class="auth-field"><label class="auth-label"><span class="en">Email</span><span class="es">Correo electrónico</span></label><input class="auth-input" id="fr-email" type="email"></div>
     <div class="auth-err" id="fr-msg" style="margin-bottom:8px"></div>
     <button class="auth-submit" onclick="sendResetCode()"><span class="en">Send Reset Code</span><span class="es">Enviar Código</span></button>
     <div style="text-align:center;margin-top:10px"><span class="auth-link" onclick="backToLogin()"><span class="en">Back to Sign In</span><span class="es">Volver</span></span></div>
@@ -1556,10 +1556,10 @@ function renderMetrics(){
   if(!CUR_USER)return;
   var st=loadST(CUR_USER.email)||{xp:0,sessions:0,downloads:0};
   var html='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-bottom:20px">';
-  html+='<div class="stat-box"><div class="stat-val">'+getLevel(st.xp||0)+'</div><div class="stat-lbl">Level</div></div>';
+  html+='<div class="stat-box"><div class="stat-val">'+getLevel(st.xp||0)+'</div><div class="stat-lbl">'+(window.LANG==='es'?'Nivel':'Level')+'</div></div>';
   html+='<div class="stat-box"><div class="stat-val">'+(st.xp||0)+'</div><div class="stat-lbl">XP</div></div>';
-  html+='<div class="stat-box"><div class="stat-val">'+(st.sessions||0)+'</div><div class="stat-lbl">Sessions</div></div>';
-  html+='<div class="stat-box"><div class="stat-val">'+(st.downloads||0)+'</div><div class="stat-lbl">Downloads</div></div>';
+  html+='<div class="stat-box"><div class="stat-val">'+(st.sessions||0)+'</div><div class="stat-lbl">'+(window.LANG==='es'?'Sesiones':'Sessions')+'</div></div>';
+  html+='<div class="stat-box"><div class="stat-val">'+(st.downloads||0)+'</div><div class="stat-lbl">'+(window.LANG==='es'?'Descargas':'Downloads')+'</div></div>';
   html+='</div>';
   g('metrics-body').innerHTML=html;
 }
