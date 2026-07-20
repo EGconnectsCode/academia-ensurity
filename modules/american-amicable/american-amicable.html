@@ -1416,11 +1416,11 @@ function adminToggleAdmin(email){
 }
 function renderAdminActivity(){
   var users=getUsers();
-  if(!users.length){ht('page-admin-activity-body','<div class="pcontent"><p style="color:var(--tx3)">No users.</p></div>');return;}
+  if(!users.length){ht('page-admin-activity-body','<div class="pcontent"><p style="color:var(--tx3)">'+(LANG==='es'?'Sin usuarios.':'No users.')+'</p></div>');return;}
   var sel='<select id="adm-view-email" onchange="renderAdminActivityFor(this.value)" style="padding:7px 12px;border:1.5px solid var(--bdr);border-radius:8px;font-size:12px;background:var(--sur);color:var(--tx);margin-bottom:14px">';
   for(var i=0;i<users.length;i++)sel+='<option value="'+users[i].email+'">'+users[i].name+' ('+users[i].email+')</option>';
   sel+='</select>';
-  var h='<div class="pcontent"><div style="display:flex;align-items:center;gap:8px;margin-bottom:14px"><label style="font-size:10px;font-weight:700;color:var(--tx3)">USER:</label>'+sel+'</div><div id="adm-activity-detail"></div></div>';
+  var h='<div class="pcontent"><div style="display:flex;align-items:center;gap:8px;margin-bottom:14px"><label style="font-size:10px;font-weight:700;color:var(--tx3)">'+(LANG==='es'?'USUARIO:':'USER:')+'</label>'+sel+'</div><div id="adm-activity-detail"></div></div>';
   ht('page-admin-activity-body',h);
   renderAdminActivityFor(users[0].email);
 }
@@ -1428,22 +1428,22 @@ function renderAdminActivityFor(email){
   var act=getActivity(email);var st2=loadST(email)||{xp:0,downloads:0};
   var totalMin=0;for(var s=0;s<act.sessions.length;s++)totalMin+=Math.round((act.sessions[s].dur||0)/60000);
   var h='<div class="adm-stat-row">';
-  h+='<div class="adm-stat"><div class="sv">'+getLevel(st2.xp||0)+'</div><div class="sl">Level</div></div>';
+  h+='<div class="adm-stat"><div class="sv">'+getLevel(st2.xp||0)+'</div><div class="sl">'+(LANG==='es'?'Nivel':'Level')+'</div></div>';
   h+='<div class="adm-stat"><div class="sv">'+(st2.xp||0)+'</div><div class="sl">XP</div></div>';
-  h+='<div class="adm-stat"><div class="sv">'+totalMin+'</div><div class="sl">Min</div></div>';
+  h+='<div class="adm-stat"><div class="sv">'+totalMin+'</div><div class="sl">'+(LANG==='es'?'Min':'Min')+'</div></div>';
   h+='<div class="adm-stat"><div class="sv">'+act.downloads.length+'</div><div class="sl">DL</div></div></div>';
   var dlRows='';
   for(var d=act.downloads.length-1;d>=0&&d>=act.downloads.length-10;d--){
     var dl2=act.downloads[d];dlRows+='<tr><td>'+dl2.name+'</td><td>'+new Date(dl2.ts).toLocaleString()+'</td></tr>';
   }
-  h+='<div class="adm-card"><h3 style="font-size:13px;font-weight:700;margin-bottom:10px">Recent Downloads</h3>';
-  h+='<table class="adm-table"><thead><tr><th>Document</th><th>Date</th></tr></thead><tbody>'+(dlRows||'<tr><td colspan="2" style="color:var(--tx3);text-align:center">No downloads</td></tr>')+'</tbody></table></div>';
+  h+='<div class="adm-card"><h3 style="font-size:13px;font-weight:700;margin-bottom:10px">'+(LANG==='es'?'Descargas Recientes':'Recent Downloads')+'</h3>';
+  h+='<table class="adm-table"><thead><tr><th>'+(LANG==='es'?'Documento':'Document')+'</th><th>'+(LANG==='es'?'Fecha':'Date')+'</th></tr></thead><tbody>'+(dlRows||('<tr><td colspan="2" style="color:var(--tx3);text-align:center">'+(LANG==='es'?'Sin descargas':'No downloads')+'</td></tr>'))+'</tbody></table></div>';
   var sesRows='';
   for(var ss=act.sessions.length-1;ss>=0&&ss>=act.sessions.length-10;ss--){
     sesRows+='<tr><td>'+new Date(act.sessions[ss].start).toLocaleString()+'</td><td>'+Math.round((act.sessions[ss].dur||0)/60000)+' min</td></tr>';
   }
-  h+='<div class="adm-card"><h3 style="font-size:13px;font-weight:700;margin-bottom:10px">Session History</h3>';
-  h+='<table class="adm-table"><thead><tr><th>Start</th><th>Duration</th></tr></thead><tbody>'+(sesRows||'<tr><td colspan="2" style="color:var(--tx3);text-align:center">No sessions</td></tr>')+'</tbody></table></div>';
+  h+='<div class="adm-card"><h3 style="font-size:13px;font-weight:700;margin-bottom:10px">'+(LANG==='es'?'Historial de Sesiones':'Session History')+'</h3>';
+  h+='<table class="adm-table"><thead><tr><th>'+(LANG==='es'?'Inicio':'Start')+'</th><th>'+(LANG==='es'?'Duración':'Duration')+'</th></tr></thead><tbody>'+(sesRows||('<tr><td colspan="2" style="color:var(--tx3);text-align:center">'+(LANG==='es'?'Sin sesiones':'No sessions')+'</td></tr>'))+'</tbody></table></div>';
   ht('adm-activity-detail',h);
 }
 function renderAdminRanking(){
@@ -1451,18 +1451,18 @@ function renderAdminRanking(){
   for(var i=0;i<users.length;i++){var u=users[i];var st2=loadST(u.email)||{xp:0,downloads:0};entries.push({name:u.name,email:u.email,xp:st2.xp||0,downloads:st2.downloads||0});}
   entries.sort(function(a,b){return b.xp-a.xp;});
   var medals=['1st','2nd','3rd'];
-  var h='<div class="pcontent"><div class="adm-card"><h3 style="font-size:13px;font-weight:700;margin-bottom:4px">Leaderboard</h3>';
-  h+='<p style="font-size:11px;color:var(--tx3);margin-bottom:14px">XP earned from downloads</p><div class="rank-list">';
+  var h='<div class="pcontent"><div class="adm-card"><h3 style="font-size:13px;font-weight:700;margin-bottom:4px">'+(LANG==='es'?'Tabla de Líderes':'Leaderboard')+'</h3>';
+  h+='<p style="font-size:11px;color:var(--tx3);margin-bottom:14px">'+(LANG==='es'?'XP ganado por descargas':'XP earned from downloads')+'</p><div class="rank-list">';
   for(var i=0;i<entries.length;i++){
     var e2=entries[i];var isMe=(e2.email.toLowerCase()===ST.email.toLowerCase());
     var ini2='';var pts=e2.name.split(' ');
     for(var p=0;p<pts.length&&ini2.length<2;p++){if(pts[p])ini2+=pts[p][0].toUpperCase();}
     h+='<div class="rank-item'+(isMe?' me':'')+'"><div class="rank-pos">'+(medals[i]||''+(i+1)+'.')+'</div>';
     h+='<div class="rank-av">'+ini2+'</div>';
-    h+='<div class="rank-info"><div class="rank-name">'+e2.name+(isMe?' (you)':'')+'</div><div class="rank-lvl">'+getLevel(e2.xp)+'</div></div>';
+    h+='<div class="rank-info"><div class="rank-name">'+e2.name+(isMe?(LANG==='es'?' (tú)':' (you)'):'')+'</div><div class="rank-lvl">'+getLevel(e2.xp)+'</div></div>';
     h+='<div class="rank-xp">'+e2.xp+' XP<br><span style="font-size:10px;color:var(--tx3)">'+e2.downloads+' DL</span></div></div>';
   }
-  if(!entries.length)h+='<p style="color:var(--tx3);text-align:center;padding:20px">No users yet.</p>';
+  if(!entries.length)h+='<p style="color:var(--tx3);text-align:center;padding:20px">'+(LANG==='es'?'Sin usuarios aún.':'No users yet.')+'</p>';
   h+='</div></div></div>';
   ht('page-admin-ranking-body',h);
 }
