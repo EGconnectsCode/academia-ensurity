@@ -1038,6 +1038,8 @@ function setLang(lang){
   if(aes)aes.classList.toggle('lang-active',LANG==='es');
   try{localStorage.setItem('aa_lang',LANG);localStorage.setItem('az_lang',LANG);}catch(e){}
   var _pnp=el('prof-newpass');if(_pnp)_pnp.placeholder=(LANG==='es'?'Min. 6 caracteres':'Min 6 characters');
+  if(typeof renderEligibility==='function'&&el('elig-grid'))renderEligibility();
+  if(typeof quizState!=='undefined'&&quizState.product&&!quizState.submitted)loadQuiz();
 }
 function toggleAuthLang(){setLang(LANG==='en'?'es':'en');}
 function toggleLang(){setLang(LANG==='en'?'es':'en');}
@@ -1745,6 +1747,213 @@ var ET_QUIZZES = {
 ]}
 };
 
+var ET_QUIZZES_ES = {
+"Easy Term":{q:[
+{q:"¿Qué tipo de seguro es Easy Term?",o:["Vida Entera","Vida a Término","Vida Universal","Dotal"],a:1},
+{q:"Easy Term brinda cobertura por un período:",o:["De por vida","De tiempo específico","De ahorro","De préstamo"],a:1},
+{q:"¿Cuál es el propósito principal de Easy Term?",o:["Acumular valor en efectivo","Ingresos de jubilación","Protección de beneficio por muerte a bajo costo","Crecimiento de inversión"],a:2},
+{q:"Easy Term es más adecuado para clientes que necesitan:",o:["Cobertura permanente","Cobertura temporal asequible","Ingresos de anualidad","Reembolso de prima"],a:1},
+{q:"¿Qué describe mejor las primas de Easy Term?",o:["Aumentan anualmente","Niveladas durante el término","Disminuyen con el tiempo","Pago único"],a:1},
+{q:"Easy Term se puede usar para cubrir:",o:["Solo protección hipotecaria","Cualquier necesidad financiera personal","Solo préstamos de negocio","Solo gastos médicos"],a:1},
+{q:"¿Qué sucede al final del período de la póliza Easy Term?",o:["Se renueva automáticamente gratis","La cobertura termina o puede renovarse con una prima más alta","Se convierte en anualidad","Se paga el valor en efectivo"],a:1},
+{q:"Easy Term está disponible para solicitantes generalmente de edad:",o:["0-17","18-70","65-80","80+"],a:1},
+{q:"Una ventaja clave de Easy Term es:",o:["Valor en efectivo garantizado","Primas altas","Protección pura a bajo costo","Dividendos de inversión"],a:2},
+{q:"El beneficio por muerte de Easy Term se paga a:",o:["La compañía de seguros","El beneficiario designado","El gobierno","El agente"],a:1}
+]},
+"Express UL":{q:[
+{q:"¿Qué tipo de póliza es Express UL?",o:["Seguro a término","Vida Universal","Vida Entera","Anualidad Variable"],a:1},
+{q:"Las pólizas de Vida Universal ofrecen:",o:["Solo primas fijas","Primas flexibles y beneficio por muerte ajustable","Sin valor en efectivo","Solo prima única"],a:1},
+{q:"Express UL acumula:",o:["Ningún valor","Valor en efectivo","Solo beneficio por muerte","Pérdidas de inversión"],a:1},
+{q:"El 'Express' en Express UL se refiere a:",o:["Alto costo","Suscripción simplificada/más rápida","Cobertura limitada","Solo a corto plazo"],a:1},
+{q:"El valor en efectivo en Express UL se puede usar para:",o:["Préstamos de póliza","Pagar impuestos","Comprar bienes raíces directamente","Anular la póliza"],a:0},
+{q:"Las primas de Express UL son:",o:["Completamente fijas","Flexibles dentro de límites","Siempre crecientes","No se pueden cambiar"],a:1},
+{q:"Express UL es apropiado para clientes que desean:",o:["Solo cobertura temporal","Cobertura permanente con flexibilidad","Ahorro puro","Cobertura grupal"],a:1},
+{q:"El beneficio por muerte en Express UL generalmente se puede:",o:["Solo disminuir","Ajustar hacia arriba o hacia abajo","Fijar permanentemente","Solo aumentar"],a:1},
+{q:"El interés acreditado sobre el valor en efectivo de Express UL se basa en:",o:["Directamente en el mercado de valores","La tasa de interés declarada actual","Solo la tasa preferencial","0% fijo"],a:1},
+{q:"Express UL puede ayudar con la planificación patrimonial porque:",o:["Evita todos los impuestos automáticamente","El beneficio por muerte se transfiere al beneficiario","Es una cuenta bancaria","No tiene primas"],a:1}
+]},
+"Family Solution (Ages 0-49)":{q:[
+{q:"Family Solution está dirigido a solicitantes de edad:",o:["50-85","0-49","65+","Solo 18-25"],a:1},
+{q:"Family Solution está diseñado para proteger:",o:["Solo a personas solteras","A toda la unidad familiar","Solo a dueños de negocios","A personas mayores"],a:1},
+{q:"¿Qué tipo de cobertura brinda Family Solution?",o:["Solo a término","Seguro de vida permanente","Seguro de salud","Solo incapacidad"],a:1},
+{q:"Family Solution es beneficioso para las familias porque:",o:["No requiere primas","Brinda protección de beneficio por muerte de por vida","Solo cubre a una persona","Es una cuenta de ahorros"],a:1},
+{q:"La edad máxima de emisión para Family Solution es:",o:["49","65","75","99"],a:0},
+{q:"Family Solution ayuda a proteger a las familias contra:",o:["Solo la inflación","Dificultades financieras por la pérdida de un ser querido","Solo accidentes automovilísticos","Solo facturas médicas"],a:1},
+{q:"Las primas de Family Solution generalmente son:",o:["Variables según el mercado","Niveladas y garantizadas","Aumentan anualmente","Siempre exentas"],a:1},
+{q:"Un beneficiario en una póliza de Family Solution:",o:["Siempre es el gobierno","Es elegido por el titular de la póliza","Debe ser un banco","No se puede cambiar"],a:1},
+{q:"Family Solution puede ayudar a cubrir gastos finales:",o:["Solo para edades 50+","Para el asegurado dentro del rango de edad elegible","Nunca","Solo si está sano"],a:1},
+{q:"Para calificar para Family Solution, los solicitantes deben ser:",o:["Menores de 50 años","Mayores de 65 años","Solo de 30-40 años","Jubilados"],a:0}
+]},
+"Financial Lifeline":{q:[
+{q:"Financial Lifeline está diseñado para brindar:",o:["Retornos de inversión","Apoyo financiero de emergencia/beneficio por muerte","Cobertura de salud","Seguro de auto"],a:1},
+{q:"¿Cuál es el mercado principal de Financial Lifeline?",o:["Corporaciones","Personas que necesitan protección asequible","Solo personas mayores","Niños menores de 5 años"],a:1},
+{q:"Las pólizas de Financial Lifeline brindan una cobertura que es:",o:["Solo temporal","Diseñada para seguridad financiera a más largo plazo","Disponible solo para bancos","Solo para préstamos"],a:1},
+{q:"El beneficio por muerte de Financial Lifeline ayuda a los beneficiarios a:",o:["Pagar vacaciones","Cubrir gastos de vida y obligaciones financieras","Invertir en acciones","Comprar vehículos"],a:1},
+{q:"Las primas de Financial Lifeline generalmente:",o:["Se pagan solo una vez","Se pagan mensual o anualmente","Son gratis después de 5 años","Dependen del mercado"],a:1},
+{q:"Una característica clave de Financial Lifeline es:",o:["Alta complejidad","Protección accesible para quienes tienen presupuestos limitados","Requiere un gran pago inicial","Excluye todas las condiciones de salud"],a:1},
+{q:"Financial Lifeline puede servir como:",o:["Un plan de seguro de negocio","Una red de seguridad para los seres queridos","Un portafolio de inversión","Una pensión de jubilación"],a:1},
+{q:"Los solicitantes de Financial Lifeline generalmente pasan por:",o:["Examen médico completo requerido","Suscripción simplificada","Ninguna suscripción en absoluto","Aprobación hospitalaria"],a:1},
+{q:"El beneficio por muerte de Financial Lifeline es:",o:["Ingreso gravable","Generalmente libre de impuestos sobre la renta para el beneficiario","Pagado al IRS","Devuelto como primas"],a:1},
+{q:"Financial Lifeline se describe mejor como:",o:["Una cuenta de ahorros","Protección de seguro de vida asequible","Un producto de préstamo","Una póliza de incapacidad"],a:1}
+]},
+"Golden Solution (Ages 50-85)":{q:[
+{q:"Golden Solution está diseñado para solicitantes de edad:",o:["0-49","18-65","50-85","86+"],a:2},
+{q:"¿A qué población está dirigido Golden Solution?",o:["Familias jóvenes","Mercado de personas mayores/maduras","Ejecutivos de negocios","Estudiantes universitarios"],a:1},
+{q:"Golden Solution generalmente brinda:",o:["Cobertura a término","Cobertura de vida entera para gastos finales","Seguro de salud","Ingresos por incapacidad"],a:1},
+{q:"Un uso común de los ingresos de Golden Solution es:",o:["Matrícula universitaria","Gastos finales y de entierro","Compra de auto","Inversión de negocio"],a:1},
+{q:"Las primas de Golden Solution:",o:["Aumentan cada año","Son niveladas y garantizadas de por vida","Se detienen después de 10 años","Se pagan solo una vez"],a:1},
+{q:"Los montos de cobertura en Golden Solution generalmente son:",o:["Más de $1 millón","Montos más pequeños diseñados para gastos finales","Solo $100","Ilimitados"],a:1},
+{q:"Golden Solution ayuda a aliviar a las familias de:",o:["Pérdidas de inversión","La carga de gastos funerarios y finales","Tratamientos médicos","Costos de vida diarios"],a:1},
+{q:"La suscripción de Golden Solution generalmente es:",o:["Examen médico completo","Simplificada con preguntas de salud limitadas","Sin preguntas en absoluto","Requiere autorización quirúrgica"],a:1},
+{q:"El beneficio por muerte de Golden Solution se paga:",o:["A lo largo de 10 años","Como una suma global al beneficiario","Mensualmente durante 5 años","Solo a la funeraria"],a:1},
+{q:"La edad máxima de emisión para Golden Solution es:",o:["70","80","85","90"],a:2}
+]},
+"Guaranteed Guardian":{q:[
+{q:"Guaranteed Guardian ofrece una cobertura que es:",o:["Condicionada a la salud","Garantizada sin importar la salud","Solo para solicitantes saludables","Requiere análisis de sangre"],a:1},
+{q:"Guaranteed Guardian generalmente se emite:",o:["Con examen médico","Sin examen médico (emisión garantizada)","Después de aprobación hospitalaria","Solo para menores de 40 años"],a:1},
+{q:"Un beneficio gradual en Guaranteed Guardian significa:",o:["Beneficio completo desde el primer día","El beneficio por muerte completo se retrasa inicialmente","Nunca hay beneficio por muerte","El beneficio disminuye con el tiempo"],a:1},
+{q:"Guaranteed Guardian es ideal para clientes que:",o:["Están muy saludables","Han sido rechazados en otro lugar o tienen problemas de salud","Son jóvenes y saludables","Necesitan productos de inversión"],a:1},
+{q:"El período de espera en Guaranteed Guardian generalmente es:",o:["Ninguno","2 años","10 años","5 años"],a:1},
+{q:"Después del período gradual, el beneficio por muerte en Guaranteed Guardian se:",o:["Reduce en 50%","Paga en su totalidad","Convierte en anualidad","Descontinúa"],a:1},
+{q:"Las primas de Guaranteed Guardian son:",o:["Variables","Niveladas de por vida","Decrecientes","Solo prima única"],a:1},
+{q:"Guaranteed Guardian está dirigido al:",o:["Mercado juvenil","Mercado de gastos finales de personas mayores","Mercado de beneficios grupales","Mercado de negocios"],a:1},
+{q:"Si el asegurado fallece durante el período de espera, Guaranteed Guardian generalmente devuelve:",o:["Nada","Las primas pagadas más intereses","Solo la primera prima","El monto total de la cobertura"],a:1},
+{q:"La aceptación de Guaranteed Guardian se basa en:",o:["Resultados de examen médico","Solo la edad y el estado (sin preguntas de salud)","Puntaje crediticio","Recomendación del médico"],a:1}
+]},
+"Home Protector":{q:[
+{q:"Home Protector está diseñado para cubrir:",o:["Préstamos de auto","El saldo de la hipoteca/préstamo de vivienda","Deudas de negocio","Préstamos estudiantiles"],a:1},
+{q:"Home Protector asegura que si el asegurado fallece:",o:["Los pagos de la hipoteca aumenten","La familia pueda pagar la vivienda por completo","La vivienda sea reposeída","Los pagos se detengan automáticamente"],a:1},
+{q:"La cobertura de Home Protector generalmente:",o:["Siempre se mantiene nivelada","Disminuye a medida que disminuye el saldo de la hipoteca","Aumenta cada año","Se paga como anualidad"],a:1},
+{q:"¿Quién se beneficia más de Home Protector?",o:["Los inquilinos","Los propietarios con una hipoteca","Solo dueños de negocio","Personas sin deudas"],a:1},
+{q:"Las primas de Home Protector generalmente son:",o:["Suma única","Pagadas mensualmente según el calendario de la hipoteca","Gratis después de 5 años","Solo anuales"],a:1},
+{q:"Home Protector es una forma de:",o:["Seguro a término","Término decreciente / protección hipotecaria","Vida Universal","Anualidad variable"],a:1},
+{q:"Home Protector protege el activo más importante de la familia:",o:["Portafolio de inversión","La vivienda","Flota de autos","Inventario de negocio"],a:1},
+{q:"El plazo de cobertura de Home Protector generalmente coincide con:",o:["La edad del hijo mayor","La duración de la hipoteca","La edad de jubilación","La elegibilidad para el Seguro Social"],a:1},
+{q:"El beneficio por muerte de Home Protector generalmente se paga a:",o:["El banco directamente","El beneficiario designado","La compañía hipotecaria automáticamente","El agente inmobiliario"],a:1},
+{q:"Un punto de venta clave de Home Protector es:",o:["Altos retornos de inversión","La tranquilidad de que la familia conserve la vivienda","Ahorros garantizados","Nunca hay primas"],a:1}
+]},
+"Intelligent Choice":{q:[
+{q:"Intelligent Choice se comercializa ofreciendo:",o:["Un plan rígido único","Opciones de cobertura flexibles para adaptarse a diferentes necesidades","Solo cobertura a término","Complementos de seguro de salud"],a:1},
+{q:"El 'Intelligent' en Intelligent Choice se refiere a:",o:["Tecnología de IA","Decisiones de cobertura inteligentes y personalizables","Soporte en idiomas extranjeros","Reclamos automatizados"],a:1},
+{q:"La cobertura de Intelligent Choice se describe mejor como:",o:["Temporal","Seguro de vida permanente","Cobertura grupal","Solo accidental"],a:1},
+{q:"Intelligent Choice permite a los titulares de póliza:",o:["Ignorar las primas","Seleccionar montos de beneficio que se ajusten a su presupuesto","Pagar solo en efectivo","Cambiar de agente diariamente"],a:1},
+{q:"Intelligent Choice es apropiado para:",o:["Solo niños","Adultos que buscan soluciones de seguro de vida personalizadas","Solo jubilados","Solo trabajadores temporales"],a:1},
+{q:"Las primas en Intelligent Choice son:",o:["Siempre crecientes","Niveladas y garantizadas","Vinculadas al mercado","Gratis el primer año"],a:1},
+{q:"Intelligent Choice ayuda a proteger contra:",o:["Pérdida de propiedad","Falta de reemplazo de ingresos y seguridad financiera para los beneficiarios","Solo muerte accidental","Solo obligaciones fiscales"],a:1},
+{q:"Un agente debería presentar Intelligent Choice a clientes que quieren:",o:["Un vehículo de ahorro puro","Protección integral con opciones","Solo cobertura de entierro","Seguro de negocio"],a:1},
+{q:"La suscripción de Intelligent Choice generalmente es:",o:["Emisión garantizada","Simplificada con preguntas de salud","Se requiere examen médico completo","Se requiere análisis de sangre"],a:1},
+{q:"El beneficio por muerte de Intelligent Choice es:",o:["Pagado como pensión mensual","Una suma global al beneficiario designado","Devuelto como ahorro","Compartido con el gobierno"],a:1}
+]},
+"Platinum Solution Family (0-49)":{q:[
+{q:"Platinum Solution Family está diseñado para las edades:",o:["50-85","65+","0-49","Solo 25-40"],a:2},
+{q:"'Platinum' denota que este producto es:",o:["Básico de nivel de entrada","Una póliza premium, rica en características","Solo para clientes de altos ingresos","Un plan gubernamental"],a:1},
+{q:"Platinum Solution Family brinda:",o:["Seguro de salud","Protección de seguro de vida permanente","Cobertura de auto","Solo ingresos por incapacidad"],a:1},
+{q:"La cobertura bajo Platinum Solution Family es:",o:["Temporal por 10 años","De por vida","Solo hasta los 65 años","Renovable anualmente"],a:1},
+{q:"Platinum Solution Family es ideal para:",o:["Personas mayores solteras","Familias con miembros menores de 50 años","Negocios","Solo estudiantes universitarios"],a:1},
+{q:"Un beneficio clave de Platinum Solution Family es:",o:["Inversión de alto riesgo","Beneficio por muerte garantizado para protección familiar","Membresía gratis de gimnasio","No se requiere prima"],a:1},
+{q:"Las primas de Platinum Solution Family son:",o:["Aumentan cada 5 años","Niveladas y fijadas al momento de la emisión","Basadas en el mercado de valores","Solo pago único"],a:1},
+{q:"Platinum Solution Family acumula:",o:["Ningún valor","Valor en efectivo con el tiempo","Solo beneficios médicos","Plusvalía inmobiliaria"],a:1},
+{q:"La edad máxima de emisión para Platinum Solution Family es:",o:["40","45","49","55"],a:2},
+{q:"La suscripción de Platinum Solution Family generalmente involucra:",o:["Examen hospitalario completo","Preguntas de salud simplificadas","Siempre emisión garantizada","Ninguna pregunta en absoluto"],a:1}
+]},
+"Platinum Solution Legacy (50-85)":{q:[
+{q:"Platinum Solution Legacy está dirigido a solicitantes de edad:",o:["0-49","50-85","86-99","25-35"],a:1},
+{q:"'Legacy' en el nombre del producto sugiere que está diseñado para:",o:["Adultos jóvenes","Dejar un legado financiero / gastos finales","Ahorros infantiles","Sucesión de negocio"],a:1},
+{q:"Platinum Solution Legacy brinda:",o:["Seguro a término","Cobertura de vida entera permanente","Anualidad variable","Seguro de salud"],a:1},
+{q:"Un uso común de Platinum Solution Legacy es:",o:["Pagar préstamos estudiantiles","Gastos finales y planificación patrimonial","Gastos diarios de supermercado","Compra de vehículos"],a:1},
+{q:"Las primas de Platinum Solution Legacy son:",o:["Pagaderas solo por 5 años","Niveladas de por vida","Aumentan con la edad","Gratis después de los 70 años"],a:1},
+{q:"El rango de edad de emisión para Platinum Solution Legacy es:",o:["0-49","18-65","50-85","70-99"],a:2},
+{q:"Platinum Solution Legacy es parte del:",o:["Mercado de familias jóvenes","Mercado de personas mayores/maduras","Mercado corporativo","Mercado de beneficios grupales"],a:1},
+{q:"La suscripción de Platinum Solution Legacy generalmente es:",o:["Emisión garantizada","Simplificada con preguntas de salud limitadas","Examen médico completo","Solo análisis de sangre"],a:1},
+{q:"El valor en efectivo en Platinum Solution Legacy:",o:["No existe","Crece con el tiempo","Disminuye anualmente","Solo es accesible a los 100 años"],a:1},
+{q:"El beneficio por muerte de Platinum Solution Legacy es:",o:["Pagado durante 20 años","Una suma global libre de impuestos sobre la renta para el beneficiario","Reducido por comisiones","Depositado al IRS"],a:1}
+]},
+"SafeCare Term":{q:[
+{q:"¿Qué tipo de seguro es SafeCare Term?",o:["Seguro permanente","Seguro de vida a término","Anualidad","Plan de salud"],a:1},
+{q:"El nombre 'SafeCare' sugiere que este producto se enfoca en:",o:["Seguridad automotriz","Cobertura segura con características de cuidado","Solo médico","Solo accidentes"],a:1},
+{q:"La cobertura de SafeCare Term dura:",o:["De por vida","Un período de término especificado","Solo 5 años","Hasta los 55 años"],a:1},
+{q:"SafeCare Term es mejor para clientes que necesitan:",o:["Cobertura permanente","Protección temporal asequible","Crecimiento de inversión","Ingresos de jubilación"],a:1},
+{q:"Las primas de SafeCare Term son:",o:["Variables","Niveladas durante el término","Decrecientes","Pago único"],a:1},
+{q:"Si el asegurado sobrevive el período de SafeCare Term:",o:["El reembolso de la prima es automático","La cobertura termina; puede renovarse a una tarifa más alta","La póliza se convierte en ahorro","Se otorga una extensión gratis"],a:1},
+{q:"SafeCare Term se puede usar para cubrir:",o:["Solo gastos funerarios","Reemplazo de ingresos durante los años laborales","Exclusivamente facturas médicas","Solo préstamos de vehículos"],a:1},
+{q:"SafeCare Term es apropiado para:",o:["Solo personas mayores","Adultos en edad laboral con necesidades de cobertura temporal","Solo infantes","Exclusivamente jubilados"],a:1},
+{q:"Una ventaja clave de SafeCare Term es:",o:["Primas altas","Costo asequible para máxima cobertura durante los años de mayores ingresos","Valor en efectivo garantizado","Se renueva automáticamente gratis para siempre"],a:1},
+{q:"La suscripción de SafeCare Term generalmente involucra:",o:["Emisión garantizada","Preguntas de salud y/o examen médico","Ninguna pregunta","Solo verificación de crédito"],a:1}
+]},
+"SecureLife Plus":{q:[
+{q:"SecureLife Plus brinda:",o:["Protección solo a término","Seguro de vida permanente con beneficios adicionales","Solo seguro de salud","Cobertura de auto"],a:1},
+{q:"El 'Plus' en SecureLife Plus indica:",o:["Solo mayor costo","Características adicionales más allá de la cobertura de vida básica","Un subsidio gubernamental","Renovación automática"],a:1},
+{q:"SecureLife Plus está diseñado para clientes que desean:",o:["Cobertura a corto plazo","Seguridad a largo plazo con características mejoradas","Ingresos de anualidad","Cobertura grupal"],a:1},
+{q:"Las primas de SecureLife Plus son:",o:["Aumentan anualmente","Niveladas y garantizadas","Basadas en el mercado","Pagaderas solo por 10 años"],a:1},
+{q:"El valor en efectivo en SecureLife Plus:",o:["No está disponible","Se acumula con el tiempo","Disminuye cada año","Se convierte a término a los 65 años"],a:1},
+{q:"SecureLife Plus puede ayudar con la planificación patrimonial al:",o:["Eliminar todos los impuestos","Brindar un beneficio por muerte con ventajas fiscales","Crear un negocio","Comprar bienes raíces"],a:1},
+{q:"Las cláusulas adicionales de SecureLife Plus pueden incluir:",o:["Colisión de auto","Beneficios por muerte accidental o incapacidad","Cobertura dental","Cuidado de la vista"],a:1},
+{q:"¿Quién es el cliente ideal para SecureLife Plus?",o:["Quienes buscan cobertura a corto plazo","Alguien que desea protección permanente con beneficios en vida","Solo dueños de negocio","Solo personas mayores"],a:1},
+{q:"El beneficio por muerte de SecureLife Plus es:",o:["Pagado mensualmente durante 5 años","Un beneficio de suma global libre de impuestos sobre la renta","Reducido a los 70 años","Sujeto a impuesto sobre la renta completo"],a:1},
+{q:"La suscripción de SecureLife Plus generalmente requiere:",o:["Examen quirúrgico completo","Preguntas de salud simplificadas","Emisión garantizada","Revisión de puntaje crediticio"],a:1}
+]},
+"Security Protector":{q:[
+{q:"Security Protector se enfoca en brindar:",o:["Retornos de inversión","Seguridad y protección para los titulares de póliza","Cobertura de salud","Seguro de negocio"],a:1},
+{q:"Security Protector se describe mejor como:",o:["Un producto de ahorro","Un producto de protección de seguro de vida","Un plan de incapacidad","Un beneficio grupal"],a:1},
+{q:"Las primas de Security Protector son:",o:["Variables","Niveladas y garantizadas","Aumentan con la edad","Solo suma global"],a:1},
+{q:"Security Protector brinda un beneficio por muerte que:",o:["Disminuye anualmente","Es nivelado y garantizado","Crece 10% cada año","Se paga como anualidad"],a:1},
+{q:"Security Protector es apropiado para clientes que:",o:["Solo quieren inversiones","Quieren protección garantizada para sus seres queridos","Son solo ejecutivos adinerados","Ya están jubilados"],a:1},
+{q:"La cobertura bajo Security Protector es:",o:["Solo a corto plazo","Permanente/de por vida","Estacional","Solo renovable anualmente"],a:1},
+{q:"Security Protector ayuda a las familias al:",o:["Aumentar la deuda","Brindar seguridad financiera en caso de muerte prematura","Ofrecer seguro de salud","Pagar hipotecas automáticamente"],a:1},
+{q:"La suscripción de Security Protector generalmente involucra:",o:["Ninguna pregunta","Preguntas de salud simplificadas","Examen hospitalario completo","Pruebas de ADN"],a:1},
+{q:"Una característica clave de Security Protector es:",o:["Retornos vinculados al mercado","Primas niveladas y beneficio por muerte garantizados","Requiere un gran depósito inicial","Limitado a cobertura de 5 años"],a:1},
+{q:"El beneficio por muerte de Security Protector se paga a:",o:["El IRS","El beneficiario designado","La aseguradora","El médico"],a:1}
+]},
+"Security Solution":{q:[
+{q:"Security Solution está diseñado para brindar:",o:["Diversificación de inversión","Un paquete completo de seguridad para necesidades de seguro de vida","Cobertura de auto","Solo beneficios médicos"],a:1},
+{q:"Security Solution está dirigido a:",o:["Solo clientes de negocio","Personas y familias que buscan protección integral","Solo personas mayores","Solo militares"],a:1},
+{q:"Las primas de Security Solution generalmente son:",o:["Pago único","Niveladas y garantizadas durante toda la vida de la póliza","Aumentan 5% anualmente","Basadas en el mercado"],a:1},
+{q:"El beneficio por muerte en Security Solution es:",o:["Variable","Garantizado y nivelado","Solo se paga como ingreso mensual","Solo disponible después de 20 años"],a:1},
+{q:"El tipo de cobertura de Security Solution es:",o:["Solo a término","Seguro de vida permanente","Solo muerte accidental","Plan grupal"],a:1},
+{q:"Una ventaja principal de Security Solution es:",o:["Opciones de inversión complejas","Protección permanente simple y garantizada","Prima mínima alta","Requiere examen anual"],a:1},
+{q:"Security Solution puede acumular:",o:["Pérdidas de mercado","Valor en efectivo con el tiempo","Solo deuda","Penalidades por acceso anticipado"],a:1},
+{q:"Security Solution se presenta mejor a clientes que quieren:",o:["Cobertura temporal económica","Seguridad financiera a largo plazo para la familia","Retornos de grado de inversión","Cobertura de salud"],a:1},
+{q:"La suscripción de Security Solution utiliza:",o:["Siempre emisión garantizada","Preguntas de salud simplificadas","Se requiere examen médico completo","Ninguna suscripción"],a:1},
+{q:"El beneficiario designado de Security Solution recibe:",o:["Cheques mensuales durante 5 años","Un beneficio por muerte en suma global","Bonos gubernamentales","Solo el valor en efectivo"],a:1}
+]},
+"Survivor Protector":{q:[
+{q:"Survivor Protector está diseñado para proteger:",o:["Al asegurado en vida","A los familiares sobrevivientes después de la muerte","Activos de negocio","Portafolios de inversión"],a:1},
+{q:"Survivor Protector brinda cobertura principalmente para:",o:["Adultos jóvenes solteros","Familias/sobrevivientes que quedan","Socios de negocio","Empleadores"],a:1},
+{q:"El beneficio por muerte de Survivor Protector está destinado a:",o:["Hacer crecer inversiones","Brindar ingresos para los dependientes sobrevivientes","Pagar préstamos de negocio","Cubrir solo gastos funerarios"],a:1},
+{q:"Las primas de Survivor Protector son:",o:["Crecientes cada año","Niveladas durante el período de la póliza","Pagadas una vez","Gratis para personas mayores"],a:1},
+{q:"Survivor Protector puede ayudar a un cónyuge sobreviviente a:",o:["Solo pagar la renta","Mantener la estabilidad financiera después de la pérdida","Invertir en acciones","Iniciar un negocio automáticamente"],a:1},
+{q:"La cobertura de Survivor Protector es:",o:["Muy a corto plazo","Diseñada para protección familiar a más largo plazo","Solo relacionada con accidentes","Limitada a 1 año"],a:1},
+{q:"¿Quién debería considerar Survivor Protector?",o:["Solteros sin dependientes","Familias donde otros dependen del ingreso del asegurado","Solo jubilados","Solo dueños de negocio"],a:1},
+{q:"La suscripción de Survivor Protector involucra:",o:["Ninguna pregunta de salud","Suscripción simplificada","Examen quirúrgico completo","Evaluación crediticia"],a:1},
+{q:"Un punto de venta clave de Survivor Protector es:",o:["Alto retorno de inversión","Asegurar que los sobrevivientes estén financieramente protegidos","No se requieren primas","Beneficios de salud garantizados"],a:1},
+{q:"El beneficio por muerte de Survivor Protector es:",o:["Gravable como ingreso","Generalmente libre de impuestos sobre la renta para el beneficiario","Pagado al empleador","Retenido por la aseguradora"],a:1}
+]},
+"Term Made Simple":{q:[
+{q:"Term Made Simple está diseñado para ser:",o:["Complejo y rico en características","Cobertura a término asequible y fácil de entender","Solo para profesionales","Basado en prima variable"],a:1},
+{q:"El concepto 'Made Simple' significa:",o:["Menor calidad","Protección a término directa sin complejidad","Solo término de 1 año","Sin beneficios"],a:1},
+{q:"Term Made Simple brinda cobertura por:",o:["De por vida","Un período de término definido","Un período de ahorro","Solo 1 mes"],a:1},
+{q:"Las primas de Term Made Simple son:",o:["Complejas y variables","Simples y niveladas durante el término","Crecientes mensualmente","Gratis después del año 1"],a:1},
+{q:"Term Made Simple es mejor para clientes que quieren:",o:["Cobertura permanente","Protección temporal asequible y fácil de entender","Crecimiento de inversión","Beneficios grupales"],a:1},
+{q:"Un beneficio de Term Made Simple es:",o:["Alta complejidad","Cobertura de bajo costo con un proceso de solicitud fácil","Exámenes médicos obligatorios","Cobertura mínima alta"],a:1},
+{q:"Term Made Simple se puede usar para cubrir:",o:["Solo deudas de negocio","Reemplazo de ingresos, hipotecas, o protección familiar","Solo gastos funerarios","Solo facturas médicas"],a:1},
+{q:"Si el asegurado sobrevive el término en Term Made Simple:",o:["La prima se reembolsa automáticamente","La cobertura termina al vencer el término","Se convierte en anualidad","Se otorga una extensión gratis"],a:1},
+{q:"El proceso de solicitud de Term Made Simple está diseñado para ser:",o:["Largo y complejo","Rápido y simplificado","Requiere visita al hospital","Toma 6 meses"],a:1},
+{q:"Term Made Simple es ideal para:",o:["Solo personas mayores","Clientes conscientes del presupuesto que necesitan cobertura sencilla","Solo personas de altos ingresos","Solo negocios"],a:1}
+]},
+"Val-U-Plus":{q:[
+{q:"Val-U-Plus está diseñado para ofrecer:",o:["Inversiones complejas","Gran valor con beneficios adicionales","Solo cobertura de entierro","Planes de salud grupales"],a:1},
+{q:"'Val-U' en Val-U-Plus significa:",o:["Cobertura reducida","Valor por la prima pagada","Vida variable","Seguro de vacaciones"],a:1},
+{q:"¿Qué tipo de cobertura brinda Val-U-Plus?",o:["Solo a término","Seguro de vida permanente","Seguro de salud","Ingresos por incapacidad"],a:1},
+{q:"Las primas de Val-U-Plus son:",o:["Vinculadas al mercado","Niveladas y garantizadas","Crecientes con la edad","Solo pago único"],a:1},
+{q:"Val-U-Plus se describe mejor como:",o:["Un producto de alto costo","Una póliza permanente asequible con valor agregado","Un plan de beneficio grupal","Una solución a corto plazo"],a:1},
+{q:"El valor en efectivo en Val-U-Plus:",o:["No existe","Crece durante la vida de la póliza","Disminuye anualmente","Se convierte en bonos"],a:1},
+{q:"Val-U-Plus es ideal para clientes que quieren:",o:["Solo cobertura temporal","Protección de por vida a buen valor","Solo beneficios de salud","Cobertura de negocio"],a:1},
+{q:"La suscripción de Val-U-Plus generalmente utiliza:",o:["Examen quirúrgico completo","Preguntas de salud simplificadas","Aceptación garantizada","Ninguna suscripción"],a:1},
+{q:"El beneficio por muerte de Val-U-Plus es:",o:["Variable","Una suma global garantizada al beneficiario","Decreciente con el tiempo","Pagado como pensión"],a:1},
+{q:"Una ventaja clave de Val-U-Plus es:",o:["Complejidad de opciones","Protección permanente de buen valor para clientes conscientes del presupuesto","Sin primas","Dividendos de inversión"],a:1}
+]}
+};
+
 var quizState={product:null,answers:{},submitted:false};
 
 function loadQuiz(){
@@ -1753,7 +1962,7 @@ function loadQuiz(){
   var container=document.getElementById('quiz-container');
   if(!container)return;
   if(!product){container.innerHTML='';return;}
-  var data=ET_QUIZZES[product];
+  var data=(LANG==="es"&&ET_QUIZZES_ES[product])?ET_QUIZZES_ES[product]:ET_QUIZZES[product];
   if(!data){container.innerHTML='<p style="color:var(--tx3);padding:16px">No quiz available for this product.</p>';return;}
   quizState={product:product,answers:{},submitted:false};
   var html='<div class="quiz-box">';
@@ -1780,7 +1989,7 @@ function loadQuiz(){
 
 function selectAns(qi,ai){
   quizState.answers[qi]=ai;
-  var data=ET_QUIZZES[quizState.product];
+  var data=(LANG==='es'&&ET_QUIZZES_ES[quizState.product])?ET_QUIZZES_ES[quizState.product]:ET_QUIZZES[quizState.product];
   // Update option styles
   data.q[qi].o.forEach(function(_,j){
     var lbl=document.getElementById('qo-'+qi+'-'+j);
@@ -1790,12 +1999,12 @@ function selectAns(qi,ai){
 
 function submitQuiz(){
   if(quizState.submitted)return;
-  var data=ET_QUIZZES[quizState.product];
+  var data=(LANG==='es'&&ET_QUIZZES_ES[quizState.product])?ET_QUIZZES_ES[quizState.product]:ET_QUIZZES[quizState.product];
   if(!data)return;
   var total=data.q.length;
   var answered=Object.keys(quizState.answers).length;
   if(answered<total){
-    alert('Please answer all '+total+' questions before submitting.');
+    alert(LANG==='es'?('Por favor responde las '+total+' preguntas antes de enviar.'):('Please answer all '+total+' questions before submitting.'));
     return;
   }
   quizState.submitted=true;
@@ -2229,11 +2438,394 @@ disqualify:[
 ]}
 ];
 
+var ET_ELIGIBILITY_ES = [
+{name:"Easy Term",ages:"18 – 70",coverage:"$25,000 – $300,000",term:"10, 20 o 30 años",
+qualify:[
+  "Residente de EE. UU. de 18 a 70 años al momento de la solicitud",
+  "Aprueba el cuestionario de salud de suscripción simplificada",
+  "Sin uso de tabaco/nicotina en los últimos 12 meses (tarifas de no fumador) — tarifas de fumador disponibles",
+  "Salud estable durante al menos 12 meses consecutivos",
+  "Sin hospitalización por una condición grave en los últimos 12 meses"
+],
+disqualify:[
+  "Actualmente diagnosticado o recibiendo tratamiento para cáncer (cualquier tipo)",
+  "Diagnosticado con VIH/SIDA",
+  "Enfermedad terminal con expectativa de vida menor a 12 meses",
+  "Insuficiencia renal que requiere diálisis",
+  "Cirrosis hepática o enfermedad hepática en etapa terminal",
+  "Insuficiencia cardíaca congestiva o evento cardíaco reciente (dentro de 12 meses)",
+  "Derrame cerebral o AIT dentro de los últimos 2 años",
+  "Diabetes insulinodependiente con complicaciones (nefropatía, neuropatía, retinopatía)",
+  "EPOC que requiere terapia de oxígeno",
+  "Quimioterapia o radioterapia activa",
+  "Receptor de trasplante de órgano (corazón, pulmón, hígado, riñón)",
+  "Actualmente encarcelado o en espera de juicio por delito grave",
+  "Amputación debido a enfermedad (diabetes, enfermedad vascular)"
+]},
+
+{name:"Express UL",ages:"0 – 80",coverage:"$25,000 – $500,000",term:"Permanente (Vida Universal)",
+qualify:[
+  "De 0 a 80 años al momento de la solicitud",
+  "Residente de EE. UU. en un estado elegible",
+  "Aprueba el cuestionario de salud simplificado",
+  "Salud asegurable — sin condiciones descalificantes mayores",
+  "Capaz de pagar primas flexibles continuas"
+],
+disqualify:[
+  "Cáncer activo (diagnosticado o en tratamiento en los últimos 5 años para cánceres graves)",
+  "Diagnóstico positivo de VIH/SIDA",
+  "Trasplante de órgano (corazón, pulmón, hígado, riñón, páncreas)",
+  "Enfermedad renal en etapa terminal / diálisis renal",
+  "Cirrosis hepática",
+  "ELA (enfermedad de Lou Gehrig)",
+  "Diagnóstico de enfermedad de Alzheimer o demencia",
+  "Esclerosis múltiple con incapacidad total",
+  "Insuficiencia cardíaca congestiva",
+  "Infarto reciente (dentro de 12 meses)",
+  "Condición respiratoria dependiente de oxígeno",
+  "Medicamentos recetados: fármacos de quimioterapia, inmunosupresores post-trasplante",
+  "Tratamiento por abuso de sustancias en los últimos 2 años",
+  "Múltiples condenas por conducir en estado de ebriedad en los últimos 5 años"
+]},
+
+{name:"Family Solution (Ages 0-49)",ages:"0 – 49",coverage:"$10,000 – $150,000",term:"Permanente (Vida Entera)",
+qualify:[
+  "De 0 a 49 años al momento de la solicitud",
+  "Residente de EE. UU. en un estado elegible",
+  "Suscripción simplificada — preguntas de salud limitadas",
+  "Sin diagnóstico descalificante en el cuestionario de salud",
+  "Los menores de 15 años pueden requerir la firma de un padre/tutor"
+],
+disqualify:[
+  "50 años o más al momento de la solicitud",
+  "Enfermedad terminal (cualquier pronóstico menor a 24 meses)",
+  "Cáncer activo o reciente (dentro de 2 años para tumores malignos graves)",
+  "Insuficiencia cardíaca congestiva",
+  "Insuficiencia renal que requiere diálisis",
+  "VIH/SIDA",
+  "Diabetes insulinodependiente con complicaciones en órganos terminales",
+  "Actualmente hospitalizado o en un centro de enfermería/cuidado",
+  "Síndrome de Down con discapacidad intelectual de moderada a severa (según la edad)",
+  "Trasplante de órgano que requiere terapia inmunosupresora",
+  "Medicamentos: inmunosupresores, fármacos contra el cáncer (biológicos/agentes de quimioterapia)",
+  "Parálisis cerebral con dependencia total de cuidado"
+]},
+
+{name:"Financial Lifeline",ages:"18 – 75",coverage:"$5,000 – $50,000",term:"Permanente (Vida Entera)",
+qualify:[
+  "De 18 a 75 años al momento de la solicitud",
+  "Residente de EE. UU.",
+  "Aprueba las preguntas de salud de suscripción simplificada",
+  "Cumple con los requisitos de elegibilidad específicos del estado",
+  "Sin enfermedad terminal activa o enfermedad crónica grave"
+],
+disqualify:[
+  "Enfermedad terminal (expectativa de vida menor a 12 meses)",
+  "Cáncer activo recibiendo quimioterapia o radioterapia",
+  "Derrame cerebral o AIT dentro de los últimos 2 años",
+  "Enfermedad renal en etapa terminal que requiere diálisis",
+  "Enfermedad hepática en etapa terminal / cirrosis",
+  "Insuficiencia cardíaca congestiva (Clase III o IV)",
+  "VIH/SIDA",
+  "EPOC dependiente de oxígeno o enfermedad pulmonar",
+  "Enfermedad de Alzheimer o demencia",
+  "Cirugía cardíaca mayor reciente (dentro de 6 meses)",
+  "Actualmente confinado en un asilo de ancianos o centro de cuidado especializado",
+  "Medicamentos: fármacos de diálisis, antirretrovirales para el VIH, agentes de quimioterapia activos"
+]},
+
+{name:"Golden Solution (Ages 50-85)",ages:"50 – 85",coverage:"$2,000 – $25,000",term:"Permanente (Vida Entera — Gastos Finales)",
+qualify:[
+  "De 50 a 85 años al momento de la solicitud",
+  "Residente de EE. UU.",
+  "Suscripción simplificada — preguntas de salud limitadas (3 a 5 preguntas)",
+  "Capaz de realizar actividades de la vida diaria de forma independiente",
+  "No confinado actualmente en un centro de cuidado"
+],
+disqualify:[
+  "Actualmente residiendo en un asilo de ancianos o centro de cuidado a largo plazo",
+  "Enfermedad terminal con pronóstico menor a 12 meses",
+  "Diagnosticado con SIDA (solo ser VIH positivo puede no descalificar — confirmar con suscripción)",
+  "Cáncer activo recibiendo tratamiento (quimio, radiación) dentro de los últimos 24 meses",
+  "Tratamiento de diálisis (insuficiencia renal)",
+  "Insuficiencia cardíaca congestiva que requirió hospitalización dentro de 12 meses",
+  "Derrame cerebral o infarto dentro de los últimos 12 meses",
+  "Dependencia de ventilador u oxígeno",
+  "Enfermedad de Alzheimer o demencia (etapa moderada a avanzada)",
+  "ELA (enfermedad de Lou Gehrig)",
+  "Medicamentos: fármacos relacionados con diálisis, agentes de quimioterapia activos, medicamentos por dependencia de ventilador"
+]},
+
+{name:"Guaranteed Guardian",ages:"45 – 85",coverage:"$2,000 – $25,000",term:"Permanente — Beneficio Gradual (período de espera de 2 años)",
+qualify:[
+  "De 45 a 85 años al momento de la solicitud",
+  "Residente de EE. UU. en un estado elegible",
+  "EMISIÓN GARANTIZADA — sin examen médico, sin preguntas de salud",
+  "Aceptación garantizada dentro del rango de edad elegible",
+  "NOTA: Aplica beneficio gradual — el beneficio por muerte completo solo después de 2 años"
+],
+disqualify:[
+  "Menor de 45 o mayor de 85 años",
+  "No residente de EE. UU.",
+  "Residente de un estado donde el producto no está disponible",
+  "IMPORTANTE: Durante el período de espera de 2 años, la muerte por causas naturales devuelve las primas pagadas + 10% de interés. La muerte accidental paga el beneficio completo desde el primer día.",
+  "Sin descalificaciones adicionales basadas en salud (aceptación garantizada)"
+]},
+
+{name:"Home Protector",ages:"18 – 65",coverage:"Igual al saldo de la hipoteca",term:"Término Decreciente (coincide con la hipoteca)",
+qualify:[
+  "De 18 a 65 años al momento de la solicitud",
+  "Hipoteca o préstamo de vivienda activo (residencia principal o propiedad de inversión)",
+  "Residente de EE. UU.",
+  "Aprueba el cuestionario de salud simplificado",
+  "Salud estable durante los últimos 12 meses"
+],
+disqualify:[
+  "Mayor de 65 años al momento de la solicitud",
+  "Sin obligación hipotecaria activa",
+  "Enfermedad terminal",
+  "Tratamiento activo contra el cáncer (quimio/radiación en los últimos 5 años para cánceres graves)",
+  "VIH/SIDA",
+  "Evento cardíaco reciente (infarto/cirugía mayor dentro de 12 meses)",
+  "Derrame cerebral dentro de los últimos 2 años",
+  "Diálisis renal",
+  "Enfermedad respiratoria dependiente de oxígeno",
+  "Medicamentos: fármacos activos de tratamiento contra el cáncer, medicamentos de diálisis, anticoagulantes por eventos cardíacos recientes"
+]},
+
+{name:"Intelligent Choice",ages:"18 – 75",coverage:"$10,000 – $250,000",term:"Permanente (Vida Universal Indexada)",
+qualify:[
+  "De 18 a 75 años al momento de la solicitud",
+  "Residente de EE. UU. en un estado elegible",
+  "Suscripción simplificada o estándar según el monto de cobertura",
+  "Cumple con los criterios de salud para la clase de suscripción aplicable",
+  "Capaz de realizar pagos de prima flexibles"
+],
+disqualify:[
+  "Cáncer activo o reciente (dentro de 5 años para tumores malignos graves)",
+  "VIH/SIDA",
+  "Trasplante de órgano (corazón, hígado, pulmón, riñón)",
+  "Enfermedad renal en etapa terminal / diálisis",
+  "Cirrosis / enfermedad hepática en etapa terminal",
+  "Insuficiencia cardíaca congestiva",
+  "ELA o enfermedad de Parkinson con incapacidad significativa",
+  "Enfermedad de Alzheimer o demencia",
+  "Derrame cerebral o AIT dentro de 2 años",
+  "EPOC dependiente de oxígeno",
+  "Quimioterapia o radioterapia activa",
+  "Medicamentos: inmunosupresores (trasplante), agentes de quimioterapia activos, fármacos de diálisis"
+]},
+
+{name:"Platinum Solution Family (0-49)",ages:"0 – 49",coverage:"$10,000 – $100,000",term:"Permanente (Vida Entera)",
+qualify:[
+  "De 0 a 49 años al momento de la solicitud",
+  "Residente de EE. UU.",
+  "Suscripción simplificada — se requiere cuestionario de salud",
+  "Sin condición médica descalificante activa",
+  "Menores de 15 años: el padre/tutor debe ser el asegurado principal o co-solicitante"
+],
+disqualify:[
+  "50 años o más al momento de la solicitud",
+  "Enfermedad terminal (cualquier pronóstico menor a 24 meses)",
+  "Cáncer activo o antecedentes de cáncer dentro de 2 años (tumores malignos graves)",
+  "VIH/SIDA",
+  "Diabetes insulinodependiente con complicaciones (retinopatía, nefropatía, neuropatía)",
+  "Insuficiencia cardíaca congestiva",
+  "Insuficiencia renal que requiere diálisis",
+  "Trasplante de órgano con terapia inmunosupresora",
+  "Insuficiencia respiratoria crónica que requiere oxígeno",
+  "Medicamentos: agentes de quimioterapia, inmunosupresores, fármacos relacionados con diálisis",
+  "Actualmente hospitalizado o confinado en un centro de cuidado"
+]},
+
+{name:"Platinum Solution Legacy (50-85)",ages:"50 – 85",coverage:"$2,000 – $30,000",term:"Permanente (Vida Entera — Gastos Finales)",
+qualify:[
+  "De 50 a 85 años al momento de la solicitud",
+  "Residente de EE. UU.",
+  "Suscripción simplificada — preguntas de salud limitadas",
+  "Ambulatorio y capaz de realizar actividades de la vida diaria",
+  "No se encuentra actualmente en un asilo de ancianos o vivienda asistida"
+],
+disqualify:[
+  "Actualmente confinado en un asilo de ancianos, vivienda asistida, o cuidado a largo plazo",
+  "Enfermedad terminal (pronóstico menor a 12 meses)",
+  "Cáncer activo en tratamiento (quimio/radiación dentro de 24 meses)",
+  "Diálisis / enfermedad renal en etapa terminal",
+  "Insuficiencia cardíaca congestiva con hospitalización reciente (dentro de 12 meses)",
+  "Derrame cerebral o infarto dentro de 12 meses",
+  "VIH/SIDA",
+  "Enfermedad de Alzheimer o demencia de moderada a severa",
+  "ELA (enfermedad de Lou Gehrig)",
+  "Condición pulmonar dependiente de oxígeno",
+  "Medicamentos: fármacos relacionados con diálisis, agentes de quimioterapia activos, inmunosupresores por trasplante"
+]},
+
+{name:"SafeCare Term",ages:"18 – 65",coverage:"$25,000 – $200,000",term:"Término de 10, 20 o 30 años",
+qualify:[
+  "De 18 a 65 años al momento de la solicitud",
+  "Residente de EE. UU.",
+  "Aprueba la revisión de salud de suscripción simplificada o estándar",
+  "Tarifas de no fumador o usuario de tabaco disponibles",
+  "Salud estable durante los últimos 12 meses"
+],
+disqualify:[
+  "Cáncer activo o reciente (dentro de 5 años para tumores malignos graves; dentro de 2 años para algunos)",
+  "VIH/SIDA",
+  "Enfermedad renal en etapa terminal / diálisis",
+  "Insuficiencia cardíaca congestiva",
+  "Infarto reciente (dentro de 12 meses)",
+  "Derrame cerebral o AIT dentro de 2 años",
+  "Enfermedad terminal",
+  "Enfermedad respiratoria dependiente de oxígeno",
+  "Abuso activo de sustancias (alcohol, drogas) — tratamiento dentro de 2 años",
+  "Trasplante de órgano con terapia inmunosupresora",
+  "Medicamentos: fármacos activos de quimio/radiación, medicamentos de diálisis, antirretrovirales para VIH activo, corticosteroides en dosis altas para condiciones graves"
+]},
+
+{name:"SecureLife Plus",ages:"0 – 75",coverage:"$10,000 – $300,000",term:"Permanente (Vida Entera con Beneficios en Vida)",
+qualify:[
+  "De 0 a 75 años al momento de la solicitud",
+  "Residente de EE. UU. en un estado elegible",
+  "Suscripción simplificada o estándar (varía según el monto de cobertura)",
+  "Cumple con los estándares de salud para la clase de suscripción aplicable",
+  "Puede incluir cláusulas de beneficio en vida (beneficio por muerte acelerado)"
+],
+disqualify:[
+  "Cáncer activo o antecedentes de cáncer dentro de 5 años (tumor maligno grave)",
+  "VIH/SIDA",
+  "Trasplante de órgano (corazón, hígado, pulmón, riñón) con inmunosupresores",
+  "Insuficiencia renal / diálisis",
+  "Insuficiencia hepática / cirrosis",
+  "Enfermedad de Alzheimer o demencia",
+  "ELA o enfermedad de Huntington",
+  "Insuficiencia cardíaca congestiva",
+  "Evento cardíaco mayor reciente (dentro de 12 meses)",
+  "Derrame cerebral o AIT dentro de 2 años",
+  "EPOC dependiente de oxígeno o fibrosis pulmonar",
+  "Medicamentos: agentes de quimioterapia activos, inmunosupresores post-trasplante, fármacos de diálisis, antirretrovirales para VIH"
+]},
+
+{name:"Security Protector",ages:"18 – 70",coverage:"$10,000 – $150,000",term:"Permanente (Vida Entera)",
+qualify:[
+  "De 18 a 70 años al momento de la solicitud",
+  "Residente de EE. UU.",
+  "Aprueba las preguntas de salud de suscripción simplificada",
+  "Sin enfermedad grave descalificante",
+  "Historial médico estable durante los últimos 12 meses"
+],
+disqualify:[
+  "Cáncer activo (recibiendo tratamiento)",
+  "Antecedentes de cáncer dentro de 2 años (tumores malignos graves)",
+  "VIH/SIDA",
+  "Insuficiencia cardíaca crónica",
+  "Insuficiencia renal que requiere diálisis",
+  "Derrame cerebral dentro de los últimos 2 años",
+  "Enfermedad terminal",
+  "Enfermedad respiratoria dependiente de oxígeno",
+  "Trasplante de órgano con terapia inmunosupresora",
+  "Enfermedad de Alzheimer o demencia",
+  "Hospitalización por evento cardíaco o de salud mayor dentro de 12 meses",
+  "Medicamentos: quimioterapia activa, fármacos de diálisis, inmunosupresores, recetas de terapia de oxígeno"
+]},
+
+{name:"Security Solution",ages:"18 – 75",coverage:"$10,000 – $200,000",term:"Permanente (Vida Entera)",
+qualify:[
+  "De 18 a 75 años al momento de la solicitud",
+  "Residente de EE. UU.",
+  "Suscripción simplificada con cuestionario de salud",
+  "Sin condición activa que ponga en riesgo la vida",
+  "Movilidad independiente y no confinado en un centro de cuidado"
+],
+disqualify:[
+  "Enfermedad terminal (pronóstico menor a 12 meses)",
+  "Cáncer activo en tratamiento (quimio/radiación dentro de 2 años para cánceres graves)",
+  "VIH/SIDA",
+  "Insuficiencia renal que requiere diálisis",
+  "Derrame cerebral dentro de 2 años",
+  "Insuficiencia cardíaca congestiva",
+  "Insuficiencia hepática / enfermedad hepática en etapa terminal",
+  "Trasplante de órgano con inmunosupresores",
+  "Diagnóstico de enfermedad de Alzheimer o demencia",
+  "ELA u otras enfermedades de neurona motora",
+  "Dependencia de oxígeno",
+  "Medicamentos: fármacos activos contra el cáncer, medicamentos de diálisis, terapia antirretroviral para VIH activo, inmunosupresores"
+]},
+
+{name:"Survivor Protector",ages:"18 – 70",coverage:"$10,000 – $150,000",term:"A Término o Permanente (varía)",
+qualify:[
+  "De 18 a 70 años al momento de la solicitud",
+  "Residente de EE. UU.",
+  "Cuestionario de salud de suscripción simplificada",
+  "Tiene dependientes o beneficiarios designados",
+  "Sin condición descalificante activa"
+],
+disqualify:[
+  "Mayor de 70 años al momento de la solicitud",
+  "Enfermedad terminal",
+  "Tratamiento activo contra el cáncer",
+  "VIH/SIDA",
+  "Evento cardíaco mayor dentro de 12 meses (infarto, cirugía de bypass)",
+  "Derrame cerebral dentro de 2 años",
+  "Insuficiencia renal que requiere diálisis",
+  "Condición dependiente de oxígeno",
+  "Actualmente encarcelado",
+  "Abuso activo de sustancias — tratamiento dentro de 2 años",
+  "Trasplante de órgano con terapia inmunosupresora",
+  "Medicamentos: agentes de quimioterapia activos, fármacos de diálisis, antirretrovirales, inmunosupresores"
+]},
+
+{name:"Term Made Simple",ages:"18 – 65",coverage:"$10,000 – $100,000",term:"Término de 10, 20 o 30 años",
+qualify:[
+  "De 18 a 65 años al momento de la solicitud",
+  "Residente de EE. UU.",
+  "Cuestionario de salud simple y ágil",
+  "Elegibilidad de salud básica — sin condiciones descalificantes mayores",
+  "Disponible para fumadores y no fumadores (diferentes clases de tarifa)"
+],
+disqualify:[
+  "Diagnóstico o tratamiento de cáncer dentro de 2 años",
+  "VIH/SIDA",
+  "Insuficiencia cardíaca congestiva",
+  "Insuficiencia renal que requiere diálisis",
+  "Enfermedad terminal",
+  "Derrame cerebral o AIT reciente (dentro de 2 años)",
+  "Trasplante de órgano",
+  "EPOC dependiente de oxígeno o enfermedad pulmonar",
+  "Hospitalización por evento cardíaco/vascular grave dentro de 12 meses",
+  "Actualmente confinado en un centro de cuidado o de enfermería",
+  "Medicamentos: tratamientos activos contra el cáncer, fármacos de diálisis, inmunosupresores, antirretrovirales para VIH"
+]},
+
+{name:"Val-U-Plus",ages:"0 – 75",coverage:"$5,000 – $100,000",term:"Permanente (Vida Entera)",
+qualify:[
+  "De 0 a 75 años al momento de la solicitud",
+  "Residente de EE. UU. en un estado elegible",
+  "Suscripción simplificada — cuestionario de salud",
+  "Buena salud general sin enfermedad grave activa",
+  "Para edades de 0 a 14 años: el padre/tutor debe firmar la solicitud"
+],
+disqualify:[
+  "Cáncer activo o tratamiento de cáncer dentro de 2 años (tumores malignos graves)",
+  "VIH/SIDA",
+  "Insuficiencia renal que requiere diálisis",
+  "Insuficiencia cardíaca congestiva",
+  "Insuficiencia hepática / cirrosis",
+  "Diagnóstico de enfermedad de Alzheimer o demencia",
+  "ELA u otras condiciones neurodegenerativas terminales",
+  "Trasplante de órgano con terapia inmunosupresora",
+  "Enfermedad terminal (pronóstico menor a 24 meses)",
+  "Derrame cerebral dentro de 2 años",
+  "Condición respiratoria dependiente de oxígeno",
+  "Medicamentos: agentes activos de quimio/inmunoterapia, medicamentos de diálisis, inmunosupresores, recetas de terapia de oxígeno"
+]}
+];
+
 function renderEligibility(){
   var grid=document.getElementById('elig-grid');
-  if(!grid||grid.children.length>0)return;
-  var lang=document.documentElement.lang||'en';
-  ET_ELIGIBILITY.forEach(function(p){
+  if(!grid)return;
+  grid.innerHTML='';
+  var src=(LANG==='es'&&typeof ET_ELIGIBILITY_ES!=='undefined')?ET_ELIGIBILITY_ES:ET_ELIGIBILITY;
+  src.forEach(function(p){
     var card=document.createElement('div');
     card.className='elig-card';
     var qualifyHTML=p.qualify.map(function(q){return '<li>'+q+'</li>';}).join('');
