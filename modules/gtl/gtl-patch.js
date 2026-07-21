@@ -678,6 +678,10 @@
       var _steps = (lang === 'en') ? _ONBOARD_STEPS_EN : _ONBOARD_STEPS;
       window.AZWidgets.updateOnboardingLang(lang, _steps);
     }
+    // Quiz question/option text is plain rendered text (not .en/.es spans) —
+    // re-render an open quiz so it reflects the new language immediately.
+    var _qzSubmitBtn = document.querySelector('.qz-submit[data-p]');
+    if (_qzSubmitBtn && window.loadQuiz) window.loadQuiz('start', _qzSubmitBtn.getAttribute('data-p'));
     var session = await AZ.Auth.getSession();
     if (!session) return;
     await AZ.Prefs.save(session.user.id, { lang: lang });
