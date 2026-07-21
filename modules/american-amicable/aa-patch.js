@@ -582,8 +582,8 @@
 
       if (isAdmin) document.body.classList.add('is-admin');
       else         document.body.classList.remove('is-admin');
-      if (profile.eg_member) document.body.classList.add('is-eg-member');
-      else                   document.body.classList.remove('is-eg-member');
+      if (profile.eg_member || isAdmin) document.body.classList.add('is-eg-member');
+      else                             document.body.classList.remove('is-eg-member');
 
       // Launch app using original AA launchApp()
       if (window.launchApp) window.launchApp();
@@ -828,6 +828,8 @@
 
       if (isAdmin) document.body.classList.add('is-admin');
       else         document.body.classList.remove('is-admin');
+      if (profile.eg_member || isAdmin) document.body.classList.add('is-eg-member');
+      else                             document.body.classList.remove('is-eg-member');
 
       // Apply preferences
       if (profile.theme === 'dark') {
