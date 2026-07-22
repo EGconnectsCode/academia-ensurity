@@ -62,6 +62,10 @@
       .topbar { background:var(--az-navy)!important; border-bottom:1px solid rgba(255,255,255,.07)!important;
         box-shadow:0 1px 8px rgba(0,0,0,.25)!important; height:54px!important; padding:0 16px!important;
         display:flex!important; align-items:center!important; justify-content:space-between!important; }
+      @media (max-width:640px) {
+        .topbar { height:auto !important; min-height:54px !important; flex-wrap:wrap !important; padding:8px 10px !important; row-gap:6px !important; }
+        .topbar-right { flex-wrap:wrap !important; justify-content:flex-end !important; }
+      }
       .topbar-disc { font-weight:700!important; font-size:.88rem!important; color:#fff!important;
         background:none!important; border:none!important; display:flex!important; align-items:center!important; }
       .topbar-disc .td-ico, .topbar-disc .td-txt, .topbar-disc .td-link { display:none!important; }

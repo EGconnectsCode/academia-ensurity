@@ -227,6 +227,11 @@
       .az-admin-back { background:rgba(251,191,36,.15)!important; border:1px solid rgba(251,191,36,.4)!important; color:#fbbf24!important; padding:4px 12px!important; border-radius:6px!important; font-size:.75rem!important; font-weight:700!important; cursor:pointer!important; text-decoration:none!important; display:flex!important; align-items:center!important; white-space:nowrap!important; }
       .az-admin-back:hover { background:rgba(251,191,36,.25)!important; }
       .tb-acts { display:flex !important; align-items:center !important; gap:8px !important; flex-wrap:nowrap !important; }
+      @media (max-width:640px) {
+        .topbar { height:auto !important; min-height:54px !important; flex-wrap:wrap !important; padding:8px 10px !important; row-gap:6px !important; }
+        .tb-greet { display:none !important; }
+        .tb-acts { flex-wrap:wrap !important; justify-content:flex-end !important; }
+      }
       /* ── XP bar ── */
       #xp-section { margin-bottom: 16px !important; }
     `;
