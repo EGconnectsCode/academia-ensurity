@@ -23,6 +23,15 @@
   .tlh-lang-btn { border:none; border-radius:16px; padding:4px 12px; font-size:.75rem; font-weight:700; cursor:pointer; transition:all .15s; }
   #react-root { min-height:calc(100vh - 58px); }
 
+  @media (max-width:640px) {
+    .tlh-topbar { display:flex !important; flex-wrap:wrap !important; row-gap:8px; padding:8px 12px; }
+    .tlh-topbar-left { min-width:0; flex:1 1 auto; }
+    .tlh-topbar-right { flex:0 0 auto; }
+    .tlh-tabs { order:3; width:100%; justify-content:center; }
+    .tlh-logo { height:32px; max-width:45vw; object-fit:contain; }
+    .tlh-back { padding:6px 10px; font-size:.78rem; }
+  }
+
   /* ── Dark mode ───────────────────────────────────── */
   [data-theme="dark"] .tlh-topbar { background:#1E293B; border-bottom-color:#334155; }
   [data-theme="dark"] .tlh-back { background:rgba(30,58,95,.4); border-color:#2563EB; color:#60A5FA; }
