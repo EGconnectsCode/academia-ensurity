@@ -26,6 +26,14 @@ body{font-family:"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(
 #palette-left,#palette-right{width:5px;flex-shrink:0;height:100vh;background:linear-gradient(180deg,#7B3F9E 0%,#0063B1 35%,#00A3C8 60%,#F5A623 80%,#002B5C 100%);position:sticky;top:0;z-index:20}
 /* ── Sidebar ── */
 #sidebar{width:240px;min-width:240px;background:var(--sb-bg);display:flex;flex-direction:column;height:100vh;overflow:hidden;border-right:1px solid rgba(255,255,255,.08)}
+#sb-toggle{background:none;border:none;color:#fff;font-size:20px;cursor:pointer;padding:4px 8px;border-radius:6px;display:none;flex-shrink:0;}
+#sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99;}
+@media(max-width:768px){
+  #sidebar{position:fixed;left:-260px;top:0;bottom:0;z-index:100;width:250px;transition:.25s;}
+  #sidebar.open{left:0;}
+  #sb-toggle{display:block;}
+  #sb-overlay.open{display:block;}
+}
 .sb-brand{padding:14px 14px 10px;border-bottom:1px solid rgba(255,255,255,.1)}
 .sb-logo-block{display:flex;align-items:center;gap:10px}
 .sb-logo-text .sb-main{font-size:15px;font-weight:800;color:#fff;letter-spacing:.3px}
@@ -358,6 +366,7 @@ td{padding:6px 10px;border-bottom:1px solid var(--bdr);color:var(--tx)}
 <div id="palette-right"></div>
 <div id="main">
 <div class="topbar">
+  <button id="sb-toggle" onclick="openSB()">☰</button>
   <div class="topbar-logo">Corebridge Financial — Agent Portal</div>
   <div class="topbar-right">
     <button class="tb-lang-btn" onclick="toggleLang()">🌐 <span id="tb-lang-lbl">ES</span></button>
@@ -365,6 +374,7 @@ td{padding:6px 10px;border-bottom:1px solid var(--bdr);color:var(--tx)}
     <div class="tb-user"><div class="tb-avatar" id="tb-avatar">A</div><span id="tb-name" style="font-size:12px;font-weight:600;color:var(--tx)"></span></div>
   </div>
 </div>
+<div id="sb-overlay" onclick="closeSB()"></div>
 <div id="content">
 <div class="page active" id="page-home">
 <div class="home-hero">
@@ -1210,7 +1220,10 @@ function navTo(pageId){
   if(pageId==='admin-activity')renderAdminActivity();
   if(pageId==='admin-ranking')renderAdminRanking();
   if(pageId==='etraining'){/* quiz loads via tab */}
+  closeSB();
 }
+function openSB(){var sb=g('sidebar');if(sb)sb.classList.add('open');var ov=g('sb-overlay');if(ov)ov.classList.add('open');}
+function closeSB(){var sb=g('sidebar');if(sb)sb.classList.remove('open');var ov=g('sb-overlay');if(ov)ov.classList.remove('open');}
 
 /* ── Auth ── */
 function switchTab(t){

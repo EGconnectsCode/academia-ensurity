@@ -29,6 +29,14 @@ body{font-family:"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(
 #app.visible{display:flex}
 #palette-left,#palette-right{width:5px;flex-shrink:0;height:100vh;background:linear-gradient(180deg,#B22234 0%,#1B1464 25%,#003087 50%,#0078C8 70%,#C8941E 85%,#27AE60 100%);position:sticky;top:0;z-index:20}
 #sidebar{width:240px;min-width:240px;background:linear-gradient(175deg,#1B1464 0%,#0d0d40 35%,#001B54 65%,#0a0a2e 100%);display:flex;flex-direction:column;height:100vh;overflow:hidden;border-right:1px solid rgba(255,255,255,.06)}
+#sb-toggle{background:none;border:none;color:#fff;font-size:20px;cursor:pointer;padding:4px 8px;border-radius:6px;display:none;flex-shrink:0;}
+#sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99;}
+@media(max-width:768px){
+  #sidebar{position:fixed;left:-260px;top:0;bottom:0;z-index:100;width:250px;transition:.25s;}
+  #sidebar.open{left:0;}
+  #sb-toggle{display:block;}
+  #sb-overlay.open{display:block;}
+}
 .sb-brand{padding:14px 10px 8px;border-bottom:1px solid rgba(255,255,255,.1);text-align:center}
 body.dark .sb-brand img{filter:brightness(0) invert(1)}
 .sb-logo-text .sb-main{font-size:13px;font-weight:800;color:#fff;letter-spacing:.3px}
@@ -647,6 +655,7 @@ body.dark .qt-multi-table tr:nth-child(even) td{background:rgba(255,255,255,.03)
 <div id="palette-right"></div>
 <div id="main">
   <div class="topbar">
+    <button id="sb-toggle" onclick="openSB()">☰</button>
     <div class="topbar-disc">
       <span class="td-ico">⚠️</span>
       <span class="td-txt">
@@ -661,6 +670,7 @@ body.dark .qt-multi-table tr:nth-child(even) td{background:rgba(255,255,255,.03)
       <div class="tb-user"><div class="tb-avatar" id="tb-avatar">A</div><span id="tb-name" style="font-size:12px;font-weight:600;color:var(--tx)"></span></div>
     </div>
   </div>
+  <div id="sb-overlay" onclick="closeSB()"></div>
   <div id="content">
 
 <!-- ===================== HOME PAGE ===================== -->
@@ -3127,7 +3137,10 @@ function goPage(id){
   if(id==='admin-users')loadAdminUsers();
   if(id==='admin-activity')loadAdminActivity();
   if(id==='admin-ranking')loadAdminRanking();
+  closeSB();
 }
+function openSB(){var sb=document.getElementById('sidebar');if(sb)sb.classList.add('open');var ov=document.getElementById('sb-overlay');if(ov)ov.classList.add('open');}
+function closeSB(){var sb=document.getElementById('sidebar');if(sb)sb.classList.remove('open');var ov=document.getElementById('sb-overlay');if(ov)ov.classList.remove('open');}
 
 document.querySelectorAll('.sb-item[data-page]').forEach(function(b){
   b.addEventListener('click',function(){goPage(this.getAttribute('data-page'));});
