@@ -218,6 +218,11 @@ html[data-lang="en"] .en{display:inline}
 html[data-lang="es"] .es{display:inline}
 /* ── Misc ── */
 .fbtn{background:linear-gradient(135deg,var(--cb-navy),var(--cb-blue));color:#fff;border:none;padding:9px 16px;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;transition:opacity .15s}
+.quiz-opt{text-align:left;padding:9px 13px;border:2px solid var(--bdr);border-radius:7px;background:var(--sur2);color:var(--tx);cursor:pointer;font-size:12px;transition:.15s}
+.quiz-opt:hover{border-color:var(--cb-blue);background:var(--cb-light)}
+.quiz-opt.correct{border-color:#10b981;background:#ecfdf5;color:#065f46}
+.quiz-opt.wrong{border-color:#ef4444;background:#fef2f2;color:#991b1b}
+.fbtn:disabled{opacity:.5;cursor:not-allowed}
 .fbtn:hover{opacity:.9}
 table{width:100%;border-collapse:collapse;font-size:12px}
 th{background:var(--cb-navy);color:#fff;padding:7px 10px;text-align:left}
@@ -1550,9 +1555,9 @@ function renderQuestion(){
     +'<p style="font-size:13px;font-weight:600;color:var(--tx);margin:6px 0 12px">'+qtext+'</p>'
     +'<div style="display:flex;flex-direction:column;gap:7px">';
   opts.forEach(function(o,i){
-    html+='<button onclick="answerQ('+i+')" style="text-align:left;padding:9px 13px;border:1px solid var(--bdr);border-radius:7px;background:var(--sur2);color:var(--tx);cursor:pointer;font-size:12px;">'+o+'</button>';
+    html+='<div class="quiz-opt" id="qopt-'+i+'" onclick="answerQ('+i+')">'+o+'</div>';
   });
-  html+='</div></div>';
+  html+='</div><div style="margin-top:12px"><button class="fbtn" id="qnext" onclick="nextQ()" disabled><span class="en">Next</span><span class="es">Siguiente</span></button></div></div>';
   container.innerHTML=html;
   qState.answered=false;
 }
@@ -1560,8 +1565,18 @@ function answerQ(i){
   if(qState.answered)return;
   qState.answered=true;
   var q=QUIZ_DATA[qState.module].questions[qState.idx];
-  if(i===q.ans)qState.score++;
-  setTimeout(function(){qState.idx++;renderQuestion();},500);
+  var correct=q.ans;
+  document.querySelectorAll('.quiz-opt').forEach(function(o,idx){
+    if(idx===correct)o.classList.add('correct');
+    else if(idx===i&&i!==correct)o.classList.add('wrong');
+    o.style.pointerEvents='none';
+  });
+  if(i===correct)qState.score++;
+  var nxt=g('qnext');if(nxt)nxt.disabled=false;
+}
+function nextQ(){
+  qState.idx++;
+  renderQuestion();
 }
 
 /* ── Metrics ── */

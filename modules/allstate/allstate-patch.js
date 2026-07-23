@@ -283,6 +283,26 @@
           if (node.nodeType === 3) node.textContent = node.textContent.replace(/[\u{1F000}-\u{1FFFF}\u{2600}-\u{27FF}\u{2700}-\u{27BF}\u{FE00}-\u{FE0F}]|️/gu, '').trim();
         });
       });
+
+      // ── Replace file-language badges (EN/ES) with a translated marker word on the file title ──
+      document.querySelectorAll('.lbadge').forEach(function (badge) {
+        var txt = (badge.textContent || '').trim();
+        if (txt !== 'EN' && txt !== 'ES') return;
+        var isSpanishFile = (txt === 'ES');
+        var card = badge.closest('.fcard');
+        var fname = card ? card.querySelector('.fname') : null;
+        if (fname) {
+          var enSpan = fname.querySelector('.en');
+          var esSpan = fname.querySelector('.es');
+          if (enSpan && !/\b(english|spanish)\b/i.test(enSpan.textContent)) {
+            enSpan.textContent = enSpan.textContent.trim() + (isSpanishFile ? ' (Spanish)' : ' (English)');
+          }
+          if (esSpan && !/\b(ingl[eé]s|espa[ñn]ol)\b/i.test(esSpan.textContent)) {
+            esSpan.textContent = esSpan.textContent.trim() + (isSpanishFile ? ' (Español)' : ' (Inglés)');
+          }
+        }
+        badge.remove();
+      });
     });
   })();
 
