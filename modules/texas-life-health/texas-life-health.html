@@ -243,6 +243,37 @@ const preguntasMock = [
   { unit:"Fundamentos del Seguro", question:"¿Cuándo debe existir interés asegurable en una póliza de vida?", choices:["Al morir","Al claim","En aplicación/emisión","En renovación"], answer:"En aplicación/emisión", explanation:"El interés asegurable debe existir cuando se compra/emite la póliza." },
 ];
 
+const preguntasMockEN = [
+  { unit:"Policy Provisions", question:"What type of beneficiary can be changed without permission?", choices:["Irrevocable","Revocable","Primary","Contingent"], answer:"Revocable", explanation:"A revocable beneficiary can be changed by the policyowner at any time." },
+  { unit:"Life Insurance Policy Types", question:"Which policy offers flexible premiums and an adjustable death benefit?", choices:["Whole Life","Term Life","Universal Life","Variable Life"], answer:"Universal Life", explanation:"Universal Life is known for flexibility in premiums and death benefit." },
+  { unit:"Medicare and Medicaid", question:"Which part of Medicare covers prescription drugs?", choices:["Part A","Part B","Part C","Part D"], answer:"Part D", explanation:"Part D provides prescription drug coverage." },
+  { unit:"Disability Income", question:"What is the waiting period before disability benefits begin called?", choices:["Probationary Period","Grace Period","Benefit Period","Elimination Period"], answer:"Elimination Period", explanation:"The Elimination Period is the waiting time before benefits begin." },
+  { unit:"Policy Options", question:"Which nonforfeiture option gives the largest amount of insurance?", choices:["Reduced Paid-Up","Extended Term","Cash Surrender","Interest Only"], answer:"Extended Term", explanation:"Extended Term uses cash value to buy term insurance with the largest possible face amount." },
+  { unit:"Riders", question:"Which rider waives premiums if the insured becomes disabled?", choices:["Payor Rider","Waiver of Premium","Guaranteed Insurability","Cost of Living Rider"], answer:"Waiver of Premium", explanation:"Waiver of Premium waives premium payments during a qualifying disability." },
+  { unit:"Life Insurance Policy Types", question:"Which life policy is pure death protection and has no cash value?", choices:["Term Life","Whole Life","Universal Life","Variable Life"], answer:"Term Life", explanation:"Term Life is temporary and does not build cash value." },
+  { unit:"Life Insurance Policy Types", question:"Which type of life insurance requires a securities license?", choices:["Term Life","Whole Life","Variable Life","Ordinary Life"], answer:"Variable Life", explanation:"Variable Life involves securities and separate accounts." },
+  { unit:"Policy Provisions", question:"The policyowner needs written consent to change a beneficiary. What type is this?", choices:["Revocable","Irrevocable","Contingent","Tertiary"], answer:"Irrevocable", explanation:"Irrevocable beneficiaries generally require consent for certain changes." },
+  { unit:"Policy Provisions", question:"Which provision allows a lapsed policy to be restored after meeting requirements?", choices:["Grace Period","Reinstatement","Free Look","Consideration"], answer:"Reinstatement", explanation:"Reinstatement restores a lapsed policy after meeting the requirements." },
+  { unit:"Policy Provisions", question:"Which provision limits the insurer's ability to deny claims for misstatements after a certain time?", choices:["Incontestability","Entire Contract","Assignment","Ownership"], answer:"Incontestability", explanation:"Incontestability limits the ability to dispute the policy after the period." },
+  { unit:"Policy Options", question:"Which option creates a smaller permanent policy with no more premiums?", choices:["Cash Surrender","Extended Term","Reduced Paid-Up","Life Income"], answer:"Reduced Paid-Up", explanation:"Reduced Paid-Up buys a smaller permanent policy using existing cash value." },
+  { unit:"Policy Options", question:"Which settlement option pays proceeds for a selected number of years?", choices:["Fixed Amount","Fixed Period","Interest Only","Cash Surrender"], answer:"Fixed Period", explanation:"Fixed Period pays proceeds over a selected period of time." },
+  { unit:"Riders", question:"Which rider is commonly used on juvenile policies if the adult payor dies or becomes disabled?", choices:["Payor Rider","Waiver of Cost Rider","Guaranteed Insurability","Term Rider"], answer:"Payor Rider", explanation:"Payor Rider protects juvenile policies if the adult payor dies or becomes disabled." },
+  { unit:"Riders", question:"Which rider allows the purchase of additional coverage in the future without proving insurability?", choices:["Waiver of Premium","Guaranteed Insurability","Accidental Death","Return of Premium"], answer:"Guaranteed Insurability", explanation:"Guaranteed Insurability allows future increases without new medical underwriting." },
+  { unit:"Disability Income", question:"Which definition of disability is more liberal and easier to qualify under?", choices:["Any Occupation","Own Occupation","Residual Disability","Partial Disability"], answer:"Own Occupation", explanation:"Own Occupation only asks whether the insured can perform their own occupation." },
+  { unit:"Disability Income", question:"Which concept is based mainly on loss of income after returning to work?", choices:["Residual Disability","Presumptive Disability","Total Disability","Probationary Period"], answer:"Residual Disability", explanation:"Residual Disability focuses on reduced income." },
+  { unit:"Disability Income", question:"Which term describes how long benefits will be paid?", choices:["Elimination Period","Benefit Period","Probationary Period","Grace Period"], answer:"Benefit Period", explanation:"Benefit Period is how long benefits are payable." },
+  { unit:"Medicare and Medicaid", question:"Which part of Medicare is associated with hospital insurance?", choices:["Part A","Part B","Part C","Part D"], answer:"Part A", explanation:"Part A is hospital insurance." },
+  { unit:"Medicare and Medicaid", question:"Which part of Medicare is Medicare Advantage?", choices:["Part A","Part B","Part C","Part D"], answer:"Part C", explanation:"Part C is Medicare Advantage through private plans approved by Medicare." },
+  { unit:"Medicare and Medicaid", question:"Medicaid is best described as what type of program?", choices:["Needs-based program","Only for retirees","Only for people with employer insurance","A Medicare supplement"], answer:"Needs-based program", explanation:"Medicaid is based on need/financial eligibility and is funded by state and federal government." },
+  { unit:"Underwriting and Texas Law", question:"Which source is commonly used to report applicants' medical information to insurers?", choices:["MIB","FDIC","SEC","NAIC Replacement Register"], answer:"MIB", explanation:"The Medical Information Bureau helps detect misrepresentation and review prior underwriting." },
+  { unit:"Underwriting and Texas Law", question:"A statement on the application believed to be true is usually called what?", choices:["Warranty","Representation","Concealment","Rebating"], answer:"Representation", explanation:"Most application statements are representations, not warranties." },
+  { unit:"Underwriting and Texas Law", question:"Offering an incentive not stated in the policy is known as what?", choices:["Twisting","Rebating","Defamation","Commingling"], answer:"Rebating", explanation:"Rebating involves offering something of value not specified in the policy as an incentive." },
+  { unit:"Underwriting and Texas Law", question:"Using misleading information to replace an existing policy is called what?", choices:["Twisting","Rebating","Estoppel","Consideration"], answer:"Twisting", explanation:"Twisting is a deceptive replacement practice." },
+  { unit:"Insurance Fundamentals", question:"Which contract characteristic means one party writes the contract and the other accepts it as is?", choices:["Aleatory","Conditional","Adhesion","Unilateral"], answer:"Adhesion", explanation:"Insurance contracts are contracts of adhesion because the insurer writes the contract." },
+  { unit:"Insurance Fundamentals", question:"Which principle restores a person financially after a loss?", choices:["Estoppel","Indemnity","Waiver","Subrogation"], answer:"Indemnity", explanation:"Indemnity attempts to restore the insured financially after a covered loss." },
+  { unit:"Insurance Fundamentals", question:"When must insurable interest exist for a life insurance policy?", choices:["At death","At claim","At application/issue","At renewal"], answer:"At application/issue", explanation:"Insurable interest must exist when the policy is purchased/issued." },
+];
+
 const pasosRapidos = [
   { step:"Paso 0", title:"Aprende Fundamentos", description:"Entiende interés asegurable, indemnity, adhesion y contract law antes de policy types." },
   { step:"Paso 1", title:"Domina Policy Types", description:"Enfócate en Term, Whole Life, Universal y Variable Life primero." },
@@ -264,6 +295,19 @@ const cramCards = [
   ["Incontestability","Después de cierto período, limita disputas por misstatements."],
   ["Extended Term","Mayor cantidad de protección."],
   ["Reduced Paid-Up","Mayor duración de protección."],
+];
+
+const cramCardsEN = [
+  ["Adhesion","The insurer writes the contract; ambiguity favors the insured."],
+  ["Aleatory","Unequal exchange: small premium for a possible large benefit."],
+  ["Insurable Interest","Must exist when the policy is issued/purchased."],
+  ["Universal Life","Flexible premium and adjustable death benefit."],
+  ["Variable Life","Investment risk, separate account, securities license."],
+  ["Grace Period","Keeps the policy in force for a limited time after a late premium."],
+  ["Reinstatement","Restoring a lapsed policy after meeting requirements."],
+  ["Incontestability","After a certain period, limits disputes over misstatements."],
+  ["Extended Term","Largest amount of protection."],
+  ["Reduced Paid-Up","Longest duration of protection."],
 ];
 
 const deepDiveItemsES = [
@@ -414,7 +458,7 @@ function StatCard({ value, label }) {
 function MiniQuiz({ pregunta, respuestaSeleccionada, setRespuestaSeleccionada, t }) {
   return (
     <div className="rounded-3xl border border-slate-200 bg-slate-50 p-5">
-      <h3 className="mb-3 text-xl font-bold">Mini Quiz</h3>
+      <h3 className="mb-3 text-xl font-bold">{t("Mini Examen","Mini Quiz")}</h3>
       <p className="mb-4 font-semibold text-slate-800">{pregunta.question}</p>
       <div className="grid gap-3 md:grid-cols-2">
         {pregunta.choices.map((choice) => {
@@ -538,10 +582,18 @@ function PlataformaTexasLifeHealthEspanolEspejo() {
 
   const isLeccion   = tabActivo >= 1 && tabActivo <= lecciones.length;
   const leccionActiva = lecciones[tabActivo - 1] || lecciones[0];
-  const preguntaLeccion = useMemo(() => preguntasMock.find((p) => p.unit === (lecciones[tabActivo - 1] || lecciones[0]).unit) || preguntasMock[0], [tabActivo]);
-  const cramActual  = cramCards[cramIndex];
-  const unidadesExamen = ["Todas las Unidades", ...Array.from(new Set(preguntasMock.map((p) => p.unit)))];
-  const poolPreguntas  = useMemo(() => filtroExamen === "Todas las Unidades" ? preguntasMock : preguntasMock.filter((p) => p.unit === filtroExamen), [filtroExamen]);
+  const unitEN = { "Fundamentos del Seguro":"Insurance Fundamentals", "Tipos de Pólizas de Vida":"Life Insurance Policy Types", "Riders":"Riders", "Provisiones de Póliza":"Policy Provisions", "Opciones de Póliza":"Policy Options", "Disability Income":"Disability Income", "Medicare y Medicaid":"Medicare and Medicaid", "Underwriting y Ley de Texas":"Underwriting and Texas Law" };
+  const preguntasMockActual = window._libLang === 'es' ? preguntasMock : preguntasMockEN;
+  const unidadTodas = t("Todas las Unidades","All Units");
+  const preguntaLeccion = useMemo(() => {
+    const currentUnitEs = (lecciones[tabActivo - 1] || lecciones[0]).unit;
+    const currentUnit = window._libLang === 'es' ? currentUnitEs : (unitEN[currentUnitEs] || currentUnitEs);
+    return preguntasMockActual.find((p) => p.unit === currentUnit) || preguntasMockActual[0];
+  }, [tabActivo, window._libLang]);
+  const cramCardsActual = window._libLang === 'es' ? cramCards : cramCardsEN;
+  const cramActual  = cramCardsActual[cramIndex];
+  const unidadesExamen = [unidadTodas, ...Array.from(new Set(preguntasMockActual.map((p) => p.unit)))];
+  const poolPreguntas  = useMemo(() => (filtroExamen === "Todas las Unidades" || filtroExamen === "All Units") ? preguntasMockActual : preguntasMockActual.filter((p) => p.unit === filtroExamen), [filtroExamen, window._libLang]);
   const preguntaExamen = poolPreguntas[preguntaActual] || poolPreguntas[0];
   const score = respuestasExamen.filter((r) => r.isCorrect).length;
 
@@ -554,8 +606,8 @@ function PlataformaTexasLifeHealthEspanolEspejo() {
     if (preguntaActual + 1 >= poolPreguntas.length) setMostrarResultados(true);
     else setPreguntaActual(preguntaActual + 1);
   };
-  const siguienteCram = () => { setMostrarCram(false); setCramIndex((i) => (i + 1) % cramCards.length); };
-  const anteriorCram  = () => { setMostrarCram(false); setCramIndex((i) => (i - 1 + cramCards.length) % cramCards.length); };
+  const siguienteCram = () => { setMostrarCram(false); setCramIndex((i) => (i + 1) % cramCardsActual.length); };
+  const anteriorCram  = () => { setMostrarCram(false); setCramIndex((i) => (i - 1 + cramCardsActual.length) % cramCardsActual.length); };
 
   const startTour = () => { sessionStorage.setItem('tlh_consejos_shown','1'); setShowConsejos(false); setTourStep(0); setTabActivo(tourSteps[0].tab); };
   const tourNext  = () => {
@@ -703,7 +755,7 @@ function PlataformaTexasLifeHealthEspanolEspejo() {
         )}
 
         {tabActivo === TAB_REPASO && (
-          <RepasoRapidoView cramCards={cramCards} cramActual={cramActual} cramIndex={cramIndex} mostrarCram={mostrarCram} setMostrarCram={setMostrarCram} siguienteCram={siguienteCram} anteriorCram={anteriorCram} t={t} />
+          <RepasoRapidoView cramCards={cramCardsActual} cramActual={cramActual} cramIndex={cramIndex} mostrarCram={mostrarCram} setMostrarCram={setMostrarCram} siguienteCram={siguienteCram} anteriorCram={anteriorCram} t={t} />
         )}
 
         {tabActivo === TAB_MOCK && (
