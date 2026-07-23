@@ -372,7 +372,9 @@
       var heroBtn2 = document.querySelector('.hero-btn-2');
       if (heroBtn2 && heroBtn2.parentElement && !heroBtn2.parentElement.querySelector('.az-about-hero')) {
         var aboutHeroBtn = document.createElement('a');
-        aboutHeroBtn.href = '/about';
+        aboutHeroBtn.href = 'https://www.citizensinc.com/about/';
+        aboutHeroBtn.target = '_blank';
+        aboutHeroBtn.rel = 'noopener';
         aboutHeroBtn.className = 'hero-btn-2 az-about-hero';
         aboutHeroBtn.style.cssText = 'text-decoration:none!important;';
         aboutHeroBtn.innerHTML = '<span class="en">About Us</span><span class="es">Sobre Nosotros</span>';
