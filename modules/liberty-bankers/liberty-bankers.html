@@ -3249,11 +3249,9 @@ function openPdf(key, title){
   document.getElementById('pdf-pages').innerHTML='';
   logActivity('pdf',title);
   trackPdfView(key);
-  var b64=script.textContent.trim();
-  var binary=atob(b64);
-  var bytes=new Uint8Array(binary.length);
-  for(var i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);
-  pdfjsLib.getDocument({data:bytes}).promise.then(function(doc){
+  var raw=script.textContent.trim();
+  var _docSrc=raw.indexOf('http')===0?{url:raw}:(function(){var binary=atob(raw);var bytes=new Uint8Array(binary.length);for(var i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);return{data:bytes};})();
+  pdfjsLib.getDocument(_docSrc).promise.then(function(doc){
     document.getElementById('pdf-loading').style.display='none';
     document.getElementById('pdf-progress').style.display='block';
     document.getElementById('pdf-pages-scroll').style.display='block';
@@ -3282,11 +3280,16 @@ function openPdf(key, title){
     var sc=document.getElementById('pdf_'+_pdfCurrentKey);
     if(sc){
       try{
-        var b=atob(sc.textContent.trim());
-        var ba=new Uint8Array(b.length);
-        for(var i=0;i<b.length;i++)ba[i]=b.charCodeAt(i);
-        var blob=new Blob([ba],{type:'application/pdf'});
-        var burl=URL.createObjectURL(blob);
+        var scRaw=sc.textContent.trim();
+        var burl;
+        if(scRaw.indexOf('http')===0){burl=scRaw;}
+        else{
+          var b=atob(scRaw);
+          var ba=new Uint8Array(b.length);
+          for(var i=0;i<b.length;i++)ba[i]=b.charCodeAt(i);
+          var blob=new Blob([ba],{type:'application/pdf'});
+          burl=URL.createObjectURL(blob);
+        }
         document.getElementById('pdf-loading').style.display='none';
         document.getElementById('pdf-progress').style.display='none';
         document.getElementById('pdf-pages-scroll').style.display='block';
@@ -3537,8 +3540,19 @@ function showQuizResult(){
 function pdfDownloadDirect(key,title){
   var script=document.getElementById('pdf_'+key);
   if(!script){alert((window.LANG==='es'?'Archivo no disponible: ':'File not available: ')+key);return;}
-  var b64=script.textContent.trim();
-  var bin=atob(b64);var bytes=new Uint8Array(bin.length);
+  var raw=script.textContent.trim();
+  if(raw.indexOf('http')===0){
+    fetch(raw).then(function(r){return r.arrayBuffer();}).then(function(buf){
+      var blob=new Blob([buf],{type:'application/pdf'});
+      var url=URL.createObjectURL(blob);
+      var a=document.createElement('a');
+      a.href=url;a.download=(title||key)+'.pdf';
+      document.body.appendChild(a);a.click();
+      setTimeout(function(){URL.revokeObjectURL(url);document.body.removeChild(a);},1000);
+    }).catch(function(){window.open(raw,'_blank');});
+    return;
+  }
+  var bin=atob(raw);var bytes=new Uint8Array(bin.length);
   for(var i=0;i<bin.length;i++)bytes[i]=bin.charCodeAt(i);
   var blob=new Blob([bytes],{type:'application/pdf'});
   var url=URL.createObjectURL(blob);
