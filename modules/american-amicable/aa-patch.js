@@ -22,6 +22,12 @@
   const MODULE_ID = 'american-amicable';
   const PREFIX    = 'aa';
 
+  // The page calls applyLang() after re-rendering the quiz, but that function
+  // was never defined anywhere — every quiz render threw a ReferenceError.
+  // Language visibility is already handled via the [lang-en]/[lang-es] CSS
+  // attribute toggle, so this only needs to exist and not throw.
+  if (typeof window.applyLang !== 'function') window.applyLang = function () {};
+
   // Hide login screen + inject modern design overrides
   (function injectDesign() {
     const style = document.createElement('style');
@@ -222,7 +228,15 @@
       acts.appendChild(pill);
       window._azLang = function(lang) {
         document.querySelectorAll('.az-lang-btn').forEach(function(b) { b.classList.toggle('active', b.dataset.lang === lang); });
+        window.LANG = lang;
         if (window.setLang) window.setLang(lang);
+        // Force-refresh any open e-Training quiz: its question/option text is
+        // plain baked-in HTML (not .en/.es spans), so it only updates if
+        // loadQuiz() is re-run — relying solely on setLang()'s internal guard
+        // has proven unreliable, so re-render directly here too.
+        if (window.quizState && window.quizState.product && !window.quizState.submitted && typeof window.loadQuiz === 'function') {
+          window.loadQuiz();
+        }
       };
       document.querySelectorAll('.az-lang-btn').forEach(function(b) { b.classList.toggle('active', b.dataset.lang === (window.LANG === 'es' ? 'es' : 'en')); });
       var darkBtn = document.createElement('button');
