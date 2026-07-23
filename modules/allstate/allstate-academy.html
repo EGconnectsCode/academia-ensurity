@@ -4801,7 +4801,7 @@ function qzFinish(){
     ST.mods[QZ.modId]=true;
     addXP(modXP,LANG==='es'?'Prueba aprobada':'Test passed');
     save();renderMods();renderExams();syncCounts();
-    toast((LANG==='es'?'&#x1F3C6; +':'&#x1F3C6; +')+modXP+' XP — '+(LANG==='es'?'Prueba aprobada!':'Test passed!'),'ok');
+    toast('🏆 +'+modXP+' XP — '+(LANG==='es'?'Prueba aprobada!':'Test passed!'),'ok');
   }
 }
 
@@ -5001,7 +5001,7 @@ function markVidWatched(mid){
     save();
   }
   renderMods();
-  toast(LANG==='es'?'&#x2705; Video visto. Ya puedes tomar el examen!':'&#x2705; Video watched. You can now take the exam!','ok');
+  toast(LANG==='es'?'✅ Video visto. Ya puedes tomar el examen!':'✅ Video watched. You can now take the exam!','ok');
 }
 
 
