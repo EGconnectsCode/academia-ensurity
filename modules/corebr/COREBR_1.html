@@ -1541,10 +1541,15 @@ function renderQuestion(){
       +retakeBtn+'</div>';
     if(CUR_USER){
       ST.quizzes=ST.quizzes||{};
-      ST.quizzes[qState.module]={passed:passed,score:pct,date:Date.now()};
-      ST.xp=(ST.xp||0)+(passed?100:20);
-      saveST(CUR_USER.email,ST);
-      g('h-xp').textContent=ST.xp;
+      var alreadyDone=!!ST.quizzes[qState.module];
+      if(!alreadyDone){
+        var xpEarned=passed?100:20;
+        ST.quizzes[qState.module]={passed:passed,score:pct,date:Date.now()};
+        ST.xp=(ST.xp||0)+xpEarned;
+        saveST(CUR_USER.email,ST);
+        g('h-xp').textContent=ST.xp;
+        if(window.qzFinish)window.qzFinish(qState.module,pct,xpEarned);
+      }
     }
     return;
   }

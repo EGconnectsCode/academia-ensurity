@@ -73,6 +73,11 @@
       body.dark ::-webkit-scrollbar-thumb:hover { background:#475569!important; }
 
       .topbar, #topbar { background:var(--az-navy)!important; border-bottom:1px solid rgba(255,255,255,.07)!important; box-shadow:0 1px 8px rgba(0,0,0,.25)!important; height:54px!important; padding:0 16px!important; display:flex!important; align-items:center!important; gap:10px!important; justify-content:space-between!important; }
+      @media (max-width:1100px) {
+        /* Back/lang/dark/sign-out buttons injected here can overflow past the
+           visible topbar at laptop-narrow widths, making them unreachable. */
+        .topbar, #topbar { height:auto !important; min-height:54px !important; flex-wrap:wrap !important; padding:8px 16px !important; row-gap:6px !important; }
+      }
       @media (max-width:640px) {
         .topbar, #topbar { height:auto !important; min-height:54px !important; flex-wrap:wrap !important; padding:8px 10px !important; row-gap:6px !important; }
         .tb-greeting { display:none !important; }
