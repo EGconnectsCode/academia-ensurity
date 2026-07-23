@@ -1531,13 +1531,20 @@ body.dark #login-screen .auth-ctrl-btn{color:#e2e8f0!important}
 </style>
 <script>
 // Supabase Storage PDF download
-function dlFromUrl(url, fname) {
+function dlFromUrl(url, name, fname) {
   fetch(url).then(function(r){ return r.arrayBuffer(); }).then(function(buf){
     var blob = new Blob([buf], {type:'application/pdf'});
     var a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = fname + '.pdf';
+    a.download = (fname||name) + '.pdf';
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    if(ST.docs.indexOf(name)<0){
+      ST.docs.push(name);save();
+      addXP(10,LANG==='es'?'Documento descargado':'Document downloaded');
+      syncCounts();
+    }
+    if(window.trackDownload)trackDownload(name);
+    toast((LANG==='es'?'Descargando: ':'Downloading: ')+name,'ok');
   }).catch(function(){ window.open(url,'_blank'); });
 }
 </script>
@@ -3916,7 +3923,7 @@ function toggleDark(){
 function dl(name,key,fname){
   var dataEl=key?el('pdf_'+key):null;
   var b64=dataEl?dataEl.textContent.trim():null;
-  if(b64&&b64.startsWith('https://')){dlFromUrl(b64,(fname||name));return;}
+  if(b64&&b64.startsWith('https://')){dlFromUrl(b64,name,fname);return;}
   if(b64&&b64.length>100){
     try{
       var bin=atob(b64);
@@ -3934,6 +3941,7 @@ function dl(name,key,fname){
         addXP(10,LANG==='es'?'Documento descargado':'Document downloaded');
         syncCounts();
       }
+      if(window.trackDownload)trackDownload(name);
       toast((LANG==='es'?'Descargando: ':'Downloading: ')+name,'ok');
     }catch(e){
       window.open('https://enroll.natgenhealth.com/downloads','_blank');

@@ -721,19 +721,37 @@
     const session = await AZ.Auth.getSession();
     if (!session) return;
     await AZ.Downloads.record(session.user.id, MODULE_ID, fileName);
+    await AZ.Activity.log(MODULE_ID, 'download', { file: fileName });
+    await AZ.db.rpc('increment_xp', { user_id: session.user.id, amount: 10 });
   };
 
   // ════════════════════════════════════════════════
   //  7. OVERRIDE QUIZ COMPLETION
   // ════════════════════════════════════════════════
+  // NOTE: the page's own qzFinish() takes no arguments — it reads state from
+  // the global QZ/MODULES objects instead. Read the same state here rather
+  // than relying on call-site params (which are always undefined).
   const _origFinishQuiz = window.qzFinish || window.finishQuiz;
-  window.qzFinish = async function (mid, score, xpEarned) {
-    if (_origFinishQuiz) _origFinishQuiz.call(this, mid, score, xpEarned);
+  window.qzFinish = async function () {
+    if (_origFinishQuiz) _origFinishQuiz.call(this);
     const session = await AZ.Auth.getSession();
     if (!session) return;
     try {
-      await AZ.Progress.complete(session.user.id, MODULE_ID, mid, score, xpEarned || 0);
-      await AZ.Activity.log(MODULE_ID, 'quiz_complete', { quiz: mid, score });
+      const QZ = window.QZ;
+      const mid = QZ && QZ.modId;
+      if (!mid) return;
+      const n = QZ.questions.length;
+      const pct = Math.round((QZ.score / n) * 100);
+      const passed = pct >= 80;
+      let modXP = 50;
+      if (window.MODULES) {
+        for (let i = 0; i < window.MODULES.length; i++) {
+          if (window.MODULES[i].id === mid) { modXP = window.MODULES[i].xp; break; }
+        }
+      }
+      const xpEarned = passed ? modXP : 0;
+      await AZ.Progress.complete(session.user.id, MODULE_ID, mid, pct, xpEarned);
+      await AZ.Activity.log(MODULE_ID, 'quiz_complete', { quiz: mid, score: pct });
     } catch (e) { console.warn('[AHS Patch] qzFinish error:', e.message); }
   };
 

@@ -263,20 +263,29 @@
       // ── Add step numbers + arrows to training tabs ──
       var etTabs = document.querySelectorAll('#page-etraining .os-tabs-bar .os-tab');
       etTabs.forEach(function(tab, i) {
-        var originalText = tab.textContent.trim()
-          .replace(/[\u{1F000}-\u{1FFFF}\u{2600}-\u{27FF}\u{2700}-\u{27BF}\u{FE00}-\u{FE0F}]|️/gu, '').trim();
+        var stripEmoji = function (s) {
+          return s.trim().replace(/[\u{1F000}-\u{1FFFF}\u{2600}-\u{27FF}\u{2700}-\u{27BF}\u{FE00}-\u{FE0F}]|️/gu, '').trim();
+        };
+        var enSpan = tab.querySelector('.en');
+        var esSpan = tab.querySelector('.es');
+        var enText = stripEmoji(enSpan ? enSpan.textContent : tab.textContent);
+        var esText = stripEmoji(esSpan ? esSpan.textContent : enText);
         tab.innerHTML = '';
         var stepNum = document.createElement('span');
         stepNum.className = 'az-et-step-num';
         stepNum.textContent = i + 1;
-        var label = document.createElement('span');
-        label.className = 'az-et-label';
-        label.textContent = originalText;
+        var labelEn = document.createElement('span');
+        labelEn.className = 'az-et-label en';
+        labelEn.textContent = enText;
+        var labelEs = document.createElement('span');
+        labelEs.className = 'az-et-label es';
+        labelEs.textContent = esText;
         var arrow = document.createElement('span');
         arrow.className = 'az-et-arrow';
         arrow.textContent = '→';
         tab.appendChild(stepNum);
-        tab.appendChild(label);
+        tab.appendChild(labelEn);
+        tab.appendChild(labelEs);
         tab.appendChild(arrow);
       });
     });
