@@ -1972,8 +1972,8 @@ function loadQuiz(){
     html+='<div class="quiz-qtext"><span style="color:var(--c2);font-weight:700">'+(i+1)+'.</span> '+item.q+'</div>';
     html+='<div class="quiz-opts">';
     item.o.forEach(function(opt,j){
-      html+='<label class="quiz-opt" id="qo-'+i+'-'+j+'">';
-      html+='<input type="radio" name="q'+i+'" value="'+j+'" onchange="selectAns('+i+','+j+')" style="display:none">';
+      html+='<label class="quiz-opt" id="qo-'+i+'-'+j+'" onclick="document.getElementById(\'qi-'+i+'-'+j+'\').checked=true;selectAns('+i+','+j+')">';
+      html+='<input type="radio" id="qi-'+i+'-'+j+'" name="q'+i+'" value="'+j+'" onchange="selectAns('+i+','+j+')" style="display:none">';
       html+='<span class="quiz-opt-letter">'+['A','B','C','D'][j]+'</span>';
       html+='<span class="quiz-opt-text">'+opt+'</span>';
       html+='</label>';
@@ -2002,6 +2002,12 @@ function submitQuiz(){
   var data=(LANG==='es'&&ET_QUIZZES_ES[quizState.product])?ET_QUIZZES_ES[quizState.product]:ET_QUIZZES[quizState.product];
   if(!data)return;
   var total=data.q.length;
+  // Re-sync from the actual DOM in case quizState.answers drifted out of sync
+  // with what's visually selected (e.g. a change event that didn't register).
+  document.querySelectorAll('#quiz-container input[type="radio"]:checked').forEach(function(inp){
+    var m=/^q(\d+)$/.exec(inp.name);
+    if(m) quizState.answers[parseInt(m[1],10)]=parseInt(inp.value,10);
+  });
   var answered=Object.keys(quizState.answers).length;
   if(answered<total){
     alert(LANG==='es'?('Por favor responde las '+total+' preguntas antes de enviar.'):('Please answer all '+total+' questions before submitting.'));
