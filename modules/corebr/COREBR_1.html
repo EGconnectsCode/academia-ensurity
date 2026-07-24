@@ -18,7 +18,12 @@
 body.dark{
   --bg:#0a1520;--txt:#d0e8f8;--tx:#d0e8f8;--tx2:#7aaac8;--tx3:#4a7a9a;
   --sb-bg:#020d18;--sur:#0f1e30;--sur2:#142030;--bdr:#1a3050;
+  --cb-blue:#6bb0e8;--cb-navy:#9fc8ec;--cb-purple:#c4a3e8;--cb-light:#16324f;
 }
+/* --cb-light is a near-white hover tint meant for a light background — in
+   dark mode it stayed white while the text sitting on it (var(--tx), also
+   light) never changed, so hovering a quiz option (or any *-card) turned
+   both text and background white/near-white at once, hiding the content. */
 body{font-family:"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--txt);display:flex;height:100vh;overflow:hidden;font-size:14px}
 #app{display:none;width:100%;height:100vh;overflow:hidden;flex-direction:row}
 #app.visible{display:flex}
@@ -1205,12 +1210,13 @@ function stTab(id){
 function etTab(id){
   document.querySelectorAll('.et-section').forEach(function(s){s.style.display='none';});
   document.querySelectorAll('.et-tab').forEach(function(b){
+    b.classList.remove('active');
     b.style.background='var(--sur2)';b.style.color='var(--tx)';
   });
   var sec=document.getElementById('etsec-'+id);
   if(sec)sec.style.display='block';
   var btn=document.getElementById('ettab-'+id);
-  if(btn){btn.style.background='var(--cb-blue)';btn.style.color='#fff';}
+  if(btn){btn.classList.add('active');btn.style.background='var(--cb-blue)';btn.style.color='#fff';}
   if(id==='quiz')loadQuiz('products');
 }
 

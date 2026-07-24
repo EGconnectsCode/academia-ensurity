@@ -22,6 +22,7 @@
 body.dark{
   --bg:#0a1520;--tx:#d0e8f8;--tx2:#7aaac8;--tx3:#4a7a9a;
   --sur:#0f1e30;--sur2:#142030;--bdr:#1a3050;
+  --gtl-blue:#6bb0e8;--gtl-navy:#9fc8ec;--gtl-teal:#7fd4f5;--gtl-light:#16324f;
 }
 body{font-family:"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--tx);display:flex;height:100vh;overflow:hidden;font-size:14px;}
 #app{display:none;width:100%;height:100vh;overflow:hidden;flex-direction:row}
@@ -4335,6 +4336,20 @@ html[data-lang="es"] .es{display:inline}
         function gfGetSel(id){
           return Array.from(document.querySelectorAll('.gf-cb[data-ms="'+id+'"]:checked')).map(function(c){return c.value;});
         }
+        var GF_CATEGORY_ES={
+          'Miscellaneous Forms':'Formularios Varios',
+          'Infographic Flyer':'Folleto Infográfico',
+          'Brochure':'Folleto',
+          'Rates':'Tarifas',
+          'Underwriting Guidelines Forms':'Formularios de Guías de Suscripción',
+          "Medicare Buyer's Guides":'Guías del Comprador de Medicare',
+          'Application':'Solicitud',
+          'AppPack or FormsPack':'Paquete de Solicitud o Formularios',
+          'Replacement-A&H Life':'Reemplazo — Vida A&H',
+          'Outline of Coverage':'Resumen de Cobertura',
+          'Required':'Requerido',
+          'Product Flyer':'Folleto del Producto'
+        };
         function gfSearch(){
           var st=gfGetSel('ms-st'),pr=gfGetSel('ms-pr'),op=gfGetSel('ms-op');
           var allSt=!st.length||st.includes('ALL'),allPr=!pr.length||pr.includes('ALL'),allOp=!op.length||op.includes('ALL');
@@ -4356,19 +4371,20 @@ html[data-lang="es"] .es{display:inline}
           var byState={};
           rows.forEach(function(r){(byState[r[1]]=byState[r[1]]||[]).push(r);});
           var stateCount=Object.keys(byState).length;
-          var html='<div style="font-size:12px;color:#546e7a;margin-bottom:10px;padding:2px 0;">'+rows.length+' form(s) found across '+stateCount+' state(s)</div>';
+          var _es=window.LANG==='es';
+          var html='<div style="font-size:12px;color:#546e7a;margin-bottom:10px;padding:2px 0;">'+(_es?(rows.length+' formulario(s) encontrado(s) en '+stateCount+' estado(s)'):(rows.length+' form(s) found across '+stateCount+' state(s)'))+'</div>';
           Object.keys(byState).sort().forEach(function(state){
             var stateForms=byState[state];
             html+='<div style="background:var(--sur);border:1px solid var(--bdr);border-radius:10px;margin-bottom:10px;overflow:hidden;">'
-              +'<div style="background:var(--gtl-navy);color:#fff;padding:7px 14px;font-size:13px;font-weight:700;">'+state+' <span style="font-weight:400;opacity:.75;font-size:11px;">('+stateForms.length+' form'+(stateForms.length>1?'s':'')+')</span></div>'
+              +'<div style="background:var(--gtl-navy);color:#fff;padding:7px 14px;font-size:13px;font-weight:700;">'+state+' <span style="font-weight:400;opacity:.75;font-size:11px;">('+stateForms.length+' '+(_es?'formulario'+(stateForms.length>1?'s':''):'form'+(stateForms.length>1?'s':''))+')</span></div>'
               +'<div style="padding:8px 14px;">';
             stateForms.forEach(function(r){
               html+='<div style="display:flex;align-items:flex-start;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--bdr);gap:10px;">'
                 +'<div style="flex:1;min-width:0;">'
                   +'<div style="font-size:12px;font-weight:600;color:var(--txt);line-height:1.4;">'+r[2]+'</div>'
-                  +'<div style="font-size:11px;color:#546e7a;margin-top:2px;">'+r[0]+' &nbsp;·&nbsp; '+r[4]+'</div>'
+                  +'<div style="font-size:11px;color:#546e7a;margin-top:2px;">'+r[0]+' &nbsp;·&nbsp; '+(_es?(GF_CATEGORY_ES[r[4]]||r[4]):r[4])+'</div>'
                 +'</div>'
-                +'<a href="'+r[3]+'" target="_blank" style="flex-shrink:0;background:#1565c0;color:#fff;text-decoration:none;border-radius:6px;padding:5px 12px;font-size:11px;font-weight:700;white-space:nowrap;">&#11015; Download</a>'
+                +'<a href="'+r[3]+'" target="_blank" style="flex-shrink:0;background:#1565c0;color:#fff;text-decoration:none;border-radius:6px;padding:5px 12px;font-size:11px;font-weight:700;white-space:nowrap;">&#11015; '+(_es?'Descargar':'Download')+'</a>'
               +'</div>';
             });
             html+='</div></div>';
@@ -4537,19 +4553,19 @@ html[data-lang="es"] .es{display:inline}
           <div class="section-title">📢 <span class="en">Marketing Materials</span><span class="es">Materiales de Marketing</span></div>
           <div class="pdf-grid">
             <div class="pdf-card" onclick="window.open('https://gtlink.gtlic.com/default.aspx?AgentCode=wntFxo2sOOAId+7M2wKlkg==','_blank')"><div class="pdf-ico">🌐</div><div><div class="pdf-name"><span class="en">Sales Brochures, Rates &amp; Applications</span><span class="es">Folletos de Ventas, Tarifas y Solicitudes</span></div><div class="pdf-dl"><span class="en">↗ Open Portal</span><span class="es">↗ Abrir Portal</span></div></div></div>
-            <div class="pdf-card" onclick="window.open('http://software.gtlic.com/Brochures/Order_Form_AC_AP.pdf','_blank')"><div class="pdf-ico">📄</div><div><div class="pdf-name"><span class="en">Advantage Plus &amp; 24 Hr Supply Order Form</span><span class="es">Formulario de Pedido Advantage Plus y 24 Hr</span></div><div class="pdf-dl"><span class="en">📥 Download</span><span class="es">📥 Descargar</span></div></div></div>
-            <div class="pdf-card" onclick="window.open('http://software.gtlic.com/Brochures/Order_Form_HHC.pdf','_blank')"><div class="pdf-ico">📄</div><div><div class="pdf-name"><span class="en">Short-Term Home Health Care Supply Order Form</span><span class="es">Formulario de Pedido de Cuidado de Salud en el Hogar a Corto Plazo</span></div><div class="pdf-dl"><span class="en">📥 Download</span><span class="es">📥 Descargar</span></div></div></div>
-            <div class="pdf-card" onclick="window.open('http://software.gtlic.com/Brochures/Order_Form_C2.pdf','_blank')"><div class="pdf-ico">📄</div><div><div class="pdf-name"><span class="en">Cancer Heart Attack &amp; Stroke Supply Order Form</span><span class="es">Formulario de Pedido de Cáncer, Ataque Cardíaco y Derrame</span></div><div class="pdf-dl"><span class="en">📥 Download</span><span class="es">📥 Descargar</span></div></div></div>
-            <div class="pdf-card" onclick="window.open('http://software.gtlic.com/Brochures/Order_Form_CC.pdf','_blank')"><div class="pdf-ico">📄</div><div><div class="pdf-name"><span class="en">Critical CASH Supply Order Form</span><span class="es">Formulario de Pedido Critical CASH</span></div><div class="pdf-dl"><span class="en">📥 Download</span><span class="es">📥 Descargar</span></div></div></div>
-            <div class="pdf-card" onclick="window.open('http://software.gtlic.com/Brochures/Order_Form_MS.pdf','_blank')"><div class="pdf-ico">📄</div><div><div class="pdf-name"><span class="en">Medicare Supplement Supply Order Form</span><span class="es">Formulario de Pedido de Medicare Supplement</span></div><div class="pdf-dl"><span class="en">📥 Download</span><span class="es">📥 Descargar</span></div></div></div>
-            <div class="pdf-card" onclick="window.open('http://software.gtlic.com/Brochures/Order_Form_RC.pdf','_blank')"><div class="pdf-ico">📄</div><div><div class="pdf-name"><span class="en">Recover Cash Supply Order Form</span><span class="es">Formulario de Pedido Recover Cash</span></div><div class="pdf-dl"><span class="en">📥 Download</span><span class="es">📥 Descargar</span></div></div></div>
+            <div class="pdf-card" onclick="openExternalPdf('http://software.gtlic.com/Brochures/Order_Form_AC_AP.pdf','Advantage Plus & 24 Hr Supply Order Form')"><div class="pdf-ico">📄</div><div><div class="pdf-name"><span class="en">Advantage Plus &amp; 24 Hr Supply Order Form</span><span class="es">Formulario de Pedido Advantage Plus y 24 Hr</span></div><div class="pdf-dl"><span class="en">📥 Download</span><span class="es">📥 Descargar</span></div></div></div>
+            <div class="pdf-card" onclick="openExternalPdf('http://software.gtlic.com/Brochures/Order_Form_HHC.pdf','Short-Term Home Health Care Supply Order Form')"><div class="pdf-ico">📄</div><div><div class="pdf-name"><span class="en">Short-Term Home Health Care Supply Order Form</span><span class="es">Formulario de Pedido de Cuidado de Salud en el Hogar a Corto Plazo</span></div><div class="pdf-dl"><span class="en">📥 Download</span><span class="es">📥 Descargar</span></div></div></div>
+            <div class="pdf-card" onclick="openExternalPdf('http://software.gtlic.com/Brochures/Order_Form_C2.pdf','Cancer Heart Attack & Stroke Supply Order Form')"><div class="pdf-ico">📄</div><div><div class="pdf-name"><span class="en">Cancer Heart Attack &amp; Stroke Supply Order Form</span><span class="es">Formulario de Pedido de Cáncer, Ataque Cardíaco y Derrame</span></div><div class="pdf-dl"><span class="en">📥 Download</span><span class="es">📥 Descargar</span></div></div></div>
+            <div class="pdf-card" onclick="openExternalPdf('http://software.gtlic.com/Brochures/Order_Form_CC.pdf','Critical CASH Supply Order Form')"><div class="pdf-ico">📄</div><div><div class="pdf-name"><span class="en">Critical CASH Supply Order Form</span><span class="es">Formulario de Pedido Critical CASH</span></div><div class="pdf-dl"><span class="en">📥 Download</span><span class="es">📥 Descargar</span></div></div></div>
+            <div class="pdf-card" onclick="openExternalPdf('http://software.gtlic.com/Brochures/Order_Form_MS.pdf','Medicare Supplement Supply Order Form')"><div class="pdf-ico">📄</div><div><div class="pdf-name"><span class="en">Medicare Supplement Supply Order Form</span><span class="es">Formulario de Pedido de Medicare Supplement</span></div><div class="pdf-dl"><span class="en">📥 Download</span><span class="es">📥 Descargar</span></div></div></div>
+            <div class="pdf-card" onclick="openExternalPdf('http://software.gtlic.com/Brochures/Order_Form_RC.pdf','Recover Cash Supply Order Form')"><div class="pdf-ico">📄</div><div><div class="pdf-name"><span class="en">Recover Cash Supply Order Form</span><span class="es">Formulario de Pedido Recover Cash</span></div><div class="pdf-dl"><span class="en">📥 Download</span><span class="es">📥 Descargar</span></div></div></div>
           </div>
         </div>
 
         <div class="section-wrap">
           <div class="section-title">🎓 <span class="en">Training &amp; Support</span><span class="es">Entrenamiento y Soporte</span></div>
           <div class="pdf-grid">
-            <div class="pdf-card" onclick="window.open('http://software.gtlic.com/Brochures/E_App_Guide.pdf','_blank')"><div class="pdf-ico">📖</div><div><div class="pdf-name"><span class="en">E-App User Guide</span><span class="es">Guía del Usuario E-App</span></div><div class="pdf-dl"><span class="en">📥 Download</span><span class="es">📥 Descargar</span></div></div></div>
+            <div class="pdf-card" onclick="openExternalPdf('http://software.gtlic.com/Brochures/E_App_Guide.pdf','E-App User Guide')"><div class="pdf-ico">📖</div><div><div class="pdf-name"><span class="en">E-App User Guide</span><span class="es">Guía del Usuario E-App</span></div><div class="pdf-dl"><span class="en">📥 Download</span><span class="es">📥 Descargar</span></div></div></div>
             <div class="pdf-card" onclick="openContactModal()"><div class="pdf-ico">📞</div><div><div class="pdf-name"><span class="en">Sales Support: (800) 323-6907</span><span class="es">Soporte de Ventas: (800) 323-6907</span></div><div class="pdf-dl"><span class="en">agency@gtlic.com · Click to view hours</span><span class="es">agency@gtlic.com · Haz clic para ver horarios</span></div></div></div>
           </div>
         </div>
@@ -4557,10 +4573,10 @@ html[data-lang="es"] .es{display:inline}
         <div class="section-wrap">
           <div class="section-title">ℹ️ <span class="en">Agent Information</span><span class="es">Información del Agente</span></div>
           <div class="pdf-grid">
-            <div class="pdf-card" onclick="window.open('http://software.gtlic.com/Brochures/Submit_New_Business.pdf','_blank')"><div class="pdf-ico">📄</div><div><div class="pdf-name"><span class="en">How to Submit New Business</span><span class="es">Cómo Enviar Nuevos Negocios</span></div><div class="pdf-dl"><span class="en">📥 Download</span><span class="es">📥 Descargar</span></div></div></div>
-            <div class="pdf-card" onclick="window.open('http://software.gtlic.com/Brochures/2011_GTL_Advertising_Guidelines.pdf','_blank')"><div class="pdf-ico">📄</div><div><div class="pdf-name"><span class="en">Advertising Guidelines</span><span class="es">Lineamientos de Publicidad</span></div><div class="pdf-dl"><span class="en">📥 Download</span><span class="es">📥 Descargar</span></div></div></div>
-            <div class="pdf-card" onclick="window.open('http://software.gtlic.com/Brochures/Amendment_Procedures.pdf','_blank')"><div class="pdf-ico">📄</div><div><div class="pdf-name"><span class="en">New Business Amendment Procedures</span><span class="es">Procedimientos de Enmienda de Nuevos Negocios</span></div><div class="pdf-dl"><span class="en">📥 Download</span><span class="es">📥 Descargar</span></div></div></div>
-            <div class="pdf-card" onclick="window.open('http://software.gtlic.com/Brochures/Privacy_Policy.pdf','_blank')"><div class="pdf-ico">📄</div><div><div class="pdf-name"><span class="en">Privacy Policy</span><span class="es">Política de Privacidad</span></div><div class="pdf-dl"><span class="en">📥 Download</span><span class="es">📥 Descargar</span></div></div></div>
+            <div class="pdf-card" onclick="openExternalPdf('http://software.gtlic.com/Brochures/Submit_New_Business.pdf','How to Submit New Business')"><div class="pdf-ico">📄</div><div><div class="pdf-name"><span class="en">How to Submit New Business</span><span class="es">Cómo Enviar Nuevos Negocios</span></div><div class="pdf-dl"><span class="en">📥 Download</span><span class="es">📥 Descargar</span></div></div></div>
+            <div class="pdf-card" onclick="openExternalPdf('http://software.gtlic.com/Brochures/2011_GTL_Advertising_Guidelines.pdf','Advertising Guidelines')"><div class="pdf-ico">📄</div><div><div class="pdf-name"><span class="en">Advertising Guidelines</span><span class="es">Lineamientos de Publicidad</span></div><div class="pdf-dl"><span class="en">📥 Download</span><span class="es">📥 Descargar</span></div></div></div>
+            <div class="pdf-card" onclick="openExternalPdf('http://software.gtlic.com/Brochures/Amendment_Procedures.pdf','New Business Amendment Procedures')"><div class="pdf-ico">📄</div><div><div class="pdf-name"><span class="en">New Business Amendment Procedures</span><span class="es">Procedimientos de Enmienda de Nuevos Negocios</span></div><div class="pdf-dl"><span class="en">📥 Download</span><span class="es">📥 Descargar</span></div></div></div>
+            <div class="pdf-card" onclick="openExternalPdf('http://software.gtlic.com/Brochures/Privacy_Policy.pdf','Privacy Policy')"><div class="pdf-ico">📄</div><div><div class="pdf-name"><span class="en">Privacy Policy</span><span class="es">Política de Privacidad</span></div><div class="pdf-dl"><span class="en">📥 Download</span><span class="es">📥 Descargar</span></div></div></div>
             <div class="pdf-card" onclick="openVerifPdf()"><div class="pdf-ico">📄</div><div><div class="pdf-name"><span class="en">Verification Call Information</span><span class="es">Información de Llamada de Verificación</span></div><div class="pdf-dl"><span class="en">📄 View / Download</span><span class="es">📄 Ver / Descargar</span></div></div></div>
           </div>
         </div>
@@ -4616,6 +4632,8 @@ window.setLang=function(l){
   var lb=g('tb-lang-lbl');if(lb)lb.textContent=(l==='en')?'ES':'EN';
   var pb=g('pre-lang-lbl');if(pb)pb.textContent=(l==='en')?'ES':'EN';
   document.querySelectorAll('.gf-ms-search input[data-ph-en]').forEach(function(inp){inp.placeholder=(l==='es')?inp.dataset.phEs:inp.dataset.phEn;});
+  var cmSel=g('cm-select');if(cmSel&&cmSel.value&&typeof cmLoad==='function')cmLoad(cmSel.value);
+  if(typeof gfSearch==='function')gfSearch();
 };
 window.toggleLang=function(){var cur=document.documentElement.getAttribute('data-lang')||'en';window.setLang(cur==='en'?'es':'en');};
 function toggleDark(){document.body.classList.toggle('dark');try{localStorage.setItem('cb_dark',document.body.classList.contains('dark')?'1':'0');localStorage.setItem('az_theme',document.body.classList.contains('dark')?'dark':'light');}catch(e){}}
@@ -4745,6 +4763,26 @@ var CM_DATA={
     {a:'CONSUMER',t:'Product Video',u:'https://vimeo.com/252775599',p:1},
   ],
 };
+var CM_LABEL_ES={
+  '8.5x11 Flyer':'Folleto 8.5x11',
+  'Digital Brochure':'Folleto Digital',
+  'Product Video':'Video del Producto',
+  'Infographic':'Infografía',
+  'Postcard (fillable)':'Postal (rellenable)',
+  'Guaranteed Issue Age Map and Flyer':'Mapa de Edades de Emisión Garantizada y Folleto',
+  'Client Presentation':'Presentación para el Cliente',
+  'Agent Fillable Postcard':'Postal Rellenable para Agente',
+  'Agent_Fillable_Postcard':'Postal Rellenable para Agente',
+  'Video How to File a Claim':'Video: Cómo Presentar un Reclamo',
+  'Caregiver Infographic':'Infografía para Cuidadores',
+  'Infographic (fillable)':'Infografía (rellenable)',
+  'Infographic for states GA,MD,PA,TN,TX,VT':'Infografía para los estados GA,MD,PA,TN,TX,VT',
+  'Why Cancer Infographic':'Infografía: Por Qué Cáncer',
+  'Digital Brochure_FL':'Folleto Digital (FL)',
+  'Message From TGen Video':'Video: Mensaje de TGen',
+  'Digital Brochure_CT':'Folleto Digital (CT)',
+  'Infographic Colorado Only':'Infografía Solo Colorado'
+};
 function cmLoad(product){
   var items=CM_DATA[product];
   document.getElementById('cm-empty').style.display='none';
@@ -4752,17 +4790,19 @@ function cmLoad(product){
   document.getElementById('cm-product-title').textContent=product;
   var grid=document.getElementById('cm-grid');
   if(!items||!items.length){grid.innerHTML='<p style="color:var(--tx2);font-size:12px;">No materials found.</p>';return;}
+  var es=window.LANG==='es';
   var h='';
   for(var i=0;i<items.length;i++){
     var item=items[i];
     var icon=item.p?'&#9654;':'&#11015;';
-    var lbl=item.p?'Play':'Download';
+    var lbl=item.p?(es?'Reproducir':'Play'):(es?'Descargar':'Download');
+    var title=es?(CM_LABEL_ES[item.t]||item.t):item.t;
     var barCls=item.p?'cm-bar-play':'cm-bar-dl';
     var safeUrl=item.u.replace(/'/g,"&#39;");
     h+='<div class="cm-card" onclick="window.open(\''+safeUrl+'\',\'_blank\')">'+
        '<div class="cm-card-top">'+
        '<div class="cm-card-aud">'+item.a+'</div>'+
-       '<div class="cm-card-title">'+item.t+'</div>'+
+       '<div class="cm-card-title">'+title+'</div>'+
        '</div>'+
        '<div class="cm-card-bar '+barCls+'">'+
        '<span class="cm-bar-label">'+lbl+'</span>'+
@@ -4884,6 +4924,27 @@ function dl(name,key,fname){
     }
     renderPdfPages(arr);
   }catch(e){alert('Viewer error: '+e);}
+}
+function openExternalPdf(url,name){
+  g('pdf-modal-title').textContent=name;g('pdf-modal').classList.add('open');
+  document.body.style.overflow='hidden';
+  g('pdf-loading').style.display='flex';g('pdf-loading').innerHTML=(window.LANG==='es'?'⏳ Cargando documento...':'⏳ Loading document...');
+  g('pdf-pages-scroll').style.display='none';g('pdf-progress').style.display='none';g('pdf-pages').innerHTML='';
+  fetch(url).then(function(r){return r.arrayBuffer();}).then(function(buf){
+    var arr=new Uint8Array(buf);
+    var blob=new Blob([arr],{type:'application/pdf'});
+    _pdfBlob=blob;_pdfBlobUrl=URL.createObjectURL(blob);_pdfName=name+'.pdf';
+    if(CUR_USER){
+      ST.downloads=(ST.downloads||0)+1;ST.xp=(ST.xp||0)+10;saveST(CUR_USER.email,ST);
+      var act=getActivity(CUR_USER.email);act.downloads.push({name:name,date:new Date().toLocaleString()});
+      saveActivity(CUR_USER.email,act);g('h-dls').textContent=ST.downloads;g('h-xp').textContent=ST.xp;
+      g('sb-level').textContent=getLevel(ST.xp)+' · '+ST.xp+' XP';
+    }
+    renderPdfPages(arr);
+  }).catch(function(){
+    g('pdf-loading').innerHTML='<span style="color:#fca5a5">⚠ '+(window.LANG==='es'?'No se pudo cargar el documento.':'Could not load the document.')+'<br><small style="opacity:.7">'+(window.LANG==='es'?'Se abrirá en una pestaña nueva.':'It will open in a new tab instead.')+'</small></span>';
+    setTimeout(function(){window.open(url,'_blank');closePdfModal();},1600);
+  });
 }
 function dlStateChart(){
   var tag=document.getElementById('pdf_state_approval_chart');
@@ -5469,8 +5530,19 @@ function openVerifPdf(){
     var arr=new Uint8Array(bin.length);
     for(var i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);
     var blob=new Blob([arr],{type:'application/pdf'});
-    var url=URL.createObjectURL(blob);
-    window.open(url,'_blank');
+    var name='Verification Call Information';
+    _pdfBlob=blob;_pdfBlobUrl=URL.createObjectURL(blob);_pdfName=name+'.pdf';
+    g('pdf-modal-title').textContent=name;g('pdf-modal').classList.add('open');
+    document.body.style.overflow='hidden';
+    g('pdf-loading').style.display='none';g('pdf-pages-scroll').style.display='none';
+    g('pdf-progress').style.display='none';g('pdf-pages').innerHTML='';
+    if(CUR_USER){
+      ST.downloads=(ST.downloads||0)+1;ST.xp=(ST.xp||0)+10;saveST(CUR_USER.email,ST);
+      var act=getActivity(CUR_USER.email);act.downloads.push({name:name,date:new Date().toLocaleString()});
+      saveActivity(CUR_USER.email,act);g('h-dls').textContent=ST.downloads;g('h-xp').textContent=ST.xp;
+      g('sb-level').textContent=getLevel(ST.xp)+' · '+ST.xp+' XP';
+    }
+    renderPdfPages(arr);
   }catch(e){alert('Error opening PDF: '+e.message);}
 }
 </script>

@@ -585,6 +585,17 @@ function PlataformaTexasLifeHealthEspanolEspejo() {
   const unitEN = { "Fundamentos del Seguro":"Insurance Fundamentals", "Tipos de Pólizas de Vida":"Life Insurance Policy Types", "Riders":"Riders", "Provisiones de Póliza":"Policy Provisions", "Opciones de Póliza":"Policy Options", "Disability Income":"Disability Income", "Medicare y Medicaid":"Medicare and Medicaid", "Underwriting y Ley de Texas":"Underwriting and Texas Law" };
   const preguntasMockActual = window._libLang === 'es' ? preguntasMock : preguntasMockEN;
   const unidadTodas = t("Todas las Unidades","All Units");
+  const unitES = useMemo(() => { const rev = {}; Object.keys(unitEN).forEach((es) => { rev[unitEN[es]] = es; }); return rev; }, []);
+  // filtroExamen stores whatever language's unit label was selected in the
+  // dropdown. On a language toggle it goes stale (e.g. still the Spanish
+  // name while everything else is now English), and preguntasMockActual
+  // filters against it and comes back empty, so preguntaExamen becomes
+  // undefined and the exam view crashes to a blank screen. Always resolve
+  // it to the current language's equivalent before using it.
+  const filtroExamenActual = useMemo(() => {
+    if (filtroExamen === unidadTodas || filtroExamen === "Todas las Unidades" || filtroExamen === "All Units") return unidadTodas;
+    return window._libLang === 'es' ? (unitES[filtroExamen] || filtroExamen) : (unitEN[filtroExamen] || filtroExamen);
+  }, [filtroExamen, window._libLang]);
   const preguntaLeccion = useMemo(() => {
     const currentUnitEs = (lecciones[tabActivo - 1] || lecciones[0]).unit;
     const currentUnit = window._libLang === 'es' ? currentUnitEs : (unitEN[currentUnitEs] || currentUnitEs);
@@ -593,7 +604,7 @@ function PlataformaTexasLifeHealthEspanolEspejo() {
   const cramCardsActual = window._libLang === 'es' ? cramCards : cramCardsEN;
   const cramActual  = cramCardsActual[cramIndex];
   const unidadesExamen = [unidadTodas, ...Array.from(new Set(preguntasMockActual.map((p) => p.unit)))];
-  const poolPreguntas  = useMemo(() => (filtroExamen === "Todas las Unidades" || filtroExamen === "All Units") ? preguntasMockActual : preguntasMockActual.filter((p) => p.unit === filtroExamen), [filtroExamen, window._libLang]);
+  const poolPreguntas  = useMemo(() => filtroExamenActual === unidadTodas ? preguntasMockActual : preguntasMockActual.filter((p) => p.unit === filtroExamenActual), [filtroExamenActual, unidadTodas, window._libLang]);
   const preguntaExamen = poolPreguntas[preguntaActual] || poolPreguntas[0];
   const score = respuestasExamen.filter((r) => r.isCorrect).length;
 
@@ -759,7 +770,7 @@ function PlataformaTexasLifeHealthEspanolEspejo() {
         )}
 
         {tabActivo === TAB_MOCK && (
-          <MockExamView unidadesExamen={unidadesExamen} filtroExamen={filtroExamen} setFiltroExamen={setFiltroExamen} resetExamen={resetExamen} examenIniciado={examenIniciado} setExamenIniciado={setExamenIniciado} mostrarResultados={mostrarResultados} poolPreguntas={poolPreguntas} preguntaActual={preguntaActual} preguntaExamen={preguntaExamen} respuestaExamen={respuestaExamen} setRespuestaExamen={setRespuestaExamen} enviarRespuestaExamen={enviarRespuestaExamen} score={score} respuestasExamen={respuestasExamen} t={t} />
+          <MockExamView unidadesExamen={unidadesExamen} filtroExamen={filtroExamenActual} setFiltroExamen={setFiltroExamen} resetExamen={resetExamen} examenIniciado={examenIniciado} setExamenIniciado={setExamenIniciado} mostrarResultados={mostrarResultados} poolPreguntas={poolPreguntas} preguntaActual={preguntaActual} preguntaExamen={preguntaExamen} respuestaExamen={respuestaExamen} setRespuestaExamen={setRespuestaExamen} enviarRespuestaExamen={enviarRespuestaExamen} score={score} respuestasExamen={respuestasExamen} t={t} />
         )}
 
       </div>
@@ -787,7 +798,15 @@ function TexasLifeHealthDeepDiveLibrary() {
   const TAB_MEMORY = "memory";
   const TAB_RESOURCES = "resources";
 
-  const [activeTab, setActiveTab] = useState(TAB_INICIO);
+  // Persist the active tab across a language toggle: renderActiveTab() swaps
+  // this component out for BibliotecaAvanzadaTexasLifeHealth entirely, so
+  // plain useState always remounts back to TAB_INICIO. Track a
+  // language-neutral index on window instead.
+  const _chapterIds = chapters.map((c) => c.id);
+  const _neutralToLocal = (idx) => idx === -2 ? TAB_MEMORY : idx === -3 ? TAB_RESOURCES : (idx >= 0 && _chapterIds[idx]) ? _chapterIds[idx] : TAB_INICIO;
+  const _localToNeutral = (tab) => tab === TAB_MEMORY ? -2 : tab === TAB_RESOURCES ? -3 : tab === TAB_INICIO ? -1 : _chapterIds.indexOf(tab);
+  const [activeTab, _setActiveTab] = useState(_neutralToLocal(window._libTabIndex));
+  const setActiveTab = (v) => { window._libTabIndex = _localToNeutral(v); _setActiveTab(v); };
   const [query, setQuery] = useState("");
   const [selectedCard, setSelectedCard] = useState({ ...chapters[0].cards[0], chapterId: chapters[0].id, chapterTitle: chapters[0].title, chapterColor: chapters[0].color });
   const [tourStep, setTourStep] = useState(null);
@@ -936,7 +955,15 @@ function BibliotecaAvanzadaTexasLifeHealth() {
   const TAB_MEMORIA = "memoria";
   const TAB_RECURSOS = "recursos";
 
-  const [tabActivo, setTabActivo] = useState(TAB_INICIO);
+  // Persist the active tab across a language toggle: renderActiveTab() swaps
+  // this component out for TexasLifeHealthDeepDiveLibrary entirely, so plain
+  // useState always remounts back to TAB_INICIO. Track a language-neutral
+  // index on window instead (shared with the English component).
+  const _capituloIds = capitulos.map((c) => c.id);
+  const _neutralToLocal = (idx) => idx === -2 ? TAB_MEMORIA : idx === -3 ? TAB_RECURSOS : (idx >= 0 && _capituloIds[idx]) ? _capituloIds[idx] : TAB_INICIO;
+  const _localToNeutral = (tab) => tab === TAB_MEMORIA ? -2 : tab === TAB_RECURSOS ? -3 : tab === TAB_INICIO ? -1 : _capituloIds.indexOf(tab);
+  const [tabActivo, _setTabActivo] = useState(_neutralToLocal(window._libTabIndex));
+  const setTabActivo = (v) => { window._libTabIndex = _localToNeutral(v); _setTabActivo(v); };
   const [busqueda, setBusqueda] = useState("");
   const [tarjetaSeleccionada, setTarjetaSeleccionada] = useState({ ...capitulos[0].tarjetas[0], capituloId: capitulos[0].id, capituloTitulo: capitulos[0].titulo, capituloColor: capitulos[0].color });
   const [tourStep, setTourStep] = useState(null);
