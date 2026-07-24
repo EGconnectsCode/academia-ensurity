@@ -549,13 +549,17 @@ body.dark .elig-badge.term{background:rgba(158,0,89,.25);color:#f472b6}
 </style>
 <script>
 // Supabase Storage PDF download
-function dlFromUrl(url, fname) {
+function dlFromUrl(url, name, key, fname) {
   fetch(url).then(function(r){ return r.arrayBuffer(); }).then(function(buf){
     var blob = new Blob([buf], {type:'application/pdf'});
     var a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = fname + '.pdf';
+    a.download = (fname||name) + '.pdf';
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    var st=loadST(ST.email)||{xp:0,downloads:0};st.downloads=(st.downloads||0)+1;saveST(ST.email,st);
+    addXP(10);
+    var act=getActivity(ST.email);act.downloads.push({name:name,key:key,ts:Date.now()});saveActivity(ST.email,act);
+    if(window.trackDownload)trackDownload(name);
   }).catch(function(){ window.open(url,'_blank'); });
 }
 </script>
@@ -1283,7 +1287,7 @@ function changeProfilePass(){
 function dl(name,key,fname){
   var dataEl=key?el('pdf_'+key):null;
   var b64=dataEl?dataEl.textContent.trim():null;
-  if(b64&&b64.startsWith('https://')){dlFromUrl(b64,(fname||name));return;}
+  if(b64&&b64.startsWith('https://')){dlFromUrl(b64,name,key,fname);return;}
   if(b64&&b64.length>100){
     try{
       var bin=atob(b64);var arr=new Uint8Array(bin.length);
@@ -1295,6 +1299,7 @@ function dl(name,key,fname){
       var st=loadST(ST.email)||{xp:0,downloads:0};st.downloads=(st.downloads||0)+1;saveST(ST.email,st);
       addXP(10);
       var act=getActivity(ST.email);act.downloads.push({name:name,key:key,ts:Date.now()});saveActivity(ST.email,act);
+      if(window.trackDownload)trackDownload(name);
     }catch(e){window.open('https://www.occidentallife.com/v4/AgentLogin.php','_blank');}
   }else{window.open('https://www.occidentallife.com/v4/AgentLogin.php','_blank');}
 }
@@ -1514,11 +1519,28 @@ function chTab(id){
 }
 
 // ── EXE downloader ──
+function logDownload(fname){
+  var st=loadST(ST.email)||{xp:0,downloads:0};st.downloads=(st.downloads||0)+1;saveST(ST.email,st);
+  addXP(10);
+  var act=getActivity(ST.email);act.downloads.push({name:fname,ts:Date.now()});saveActivity(ST.email,act);
+  if(window.trackDownload)trackDownload(fname);
+}
 function dlExe(key,fname){
   var dataEl=el('pdf_'+key);
-  var b64=dataEl?dataEl.textContent.trim():null;
-  if(!b64){alert(window.LANG==="es"?"Archivo no encontrado.":"File not found.");return;}
-  var bin=atob(b64);var arr=new Uint8Array(bin.length);
+  var raw=dataEl?dataEl.textContent.trim():null;
+  if(!raw){alert(window.LANG==="es"?"Archivo no encontrado.":"File not found.");return;}
+  if(raw.indexOf('http')===0){
+    fetch(raw).then(function(r){return r.arrayBuffer();}).then(function(buf){
+      var blob=new Blob([buf],{type:'application/octet-stream'});
+      var url=URL.createObjectURL(blob);
+      var a=document.createElement('a');a.href=url;a.download=fname;
+      document.body.appendChild(a);a.click();
+      setTimeout(function(){URL.revokeObjectURL(url);document.body.removeChild(a);},1000);
+      logDownload(fname);
+    }).catch(function(){window.open(raw,'_blank');logDownload(fname);});
+    return;
+  }
+  var bin=atob(raw);var arr=new Uint8Array(bin.length);
   for(var i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);
   var blob=new Blob([arr],{type:'application/octet-stream'});
   var url=URL.createObjectURL(blob);
