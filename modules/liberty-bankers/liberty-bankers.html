@@ -24,13 +24,16 @@ body.dark{
   --bg:#09101e;--txt:#d0e8f8;--tx:#d0e8f8;--tx2:#7aaac8;--tx3:#4a7a9a;
   --sb-bg:#06091a;--sur:#0c1628;--sur2:#111e34;--bdr:#1a3050;
   --cb-blue:#6ba3e8;--cb-navy:#4a72b8;--cb-purple:#9b7fd4;--cb-light:#16324f;
+  --lb-navy:#7a9fd6;--lb-red:#ef8b98;
 }
-/* --cb-blue/--cb-navy/--cb-purple are dark, brand-navy tones meant for text
-   on a light background. Where they're used as backgrounds (buttons, table
-   headers) they still pair with explicit #fff text and stay readable, but
-   used as TEXT color directly on the page surface they become near-invisible
+/* --cb-blue/--cb-navy/--cb-purple/--lb-navy/--lb-red are dark, brand-navy or
+   brand-red tones meant for text on a light background. Where they're used
+   as backgrounds (buttons, table headers) they still pair with explicit
+   #fff text and stay readable, but used as TEXT color directly on the page
+   surface (.section-title and ~240 other spots) they become near-invisible
    once --sur turns dark. Lighten just the text-color case above; a few
    spots also hardcode the literal color instead of the variable. */
+body.dark span[style*="background:var(--lb-navy)"]{background:#1B1464!important}
 body.dark .prod-chip{color:#a8c4ec!important;border-color:#3d5a9e!important}
 body.dark .prod-detail{background:var(--sur)!important;border-color:var(--bdr)!important}
 body.dark .prod-detail td[style*="color:#444"]{color:var(--tx2)!important}
