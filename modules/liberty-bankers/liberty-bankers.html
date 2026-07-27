@@ -34,6 +34,14 @@ body.dark{
    once --sur turns dark. Lighten just the text-color case above; a few
    spots also hardcode the literal color instead of the variable. */
 body.dark span[style*="background:var(--lb-navy)"]{background:#1B1464!important}
+/* .dt2-tab (Docs & Tools tab bar) hardcodes literal navy hex for its
+   hover/active text color instead of using a variable, so it's dark
+   navy text on a near-identical dark tint once --sur turns dark. */
+body.dark .dt2-tab:hover{border-color:#6ba3e8!important;color:#6ba3e8!important}
+body.dark .dt2-tab:hover::before{background:#6ba3e8!important}
+body.dark .dt2-tab.active{background:rgba(122,159,214,.15)!important;border-color:#7a9fd6!important;color:#7a9fd6!important}
+body.dark .qt-reset-btn:hover{border-color:#ef8b98!important;color:#ef8b98!important}
+body.dark .qt-nav-prev:hover{border-color:#6ba3e8!important;color:#6ba3e8!important}
 body.dark .prod-chip{color:#a8c4ec!important;border-color:#3d5a9e!important}
 body.dark .prod-detail{background:var(--sur)!important;border-color:var(--bdr)!important}
 body.dark .prod-detail td[style*="color:#444"]{color:var(--tx2)!important}
