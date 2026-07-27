@@ -5002,7 +5002,16 @@ function renderPdfPages(arr){
 function pdfOpenTab(){if(_pdfBlobUrl)window.open(_pdfBlobUrl,'_blank');else if(_pdfExternalUrl)window.open(_pdfExternalUrl,'_blank');}
 function pdfDownload(){
   if(_pdfBlobUrl){var a=document.createElement('a');a.href=_pdfBlobUrl;a.download=_pdfName;a.click();return;}
-  if(_pdfExternalUrl)window.open(_pdfExternalUrl,'_blank');
+  if(_pdfExternalUrl){
+    // These files live on a third-party server with no CORS headers, so we
+    // can't fetch the bytes client-side to force a real download — route
+    // through our own serverless proxy instead, which fetches server-side
+    // (no CORS restriction applies there) and sends it back with a
+    // Content-Disposition header that makes the browser download it.
+    var a=document.createElement('a');
+    a.href='/api/proxy-pdf?url='+encodeURIComponent(_pdfExternalUrl)+'&name='+encodeURIComponent(_pdfName.replace(/\.pdf$/i,''));
+    document.body.appendChild(a);a.click();document.body.removeChild(a);
+  }
 }
 function closePdfModal(){
   g('pdf-modal').classList.remove('open');document.body.style.overflow='';
