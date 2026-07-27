@@ -4900,7 +4900,7 @@ function doLogout(){
   var app=g('app');app.style.display='none';app.classList.remove('visible');
   g('login-screen').style.display='flex';g('li-email').value='';g('li-pass').value='';
 }
-var _pdfBlob=null,_pdfName='document',_pdfBlobUrl=null;
+var _pdfBlob=null,_pdfName='document',_pdfBlobUrl=null,_pdfExternalUrl=null;
 var PDF_SCALE=1.5,PDF_COVER_PX=48;
 if(typeof pdfjsLib!=='undefined'){pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';}
 function dl(name,key,fname){
@@ -4926,25 +4926,26 @@ function dl(name,key,fname){
   }catch(e){alert('Viewer error: '+e);}
 }
 function openExternalPdf(url,name){
+  // These PDFs live on a third-party server (software.gtlic.com) that sends
+  // no CORS headers, so fetch()-ing the bytes to render in-page always fails
+  // (silently, for both http and https) and previously fell back to opening
+  // a new tab after a delay — matching exactly what looked broken. An
+  // <iframe> isn't subject to that CORS restriction, so use it to render
+  // the document in-page directly instead of trying to fetch its bytes.
+  var httpsUrl=url.replace(/^http:/,'https:');
+  _pdfBlob=null;_pdfBlobUrl=null;_pdfExternalUrl=httpsUrl;_pdfName=name+'.pdf';
   g('pdf-modal-title').textContent=name;g('pdf-modal').classList.add('open');
   document.body.style.overflow='hidden';
-  g('pdf-loading').style.display='flex';g('pdf-loading').innerHTML=(window.LANG==='es'?'⏳ Cargando documento...':'⏳ Loading document...');
-  g('pdf-pages-scroll').style.display='none';g('pdf-progress').style.display='none';g('pdf-pages').innerHTML='';
-  fetch(url).then(function(r){return r.arrayBuffer();}).then(function(buf){
-    var arr=new Uint8Array(buf);
-    var blob=new Blob([arr],{type:'application/pdf'});
-    _pdfBlob=blob;_pdfBlobUrl=URL.createObjectURL(blob);_pdfName=name+'.pdf';
-    if(CUR_USER){
-      ST.downloads=(ST.downloads||0)+1;ST.xp=(ST.xp||0)+10;saveST(CUR_USER.email,ST);
-      var act=getActivity(CUR_USER.email);act.downloads.push({name:name,date:new Date().toLocaleString()});
-      saveActivity(CUR_USER.email,act);g('h-dls').textContent=ST.downloads;g('h-xp').textContent=ST.xp;
-      g('sb-level').textContent=getLevel(ST.xp)+' · '+ST.xp+' XP';
-    }
-    renderPdfPages(arr);
-  }).catch(function(){
-    g('pdf-loading').innerHTML='<span style="color:#fca5a5">⚠ '+(window.LANG==='es'?'No se pudo cargar el documento.':'Could not load the document.')+'<br><small style="opacity:.7">'+(window.LANG==='es'?'Se abrirá en una pestaña nueva.':'It will open in a new tab instead.')+'</small></span>';
-    setTimeout(function(){window.open(url,'_blank');closePdfModal();},1600);
-  });
+  g('pdf-loading').style.display='none';
+  g('pdf-progress').style.display='none';
+  g('pdf-pages-scroll').style.display='block';
+  g('pdf-pages').innerHTML='<iframe src="'+httpsUrl+'" style="width:100%;height:78vh;border:none;background:#fff"></iframe>';
+  if(CUR_USER){
+    ST.downloads=(ST.downloads||0)+1;ST.xp=(ST.xp||0)+10;saveST(CUR_USER.email,ST);
+    var act=getActivity(CUR_USER.email);act.downloads.push({name:name,date:new Date().toLocaleString()});
+    saveActivity(CUR_USER.email,act);g('h-dls').textContent=ST.downloads;g('h-xp').textContent=ST.xp;
+    g('sb-level').textContent=getLevel(ST.xp)+' · '+ST.xp+' XP';
+  }
 }
 function dlStateChart(){
   var tag=document.getElementById('pdf_state_approval_chart');
@@ -4998,8 +4999,11 @@ function renderPdfPages(arr){
     g('pdf-loading').innerHTML='<span style="color:#fca5a5">⚠ '+e.message+'<br><small style="opacity:.7">Use the ⬇ Download button to open this file.</small></span>';
   });
 }
-function pdfOpenTab(){if(_pdfBlobUrl)window.open(_pdfBlobUrl,'_blank');}
-function pdfDownload(){if(!_pdfBlobUrl)return;var a=document.createElement('a');a.href=_pdfBlobUrl;a.download=_pdfName;a.click();}
+function pdfOpenTab(){if(_pdfBlobUrl)window.open(_pdfBlobUrl,'_blank');else if(_pdfExternalUrl)window.open(_pdfExternalUrl,'_blank');}
+function pdfDownload(){
+  if(_pdfBlobUrl){var a=document.createElement('a');a.href=_pdfBlobUrl;a.download=_pdfName;a.click();return;}
+  if(_pdfExternalUrl)window.open(_pdfExternalUrl,'_blank');
+}
 function closePdfModal(){
   g('pdf-modal').classList.remove('open');document.body.style.overflow='';
   g('pdf-pages').innerHTML='';g('pdf-loading').style.display='none';
