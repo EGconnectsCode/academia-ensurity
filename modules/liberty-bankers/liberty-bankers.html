@@ -42,6 +42,15 @@ body.dark .dt2-tab:hover::before{background:#6ba3e8!important}
 body.dark .dt2-tab.active{background:rgba(122,159,214,.15)!important;border-color:#7a9fd6!important;color:#7a9fd6!important}
 body.dark .qt-reset-btn:hover{border-color:#ef8b98!important;color:#ef8b98!important}
 body.dark .qt-nav-prev:hover{border-color:#6ba3e8!important;color:#6ba3e8!important}
+/* Same literal-navy-text pattern recurring across the page: section titles
+   (e.g. "Ordinary Life State Availability"), the eligibility sub-headers,
+   the Product Availability table, and the quote-tool headline all hardcode
+   #1B1464 as text color with no dark-mode adjustment. */
+body.dark [style*="color:#1B1464"]{color:#7a9fd6!important}
+body.dark .qt-hq-title.blue{color:#7a9fd6!important}
+body.dark .elig-sub{color:#7a9fd6!important}
+body.dark #pa-tbody td:first-child{color:#7a9fd6!important}
+body.dark #pa-tbody .lbl-cell{color:#7a9fd6!important}
 body.dark .prod-chip{color:#a8c4ec!important;border-color:#3d5a9e!important}
 body.dark .prod-detail{background:var(--sur)!important;border-color:var(--bdr)!important}
 body.dark .prod-detail td[style*="color:#444"]{color:var(--tx2)!important}
@@ -2821,10 +2830,7 @@ body.dark .qt-multi-table tr:nth-child(even) td{background:rgba(255,255,255,.03)
     <div class="stat-box"><div class="stat-val" id="met-score">—</div><div class="stat-lbl"><span class="en">Quiz Best</span><span class="es">Mejor Quiz</span></div></div>
     <div class="stat-box"><div class="stat-val" id="met-level" style="font-size:14px">Rookie</div><div class="stat-lbl"><span class="en">Level</span><span class="es">Nivel</span></div></div>
   </div>
-  <div class="section-wrap">
-    <div class="section-title">🕑 <span class="en">Recent Activity</span><span class="es">Actividad Reciente</span></div>
-    <div id="met-history" style="font-size:12px;color:var(--tx2)"></div>
-  </div>
+
 </div>
 <div class="page admin-only" id="page-admin-users">
   <div class="ph"><div class="ph-row"><div class="ph-ico">👥</div><div><h1><span class="en">User Management</span><span class="es">Gestión de Usuarios</span></h1></div></div></div>
@@ -3408,11 +3414,6 @@ function loadMetrics(){
     document.getElementById('met-logins').textContent=u.logins||0;
     document.getElementById('met-score').textContent=u.quizBest!=null?u.quizBest+'%':'—';
     document.getElementById('met-level').textContent=level;
-    var log=JSON.parse(localStorage.getItem('cb_activity_'+CB_AUTH.email)||'[]');
-    var html=log.slice(0,20).map(function(item){
-      return '<div style="padding:6px 0;border-bottom:1px solid var(--bdr);display:flex;gap:8px"><span style="font-size:11px;color:var(--tx3);flex-shrink:0">'+new Date(item.ts).toLocaleDateString()+'</span><span>'+item.label+'</span></div>';
-    }).join('');
-    document.getElementById('met-history').innerHTML=html||('<span style="color:var(--tx3)">'+(window.LANG==='en'?'No activity yet.':'Sin actividad aún.')+'</span>');
   }catch(e){}
 }
 
