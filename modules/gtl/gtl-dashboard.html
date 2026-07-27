@@ -10,6 +10,7 @@
 :root{
   --gtl-navy:#1b2249;
   --gtl-blue:#1565c0;
+  --gtl-blue-tx:#1565c0;
   --gtl-green:#1e88e5;
   --gtl-teal:#42a5f5;
   --gtl-light:#e8f0fe;
@@ -22,8 +23,14 @@
 body.dark{
   --bg:#0a1520;--tx:#d0e8f8;--tx2:#7aaac8;--tx3:#4a7a9a;
   --sur:#0f1e30;--sur2:#142030;--bdr:#1a3050;
-  --gtl-blue:#6bb0e8;--gtl-navy:#9fc8ec;--gtl-teal:#7fd4f5;--gtl-light:#16324f;
+  --gtl-blue-tx:#6bb0e8;--gtl-teal:#7fd4f5;--gtl-light:#16324f;
 }
+/* --gtl-blue/--gtl-navy are also used as BACKGROUNDS paired with white text
+   (table headers, pdf modal bar, active tab buttons, rank badge, etc.) —
+   those must stay their original dark value in every theme, so they're
+   deliberately not overridden here. --gtl-blue-tx exists separately for the
+   handful of spots that use this color as bare TEXT on the page surface,
+   which does need lightening. */
 body{font-family:"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--tx);display:flex;height:100vh;overflow:hidden;font-size:14px;}
 #app{display:none;width:100%;height:100vh;overflow:hidden;flex-direction:row}
 #app.visible{display:flex}
@@ -62,7 +69,7 @@ body.is-admin .page.admin-only{display:none!important}
 body.is-admin .page.admin-only.active{display:block!important}
 #main{flex:1;overflow-y:auto;background:var(--bg);display:flex;flex-direction:column;height:100vh}
 .topbar{background:var(--sur);border-bottom:1px solid var(--bdr);padding:0 18px;height:50px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;position:sticky;top:0;z-index:10;}
-.topbar-logo{font-size:13px;font-weight:800;color:var(--gtl-blue);letter-spacing:.5px}
+.topbar-logo{font-size:13px;font-weight:800;color:var(--gtl-blue-tx);letter-spacing:.5px}
 .topbar-right{display:flex;align-items:center;gap:10px}
 .tb-lang-btn{background:var(--gtl-light);border:1px solid #1565c0;color:#1b2249;border-radius:20px;padding:4px 11px;font-size:11px;font-weight:700;cursor:pointer;transition:all .15s;}
 .tb-lang-btn:hover{background:var(--gtl-blue);color:#fff}
@@ -82,13 +89,13 @@ body.is-admin .page.admin-only.active{display:block!important}
 .ph h1{font-size:22px;font-weight:800;margin:0 0 3px;color:#fff}
 .ph p{font-size:12px;margin:0;opacity:.8;color:#fff}
 .section-wrap{background:var(--sur);border:1px solid var(--bdr);border-radius:var(--rad);padding:16px;margin-bottom:14px}
-.section-title{font-size:13px;font-weight:700;color:var(--gtl-blue);border-bottom:2px solid #1e88e5;padding-bottom:8px;margin-bottom:12px}
+.section-title{font-size:13px;font-weight:700;color:var(--gtl-blue-tx);border-bottom:2px solid #1e88e5;padding-bottom:8px;margin-bottom:12px}
 .pdf-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
 .pdf-card{background:var(--sur2);border:1px solid var(--bdr);border-radius:8px;padding:14px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .15s}
 .pdf-card:hover{border-color:var(--gtl-blue);background:var(--gtl-light);transform:translateY(-1px);box-shadow:0 3px 12px rgba(21,101,192,.15)}
 .pdf-ico{width:40px;height:40px;background:linear-gradient(135deg,#1565c0,#1b2249);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;color:#fff}
 .pdf-name{font-size:12px;font-weight:600;color:var(--tx);line-height:1.3}
-.pdf-dl{font-size:10px;color:var(--gtl-blue);font-weight:700;margin-top:3px}
+.pdf-dl{font-size:10px;color:var(--gtl-blue-tx);font-weight:700;margin-top:3px}
 .home-hero{background:linear-gradient(135deg,#0d1635 0%,#1b2249 30%,#1565c0 65%,#1e88e5 100%);border-radius:var(--rad);padding:28px;color:#fff;margin-bottom:18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
 .hero-title{font-size:26px;font-weight:900;margin:0 0 6px;color:#fff}
 .hero-sub{font-size:12px;opacity:.8;margin:0 0 16px;color:#fff}
@@ -108,17 +115,17 @@ body.is-admin .page.admin-only.active{display:block!important}
 .pl-card:hover{border-color:var(--gtl-blue);background:var(--gtl-light)}
 .pl-ico{font-size:22px;width:40px;text-align:center}
 .pl-title{font-size:13px;font-weight:700;color:var(--tx)}
-.pl-url{font-size:10px;color:var(--gtl-blue);margin-top:2px}
+.pl-url{font-size:10px;color:var(--gtl-blue-tx);margin-top:2px}
 .pl-arrow{margin-left:auto;color:#42a5f5;font-size:16px}
 .sm-cell{display:flex;align-items:center;justify-content:center;border-radius:4px;font-size:10px;font-weight:700;cursor:pointer;transition:opacity .15s;user-select:none}
 .sm-cell:hover{opacity:.82;outline:2px solid #42a5f5}
 .sm-cell span{display:block!important;direction:ltr!important;unicode-bidi:normal!important;text-align:center}
 .stat-box{background:var(--sur);border:1px solid var(--bdr);border-radius:8px;padding:14px;text-align:center}
-.stat-val{font-size:26px;font-weight:900;color:var(--gtl-blue)}
+.stat-val{font-size:26px;font-weight:900;color:var(--gtl-blue-tx)}
 .stat-lbl{font-size:10px;color:var(--tx3);text-transform:uppercase;letter-spacing:.8px;margin-top:3px}
 .adm-stat-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:16px}
 .adm-stat{background:var(--sur2);border:1px solid var(--bdr);border-radius:8px;padding:12px;text-align:center}
-.adm-stat .sv{font-size:22px;font-weight:900;color:var(--gtl-blue)}
+.adm-stat .sv{font-size:22px;font-weight:900;color:var(--gtl-blue-tx)}
 .adm-stat .sl{font-size:10px;color:var(--tx3);text-transform:uppercase}
 .adm-btn{padding:4px 8px;border-radius:5px;border:1px solid var(--bdr);background:var(--sur2);cursor:pointer;font-size:13px;color:var(--tx)}
 .adm-btn.danger{border-color:#ef4444;color:#ef4444}
@@ -173,7 +180,7 @@ body.is-admin .page.admin-only.active{display:block!important}
 .gtl-modal-section{margin-bottom:16px;}
 .gtl-modal-section h4{font-size:13px;font-weight:800;color:var(--tx);margin-bottom:8px;}
 .gtl-modal-row{display:flex;gap:24px;flex-wrap:wrap;font-size:13px;color:var(--tx2);}
-.gtl-modal-row a{color:var(--gtl-blue);text-decoration:none;font-weight:600;}
+.gtl-modal-row a{color:var(--gtl-blue-tx);text-decoration:none;font-weight:600;}
 .gtl-modal-row a:hover{text-decoration:underline;}
 
       .cm-material-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;}
@@ -4439,14 +4446,14 @@ html[data-lang="es"] .es{display:inline}
               <div style="font-size:40px;margin-bottom:10px;">📣</div>
               <div><span class="en">Select a product above to view its marketing materials.</span><span class="es">Selecciona un producto arriba para ver sus materiales de marketing.</span></div>
             </div>
-            <div id="cm-product-title" style="display:none;font-size:16px;font-weight:800;color:var(--gtl-blue);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid var(--bdr);"></div>
+            <div id="cm-product-title" style="display:none;font-size:16px;font-weight:800;color:var(--gtl-blue-tx);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid var(--bdr);"></div>
             <div id="cm-grid" class="cm-material-grid"></div>
           </div>
         </div>
 
         <div class="section-wrap" style="margin-top:0;padding:10px 16px;font-size:11px;color:var(--tx2);">
           <span class="en">For product brochures, visit the</span><span class="es">Para folletos de productos, visita la sección de</span>
-          <a href="javascript:navTo('forms')" style="color:var(--gtl-blue);font-weight:600;margin-left:4px;"><span class="en">Forms section</span><span class="es">Formularios</span></a>.
+          <a href="javascript:navTo('forms')" style="color:var(--gtl-blue-tx);font-weight:600;margin-left:4px;"><span class="en">Forms section</span><span class="es">Formularios</span></a>.
         </div>
       </div>
       <!-- COMMISSIONS -->
@@ -4472,7 +4479,7 @@ html[data-lang="es"] .es{display:inline}
         </div></div></div>
         <div class="section-wrap" style="text-align:center;padding:30px 16px;">
           <div style="font-size:48px;margin-bottom:12px;">🎙️</div>
-          <div style="font-size:16px;font-weight:700;color:var(--gtl-blue);margin-bottom:8px;">GTL Agent Podcast</div>
+          <div style="font-size:16px;font-weight:700;color:var(--gtl-blue-tx);margin-bottom:8px;">GTL Agent Podcast</div>
           <p style="color:var(--tx2);font-size:12px;margin-bottom:20px;"><span class="en">Listen to the latest GTL Agent Podcast episodes directly on the portal.</span><span class="es">Escucha los últimos episodios del Podcast del Agente GTL directamente en el portal.</span></p>
           <button class="fbtn" onclick="window.open('https://podcast.gtlagentportal.com/','_blank')">🎙️ <span class="en">Open GTL Podcast</span><span class="es">Abrir Podcast GTL</span></button>
         </div>

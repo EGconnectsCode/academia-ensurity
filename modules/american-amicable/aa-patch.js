@@ -181,6 +181,10 @@
         background:var(--az-surface)!important; border:1px solid var(--az-border)!important;
         transition:background .13s!important; text-decoration:none!important; }
       .dash-card:hover { background:#EFF6FF!important; border-color:#BFDBFE!important; }
+      /* #EFF6FF is a near-white hover tint meant for light mode; in dark
+         mode the h3/p text inside (var(--tx)/var(--tx3), both light) sits
+         on that near-white background and becomes unreadable. */
+      body.dark .dash-card:hover { background:var(--sur2)!important; border-color:#3d5a9e!important; }
       .dash-card-ico { font-size:1.1rem!important; flex-shrink:0!important; width:32px!important; text-align:center!important; }
       .dash-card-body { flex:1!important; }
       .dash-card-title { font-size:.85rem!important; font-weight:600!important; color:var(--az-text)!important; }

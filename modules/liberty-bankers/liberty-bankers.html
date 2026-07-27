@@ -13,6 +13,7 @@
   --lb-gold:#C8941E;--lb-green:#27AE60;--lb-amber:#F5A623;
   /* Aliases */
   --cb-blue:#003087;--cb-navy:#1B1464;--cb-purple:#3D2B8E;
+  --cb-blue-tx:#003087;--cb-navy-tx:#1B1464;
   --cb-teal:#0078C8;--cb-light:#EAF0FB;--cb-accent:#C8941E;
   --bg:#f0f4f8;--txt:#1a2a3a;--tx:#1a2a3a;--tx2:#4a6070;--tx3:#7a90a0;
   --sb-bg:#1B1464;--sb-txt:#b8d4f0;--sb-act:#fff;--sb-ico:#70b0e0;
@@ -23,7 +24,7 @@
 body.dark{
   --bg:#09101e;--txt:#d0e8f8;--tx:#d0e8f8;--tx2:#7aaac8;--tx3:#4a7a9a;
   --sb-bg:#06091a;--sur:#0c1628;--sur2:#111e34;--bdr:#1a3050;
-  --cb-blue:#6ba3e8;--cb-navy:#4a72b8;--cb-purple:#9b7fd4;--cb-light:#16324f;
+  --cb-blue-tx:#6ba3e8;--cb-navy-tx:#4a72b8;--cb-purple:#9b7fd4;--cb-light:#16324f;
   --lb-navy:#7a9fd6;--lb-red:#ef8b98;
 }
 /* --cb-blue/--cb-navy/--cb-purple/--lb-navy/--lb-red are dark, brand-navy or
@@ -48,7 +49,6 @@ body.dark .qt-nav-prev:hover{border-color:#6ba3e8!important;color:#6ba3e8!import
    #1B1464 as text color with no dark-mode adjustment. */
 body.dark [style*="color:#1B1464"]{color:#7a9fd6!important}
 body.dark .qt-hq-title.blue{color:#7a9fd6!important}
-body.dark .elig-sub{color:#7a9fd6!important}
 body.dark #pa-tbody td:first-child{color:#7a9fd6!important}
 body.dark #pa-tbody .lbl-cell{color:#7a9fd6!important}
 body.dark .prod-chip{color:#a8c4ec!important;border-color:#3d5a9e!important}
@@ -101,7 +101,7 @@ body.is-admin .admin-only.sb-section{display:block!important}
 .td-link{display:inline-flex;align-items:center;gap:4px;background:#C8941E;color:#001B54;font-size:10px;font-weight:800;padding:4px 11px;border-radius:20px;text-decoration:none;flex-shrink:0;white-space:nowrap;transition:opacity .15s}
 .td-link:hover{opacity:.85}
 .topbar-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
-.tb-lang-btn{background:var(--cb-light);border:1px solid var(--cb-blue);color:var(--cb-navy);border-radius:20px;padding:4px 11px;font-size:11px;font-weight:700;cursor:pointer;transition:all .15s}
+.tb-lang-btn{background:var(--cb-light);border:1px solid var(--cb-blue);color:var(--cb-navy-tx);border-radius:20px;padding:4px 11px;font-size:11px;font-weight:700;cursor:pointer;transition:all .15s}
 .tb-lang-btn:hover{background:var(--cb-blue);color:#fff}
 .tb-dark-btn{background:none;border:none;font-size:18px;cursor:pointer;padding:2px 6px;border-radius:6px;transition:background .15s}
 .tb-dark-btn:hover{background:var(--sur2)}
@@ -127,7 +127,7 @@ body.is-admin .admin-only.sb-section{display:block!important}
 .pdf-card:hover{border-color:var(--cb-blue);background:var(--cb-light);transform:translateY(-1px);box-shadow:0 3px 12px rgba(0,48,135,.15)}
 .pdf-ico{width:40px;height:40px;background:linear-gradient(135deg,#1B1464,#003087);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;color:#fff}
 .pdf-name{font-size:12px;font-weight:600;color:var(--tx);line-height:1.3}
-.pdf-dl{font-size:10px;color:var(--cb-blue);font-weight:700;margin-top:3px}
+.pdf-dl{font-size:10px;color:var(--cb-blue-tx);font-weight:700;margin-top:3px}
 .home-hero{background:linear-gradient(135deg,#1B1464 0%,#003087 45%,#0066b3 75%,#0078C8 100%);border-radius:var(--rad);padding:28px;color:#fff;margin-bottom:18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;border-left:5px solid #B22234}
 .hero-title{font-size:26px;font-weight:900;margin:0 0 6px;color:#fff}
 .hero-sub{font-size:12px;opacity:.8;margin:0 0 16px;color:#fff}
@@ -157,12 +157,12 @@ body.is-admin .admin-only.sb-section{display:block!important}
 .pl-card:hover{border-color:var(--cb-blue);background:var(--cb-light)}
 .pl-ico{font-size:22px;width:40px;text-align:center}
 .pl-title{font-size:13px;font-weight:700;color:var(--tx)}
-.pl-url{font-size:10px;color:var(--cb-blue);margin-top:2px}
+.pl-url{font-size:10px;color:var(--cb-blue-tx);margin-top:2px}
 .pl-arrow{margin-left:auto;color:var(--lb-red);font-size:16px;font-weight:900}
 .prod-card{background:var(--sur);border:2px solid var(--bdr);border-radius:12px;padding:20px;transition:all .2s;cursor:pointer}
 .prod-card:hover{border-color:var(--cb-blue);box-shadow:0 4px 20px rgba(0,48,135,.15);transform:translateY(-2px)}
 .prod-badge{display:inline-block;background:linear-gradient(135deg,#B22234,#1B1464);color:#fff;font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;margin-bottom:10px}
-.prod-title{font-size:16px;font-weight:800;color:var(--cb-blue);margin-bottom:6px}
+.prod-title{font-size:16px;font-weight:800;color:var(--cb-blue-tx);margin-bottom:6px}
 .prod-sub{font-size:11px;color:var(--tx3);margin-bottom:10px}
 .prod-detail-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
 .prod-chip{background:linear-gradient(135deg,rgba(27,20,100,.07),rgba(0,48,135,.07));border:1px solid #003087;color:#1B1464;font-size:10px;font-weight:700;padding:3px 9px;border-radius:12px}
@@ -762,8 +762,8 @@ body.dark .qt-multi-table tr:nth-child(even) td{background:rgba(255,255,255,.03)
   <div class="section-wrap">
     <div class="section-title">📞 <span class="en">Quick Contacts</span><span class="es">Contactos Rápidos</span></div>
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;font-size:12px">
-      <div class="stat-box"><div class="stat-val" style="font-size:16px">🌐</div><div class="stat-lbl"><span class="en">Agent Portal</span><span class="es">Portal del Agente</span></div><div style="font-size:11px;color:var(--cb-blue);margin-top:4px;cursor:pointer" onclick="window.open('https://agent.lbig.com/briefcase','_blank')">agent.lbig.com/briefcase</div></div>
-      <div class="stat-box"><div class="stat-val" style="font-size:16px">📧</div><div class="stat-lbl"><span class="en">Contact LBIG</span><span class="es">Contactar LBIG</span></div><div style="font-size:11px;color:var(--cb-blue);margin-top:4px;cursor:pointer" onclick="window.open('https://agent.lbig.com/contact','_blank')">agent.lbig.com/contact</div></div>
+      <div class="stat-box"><div class="stat-val" style="font-size:16px">🌐</div><div class="stat-lbl"><span class="en">Agent Portal</span><span class="es">Portal del Agente</span></div><div style="font-size:11px;color:var(--cb-blue-tx);margin-top:4px;cursor:pointer" onclick="window.open('https://agent.lbig.com/briefcase','_blank')">agent.lbig.com/briefcase</div></div>
+      <div class="stat-box"><div class="stat-val" style="font-size:16px">📧</div><div class="stat-lbl"><span class="en">Contact LBIG</span><span class="es">Contactar LBIG</span></div><div style="font-size:11px;color:var(--cb-blue-tx);margin-top:4px;cursor:pointer" onclick="window.open('https://agent.lbig.com/contact','_blank')">agent.lbig.com/contact</div></div>
     </div>
   </div>
 </div>
@@ -971,7 +971,7 @@ body.dark .qt-multi-table tr:nth-child(even) td{background:rgba(255,255,255,.03)
       <div class="section-title">❓ <span class="en">Knowledge Quiz</span><span class="es">Evaluación de Conocimiento</span></div>
       <div id="quiz-container"></div>
       <div id="quiz-result" style="display:none;background:var(--cb-light);border:2px solid var(--cb-blue);border-radius:8px;padding:16px;text-align:center;margin-top:12px">
-        <div id="quiz-score" style="font-size:22px;font-weight:900;color:var(--cb-blue)"></div>
+        <div id="quiz-score" style="font-size:22px;font-weight:900;color:var(--cb-blue-tx)"></div>
         <div id="quiz-msg" style="font-size:13px;color:var(--tx2);margin:6px 0 12px"></div>
         <button class="fbtn" onclick="startQuiz()"><span class="en">Retry</span><span class="es">Reintentar</span></button>
       </div>
@@ -1160,11 +1160,11 @@ body.dark .qt-multi-table tr:nth-child(even) td{background:rgba(255,255,255,.03)
   .elig-card{border:1px solid var(--bdr);border-radius:8px;overflow:hidden;background:var(--sur)}
   .elig-header{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;cursor:pointer;font-size:13px;font-weight:700;color:var(--tx);background:var(--sur2);user-select:none;transition:background .15s}
   .elig-header:hover{background:var(--bdr)}
-  .elig-arr{font-size:12px;transition:transform .2s;color:var(--cb-blue)}
+  .elig-arr{font-size:12px;transition:transform .2s;color:var(--cb-blue-tx)}
   .elig-body{padding:14px 18px;font-size:12px;color:var(--tx);line-height:1.6}
   .elig-note{background:rgba(0,48,135,.07);border-left:3px solid #003087;padding:8px 12px;border-radius:0 6px 6px 0;margin-bottom:10px;font-size:12px}
   .elig-sub{font-weight:700;color:#1B1464;margin:10px 0 4px 0;font-size:12px}
-  body.dark .elig-sub{color:var(--cb-blue)!important}
+  body.dark .elig-sub{color:var(--cb-blue-tx)!important}
   .elig-list{margin:0 0 8px 0;padding-left:18px}
   .elig-list li{margin-bottom:4px}
   </style>
@@ -3458,7 +3458,7 @@ function loadAdminActivity(){
   try{
     var log=JSON.parse(localStorage.getItem('cb_global_activity')||'[]');
     var html=log.slice(0,50).map(function(item){
-      return '<div style="padding:6px 0;border-bottom:1px solid var(--bdr);display:flex;gap:8px;font-size:11px"><span style="color:var(--tx3);flex-shrink:0;width:90px">'+new Date(item.ts).toLocaleDateString()+'</span><span style="color:var(--cb-blue);flex-shrink:0;width:130px">'+item.email+'</span><span>'+item.label+'</span></div>';
+      return '<div style="padding:6px 0;border-bottom:1px solid var(--bdr);display:flex;gap:8px;font-size:11px"><span style="color:var(--tx3);flex-shrink:0;width:90px">'+new Date(item.ts).toLocaleDateString()+'</span><span style="color:var(--cb-blue-tx);flex-shrink:0;width:130px">'+item.email+'</span><span>'+item.label+'</span></div>';
     }).join('');
     document.getElementById('adm-activity-log').innerHTML=html||'<span style="color:var(--tx3)">No activity.</span>';
   }catch(e){}
