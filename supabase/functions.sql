@@ -4,6 +4,9 @@
 -- ============================================================
 
 -- Increment XP for a user (called after quiz completion)
+-- SECURITY: the user_id param is intentionally ignored for the actual update —
+-- always applies to auth.uid() so a caller can never inflate another user's
+-- (or their own, beyond what the client intends) XP via a forged parameter.
 CREATE OR REPLACE FUNCTION increment_xp(user_id UUID, amount INTEGER)
 RETURNS void LANGUAGE plpgsql SECURITY DEFINER AS $$
 DECLARE
@@ -12,7 +15,7 @@ DECLARE
 BEGIN
   UPDATE profiles
   SET xp = xp + amount
-  WHERE id = user_id
+  WHERE id = auth.uid()
   RETURNING xp INTO new_xp;
 
   -- Level thresholds: 1=0, 2=100, 3=250, 4=500, 5=900, 6=1400, 7=2000, 8=2700, 9=3500, 10=5000
@@ -29,7 +32,7 @@ BEGIN
     ELSE 1
   END;
 
-  UPDATE profiles SET level = new_level WHERE id = user_id;
+  UPDATE profiles SET level = new_level WHERE id = auth.uid();
 END;
 $$;
 

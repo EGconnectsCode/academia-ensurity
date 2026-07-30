@@ -45,6 +45,31 @@ function jsonResp(data: unknown, status = 200) {
   });
 }
 
+// Shared code check for both password_reset_verify and password_reset_complete —
+// centralized so brute-force attempts against either endpoint count against the
+// same lockout, and so no caller can retry indefinitely (this endpoint has
+// verify_jwt = false, i.e. it is fully public with no auth of its own).
+const MAX_CODE_ATTEMPTS = 5;
+
+async function checkResetCode(db: ReturnType<typeof createClient>, email: string, code: string) {
+  const { data: row } = await db
+    .from('password_reset_codes')
+    .select('id, code, expires_at, used, attempts')
+    .eq('email', email)
+    .eq('used', false)
+    .single();
+
+  if (!row) return { valid: false, reason: 'not_found' as const, row: null };
+  if (new Date(row.expires_at) < new Date()) return { valid: false, reason: 'expired' as const, row };
+  if ((row.attempts || 0) >= MAX_CODE_ATTEMPTS) return { valid: false, reason: 'locked' as const, row };
+
+  if (row.code !== String(code)) {
+    await db.from('password_reset_codes').update({ attempts: (row.attempts || 0) + 1 }).eq('id', row.id);
+    return { valid: false, reason: 'wrong_code' as const, row };
+  }
+  return { valid: true, reason: null, row };
+}
+
 Deno.serve(async (req: Request) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: CORS });
 
@@ -171,18 +196,8 @@ Deno.serve(async (req: Request) => {
       if (!email || !code) return jsonResp({ valid: false, reason: 'missing_fields' });
 
       const db = adminClient();
-      const { data: row } = await db
-        .from('password_reset_codes')
-        .select('code, expires_at, used')
-        .eq('email', email)
-        .eq('used', false)
-        .single();
-
-      if (!row) return jsonResp({ valid: false, reason: 'not_found' });
-      if (new Date(row.expires_at) < new Date()) return jsonResp({ valid: false, reason: 'expired' });
-      if (row.code !== String(code)) return jsonResp({ valid: false, reason: 'wrong_code' });
-
-      return jsonResp({ valid: true });
+      const result = await checkResetCode(db, email, String(code));
+      return jsonResp({ valid: result.valid, reason: result.reason || undefined });
     }
 
     // ── Password reset — Step 3: update password and clear code ────────────
@@ -194,15 +209,9 @@ Deno.serve(async (req: Request) => {
 
       const db = adminClient();
 
-      // Verify code one last time
-      const { data: row } = await db
-        .from('password_reset_codes')
-        .select('code, expires_at, used')
-        .eq('email', email)
-        .eq('used', false)
-        .single();
-
-      if (!row || row.code !== String(code) || new Date(row.expires_at) < new Date()) {
+      // Verify code one last time (shares the attempt counter/lockout with password_reset_verify)
+      const result = await checkResetCode(db, email, String(code));
+      if (!result.valid) {
         return jsonResp({ error: 'Invalid or expired code.' }, 400);
       }
 
