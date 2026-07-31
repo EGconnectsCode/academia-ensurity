@@ -5007,7 +5007,7 @@ function renderPdfPages(arr){
   });
 }
 function pdfOpenTab(){if(_pdfBlobUrl)window.open(_pdfBlobUrl,'_blank');else if(_pdfExternalUrl)window.open(_pdfExternalUrl,'_blank');}
-function pdfDownload(){
+async function pdfDownload(){
   if(_pdfBlobUrl){var a=document.createElement('a');a.href=_pdfBlobUrl;a.download=_pdfName;a.click();return;}
   if(_pdfExternalUrl){
     // These files live on a third-party server with no CORS headers, so we
@@ -5015,9 +5015,21 @@ function pdfDownload(){
     // through our own serverless proxy instead, which fetches server-side
     // (no CORS restriction applies there) and sends it back with a
     // Content-Disposition header that makes the browser download it.
-    var a=document.createElement('a');
-    a.href='/api/proxy-pdf?url='+encodeURIComponent(_pdfExternalUrl)+'&name='+encodeURIComponent(_pdfName.replace(/\.pdf$/i,''));
-    document.body.appendChild(a);a.click();document.body.removeChild(a);
+    // The proxy requires a logged-in session, so the request is sent via
+    // fetch() with the auth token (a plain <a href> can't carry headers).
+    try{
+      var session=window.AZ&&window.AZ.Auth?await AZ.Auth.getSession():null;
+      var token=session&&session.access_token;
+      if(!token){alert('Please log in again to download this file.');return;}
+      var url='/api/proxy-pdf?url='+encodeURIComponent(_pdfExternalUrl)+'&name='+encodeURIComponent(_pdfName.replace(/\.pdf$/i,''));
+      var resp=await fetch(url,{headers:{Authorization:'Bearer '+token}});
+      if(!resp.ok){alert('Download failed. Please try again.');return;}
+      var blob=await resp.blob();
+      var blobUrl=URL.createObjectURL(blob);
+      var a=document.createElement('a');a.href=blobUrl;a.download=_pdfName;
+      document.body.appendChild(a);a.click();document.body.removeChild(a);
+      URL.revokeObjectURL(blobUrl);
+    }catch(e){alert('Download failed. Please try again.');}
   }
 }
 function closePdfModal(){

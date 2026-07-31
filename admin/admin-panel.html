@@ -675,11 +675,13 @@ async function loadPending() {
     else { badge.style.display = 'none'; }
 
     // Fetch course interests from Bitrix for all pending users in parallel
+    const { data: sessionData } = await AZ.db.auth.getSession();
+    const adminToken = sessionData?.session?.access_token || EDGE_FN_KEY;
     await Promise.all(pending.map(async u => {
       try {
         const res = await fetch(EDGE_FN_URL, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + EDGE_FN_KEY },
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + adminToken },
           body: JSON.stringify({ action: 'get_courses_by_email', email: u.email }),
         });
         const d = await res.json();

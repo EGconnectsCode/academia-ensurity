@@ -29,6 +29,22 @@ function adminClient() {
   );
 }
 
+// This function has verify_jwt = false (it must stay public for the pre-login
+// password-reset actions), so actions meant for admins only — like looking up
+// a user's Bitrix course interest — have to check the caller themselves.
+async function requireAdmin(req: Request, db: ReturnType<typeof createClient>) {
+  const authHeader = req.headers.get('Authorization') || '';
+  const token = authHeader.replace(/^Bearer\s+/i, '');
+  if (!token) return false;
+
+  const { data: userData } = await db.auth.getUser(token);
+  const callerId = userData?.user?.id;
+  if (!callerId) return false;
+
+  const { data: profile } = await db.from('profiles').select('role').eq('id', callerId).single();
+  return profile?.role === 'admin' || profile?.role === 'super_admin';
+}
+
 async function bxCall(webhookUrl: string, method: string, params: unknown) {
   const res = await fetch(`${webhookUrl}${method}.json`, {
     method: 'POST',
@@ -80,7 +96,11 @@ Deno.serve(async (req: Request) => {
     if (!webhookUrl) return jsonResp({ error: 'BITRIX_WEBHOOK_URL not set' }, 500);
 
     // ── Get course interests for a registered user from Bitrix ──────────────
+    // Admin-only: reveals which courses a given email is interested in per Bitrix.
     if (body.action === 'get_courses_by_email') {
+      const db = adminClient();
+      if (!(await requireAdmin(req, db))) return jsonResp({ error: 'Forbidden' }, 403);
+
       const email: string = body.email || '';
       if (!email) return jsonResp({ modules: [] });
 
