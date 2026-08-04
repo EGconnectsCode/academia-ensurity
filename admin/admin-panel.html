@@ -733,7 +733,13 @@ async function loadPending() {
 
 async function approvePending(userId) {
   const courses = [...document.querySelectorAll(`.mod-sel-${userId}:checked`)].map(cb => cb.value);
-  if (!courses.length) { alert(t('Select at least one module before approving.','Selecciona al menos un módulo antes de aprobar.')); return; }
+  if (!courses.length) {
+    const proceed = confirm(t(
+      'No module selected — approve anyway with no module access? You can assign modules later from the Users tab.',
+      'No seleccionaste ningún módulo — ¿aprobar de todas formas sin acceso a ningún módulo? Puedes asignar módulos después desde la pestaña Usuarios.'
+    ));
+    if (!proceed) return;
+  }
   const fullAccess = document.getElementById(`full-access-${userId}`)?.checked || false;
   try {
     await AZ.db.from('profiles').update({ status: 'active', role: 'agent', full_access: fullAccess }).eq('id', userId);
