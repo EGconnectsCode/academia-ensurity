@@ -72,6 +72,12 @@ const Auth = {
     if (data.user) {
       await db.from('profiles').update({ full_name: fullName, phone, course_interest: courseInterest }).eq('id', data.user.id);
     }
+    // Supabase signUp() can return an already-authenticated session (e.g. when
+    // email confirmation is off) — sign back out immediately so a brand-new,
+    // not-yet-approved account never has live dashboard access.
+    if (data.session) {
+      await db.auth.signOut();
+    }
     return { user: data.user };
   },
 
@@ -88,11 +94,22 @@ const Auth = {
     return data.session;
   },
 
-  /** Get current user + profile (null if not logged in) */
+  /**
+   * Get current user + profile (null if not logged in).
+   * Also treats pending/suspended accounts as logged-out — Supabase signUp()
+   * can leave an authenticated session in the browser right after
+   * registration, before an admin has approved anything, so this is the
+   * single choke point (used by every page's initial session check and by
+   * requireAuth()) that actually enforces the approval gate.
+   */
   async getCurrentUser() {
     const session = await Auth.getSession();
     if (!session) return null;
     const profile = await Auth._getProfile(session.user.id);
+    if (profile.status === 'pending' || profile.status === 'suspended') {
+      await db.auth.signOut();
+      return null;
+    }
     return { user: session.user, profile };
   },
 
