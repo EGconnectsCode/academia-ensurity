@@ -1525,6 +1525,8 @@ async function showModules(profile) {
   document.getElementById('xp-display').textContent   = profile.xp || 0;
   document.getElementById('level-display').textContent = profile.level || 1;
 
+  hideAorBannerIfLicensed();
+
   const grid = document.getElementById('modules-grid');
   grid.innerHTML = '';
 
@@ -1665,6 +1667,27 @@ function closePasos() {
 document.getElementById('pasos-overlay').addEventListener('click', function(e) {
   if (e.target === this) closePasos();
 });
+
+const EDGE_FN_URL = 'https://qvamdopwbjlccazchoer.supabase.co/functions/v1/bitrix-sync';
+let _aorBannerChecked = false;
+async function hideAorBannerIfLicensed() {
+  if (_aorBannerChecked) return;
+  _aorBannerChecked = true;
+  try {
+    const session = await AZ.Auth.getSession();
+    if (!session) return;
+    const res = await fetch(EDGE_FN_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + session.access_token },
+      body: JSON.stringify({ action: 'has_license' }),
+    });
+    const data = await res.json();
+    if (data.hasLicense) {
+      const card = document.getElementById('tlh-preview-card');
+      if (card) card.style.display = 'none';
+    }
+  } catch (e) { /* leave the banner visible on any lookup failure */ }
+}
 
 let _aorGuideUrls = { en: null, es: null };
 function openAorGuide() {

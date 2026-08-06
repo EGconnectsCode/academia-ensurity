@@ -9,6 +9,8 @@ const CORS = {
 
 // Bitrix deal custom field — course interests (multi-select IDs)
 const BITRIX_COURSES_FIELD = 'UF_CRM_1766001845';
+// Bitrix deal custom field — "Insurance licenses" file upload
+const BITRIX_LICENSE_FIELD = 'UF_CRM_1767035626';
 // Bitrix contact custom field — temporary password-reset code
 const BITRIX_RESET_CODE_FIELD = 'UF_CRM_1783613073';
 
@@ -94,6 +96,32 @@ Deno.serve(async (req: Request) => {
     const webhookUrl = Deno.env.get('BITRIX_WEBHOOK_URL');
 
     if (!webhookUrl) return jsonResp({ error: 'BITRIX_WEBHOOK_URL not set' }, 500);
+
+    // ── Check whether the logged-in agent already has a license attached ────
+    // Self-lookup only: the email comes from the caller's own verified session
+    // (never from a client-supplied param), so this can't be used to probe
+    // other agents' license status.
+    if (body.action === 'has_license') {
+      const db = adminClient();
+      const authHeader = req.headers.get('Authorization') || '';
+      const token = authHeader.replace(/^Bearer\s+/i, '');
+      const { data: userData } = token ? await db.auth.getUser(token) : { data: null };
+      const email = userData?.user?.email;
+      if (!email) return jsonResp({ error: 'Unauthorized' }, 401);
+
+      const contactRes = await bxCall(webhookUrl, 'crm.contact.list', { filter: { EMAIL: email }, select: ['ID'] });
+      const contacts: Array<{ ID: string }> = contactRes.result || [];
+      let hasLicense = false;
+      for (const contact of contacts) {
+        const dealRes = await bxCall(webhookUrl, 'crm.deal.list', {
+          filter: { CONTACT_ID: contact.ID },
+          select: ['ID', BITRIX_LICENSE_FIELD],
+        });
+        const found = (dealRes.result || []).some((d: Record<string, unknown>) => !!d[BITRIX_LICENSE_FIELD]);
+        if (found) { hasLicense = true; break; }
+      }
+      return jsonResp({ hasLicense });
+    }
 
     // ── Get course interests for a registered user from Bitrix ──────────────
     // Admin-only: reveals which courses a given email is interested in per Bitrix.
