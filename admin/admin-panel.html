@@ -453,6 +453,7 @@ tr:hover td { background: var(--surface2); }
           <option value="corebr">Corebridge Financial</option>
           <option value="gtl">Guarantee Trust Life</option>
           <option value="liberty-bankers">Liberty Bankers Life</option>
+          <option value="moo">Mutual of Omaha</option>
         </select>
         <input type="search" id="access-search" placeholder="Search user…" data-ph-en="Search user…" data-ph-es="Buscar usuario…" oninput="loadAccessTable()"/>
       </div>
@@ -482,6 +483,7 @@ tr:hover td { background: var(--surface2); }
           <option value="corebr">Corebridge</option>
           <option value="gtl">GTL</option>
           <option value="liberty-bankers">Liberty Bankers</option>
+          <option value="moo">MOO</option>
         </select>
         <select class="filter-select" id="activity-event-filter" onchange="filterActivity()">
           <option value="" data-en="All events" data-es="Todos los eventos">All events</option>
@@ -517,6 +519,7 @@ tr:hover td { background: var(--surface2); }
           <option value="corebr">Corebridge</option>
           <option value="gtl">GTL</option>
           <option value="liberty-bankers">Liberty Bankers</option>
+          <option value="moo">MOO</option>
         </select>
       </div>
       <table>
@@ -563,6 +566,7 @@ const MODULE_COLORS = {
   'corebr':            '#F97316',
   'gtl':               '#0369A1',
   'liberty-bankers':   '#059669',
+  'moo':               '#1c3d5a',
 };
 const MODULE_NAMES = {
   'allstate':          'Allstate',
@@ -571,6 +575,7 @@ const MODULE_NAMES = {
   'corebr':            'Corebridge',
   'gtl':               'GTL',
   'liberty-bankers':   'Liberty Bankers',
+  'moo':               'Mutual of Omaha',
 };
 const ALL_MODULE_IDS = Object.keys(MODULE_NAMES);
 

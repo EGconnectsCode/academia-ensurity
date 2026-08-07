@@ -25,6 +25,12 @@ INSERT INTO modules (id, name, description, color) VALUES
   ('cica',               'CICA Citizens',              'CICA agent portal — policies, claims, marketing',     '#2E7D32')
 ON CONFLICT (id) DO NOTHING;
 
+-- corebr / gtl / liberty-bankers were added directly in the Supabase dashboard
+-- (not captured here at the time); moo added the same way, now tracked below.
+INSERT INTO modules (id, name, description, color) VALUES
+  ('moo', 'Mutual of Omaha', 'MOO AOR onboarding — final expense and Medicare Supplement products', '#1c3d5a')
+ON CONFLICT (id) DO NOTHING;
+
 -- ============================================================
 -- 2. PROFILES — extends Supabase auth.users
 -- ============================================================

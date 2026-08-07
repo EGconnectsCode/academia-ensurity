@@ -19,6 +19,7 @@ const MODULE_IDS = {
   COREBR:             'corebr',
   GTL:                'gtl',
   LIBERTY_BANKERS:    'liberty-bankers',
+  MOO:                'moo',
 };
 
 // ---------------------------------------------------------------------------
