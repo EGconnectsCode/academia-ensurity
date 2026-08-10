@@ -1,18 +1,55 @@
 // Vercel serverless function — receives the Bitrix24 "local application" install/open
 // POST (DOMAIN, AUTH_ID, member_id, etc.), verifies the caller against Bitrix's own
-// REST API using that AUTH_ID, and issues a Supabase session for the matching agent
-// profile — this is what makes "open the app from inside Bitrix" behave as SSO.
-//
-// Client ID/Secret are set (Vercel env vars, Production) — the local application is
-// registered in Bitrix24. Still pending before this is a real SSO flow:
-//   1. A live test open from inside Bitrix, to confirm the actual field name Bitrix
-//      uses for department on the user.current payload (varies by portal setup).
-//   2. Deciding how a profile gets tagged "internal EG agent" (vs external AOR) —
-//      this depends on the still-open access-restriction design, not just this file.
-//   3. Actually issuing the Supabase session (service-role admin API) once 1 and 2
-//      are settled — until then this intentionally stops at verifying identity only.
+// REST API using that AUTH_ID, then mints a real Supabase session for the matching
+// agent profile (creating it on first login) and redirects the browser into it —
+// this is what makes "open the app from inside Bitrix" behave as SSO.
 const BITRIX_CLIENT_ID = process.env.BITRIX_CLIENT_ID;
 const BITRIX_CLIENT_SECRET = process.env.BITRIX_CLIENT_SECRET;
+const SUPABASE_URL = process.env.SUPABASE_URL || 'https://qvamdopwbjlccazchoer.supabase.co';
+const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const SITE_URL = process.env.SITE_URL || 'https://academia-ensurity.vercel.app';
+
+function admin(path, opts = {}) {
+  return fetch(`${SUPABASE_URL}${path}`, {
+    ...opts,
+    headers: {
+      apikey: SUPABASE_SERVICE_ROLE_KEY,
+      Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+      'Content-Type': 'application/json',
+      ...(opts.headers || {}),
+    },
+  });
+}
+
+// Finds the profile for this email, creating the auth user (and its
+// auto-generated profile row, via the handle_new_user trigger) on first
+// login, then tags it as an internal EG agent with an active status —
+// Bitrix-authenticated agents skip the pending-approval flow entirely.
+async function ensureInternalProfile(email, fullName) {
+  let r = await admin(`/rest/v1/profiles?email=eq.${encodeURIComponent(email)}&select=id,agent_source,status`);
+  let rows = await r.json();
+
+  let profileId = rows[0] && rows[0].id;
+  if (!profileId) {
+    const createRes = await admin('/auth/v1/admin/users', {
+      method: 'POST',
+      body: JSON.stringify({ email, email_confirm: true, user_metadata: { full_name: fullName } }),
+    });
+    const created = await createRes.json();
+    if (!createRes.ok || !created.id) {
+      throw new Error('Could not create Supabase user: ' + JSON.stringify(created));
+    }
+    profileId = created.id;
+  }
+
+  await admin(`/rest/v1/profiles?id=eq.${profileId}`, {
+    method: 'PATCH',
+    headers: { Prefer: 'return=minimal' },
+    body: JSON.stringify({ agent_source: 'internal', status: 'active', full_name: fullName }),
+  });
+
+  return profileId;
+}
 
 // Bitrix access tokens (AUTH_ID) expire — use REFRESH_ID + the app's client
 // id/secret to get a fresh one instead of failing once the first token dies.
@@ -40,8 +77,8 @@ module.exports = async (req, res) => {
     return;
   }
 
-  if (!BITRIX_CLIENT_ID || !BITRIX_CLIENT_SECRET) {
-    res.status(500).send('BITRIX_CLIENT_ID/SECRET not configured');
+  if (!BITRIX_CLIENT_ID || !BITRIX_CLIENT_SECRET || !SUPABASE_SERVICE_ROLE_KEY) {
+    res.status(500).send('Bitrix or Supabase credentials not configured');
     return;
   }
 
@@ -85,11 +122,21 @@ module.exports = async (req, res) => {
     return;
   }
 
-  // TODO: once a live payload has been inspected and the access-restriction design
-  // is settled — look up/create the Supabase profile for bxUser.EMAIL, tag it as an
-  // internal EG agent, generate a Supabase session, and hand it back to the front end.
-  res.status(501).json({
-    error: 'Bitrix identity verified, but Supabase session hand-off is not implemented yet',
-    bitrixUser: { email: bxUser.EMAIL, name: bxUser.NAME, department: bxUser.UF_DEPARTMENT || null },
-  });
+  try {
+    await ensureInternalProfile(bxUser.EMAIL, bxUser.NAME || bxUser.EMAIL);
+
+    const linkRes = await admin('/auth/v1/admin/generate_link', {
+      method: 'POST',
+      body: JSON.stringify({ type: 'magiclink', email: bxUser.EMAIL, options: { redirectTo: SITE_URL } }),
+    });
+    const linkData = await linkRes.json();
+    if (!linkRes.ok || !linkData.properties || !linkData.properties.action_link) {
+      throw new Error('Could not generate Supabase session link: ' + JSON.stringify(linkData));
+    }
+
+    res.writeHead(302, { Location: linkData.properties.action_link });
+    res.end();
+  } catch (e) {
+    res.status(500).send('SSO sign-in failed: ' + e.message);
+  }
 };

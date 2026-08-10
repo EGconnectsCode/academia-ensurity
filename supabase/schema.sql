@@ -50,6 +50,16 @@ CREATE TABLE IF NOT EXISTS profiles (
   updated_at   TIMESTAMPTZ DEFAULT now()
 );
 
+-- Added directly in the Supabase dashboard at various points, not captured in
+-- the CREATE TABLE above at the time: status ('pending'/'active'/'suspended'),
+-- full_access, course_interest. agent_source is tracked here going forward.
+--
+-- agent_source distinguishes agents who signed up via the public registration
+-- link ('external' — AORs being contracted) from EG staff who authenticate via
+-- the Bitrix24 SSO widget ('internal'). Drives which dashboard content/flows
+-- (e.g. the Become-AOR guide) a given profile should see.
+ALTER TABLE profiles ADD COLUMN IF NOT EXISTS agent_source TEXT NOT NULL DEFAULT 'external' CHECK (agent_source IN ('external','internal'));
+
 -- Auto-create profile on auth.users insert
 CREATE OR REPLACE FUNCTION handle_new_user()
 RETURNS TRIGGER LANGUAGE plpgsql SECURITY DEFINER AS $$
