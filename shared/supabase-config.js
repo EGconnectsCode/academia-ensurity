@@ -304,10 +304,70 @@ const Activity = {
       event_type: eventType,
       event_data: eventData,
     });
+    // Every page fires exactly one 'login' event on load (main dashboard and
+    // every module's auto-login) — piggyback session tracking on it instead
+    // of requiring a separate call at every one of those call sites.
+    if (eventType === 'login') Session.start(moduleId, session);
   },
 
   async logPageView(moduleId, page) {
     return Activity.log(moduleId, 'page_view', { page });
+  },
+};
+
+// ---------------------------------------------------------------------------
+// 7b. SESSION TRACKING — how long an agent stayed, for the admin panel
+// ---------------------------------------------------------------------------
+// There's no reliable "the user closed the tab" event, so this approximates
+// session length with a periodic heartbeat (updates ended_at/duration_sec on
+// the same row every 60s) plus one best-effort update when the tab is hidden
+// or unloaded. A session with ended_at in the last ~2 minutes reads as
+// "currently active" in the admin panel; otherwise its last heartbeat is
+// treated as the real end time. Accuracy is within one heartbeat interval,
+// which is fine for usage analytics — this isn't a billing timer.
+const Session = {
+  _id: null,
+  _startedAt: null,
+  _token: null,
+  _timer: null,
+
+  async start(moduleId, authSession) {
+    if (Session._id) return; // one session row per page load
+    authSession = authSession || await Auth.getSession();
+    if (!authSession) return;
+    try {
+      const { data } = await db.from('sessions')
+        .insert({ user_id: authSession.user.id, module_id: moduleId || null, user_agent: navigator.userAgent })
+        .select('id').single();
+      if (!data) return;
+      Session._id = data.id;
+      Session._startedAt = Date.now();
+      Session._token = authSession.access_token;
+      Session._timer = setInterval(Session._tick, 60000);
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'hidden') Session._tick();
+      });
+      window.addEventListener('pagehide', Session._tick);
+    } catch (e) { /* session tracking is best-effort, never block the page */ }
+  },
+
+  _tick() {
+    if (!Session._id) return;
+    const duration_sec = Math.round((Date.now() - Session._startedAt) / 1000);
+    // Plain fetch (not the supabase-js client) so this can run with
+    // keepalive:true — needed for the update to actually complete during
+    // visibilitychange/pagehide, when the page may be torn down mid-request.
+    fetch(`${SUPABASE_URL}/rest/v1/sessions?id=eq.${Session._id}`, {
+      method: 'PATCH',
+      keepalive: true,
+      headers: {
+        apikey: SUPABASE_ANON_KEY,
+        Authorization: `Bearer ${Session._token}`,
+        'Content-Type': 'application/json',
+        Prefer: 'return=minimal',
+      },
+      body: JSON.stringify({ ended_at: new Date().toISOString(), duration_sec }),
+    }).catch(() => {});
   },
 };
 
@@ -372,6 +432,20 @@ const Admin = {
     }));
   },
 
+  async getSessions(limit = 200) {
+    const { data, error } = await db
+      .from('sessions')
+      .select('id,user_id,module_id,started_at,ended_at,duration_sec,user_agent,profiles(email,full_name)')
+      .order('started_at', { ascending: false })
+      .limit(limit);
+    if (error) throw error;
+    return (data || []).map(r => ({
+      ...r,
+      email:     r.profiles?.email,
+      full_name: r.profiles?.full_name,
+    }));
+  },
+
   async getModuleRanking(moduleId) {
     const { data, error } = await db
       .from('profiles')
@@ -415,4 +489,4 @@ async function requireAuth(moduleId, redirectTo = '/academia-ensurity.html') {
 }
 
 // Expose on window for inline scripts in HTML modules
-window.AZ = { db, Auth, Modules, Progress, Downloads, Activity, Prefs, Admin, requireAuth, MODULE_IDS };
+window.AZ = { db, Auth, Modules, Progress, Downloads, Activity, Session, Prefs, Admin, requireAuth, MODULE_IDS };

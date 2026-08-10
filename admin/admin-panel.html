@@ -330,6 +330,10 @@ tr:hover td { background: var(--surface2); }
   </a>
 
   <span class="nav-section" data-en="Analytics" data-es="Análisis">Analytics</span>
+  <a class="nav-item" onclick="showPage('sessions')" href="#">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+    <span data-en="Sessions" data-es="Sesiones">Sessions</span>
+  </a>
   <a class="nav-item" onclick="showPage('activity')" href="#">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
     <span data-en="Activity Feed" data-es="Actividad">Activity Feed</span>
@@ -461,6 +465,41 @@ tr:hover td { background: var(--surface2); }
         <thead><tr><th data-en="Name / Email" data-es="Nombre / Email">Name / Email</th><th data-en="Active Modules" data-es="Módulos Activos">Active Modules</th><th data-en="Add Module" data-es="Agregar Módulo">Add Module</th></tr></thead>
         <tbody id="access-tbody">
           <tr class="loading-row"><td colspan="3"><span class="spinner"></span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- SESSIONS PAGE -->
+  <div class="page" id="page-sessions">
+    <div class="page-header">
+      <h1 data-en="Sessions" data-es="Sesiones">Sessions</h1>
+      <p data-en="Who's connected right now, and how long each visit lasted" data-es="Quién está conectado ahora, y cuánto duró cada visita">Who's connected right now, and how long each visit lasted</p>
+    </div>
+    <div class="table-wrap">
+      <div class="table-toolbar">
+        <input type="search" id="sessions-search" placeholder="Search user…" data-ph-en="Search user…" data-ph-es="Buscar usuario…" oninput="renderSessions()"/>
+        <select class="filter-select" id="sessions-module-filter" onchange="renderSessions()">
+          <option value="" data-en="All modules" data-es="Todos los módulos">All modules</option>
+          <option value="allstate">Allstate</option>
+          <option value="american-amicable">American Amicable</option>
+          <option value="cica">CICA</option>
+          <option value="corebr">Corebridge</option>
+          <option value="gtl">GTL</option>
+          <option value="liberty-bankers">Liberty Bankers</option>
+          <option value="moo">MOO</option>
+        </select>
+      </div>
+      <table>
+        <thead><tr>
+          <th data-en="User" data-es="Usuario">User</th>
+          <th data-en="Module" data-es="Módulo">Module</th>
+          <th data-en="Started" data-es="Inicio">Started</th>
+          <th data-en="Duration" data-es="Duración">Duration</th>
+          <th data-en="Interaction" data-es="Interacción">Interaction</th>
+        </tr></thead>
+        <tbody id="sessions-tbody">
+          <tr class="loading-row"><td colspan="5"><span class="spinner"></span></td></tr>
         </tbody>
       </table>
     </div>
@@ -659,6 +698,7 @@ function showPage(id) {
   if (id === 'access')   loadAccessTable();
   if (id === 'activity') loadActivity();
   if (id === 'ranking')  loadRanking();
+  if (id === 'sessions') loadSessions();
 }
 
 // ===== PENDING APPROVALS =====
@@ -942,6 +982,73 @@ function filterActivity() {
     (!mod    || a.module_id === mod) &&
     (!evType || a.event_type === evType)
   ));
+}
+
+// ===== SESSIONS =====
+let allSessions = [];
+
+// A session's last heartbeat lands within ~60s of real time while the tab is
+// open; give it double that as slack before treating it as ended.
+const SESSION_ACTIVE_WINDOW_MS = 120000;
+
+function fmtDuration(sec) {
+  if (sec == null) return '—';
+  const h = Math.floor(sec / 3600), m = Math.floor((sec % 3600) / 60), s = sec % 60;
+  if (h) return `${h}h ${m}m`;
+  if (m) return `${m}m ${s}s`;
+  return `${s}s`;
+}
+
+async function loadSessions() {
+  allSessions = await AZ.Admin.getSessions(300);
+  renderSessions();
+}
+
+// Keep "active now" / live duration current without a manual refresh, but
+// only while this page is actually the one on screen.
+setInterval(() => { if (window._currentAdminPage === 'sessions') renderSessions(); }, 15000);
+setInterval(() => { if (window._currentAdminPage === 'sessions') loadSessions(); }, 60000);
+
+function renderSessions() {
+  const q   = (document.getElementById('sessions-search')?.value || '').toLowerCase();
+  const mod = document.getElementById('sessions-module-filter')?.value || '';
+  const now = Date.now();
+
+  const filtered = allSessions.filter(s =>
+    (!q   || s.email?.toLowerCase().includes(q) || (s.full_name||'').toLowerCase().includes(q)) &&
+    (!mod || s.module_id === mod)
+  );
+
+  const tbody = document.getElementById('sessions-tbody');
+  tbody.innerHTML = filtered.map(s => {
+    const isActive = s.ended_at && (now - new Date(s.ended_at).getTime()) < SESSION_ACTIVE_WINDOW_MS;
+    const liveSec  = isActive ? Math.round((now - new Date(s.started_at).getTime()) / 1000) : s.duration_sec;
+    const duration = isActive
+      ? `<span style="color:#10b981;font-weight:700">● ${t('Active','Activo')} · ${fmtDuration(liveSec)}</span>`
+      : fmtDuration(s.duration_sec);
+    return `
+    <tr>
+      <td>
+        <div style="font-weight:600">${escHtml(s.full_name || '—')}</div>
+        <div style="font-size:.75rem;color:var(--text2)">${escHtml(s.email || '—')}</div>
+      </td>
+      <td>${s.module_id ? `<span class="badge" style="background:${MODULE_COLORS[s.module_id]||'#aaa'}22;color:${MODULE_COLORS[s.module_id]||'#555'}">${MODULE_NAMES[s.module_id]||escHtml(s.module_id)}</span>` : '—'}</td>
+      <td style="white-space:nowrap;font-size:.8rem;color:var(--text2)" title="${fmtDate(s.started_at)}">${relTime(s.started_at)}</td>
+      <td style="white-space:nowrap">${duration}</td>
+      <td><button class="btn-sm" style="background:var(--surface2);border:1px solid var(--border);color:var(--text)" onclick="viewUserActivity('${(s.email||'').replace(/'/g,"\\'")}')" data-en="View Activity" data-es="Ver Actividad">View Activity</button></td>
+    </tr>`;
+  }).join('') || `<tr><td colspan="5" class="loading-row">${t('No sessions found.','Sin sesiones encontradas.')}</td></tr>`;
+}
+
+// Jumps to the Activity Feed pre-filtered to one user — the closest thing to
+// "what did they actually do" without a dedicated per-session event list.
+function viewUserActivity(email) {
+  if (!email) return;
+  showPage('activity');
+  loadActivity().then(() => {
+    document.getElementById('activity-search').value = email;
+    filterActivity();
+  });
 }
 
 // ===== RANKING =====
