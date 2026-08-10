@@ -127,14 +127,14 @@ module.exports = async (req, res) => {
 
     const linkRes = await admin('/auth/v1/admin/generate_link', {
       method: 'POST',
-      body: JSON.stringify({ type: 'magiclink', email: bxUser.EMAIL, options: { redirectTo: SITE_URL } }),
+      body: JSON.stringify({ type: 'magiclink', email: bxUser.EMAIL, redirect_to: SITE_URL }),
     });
     const linkData = await linkRes.json();
-    if (!linkRes.ok || !linkData.properties || !linkData.properties.action_link) {
+    if (!linkRes.ok || !linkData.action_link) {
       throw new Error('Could not generate Supabase session link: ' + JSON.stringify(linkData));
     }
 
-    res.writeHead(302, { Location: linkData.properties.action_link });
+    res.writeHead(302, { Location: linkData.action_link });
     res.end();
   } catch (e) {
     res.status(500).send('SSO sign-in failed: ' + e.message);
