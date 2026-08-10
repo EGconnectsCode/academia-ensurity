@@ -27,18 +27,36 @@ async function refreshToken(domain, refreshId) {
 }
 
 module.exports = async (req, res) => {
-  if (req.method !== 'POST') {
-    res.status(405).send('POST required — Bitrix opens local apps via POST');
+  // TEMP DEBUG — dump everything about the incoming request so we can see the
+  // real field names/shape Bitrix actually sends, whatever the HTTP method.
+  // Remove once the live payload has been inspected.
+  if (req.query && req.query.debug === '1') {
+    res.status(200).json({
+      method: req.method,
+      contentType: req.headers['content-type'] || null,
+      query: req.query,
+      body: req.body,
+    });
     return;
   }
+
   if (!BITRIX_CLIENT_ID || !BITRIX_CLIENT_SECRET) {
     res.status(500).send('BITRIX_CLIENT_ID/SECRET not configured');
     return;
   }
 
-  const { DOMAIN, AUTH_ID, REFRESH_ID, member_id } = req.body || {};
+  const src = { ...(req.query || {}), ...(req.body || {}) };
+  const DOMAIN     = src.DOMAIN     || src.domain;
+  const AUTH_ID    = src.AUTH_ID    || src.auth_id    || src.auth;
+  const REFRESH_ID = src.REFRESH_ID || src.refresh_id;
   if (!DOMAIN || !AUTH_ID) {
-    res.status(400).send('Missing DOMAIN or AUTH_ID from Bitrix');
+    res.status(400).json({
+      error: 'Missing DOMAIN or AUTH_ID from Bitrix',
+      method: req.method,
+      contentType: req.headers['content-type'] || null,
+      query: req.query,
+      body: req.body,
+    });
     return;
   }
 
