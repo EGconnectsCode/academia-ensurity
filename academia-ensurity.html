@@ -1420,6 +1420,10 @@ async function doForgot(e) {
 }
 
 async function doSignOut() {
+  // Defense in depth: the button is hidden for internal agents (see
+  // showModules), but never let this actually sign them out even if it's
+  // triggered another way — they have no password to get back in with.
+  if (window._currentProfile?.agent_source === 'internal') return;
   await AZ.Auth.signOut();
   window._currentProfile = null;
   const signoutBtn = document.getElementById('topbar-signout-btn');
@@ -1520,10 +1524,14 @@ function renderModuleCards(profile) {
 
 async function showModules(profile) {
   window._currentProfile = profile;
+  // Internal (Bitrix SSO) agents have no password to sign back in with — the
+  // only way their session actually ends is by closing the tab/window, so
+  // there's no working "sign out" action to offer them.
+  const isInternal = profile.agent_source === 'internal';
   const signoutBtn = document.getElementById('topbar-signout-btn');
-  if (signoutBtn) signoutBtn.style.display = '';
+  if (signoutBtn) signoutBtn.style.display = isInternal ? 'none' : '';
   const mSignout = document.getElementById('m-signout-btn');
-  if (mSignout) mSignout.style.display = '';
+  if (mSignout) mSignout.style.display = isInternal ? 'none' : '';
   document.getElementById('auth-section').style.display = 'none';
   document.getElementById('modules-section').style.display = 'block';
 
