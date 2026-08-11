@@ -55,7 +55,8 @@ async function ensureInternalProfile(email, fullName) {
   let rows = await r.json();
 
   let profileId = rows[0] && rows[0].id;
-  if (!profileId) {
+  const isNew = !profileId;
+  if (isNew) {
     const createRes = await admin('/auth/v1/admin/users', {
       method: 'POST',
       body: JSON.stringify({ email, email_confirm: true, user_metadata: { full_name: fullName } }),
@@ -65,6 +66,10 @@ async function ensureInternalProfile(email, fullName) {
       throw new Error('Could not create Supabase user: ' + JSON.stringify(created));
     }
     profileId = created.id;
+  } else if (rows[0].status === 'suspended') {
+    // An admin blocked this account from the panel — never silently
+    // resurrect it just because they opened the app from Bitrix again.
+    throw new Error('This account has been blocked by an administrator.');
   }
 
   // eg_member is the pre-existing flag (an EG registration code, AA-only
@@ -72,10 +77,12 @@ async function ensureInternalProfile(email, fullName) {
   // American Amicable — a Bitrix login is at least as strong a proof of
   // being EG staff, so it sets the same flag rather than introducing a
   // second, competing "is this person internal" signal.
+  const patch = { agent_source: 'internal', eg_member: true, full_name: fullName };
+  if (isNew) patch.status = 'active'; // only set on creation — never override an existing status
   await admin(`/rest/v1/profiles?id=eq.${profileId}`, {
     method: 'PATCH',
     headers: { Prefer: 'return=minimal' },
-    body: JSON.stringify({ agent_source: 'internal', eg_member: true, status: 'active', full_name: fullName }),
+    body: JSON.stringify(patch),
   });
 
   return profileId;

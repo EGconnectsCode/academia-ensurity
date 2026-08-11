@@ -394,7 +394,7 @@ const Prefs = {
 const Admin = {
   async getAllUsers() {
     const [profilesRes, modulesRes, downloadsRes, progressRes] = await Promise.all([
-      db.from('profiles').select('id,email,full_name,role,xp,level,created_at,course_interest,full_access').order('created_at', { ascending: false }),
+      db.from('profiles').select('id,email,full_name,role,xp,level,created_at,course_interest,full_access,status,agent_source').order('created_at', { ascending: false }),
       db.from('user_modules').select('user_id,module_id,active').eq('active', true),
       db.from('downloads').select('user_id'),
       db.from('progress').select('user_id').eq('completed', true),

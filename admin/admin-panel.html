@@ -862,6 +862,11 @@ function renderUsers(users) {
           title="${u.full_access?t('Revoke full access','Revocar acceso completo'):t('Grant full access','Otorgar acceso completo')}">
           ${u.full_access?'Full ✓':'Full'}
         </button>
+        <button class="btn-sm" onclick="toggleSuspended('${u.id}', '${u.status||'active'}')"
+          style="background:${u.status==='suspended'?'#ef444420':'var(--surface2)'};border:1px solid ${u.status==='suspended'?'#ef4444':'var(--border)'};color:${u.status==='suspended'?'#dc2626':'var(--text2)'}"
+          title="${u.status==='suspended'?t('Restore access','Restaurar acceso'):t('Block access — signs them out immediately, including Bitrix','Bloquear acceso — los desconecta al instante, incluso desde Bitrix')}">
+          ${u.status==='suspended'?t('Blocked','Bloqueado'):t('Block','Bloquear')}
+        </button>
       </td>
     </tr>`).join('') || `<tr><td colspan="6" class="loading-row">${t('No users found.','Sin usuarios encontrados.')}</td></tr>`;
 }
@@ -870,6 +875,20 @@ async function toggleFullAccess(userId, current) {
   const newVal = !current;
   try {
     await AZ.db.from('profiles').update({ full_access: newVal }).eq('id', userId);
+    allUsers = [];
+    loadUsers();
+  } catch(e) { alert('Error: ' + e.message); }
+}
+
+// Blocking sets status='suspended', which getCurrentUser() re-checks against
+// the database on every page load (not just at sign-in) and signs the user
+// out the moment it sees it — so this cuts off an already-open session too,
+// not just future logins, including re-entering from the Bitrix SSO widget.
+async function toggleSuspended(userId, currentStatus) {
+  const blocking = currentStatus !== 'suspended';
+  if (blocking && !confirm(t('Block this user\'s access? They will be signed out immediately, everywhere.', '¿Bloquear el acceso de este usuario? Se le cerrará la sesión al instante, en todos lados.'))) return;
+  try {
+    await AZ.db.from('profiles').update({ status: blocking ? 'suspended' : 'active' }).eq('id', userId);
     allUsers = [];
     loadUsers();
   } catch(e) { alert('Error: ' + e.message); }
