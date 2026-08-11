@@ -13,6 +13,11 @@
     style.textContent = `
       #login-screen, #auth-screen { display: none !important; }
 
+      /* The template ships its own language/dark-mode buttons; ours replace
+         them below, so hide the originals or both show up side by side. */
+      .tb-lang-btn { display:none!important; }
+      .tb-dark-btn { display:none!important; }
+
       .topbar-right { margin-left:auto!important; display:flex!important; align-items:center!important; gap:8px!important; }
       .admin-only { display:none!important; }
       body.is-admin .admin-only { display:none!important; }
