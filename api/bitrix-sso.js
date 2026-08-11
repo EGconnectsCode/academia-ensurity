@@ -9,6 +9,31 @@ const SUPABASE_URL = process.env.SUPABASE_URL || 'https://qvamdopwbjlccazchoer.s
 const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const SITE_URL = process.env.SITE_URL || 'https://academia-ensurity.vercel.app';
 
+// Explicit allowlist — only these Bitrix accounts may SSO into the Academia.
+// Confirmed by name lookup against Bitrix on 2026-08-11; spans several
+// departments (Life/Sales Life plus a few individual approvals), so this is
+// a flat email list rather than a department-based rule.
+const ALLOWED_BITRIX_EMAILS = [
+  'yohanni.beltre@ensuritygroup.com',
+  'fany.rojas@ensuritygroup.com',
+  'zeilic.hernandez@ensuritygroup.com',
+  'lidiannny.reyes@ensuritygroup.com',
+  'franklyn.almonte@ensuritygroup.com',
+  'pedro.manzanillo@ensuritygroup.com',
+  'chackie.polanco@ensuritygroup.com',
+  'daniel.ramirez@ensuritygroup.com',
+  'priscila.martinez@ensuritygroup.com',
+  'elizabeth.celestino@ensuritygroup.com',
+  'olider.veras@ensuritygroup.com',
+  'mdc@ensuritygroup.com', // Maria Martinez
+  'jhefersson.linares@egconnects.com',
+  'ner.velasquez@mymedicareprogram.com',
+  'deisy@ensuritygroup.com', // Deisy Castaño
+  'nerfi.valenzuela@myhealthprograms.com',
+  'hanz.krznaric@ensuritygroup.com',
+  'operations@ensuritygroup.com', // Moe Flores
+];
+
 function admin(path, opts = {}) {
   return fetch(`${SUPABASE_URL}${path}`, {
     ...opts,
@@ -124,6 +149,10 @@ module.exports = async (req, res) => {
   }
   if (!bxUser || !bxUser.EMAIL) {
     res.status(502).send('Bitrix did not return a user with an email');
+    return;
+  }
+  if (!ALLOWED_BITRIX_EMAILS.includes(bxUser.EMAIL.toLowerCase())) {
+    res.status(403).send('This Bitrix account is not authorized to access the Academia.');
     return;
   }
 
