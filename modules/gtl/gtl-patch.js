@@ -7,6 +7,15 @@
 
   const MODULE_ID = 'gtl';
 
+  // ── External-AOR content restriction: Forms is EG-staff-only. ──
+  function _applyExternalRestrictions(profile, isAdmin) {
+    if (profile.eg_member || isAdmin) return;
+    var nav = document.querySelector('.sb-item[data-page="forms"]');
+    if (nav) nav.style.display = 'none';
+    var page = document.getElementById('page-forms');
+    if (page) page.style.display = 'none';
+  }
+
   // ── Design system + UI overrides ──
   (function injectDesign() {
     const style = document.createElement('style');
@@ -648,6 +657,7 @@
 
     if (isAdmin) document.body.classList.add('is-admin');
     else         document.body.classList.remove('is-admin');
+    _applyExternalRestrictions(profile, isAdmin);
 
     _updateStats(profile.xp || 0, 0);
     AZ.Downloads.getForUser(profile.id, MODULE_ID).then(function (dl) {

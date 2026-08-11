@@ -1541,7 +1541,7 @@ async function showModules(profile) {
   document.getElementById('xp-display').textContent   = profile.xp || 0;
   document.getElementById('level-display').textContent = profile.level || 1;
 
-  hideAorBannerIfLicensed();
+  hideAorBannerIfLicensed(isInternal);
 
   const grid = document.getElementById('modules-grid');
   grid.innerHTML = '';
@@ -1686,9 +1686,15 @@ document.getElementById('pasos-overlay').addEventListener('click', function(e) {
 
 const EDGE_FN_URL = 'https://qvamdopwbjlccazchoer.supabase.co/functions/v1/bitrix-sync';
 let _aorBannerChecked = false;
-async function hideAorBannerIfLicensed() {
+async function hideAorBannerIfLicensed(isInternal) {
   if (_aorBannerChecked) return;
   _aorBannerChecked = true;
+  // Internal EG staff (Bitrix SSO) are never going through AOR contracting —
+  // no need to even check Bitrix for a license, just hide it outright.
+  if (isInternal) {
+    document.querySelectorAll('.aor-flow-item').forEach(el => { el.style.display = 'none'; });
+    return;
+  }
   try {
     const session = await AZ.Auth.getSession();
     if (!session) return;

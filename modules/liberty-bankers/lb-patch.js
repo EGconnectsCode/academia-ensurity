@@ -7,6 +7,16 @@
 
   const MODULE_ID = 'liberty-bankers';
 
+  // ── External-AOR content restriction: only the "New Business" category
+  // within Forms is EG-staff-only — Marketing Info stays visible to everyone. ──
+  function _applyExternalRestrictions(profile, isAdmin) {
+    if (profile.eg_member || isAdmin) return;
+    var tab = document.getElementById('fcatbtn_newbusiness');
+    if (tab) tab.style.display = 'none';
+    var panel = document.getElementById('fcat_newbusiness');
+    if (panel) panel.style.display = 'none';
+  }
+
   // ── Design system + UI overrides ──
   (function injectDesign() {
     const style = document.createElement('style');
@@ -501,6 +511,7 @@
 
     if (isAdmin) document.body.classList.add('is-admin');
     else         document.body.classList.remove('is-admin');
+    _applyExternalRestrictions(profile, isAdmin);
 
     _updateStats(profile.xp || 0, 0);
     AZ.Downloads.getForUser(profile.id, MODULE_ID).then(function (dl) {

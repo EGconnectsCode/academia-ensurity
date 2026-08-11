@@ -42,10 +42,15 @@ async function ensureInternalProfile(email, fullName) {
     profileId = created.id;
   }
 
+  // eg_member is the pre-existing flag (an EG registration code, AA-only
+  // signup path) that already gates internal-only dashboard content in
+  // American Amicable — a Bitrix login is at least as strong a proof of
+  // being EG staff, so it sets the same flag rather than introducing a
+  // second, competing "is this person internal" signal.
   await admin(`/rest/v1/profiles?id=eq.${profileId}`, {
     method: 'PATCH',
     headers: { Prefer: 'return=minimal' },
-    body: JSON.stringify({ agent_source: 'internal', status: 'active', full_name: fullName }),
+    body: JSON.stringify({ agent_source: 'internal', eg_member: true, status: 'active', full_name: fullName }),
   });
 
   return profileId;

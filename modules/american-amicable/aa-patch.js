@@ -22,6 +22,37 @@
   const MODULE_ID = 'american-amicable';
   const PREFIX    = 'aa';
 
+  // ── External-AOR content restrictions ──
+  // Order Supply / Illustrations are already gated by .is-eg-member (CSS,
+  // added earlier). These two are the same idea for sections that don't
+  // have a dedicated page-level toggle: a submenu with only some items kept,
+  // and a tab within an existing page.
+  function _restrictOtherInfoSection() {
+    var content = document.querySelector('#page-other-info .pcontent');
+    if (!content) return;
+    var keep = ['Announcements & Brochures', 'Anuncios y Folletos', 'Online Training', 'Entrenamiento Online'];
+    var children = Array.prototype.slice.call(content.children);
+    children.forEach(function (el, i) {
+      if (el.classList.contains('fgrid')) return; // shown/hidden via its heading, below
+      var text = el.textContent || '';
+      var shouldKeep = keep.some(function (k) { return text.indexOf(k) !== -1; });
+      el.style.display = shouldKeep ? '' : 'none';
+      var next = children[i + 1];
+      if (next && next.classList.contains('fgrid')) next.style.display = shouldKeep ? '' : 'none';
+    });
+  }
+  function _restrictComputerHelpTab() {
+    var tab = document.getElementById('cht-illus');
+    if (tab) tab.style.display = 'none';
+    var panel = document.getElementById('chp-illus');
+    if (panel) panel.style.display = 'none';
+  }
+  function _applyExternalRestrictions(profile, isAdmin) {
+    if (profile.eg_member || isAdmin) return; // full access — nothing to restrict
+    _restrictOtherInfoSection();
+    _restrictComputerHelpTab();
+  }
+
   // The page calls applyLang() after re-rendering the quiz, but that function
   // was never defined anywhere — every quiz render threw a ReferenceError.
   // Language visibility is already handled via the [lang-en]/[lang-es] CSS
@@ -621,6 +652,7 @@
       else         document.body.classList.remove('is-admin');
       if (profile.eg_member || isAdmin) document.body.classList.add('is-eg-member');
       else                             document.body.classList.remove('is-eg-member');
+      _applyExternalRestrictions(profile, isAdmin);
 
       // Launch app using original AA launchApp()
       if (window.launchApp) window.launchApp();
@@ -868,6 +900,7 @@
       else         document.body.classList.remove('is-admin');
       if (profile.eg_member || isAdmin) document.body.classList.add('is-eg-member');
       else                             document.body.classList.remove('is-eg-member');
+      _applyExternalRestrictions(profile, isAdmin);
 
       // Apply preferences
       if (profile.theme === 'dark') {

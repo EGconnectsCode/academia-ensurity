@@ -9,6 +9,18 @@
   const MODULE_ID = 'cica';
   const TOUR_KEY  = 'az_cica_tour_done';
 
+  // ── External-AOR content restrictions — hide entirely for agents who
+  // aren't EG staff (profile.eg_member, same flag already used in AA). ──
+  function _applyExternalRestrictions(profile, isAdmin) {
+    if (profile.eg_member || isAdmin) return;
+    ['claim', 'contracts', 'policyholder'].forEach(function (pageId) {
+      var nav = document.querySelector('.sb-item[data-page="' + pageId + '"]');
+      if (nav) nav.style.display = 'none';
+      var page = document.getElementById('page-' + pageId);
+      if (page) page.style.display = 'none';
+    });
+  }
+
   // ════════════════════════════════════════════════════════════════════════
   //  1. DESIGN OVERRIDES + LANG PILLS
   // ════════════════════════════════════════════════════════════════════════
@@ -956,6 +968,7 @@
       await _loadUserCache(profile.id, user.email);
       if (isAdmin) document.body.classList.add('is-admin');
       else         document.body.classList.remove('is-admin');
+      _applyExternalRestrictions(profile, isAdmin);
       if (window.loginUser) window.loginUser(window.CUR_USER);
       await AZ.Activity.log(MODULE_ID, 'login');
     } catch (err) {
@@ -1187,6 +1200,7 @@
 
       if (isAdmin) document.body.classList.add('is-admin');
       else         document.body.classList.remove('is-admin');
+      _applyExternalRestrictions(profile, isAdmin);
 
       if (profile.lang && window.LANG !== profile.lang) {
         window.LANG = profile.lang;
