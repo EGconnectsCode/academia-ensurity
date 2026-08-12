@@ -158,17 +158,23 @@ module.exports = async (req, res) => {
     res.status(502).send('Bitrix did not return a user with an email');
     return;
   }
-  if (!ALLOWED_BITRIX_EMAILS.includes(bxUser.EMAIL.toLowerCase())) {
+  // Bitrix returns emails with whatever casing was typed in (e.g.
+  // "Ner.Velasquez@..."), but Supabase auth/profiles store them lowercase —
+  // comparing/looking up with the raw casing silently fails to find an
+  // existing account and tries to create a duplicate instead. Normalize once
+  // here and use this everywhere below, never bxUser.EMAIL directly.
+  const email = bxUser.EMAIL.toLowerCase();
+  if (!ALLOWED_BITRIX_EMAILS.includes(email)) {
     res.status(403).send('This Bitrix account is not authorized to access the Academia.');
     return;
   }
 
   try {
-    await ensureInternalProfile(bxUser.EMAIL, bxUser.NAME || bxUser.EMAIL);
+    await ensureInternalProfile(email, bxUser.NAME || email);
 
     const linkRes = await admin('/auth/v1/admin/generate_link', {
       method: 'POST',
-      body: JSON.stringify({ type: 'magiclink', email: bxUser.EMAIL, redirect_to: SITE_URL }),
+      body: JSON.stringify({ type: 'magiclink', email, redirect_to: SITE_URL }),
     });
     const linkData = await linkRes.json();
     if (!linkRes.ok || !linkData.action_link) {
