@@ -1503,6 +1503,7 @@ function renderModuleCards(profile) {
   const lang = currentLang;
   cached.forEach(moduleId => {
     if (moduleId === 'texas-life-health') return;
+    if (moduleId === 'moo') return; // TEMP: hidden from everyone while translation work finishes — re-enable when told to
     const meta = MODULE_META[moduleId];
     if (!meta) return;
     const pills = (meta.pills[lang] || meta.pills.en).map(p => `<span class="module-pill">${p}</span>`).join(' ');
@@ -1572,6 +1573,7 @@ async function showModules(profile) {
 
   moduleIds.forEach(moduleId => {
     if (moduleId === 'texas-life-health') return;
+    if (moduleId === 'moo') return; // TEMP: hidden from everyone while translation work finishes — re-enable when told to
     const meta = MODULE_META[moduleId];
     if (!meta) return;
     const lang = currentLang;
