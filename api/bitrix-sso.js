@@ -174,7 +174,10 @@ module.exports = async (req, res) => {
 
     const linkRes = await admin('/auth/v1/admin/generate_link', {
       method: 'POST',
-      body: JSON.stringify({ type: 'magiclink', email, redirect_to: SITE_URL }),
+      // Sends the browser to a dedicated callback page (not straight to the
+      // dashboard) that explicitly awaits setSession() before navigating —
+      // see bitrix-callback.html for why.
+      body: JSON.stringify({ type: 'magiclink', email, redirect_to: `${SITE_URL}/bitrix-callback.html` }),
     });
     const linkData = await linkRes.json();
     if (!linkRes.ok || !linkData.action_link) {
