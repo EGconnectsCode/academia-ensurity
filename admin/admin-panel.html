@@ -806,7 +806,12 @@ async function loadDashboard() {
   const totalDownloads = users.reduce((s, u) => s + (u.total_downloads || 0), 0);
   const totalQuizzes   = users.reduce((s, u) => s + (u.quizzes_completed || 0), 0);
   const totalXP        = users.reduce((s, u) => s + (u.xp || 0), 0);
-  const pendingCount   = users.filter(u => u.role === 'agent' && !(u.active_modules || []).length).length;
+  // Must match the Pending page's own definition (status === 'pending') —
+  // this used to count "agent with zero modules" instead, which flagged
+  // active-but-not-yet-assigned agents (e.g. fresh Bitrix logins) as
+  // "pending approval" even though the Pending list correctly had nothing
+  // to show for them.
+  const pendingCount   = users.filter(u => u.status === 'pending').length;
 
   document.getElementById('stats-grid').innerHTML = `
     <div class="stat-card"><div class="stat-num">${totalUsers}</div><div class="stat-label">${t('Total Users','Total Usuarios')}</div></div>
