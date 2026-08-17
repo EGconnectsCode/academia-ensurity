@@ -190,6 +190,7 @@ body.is-admin .page.admin-only.active{display:block!important}
       .cm-card-aud{font-size:9px;font-weight:800;letter-spacing:1px;color:var(--tx3);margin-bottom:4px;}
       .cm-card-title{font-size:12px;font-weight:700;color:var(--tx);line-height:1.3;}
       .cm-card-bar{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;margin-top:8px;}
+      .cm-product-desc{background:linear-gradient(135deg,var(--gtl-navy) 0%,var(--gtl-blue) 100%);color:#fff;border-radius:8px;padding:14px 16px;margin-bottom:14px;font-size:12px;line-height:1.6;}
       .cm-bar-dl{background:#1565c0;}
       .cm-bar-play{background:#1565c0;}
       .cm-bar-label{font-size:11px;font-weight:700;color:#fff;}
@@ -4447,6 +4448,7 @@ html[data-lang="es"] .es{display:inline}
               <div><span class="en">Select a product above to view its marketing materials.</span><span class="es">Selecciona un producto arriba para ver sus materiales de marketing.</span></div>
             </div>
             <div id="cm-product-title" style="display:none;font-size:16px;font-weight:800;color:var(--gtl-blue-tx);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid var(--bdr);"></div>
+            <div id="cm-product-desc" class="cm-product-desc" style="display:none;"></div>
             <div id="cm-grid" class="cm-material-grid"></div>
           </div>
         </div>
@@ -4770,6 +4772,19 @@ var CM_DATA={
     {a:'CONSUMER',t:'Product Video',u:'https://vimeo.com/252775599',p:1},
   ],
 };
+var GTL_PRODUCT_DESC={
+  'Advantage Plus - DE, ID, MA, ME, NJ, OR, WA':{en:'Hospital Confinement Indemnity plan that fills the co-payments, deductibles, and coverage gaps of today\'s health insurance plans. Pays cash benefits directly to the insured for hospital confinement, ambulance trips, and skilled nursing care. Issue ages 40-85 (65-85 in MA).',es:'Plan de Indemnización por Confinamiento Hospitalario que cubre los copagos, deducibles y vacíos de cobertura de los planes de salud actuales. Paga beneficios en efectivo directamente al asegurado por confinamiento hospitalario, viajes en ambulancia y cuidado de enfermería especializada. Edades de emisión 40-85 (65-85 en MA).'},
+  'Advantage Plus Elite':{en:'Hospital Confinement Indemnity plan that fills co-payments, deductibles, and coverage limits of today\'s health plans. Cash benefits paid directly to the insured for hospital confinement, ambulance trips, and skilled nursing care.',es:'Plan de Indemnización por Confinamiento Hospitalario que cubre copagos, deducibles y límites de cobertura de los planes de salud actuales. Beneficios en efectivo pagados directamente al asegurado por confinamiento hospitalario, viajes en ambulancia y cuidado de enfermería especializada.'},
+  'Advantage Plus Elite with GPO Rider':{en:'Advantage Plus Elite with an added Guaranteed Purchase Option rider, letting clients increase their coverage at set future dates without new underwriting.',es:'Advantage Plus Elite con un beneficio adicional de Opción de Compra Garantizada, que permite a los clientes aumentar su cobertura en fechas futuras establecidas sin nueva suscripción.'},
+  'Cancer Heart Attack Stroke':{en:'Lump-sum cash benefit from $2,500 to $50,000 that lets clients design coverage for multiple types of cancer (invasive, late-stage, in-situ, skin), plus an Experimental Treatment Benefit paying an additional 25% of the chosen benefit.',es:'Beneficio en efectivo de suma global de $2,500 a $50,000 que permite a los clientes diseñar cobertura para múltiples tipos de cáncer (invasivo, en etapa avanzada, in situ, de piel), además de un Beneficio de Tratamiento Experimental que paga un 25% adicional del beneficio elegido.'},
+  'Critical Provider Plus Critical Illness':{en:'Critical illness coverage from $10,000 to $100,000 (issue ages 18-64), paying up to 2 times for 2 separate critical illness categories for up to a 250% lifetime maximum. Optional riders for accidents, hospitalization, and cancer genomic sequencing.',es:'Cobertura de enfermedad crítica de $10,000 a $100,000 (edades de emisión 18-64), que paga hasta 2 veces por 2 categorías distintas de enfermedad crítica, hasta un máximo de por vida del 250%. Beneficios adicionales opcionales para accidentes, hospitalización y secuenciación genómica de cáncer.'},
+  'Indemnity Plus Elite - Florida':{en:'Florida-specific Hospital Confinement Indemnity plan covering co-payments, deductibles, and coverage limits, with cash paid directly to the insured. Issue ages 40-85.',es:'Plan de Indemnización por Confinamiento Hospitalario específico para Florida que cubre copagos, deducibles y límites de cobertura, con efectivo pagado directamente al asegurado. Edades de emisión 40-85.'},
+  'Precision Care Cancer':{en:'Cancer insurance built on GTL\'s partnership with TGen, giving policyholders access to genomic sequencing technology and consultative oncology services alongside a lump-sum benefit up to $50,000. Optional Cancer Benefit Builder, Child Coverage, and ROP riders.',es:'Seguro de cáncer basado en la alianza de GTL con TGen, que da a los asegurados acceso a tecnología de secuenciación genómica y servicios de consulta oncológica junto con un beneficio de suma global hasta $50,000. Beneficios adicionales opcionales de Constructor de Beneficio de Cáncer, Cobertura Infantil y Devolución de Primas.'},
+  'Recover Cash':{en:'Cash benefit plan addressing caregiver burnout — helps families cover the financial toll of caring for a loved one with a prolonged illness or disability.',es:'Plan de beneficio en efectivo que atiende el agotamiento del cuidador — ayuda a las familias a cubrir el costo financiero de cuidar a un ser querido con una enfermedad o discapacidad prolongada.'},
+  'SBSA 24 Hour Accident':{en:'Group Accident Only insurance (SBSA required to apply) paying benefits directly to clients after an accident for medical expense reimbursement, with options for accidental death and dismemberment. Issue ages 18-69.',es:'Seguro Grupal Solo de Accidentes (requiere SBSA para aplicar) que paga beneficios directamente a los clientes tras un accidente para reembolso de gastos médicos, con opciones de muerte accidental y desmembramiento. Edades de emisión 18-69.'},
+  'Short-Term Home Health Care for CO, KS, KY, MT, PA, TN Only':{en:'Short-term home health care plan paying benefits directly to you regardless of other insurance. Choose from 3 daily benefit plans ($260/$520/$780) for up to 360 payments, plus a Home Health Care Aide benefit for up to 60 days — no hospitalization stay required.',es:'Plan de cuidado de salud en el hogar a corto plazo que paga beneficios directamente a usted sin importar otro seguro. Elija entre 3 planes de beneficio diario ($260/$520/$780) por hasta 360 pagos, además de un beneficio de Auxiliar de Cuidado de Salud en el Hogar por hasta 60 días — no requiere estadía hospitalaria.'},
+  'Short-Term Home Health Care with New TCARE':{en:'Short-term home health care plan addressing caregiver burnout, now integrated with TCARE assessment tools to support families caring for a loved one at home.',es:'Plan de cuidado de salud en el hogar a corto plazo que atiende el agotamiento del cuidador, ahora integrado con las herramientas de evaluación TCARE para apoyar a las familias que cuidan a un ser querido en casa.'}
+};
 var CM_LABEL_ES={
   '8.5x11 Flyer':'Folleto 8.5x11',
   'Digital Brochure':'Folleto Digital',
@@ -4795,6 +4810,9 @@ function cmLoad(product){
   document.getElementById('cm-empty').style.display='none';
   document.getElementById('cm-product-title').style.display='block';
   document.getElementById('cm-product-title').textContent=product;
+  var descEl=document.getElementById('cm-product-desc');
+  var desc=GTL_PRODUCT_DESC[product];
+  if(desc){descEl.style.display='block';descEl.textContent=window.LANG==='es'?desc.es:desc.en;}else{descEl.style.display='none';}
   var grid=document.getElementById('cm-grid');
   if(!items||!items.length){grid.innerHTML='<p style="color:var(--tx2);font-size:12px;">No materials found.</p>';return;}
   var es=window.LANG==='es';
