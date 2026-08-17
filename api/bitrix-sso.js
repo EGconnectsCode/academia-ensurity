@@ -27,7 +27,6 @@ const ALLOWED_BITRIX_EMAILS = [
   'olider.veras@ensuritygroup.com',
   'mdc@ensuritygroup.com', // Maria Martinez
   'jhefersson.linares@egconnects.com',
-  'ner.velasquez@mymedicareprogram.com',
   'deisy@ensuritygroup.com', // Deisy Castaño
   'nerfi.valenzuela@myhealthprograms.com',
   'hanz.krznaric@ensuritygroup.com',
