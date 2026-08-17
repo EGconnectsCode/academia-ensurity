@@ -119,6 +119,14 @@ body.is-admin .admin-only.sb-section{display:block!important}
 .pdf-ico{width:40px;height:40px;background:linear-gradient(135deg,#7B3F9E,#0063B1);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;color:#fff}
 .pdf-name{font-size:12px;font-weight:600;color:var(--tx);line-height:1.3}
 .pdf-dl{font-size:10px;color:var(--cb-blue-tx);font-weight:700;margin-top:3px}
+.moprod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px;margin-bottom:16px}
+.moprod-card{background:var(--sur2);border:1px solid var(--bdr);border-radius:8px;overflow:hidden;display:flex;flex-direction:column;cursor:pointer;transition:all .15s}
+.moprod-card:hover{border-color:var(--cb-blue);transform:translateY(-2px)}
+.moprod-card-bar{height:4px;background:linear-gradient(90deg,var(--cb-navy),var(--cb-blue),var(--cb-teal))}
+.moprod-card-body{padding:14px;display:flex;flex-direction:column;gap:8px;flex:1}
+.moprod-card-title{font-size:13px;font-weight:700;color:var(--tx)}
+.moprod-card-desc{font-size:11.5px;color:var(--tx2,var(--tx));line-height:1.5;flex:1}
+.moprod-card-link{font-size:11px;font-weight:700;color:var(--cb-blue-tx);display:inline-flex;align-items:center;gap:4px}
 /* ── Home cards ── */
 .home-hero{background:linear-gradient(135deg,var(--cb-navy) 0%,var(--cb-blue) 50%,var(--cb-teal) 100%);border-radius:var(--rad);padding:28px;color:#fff;margin-bottom:18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
 .hero-title{font-size:26px;font-weight:900;margin:0 0 6px}
@@ -447,21 +455,9 @@ td{padding:6px 10px;border-bottom:1px solid var(--bdr);color:var(--tx)}
 </div>
 <div class="page" id="page-products">
 <div class="ph"><div class="ph-row"><div class="ph-ico">📦</div><div><h1>📦 <span class="en">Products</span><span class="es">Productos</span></h1><p><span class="en">Download and review training materials</span><span class="es">Descarga y revisa los materiales de entrenamiento</span></p></div></div></div>
-<div class="section-wrap"><div class="pdf-grid">
-<div class="pdf-card" onclick="dl('Guaranteed Issue Life','guaranteed_issue_life','guaranteed_issue_life.pdf')">
-  <div class="pdf-ico">📄</div>
-  <div>
-    <div class="pdf-name"><span class="en">Guaranteed Issue Life</span><span class="es">Seguro de Vida Emisión Garantizada</span></div>
-    <div class="pdf-dl">📥 <span class="en">Download PDF</span><span class="es">Descargar PDF</span></div>
-  </div>
-</div>
-<div class="pdf-card" onclick="dl('Simplified Issue Life','simplified_issue_life','simplified_issue_life.pdf')">
-  <div class="pdf-ico">📄</div>
-  <div>
-    <div class="pdf-name"><span class="en">Simplified Issue Life</span><span class="es">Seguro de Vida Emisión Simplificada</span></div>
-    <div class="pdf-dl">📥 <span class="en">Download PDF</span><span class="es">Descargar PDF</span></div>
-  </div>
-</div>
+<div class="section-wrap"><div class="moprod-grid">
+<div class="moprod-card" onclick="dl('Guaranteed Issue Life','guaranteed_issue_life','guaranteed_issue_life.pdf')"><div class="moprod-card-bar"></div><div class="moprod-card-body"><div class="moprod-card-title">📄 Guaranteed Issue Whole Life (GIWL)</div><div class="moprod-card-desc"><span class="en">Final expense whole life for clients ages 50-80 — no health questions, no medical tests, guaranteed acceptance, fixed premiums, and living benefit riders at no additional charge. eApp completed in minutes.</span><span class="es">Seguro de vida entera para gastos finales, clientes de 50 a 80 años — sin preguntas de salud, sin exámenes médicos, aceptación garantizada, primas fijas, y beneficios en vida incluidos sin costo adicional. Solicitud electrónica en minutos.</span></div><span class="moprod-card-link">📄 <span class="en">View PDF</span><span class="es">Ver PDF</span></span></div></div>
+<div class="moprod-card" onclick="dl('Simplified Issue Life','simplified_issue_life','simplified_issue_life.pdf')"><div class="moprod-card-bar"></div><div class="moprod-card-body"><div class="moprod-card-title">📄 SimpliNow Legacy (SIWL)</div><div class="moprod-card-desc"><span class="en">Final expense solution for ages 50-80 with eligibility-based Level and Graded death benefit options. Instant underwriting decisions in the eApp, a limited-pay feature, and living benefits based on eligibility.</span><span class="es">Solución de gastos finales para edades 50-80 con opciones de beneficio por fallecimiento Nivelado y Graduado según elegibilidad. Decisiones de suscripción instantáneas en la solicitud electrónica, opción de pago limitado, y beneficios en vida según elegibilidad.</span></div><span class="moprod-card-link">📄 <span class="en">View PDF</span><span class="es">Ver PDF</span></span></div></div>
 </div></div>
 </div>
 <div class="page" id="page-marketing">
