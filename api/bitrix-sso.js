@@ -32,6 +32,13 @@ const ALLOWED_BITRIX_EMAILS = [
   'nerfi.valenzuela@myhealthprograms.com',
   'hanz.krznaric@ensuritygroup.com',
   'operations@ensuritygroup.com', // Moe Flores
+  // Added 2026-08-17 — confirmed against Bitrix via the "Life Insurance" dept roster
+  'ashley.amparo@ensuritygroup.com', // Ashley Amparo De Los Santos
+  'crystal.torres@ensuritygroup.com', // Crystal Torres Segura
+  'aliana.perez@ensuritygroup.com', // Eliana Altagracia Perez Sanchez — Bitrix email spells it "aliana"
+  'teodairin.rodriguez@ensuritygroup.com', // Teodairin Rodriguez Matos
+  'yeremy.calzado@ensuritygroup.com', // Yeremy Jorge Calzado Tejeda
+  'Mayely.Then@myhealthprograms.com', // Mayely Nicole Then Añazco — Bitrix first name shows as "Mayelin N."
 ];
 
 function admin(path, opts = {}) {
