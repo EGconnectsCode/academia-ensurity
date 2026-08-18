@@ -1542,14 +1542,14 @@ async function showModules(profile) {
   document.getElementById('xp-display').textContent   = profile.xp || 0;
   document.getElementById('level-display').textContent = profile.level || 1;
 
-  hideAorBannerIfLicensed(isInternal);
-
-  const grid = document.getElementById('modules-grid');
-  grid.innerHTML = '';
-
   // Admins see all; agents see only assigned modules
   let moduleIds = [];
   const isAdmin = ['admin','super_admin'].includes(profile.role);
+
+  hideAorBannerIfLicensed(isInternal, isAdmin);
+
+  const grid = document.getElementById('modules-grid');
+  grid.innerHTML = '';
 
   if (isAdmin) {
     moduleIds = Object.keys(MODULE_META);
@@ -1688,9 +1688,13 @@ document.getElementById('pasos-overlay').addEventListener('click', function(e) {
 
 const EDGE_FN_URL = 'https://qvamdopwbjlccazchoer.supabase.co/functions/v1/bitrix-sync';
 let _aorBannerChecked = false;
-async function hideAorBannerIfLicensed(isInternal) {
+async function hideAorBannerIfLicensed(isInternal, isAdmin) {
   if (_aorBannerChecked) return;
   _aorBannerChecked = true;
+  // Admins get full access to every module and section regardless of Bitrix
+  // license/contracting status — the AOR flow is an agent onboarding path,
+  // not something that should ever be hidden from an admin's own dashboard.
+  if (isAdmin) return;
   // Internal EG staff (Bitrix SSO) are never going through AOR contracting —
   // no need to even check Bitrix for a license, just hide it outright.
   if (isInternal) {
