@@ -1206,36 +1206,87 @@ document.addEventListener('DOMContentLoaded', function(){
 </div>
 <script>
 var CICA_PRODUCT_BOOKS = {
-  "brochure": {"title":"Brochure — Whole Life Insurance","intro":"Whole life insurance policies for clients ages 0-85, with an inclusive approach to underwriting that allows more clients to obtain coverage.","sections":[
-    {"label":"Coverage","items":["Whole Life insurance policies for clients ages 0-85","Death benefit amounts up to $30,000 (varies by age, benefit type, policy loans, and other factors — see policy for details)","Accidental death, terminal illness, and dismemberment benefits available"]},
-    {"label":"Key features","items":["Immediate approval","Claims paid directly to your beneficiary","No tobacco usage questions","True guaranteed issue option","Multiple premium payment options"]},
-    {"label":"About CICA Life of America","items":["Member of the Citizens, Inc. group of insurance companies","Incorporated under the laws of Colorado on February 13, 1968; began business June 12, 1968","Began conducting business in Texas on January 1, 1969","Holding company Citizens, Inc. is publicly listed on the New York Stock Exchange, fulfilling promises for over 55 years","Serves clients in their native languages across Latin America, North America, and Asia"]}
+  "brochure": {"title":{"en":"Brochure — Whole Life Insurance","es":"Folleto — Seguro de Vida Entera"},"intro":{"en":"Whole life insurance policies for clients ages 0-85, with an inclusive approach to underwriting that allows more clients to obtain coverage.","es":"Pólizas de seguro de vida entera para clientes de 0 a 85 años, con un enfoque inclusivo de suscripción que permite que más clientes obtengan cobertura."},"sections":[
+    {"label":{"en":"Coverage","es":"Cobertura"},"items":[
+      {"en":"Whole Life insurance policies for clients ages 0-85","es":"Pólizas de seguro de vida entera para clientes de 0 a 85 años"},
+      {"en":"Death benefit amounts up to $30,000 (varies by age, benefit type, policy loans, and other factors — see policy for details)","es":"Montos de beneficio por fallecimiento de hasta $30,000 (varía según la edad, el tipo de beneficio, los préstamos sobre la póliza y otros factores — ver la póliza para más detalles)"},
+      {"en":"Accidental death, terminal illness, and dismemberment benefits available","es":"Beneficios disponibles por muerte accidental, enfermedad terminal y desmembramiento"}
+    ]},
+    {"label":{"en":"Key features","es":"Características principales"},"items":[
+      {"en":"Immediate approval","es":"Aprobación inmediata"},
+      {"en":"Claims paid directly to your beneficiary","es":"Reclamos pagados directamente a su beneficiario"},
+      {"en":"No tobacco usage questions","es":"Sin preguntas sobre uso de tabaco"},
+      {"en":"True guaranteed issue option","es":"Opción de emisión verdaderamente garantizada"},
+      {"en":"Multiple premium payment options","es":"Múltiples opciones de pago de prima"}
+    ]},
+    {"label":{"en":"About CICA Life of America","es":"Acerca de CICA Life of America"},"items":[
+      {"en":"Member of the Citizens, Inc. group of insurance companies","es":"Miembro del grupo de compañías de seguros Citizens, Inc."},
+      {"en":"Incorporated under the laws of Colorado on February 13, 1968; began business June 12, 1968","es":"Incorporada bajo las leyes de Colorado el 13 de febrero de 1968; comenzó operaciones el 12 de junio de 1968"},
+      {"en":"Began conducting business in Texas on January 1, 1969","es":"Comenzó a operar en Texas el 1 de enero de 1969"},
+      {"en":"Holding company Citizens, Inc. is publicly listed on the New York Stock Exchange, fulfilling promises for over 55 years","es":"Su compañía tenedora Citizens, Inc. cotiza públicamente en la Bolsa de Nueva York, cumpliendo promesas por más de 55 años"},
+      {"en":"Serves clients in their native languages across Latin America, North America, and Asia","es":"Atiende a clientes en sus idiomas nativos en Latinoamérica, Norteamérica y Asia"}
+    ]}
   ]},
-  "corporate-brochure": {"title":"Corporate Brochure — Final Expense","intro":"Final expense whole life protection with full coverage from day one — no waiting period, no medical exams, ages 0-85.","sections":[
-    {"label":"Key features","items":["Full coverage from day one, no waiting period","Wider age range coverage (0-85 years old)","Easy application process","Immediate approval","No medical exams","No smoking restrictions","No height or weight restrictions","Death benefit amounts up to $30,000","Claims paid directly to beneficiary"]},
-    {"label":"Product options","items":["Standard Issue — a simplified underwritten product with a level guaranteed premium, guaranteed cash values, and guaranteed death benefit","Guaranteed Issue — available if you don't qualify for Standard Issue; level guaranteed premium and guaranteed cash values; death benefit is 110% of premiums paid during the first two years (contestability period), unless death is accidental"]},
-    {"label":"Optional additional coverage","items":["Terminal Illness Accelerated Death Benefit — receive a portion of the death benefit while still alive if diagnosed with a qualifying terminal illness","Accidental Death Benefit — up to $60,000 additional sum if death occurs","Accidental Dismemberment — up to $60,000 additional sum if dismemberment occurs"]},
-    {"label":"Premium payment options","items":["Payments can be scheduled to align with your Social Security payment date","ACH direct debit","Credit card options","Direct Express card","Monthly, quarterly, or yearly payments"]},
-    {"label":"Company strength","items":["A.M. Best Financial Strength Rating: B++ (Good) — 5th highest out of 16 ratings (as of August 2024)","Citizens, Inc. present in over 75 countries and 40+ U.S. states, fulfilling promises for over 55 years","Publicly listed on the New York Stock Exchange"]}
+  "corporate-brochure": {"title":{"en":"Corporate Brochure — Final Expense","es":"Folleto Corporativo — Gastos Finales"},"intro":{"en":"Final expense whole life protection with full coverage from day one — no waiting period, no medical exams, ages 0-85.","es":"Protección de vida entera para gastos finales con cobertura completa desde el primer día — sin período de espera, sin exámenes médicos, edades 0-85."},"sections":[
+    {"label":{"en":"Key features","es":"Características principales"},"items":[
+      {"en":"Full coverage from day one, no waiting period","es":"Cobertura completa desde el primer día, sin período de espera"},
+      {"en":"Wider age range coverage (0-85 years old)","es":"Rango de edad de cobertura más amplio (0 a 85 años)"},
+      {"en":"Easy application process","es":"Proceso de solicitud sencillo"},
+      {"en":"Immediate approval","es":"Aprobación inmediata"},
+      {"en":"No medical exams","es":"Sin exámenes médicos"},
+      {"en":"No smoking restrictions","es":"Sin restricciones por fumar"},
+      {"en":"No height or weight restrictions","es":"Sin restricciones de altura o peso"},
+      {"en":"Death benefit amounts up to $30,000","es":"Montos de beneficio por fallecimiento de hasta $30,000"},
+      {"en":"Claims paid directly to beneficiary","es":"Reclamos pagados directamente al beneficiario"}
+    ]},
+    {"label":{"en":"Product options","es":"Opciones de producto"},"items":[
+      {"en":"Standard Issue — a simplified underwritten product with a level guaranteed premium, guaranteed cash values, and guaranteed death benefit","es":"Standard Issue — un producto de suscripción simplificada con prima garantizada nivelada, valores en efectivo garantizados y beneficio por fallecimiento garantizado"},
+      {"en":"Guaranteed Issue — available if you don't qualify for Standard Issue; level guaranteed premium and guaranteed cash values; death benefit is 110% of premiums paid during the first two years (contestability period), unless death is accidental","es":"Guaranteed Issue — disponible si no califica para Standard Issue; prima garantizada nivelada y valores en efectivo garantizados; el beneficio por fallecimiento es el 110% de las primas pagadas durante los primeros dos años (período de impugnabilidad), a menos que la muerte sea accidental"}
+    ]},
+    {"label":{"en":"Optional additional coverage","es":"Cobertura adicional opcional"},"items":[
+      {"en":"Terminal Illness Accelerated Death Benefit — receive a portion of the death benefit while still alive if diagnosed with a qualifying terminal illness","es":"Beneficio Acelerado por Enfermedad Terminal — reciba una parte del beneficio por fallecimiento en vida si es diagnosticado con una enfermedad terminal calificada"},
+      {"en":"Accidental Death Benefit — up to $60,000 additional sum if death occurs","es":"Beneficio por Muerte Accidental — hasta $60,000 de suma adicional si ocurre el fallecimiento"},
+      {"en":"Accidental Dismemberment — up to $60,000 additional sum if dismemberment occurs","es":"Desmembramiento Accidental — hasta $60,000 de suma adicional si ocurre el desmembramiento"}
+    ]},
+    {"label":{"en":"Premium payment options","es":"Opciones de pago de prima"},"items":[
+      {"en":"Payments can be scheduled to align with your Social Security payment date","es":"Los pagos pueden programarse para coincidir con su fecha de pago del Seguro Social"},
+      {"en":"ACH direct debit","es":"Débito directo ACH"},
+      {"en":"Credit card options","es":"Opciones de tarjeta de crédito"},
+      {"en":"Direct Express card","es":"Tarjeta Direct Express"},
+      {"en":"Monthly, quarterly, or yearly payments","es":"Pagos mensuales, trimestrales o anuales"}
+    ]},
+    {"label":{"en":"Company strength","es":"Solidez de la compañía"},"items":[
+      {"en":"A.M. Best Financial Strength Rating: B++ (Good) — 5th highest out of 16 ratings (as of August 2024)","es":"Calificación de Fortaleza Financiera A.M. Best: B++ (Buena) — la 5ª más alta de 16 calificaciones (a agosto de 2024)"},
+      {"en":"Citizens, Inc. present in over 75 countries and 40+ U.S. states, fulfilling promises for over 55 years","es":"Citizens, Inc. presente en más de 75 países y más de 40 estados de EE. UU., cumpliendo promesas por más de 55 años"},
+      {"en":"Publicly listed on the New York Stock Exchange","es":"Cotiza públicamente en la Bolsa de Nueva York"}
+    ]}
   ]}
 };
 function cicaProdbookEsc(s){ var d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
+function cicaProdbookLang(){ return (typeof window.LANG!=='undefined'&&window.LANG==='es')?'es':'en'; }
 function openCicaProductBook(key){
   var d=CICA_PRODUCT_BOOKS[key];
   if(!d) return;
-  var titleEl=document.getElementById('prodbook-title'); if(titleEl) titleEl.textContent=d.title;
-  var html='<div class="prodbook-intro">'+cicaProdbookEsc(d.intro)+'</div>';
+  var lang=cicaProdbookLang();
+  document.getElementById('prodbook-overlay').setAttribute('data-book-key',key);
+  document.getElementById('prodbook-overlay').setAttribute('data-book-fn','openCicaProductBook');
+  cicaRenderProductBook(d, lang);
+  var ov=document.getElementById('prodbook-overlay'); if(ov){ ov.classList.add('active'); }
+  document.body.style.overflow='hidden';
+}
+function cicaRenderProductBook(d, lang){
+  var titleEl=document.getElementById('prodbook-title'); if(titleEl) titleEl.textContent=d.title[lang]||d.title.en;
+  var html='<div class="prodbook-intro">'+cicaProdbookEsc(d.intro[lang]||d.intro.en)+'</div>';
   (d.sections||[]).forEach(function(s){
-    html+='<h2>'+cicaProdbookEsc(s.label)+'</h2>';
-    if(s.items.length>1){
-      html+='<ul>'+s.items.map(function(it){return '<li>'+cicaProdbookEsc(it)+'</li>';}).join('')+'</ul>';
-    } else if(s.items.length===1){
-      html+='<p>'+cicaProdbookEsc(s.items[0])+'</p>';
+    html+='<h2>'+cicaProdbookEsc(s.label[lang]||s.label.en)+'</h2>';
+    var texts=s.items.map(function(it){return it[lang]||it.en;});
+    if(texts.length>1){
+      html+='<ul>'+texts.map(function(t){return '<li>'+cicaProdbookEsc(t)+'</li>';}).join('')+'</ul>';
+    } else if(texts.length===1){
+      html+='<p>'+cicaProdbookEsc(texts[0])+'</p>';
     }
   });
   var bodyEl=document.getElementById('prodbook-body'); if(bodyEl) bodyEl.innerHTML=html;
-  var ov=document.getElementById('prodbook-overlay'); if(ov){ ov.classList.add('active'); }
-  document.body.style.overflow='hidden';
 }
 function closeCicaProductBook(){
   var ov=document.getElementById('prodbook-overlay'); if(ov){ ov.classList.remove('active'); }
@@ -1247,6 +1298,20 @@ document.addEventListener('keydown', function(e){
     if(ov && ov.classList.contains('active')) closeCicaProductBook();
   }
 });
+(function(){
+  var prevSetLang=window.setLang;
+  if(typeof prevSetLang==='function'){
+    window.setLang=function(l){
+      prevSetLang(l);
+      var ov=document.getElementById('prodbook-overlay');
+      if(ov && ov.classList.contains('active')){
+        var key=ov.getAttribute('data-book-key');
+        var d=key&&CICA_PRODUCT_BOOKS[key];
+        if(d) cicaRenderProductBook(d, cicaProdbookLang());
+      }
+    };
+  }
+})();
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../../shared/supabase-config.js"></script>
