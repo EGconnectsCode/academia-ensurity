@@ -5646,72 +5646,125 @@ function openVerifPdf(){
 </div>
 <script>
 var GTL_PRODUCT_BOOKS = {
-  "Advantage Plus - DE, ID, MA, ME, NJ, OR, WA": {"title":"Advantage Plus","intro":"Hospital Confinement Indemnity plan designed to fill the co-payments, deductibles, and coverage limits of today's most popular health insurance plans.","sections":[
-    {"label":"Product type","items":["Hospital Confinement Indemnity Insurance"]},
-    {"label":"Issue age","items":["40-85","65-85 in MA"]},
-    {"label":"Available in","items":["DE, ID, MA, ME, NJ, OR, WA"]},
-    {"label":"Benefits","items":["Cash benefits paid directly to the insured","Covers hospital confinement, ambulance trips, and skilled nursing care expenses"]}
+  "Advantage Plus - DE, ID, MA, ME, NJ, OR, WA": {"title":{"en":"Advantage Plus","es":"Advantage Plus"},"intro":{"en":"Hospital Confinement Indemnity plan designed to fill the co-payments, deductibles, and coverage limits of today's most popular health insurance plans.","es":"Plan de Indemnización por Confinamiento Hospitalario diseñado para cubrir los copagos, deducibles y límites de cobertura de los planes de salud más populares de hoy."},"sections":[
+    {"label":{"en":"Product type","es":"Tipo de producto"},"items":[{"en":"Hospital Confinement Indemnity Insurance","es":"Seguro de Indemnización por Confinamiento Hospitalario"}]},
+    {"label":{"en":"Issue age","es":"Edad de emisión"},"items":[{"en":"40-85","es":"40-85"},{"en":"65-85 in MA","es":"65-85 en MA"}]},
+    {"label":{"en":"Available in","es":"Disponible en"},"items":[{"en":"DE, ID, MA, ME, NJ, OR, WA","es":"DE, ID, MA, ME, NJ, OR, WA"}]},
+    {"label":{"en":"Benefits","es":"Beneficios"},"items":[{"en":"Cash benefits paid directly to the insured","es":"Beneficios en efectivo pagados directamente al asegurado"},{"en":"Covers hospital confinement, ambulance trips, and skilled nursing care expenses","es":"Cubre confinamiento hospitalario, viajes en ambulancia y gastos de cuidado de enfermería especializada"}]}
   ]},
-  "Advantage Plus Elite": {"title":"Advantage Plus Elite","intro":"Hospital Indemnity coverage designed to help cover out-of-pocket expenses in your Medicare Advantage plan — pays cash benefits regardless of any other insurance coverage you have.","sections":[
-    {"label":"Product type","items":["Hospital Confinement Indemnity Insurance, underwritten by Guarantee Trust Life Insurance Company (GTL)"]},
-    {"label":"Optional riders","items":["Ambulance Benefit Rider (lifetime maximum of 12 trips)","Skilled Nursing Facility Benefit Rider (pays $100-$300/day)","Outpatient Therapy Benefit Rider ($50 daily benefit, limited to 15 or 30 days)","Cancer Lump Sum Benefit Rider ($2,500 / $5,000 / $7,500 / $10,000, 30-day waiting period) with a Recurrence Benefit Rider option","Emergency Room Benefit Rider ($250 / $500 / $750 / $1,000 lump sum)","Guaranteed Purchase Option Rider","Wellness Rider"]}
+  "Advantage Plus Elite": {"title":{"en":"Advantage Plus Elite","es":"Advantage Plus Elite"},"intro":{"en":"Hospital Indemnity coverage designed to help cover out-of-pocket expenses in your Medicare Advantage plan — pays cash benefits regardless of any other insurance coverage you have.","es":"Cobertura de Indemnización Hospitalaria diseñada para ayudar a cubrir gastos de bolsillo en su plan Medicare Advantage — paga beneficios en efectivo sin importar cualquier otra cobertura de seguro que tenga."},"sections":[
+    {"label":{"en":"Product type","es":"Tipo de producto"},"items":[{"en":"Hospital Confinement Indemnity Insurance, underwritten by Guarantee Trust Life Insurance Company (GTL)","es":"Seguro de Indemnización por Confinamiento Hospitalario, suscrito por Guarantee Trust Life Insurance Company (GTL)"}]},
+    {"label":{"en":"Optional riders","es":"Beneficios adicionales opcionales"},"items":[
+      {"en":"Ambulance Benefit Rider (lifetime maximum of 12 trips)","es":"Beneficio de Ambulancia (máximo de por vida de 12 viajes)"},
+      {"en":"Skilled Nursing Facility Benefit Rider (pays $100-$300/day)","es":"Beneficio de Instalación de Enfermería Especializada (paga $100-$300/día)"},
+      {"en":"Outpatient Therapy Benefit Rider ($50 daily benefit, limited to 15 or 30 days)","es":"Beneficio de Terapia Ambulatoria ($50 de beneficio diario, limitado a 15 o 30 días)"},
+      {"en":"Cancer Lump Sum Benefit Rider ($2,500 / $5,000 / $7,500 / $10,000, 30-day waiting period) with a Recurrence Benefit Rider option","es":"Beneficio de Suma Global por Cáncer ($2,500 / $5,000 / $7,500 / $10,000, período de espera de 30 días) con opción de Beneficio por Recurrencia"},
+      {"en":"Emergency Room Benefit Rider ($250 / $500 / $750 / $1,000 lump sum)","es":"Beneficio de Sala de Emergencias (suma global de $250 / $500 / $750 / $1,000)"},
+      {"en":"Guaranteed Purchase Option Rider","es":"Beneficio de Opción de Compra Garantizada"},
+      {"en":"Wellness Rider","es":"Beneficio de Bienestar"}
+    ]}
   ]},
-  "Advantage Plus Elite with GPO Rider": {"title":"Advantage Plus Elite with GPO Rider","intro":"Advantage Plus Elite built around its Guaranteed Purchase Option (GPO) Rider, letting clients increase their coverage at set future dates without new underwriting.","sections":[
-    {"label":"Product type","items":["Hospital Confinement Indemnity Insurance, underwritten by Guarantee Trust Life Insurance Company (GTL)"]},
-    {"label":"Included/optional riders","items":["Guaranteed Purchase Option Rider (featured)","Ambulance Benefit Rider (lifetime maximum of 12 trips)","Skilled Nursing Facility Benefit Rider","Outpatient Therapy Benefit Rider","Cancer Lump Sum Benefit Rider with Recurrence Benefit Rider option","Emergency Room Benefit Rider","Wellness Rider"]}
+  "Advantage Plus Elite with GPO Rider": {"title":{"en":"Advantage Plus Elite with GPO Rider","es":"Advantage Plus Elite con Beneficio GPO"},"intro":{"en":"Advantage Plus Elite built around its Guaranteed Purchase Option (GPO) Rider, letting clients increase their coverage at set future dates without new underwriting.","es":"Advantage Plus Elite estructurado alrededor de su Beneficio de Opción de Compra Garantizada (GPO), que permite a los clientes aumentar su cobertura en fechas futuras establecidas sin nueva suscripción."},"sections":[
+    {"label":{"en":"Product type","es":"Tipo de producto"},"items":[{"en":"Hospital Confinement Indemnity Insurance, underwritten by Guarantee Trust Life Insurance Company (GTL)","es":"Seguro de Indemnización por Confinamiento Hospitalario, suscrito por Guarantee Trust Life Insurance Company (GTL)"}]},
+    {"label":{"en":"Included/optional riders","es":"Beneficios incluidos/opcionales"},"items":[
+      {"en":"Guaranteed Purchase Option Rider (featured)","es":"Beneficio de Opción de Compra Garantizada (destacado)"},
+      {"en":"Ambulance Benefit Rider (lifetime maximum of 12 trips)","es":"Beneficio de Ambulancia (máximo de por vida de 12 viajes)"},
+      {"en":"Skilled Nursing Facility Benefit Rider","es":"Beneficio de Instalación de Enfermería Especializada"},
+      {"en":"Outpatient Therapy Benefit Rider","es":"Beneficio de Terapia Ambulatoria"},
+      {"en":"Cancer Lump Sum Benefit Rider with Recurrence Benefit Rider option","es":"Beneficio de Suma Global por Cáncer con opción de Beneficio por Recurrencia"},
+      {"en":"Emergency Room Benefit Rider","es":"Beneficio de Sala de Emergencias"},
+      {"en":"Wellness Rider","es":"Beneficio de Bienestar"}
+    ]}
   ]},
-  "Cancer Heart Attack Stroke": {"title":"Cancer Heart Attack Stroke","intro":"Lump-sum cash benefit plan letting clients design coverage for multiple types of cancer, plus heart attack and stroke.","sections":[
-    {"label":"Coverage options","items":["Covers Invasive Cancer, Late Stage Cancer, Cancer In-Situ, and Skin Cancer","Choose a lump-sum benefit from $2,500 to $50,000"]},
-    {"label":"Additional benefit","items":["Experimental Treatment Benefit included — pays an additional 25% of the chosen benefit"]}
+  "Cancer Heart Attack Stroke": {"title":{"en":"Cancer Heart Attack Stroke","es":"Cáncer, Ataque Cardíaco y Derrame"},"intro":{"en":"Lump-sum cash benefit plan letting clients design coverage for multiple types of cancer, plus heart attack and stroke.","es":"Plan de beneficio en efectivo de suma global que permite a los clientes diseñar cobertura para múltiples tipos de cáncer, además de ataque cardíaco y derrame cerebral."},"sections":[
+    {"label":{"en":"Coverage options","es":"Opciones de cobertura"},"items":[
+      {"en":"Covers Invasive Cancer, Late Stage Cancer, Cancer In-Situ, and Skin Cancer","es":"Cubre Cáncer Invasivo, Cáncer en Etapa Avanzada, Cáncer In Situ y Cáncer de Piel"},
+      {"en":"Choose a lump-sum benefit from $2,500 to $50,000","es":"Elija un beneficio de suma global de $2,500 a $50,000"}
+    ]},
+    {"label":{"en":"Additional benefit","es":"Beneficio adicional"},"items":[{"en":"Experimental Treatment Benefit included — pays an additional 25% of the chosen benefit","es":"Beneficio de Tratamiento Experimental incluido — paga un 25% adicional del beneficio elegido"}]}
   ]},
-  "Critical Provider Plus Critical Illness": {"title":"Critical Provider Plus","intro":"Critical Illness insurance letting clients select coverage ranging from $10,000 to $100,000, with the option to boost overall cash benefits.","sections":[
-    {"label":"Coverage","items":["Coverage from $10,000 to $100,000","Certificate pays up to 2 times for 2 separate critical illness categories, up to a 250% lifetime maximum","Benefits reduce by 50% on the insured's 65th birthday"]},
-    {"label":"Issue age","items":["18-64","Guaranteed Renewable for Life"]},
-    {"label":"Optional riders","items":["Accidents","Hospitalizations","Cancer genomic sequencing"]}
+  "Critical Provider Plus Critical Illness": {"title":{"en":"Critical Provider Plus","es":"Critical Provider Plus"},"intro":{"en":"Critical Illness insurance letting clients select coverage ranging from $10,000 to $100,000, with the option to boost overall cash benefits.","es":"Seguro de Enfermedad Crítica que permite a los clientes elegir cobertura desde $10,000 hasta $100,000, con la opción de aumentar los beneficios en efectivo totales."},"sections":[
+    {"label":{"en":"Coverage","es":"Cobertura"},"items":[
+      {"en":"Coverage from $10,000 to $100,000","es":"Cobertura de $10,000 a $100,000"},
+      {"en":"Certificate pays up to 2 times for 2 separate critical illness categories, up to a 250% lifetime maximum","es":"El certificado paga hasta 2 veces por 2 categorías distintas de enfermedad crítica, hasta un máximo de por vida del 250%"},
+      {"en":"Benefits reduce by 50% on the insured's 65th birthday","es":"Los beneficios se reducen en un 50% al cumplir el asegurado 65 años"}
+    ]},
+    {"label":{"en":"Issue age","es":"Edad de emisión"},"items":[{"en":"18-64","es":"18-64"},{"en":"Guaranteed Renewable for Life","es":"Renovable Garantizado de por Vida"}]},
+    {"label":{"en":"Optional riders","es":"Beneficios adicionales opcionales"},"items":[{"en":"Accidents","es":"Accidentes"},{"en":"Hospitalizations","es":"Hospitalizaciones"},{"en":"Cancer genomic sequencing","es":"Secuenciación genómica de cáncer"}]}
   ]},
-  "Indemnity Plus Elite - Florida": {"title":"Indemnity Plus Elite (Florida)","intro":"Florida-specific Hospital Indemnity coverage designed to help cover out-of-pocket expenses in your Medicare Advantage plan.","sections":[
-    {"label":"Product type","items":["Hospital Confinement Indemnity Insurance, underwritten by Guarantee Trust Life Insurance Company (GTL)","Florida only"]},
-    {"label":"Optional riders","items":["Skilled Nursing Facility Benefit Rider (pays $100-$220/day, Florida-specific range)","Cancer Lump Sum Benefit Rider ($2,500 / $5,000 / $7,500 / $10,000, 30-day waiting period) with a Recurrence Benefit Rider option","Outpatient Therapy Benefit Rider","Ambulance Benefit Rider"]}
+  "Indemnity Plus Elite - Florida": {"title":{"en":"Indemnity Plus Elite (Florida)","es":"Indemnity Plus Elite (Florida)"},"intro":{"en":"Florida-specific Hospital Indemnity coverage designed to help cover out-of-pocket expenses in your Medicare Advantage plan.","es":"Cobertura de Indemnización Hospitalaria específica de Florida diseñada para ayudar a cubrir gastos de bolsillo en su plan Medicare Advantage."},"sections":[
+    {"label":{"en":"Product type","es":"Tipo de producto"},"items":[{"en":"Hospital Confinement Indemnity Insurance, underwritten by Guarantee Trust Life Insurance Company (GTL)","es":"Seguro de Indemnización por Confinamiento Hospitalario, suscrito por Guarantee Trust Life Insurance Company (GTL)"},{"en":"Florida only","es":"Solo Florida"}]},
+    {"label":{"en":"Optional riders","es":"Beneficios adicionales opcionales"},"items":[
+      {"en":"Skilled Nursing Facility Benefit Rider (pays $100-$220/day, Florida-specific range)","es":"Beneficio de Instalación de Enfermería Especializada (paga $100-$220/día, rango específico de Florida)"},
+      {"en":"Cancer Lump Sum Benefit Rider ($2,500 / $5,000 / $7,500 / $10,000, 30-day waiting period) with a Recurrence Benefit Rider option","es":"Beneficio de Suma Global por Cáncer ($2,500 / $5,000 / $7,500 / $10,000, período de espera de 30 días) con opción de Beneficio por Recurrencia"},
+      {"en":"Outpatient Therapy Benefit Rider","es":"Beneficio de Terapia Ambulatoria"},
+      {"en":"Ambulance Benefit Rider","es":"Beneficio de Ambulancia"}
+    ]}
   ]},
-  "Precision Care Cancer": {"title":"Precision Care™ Cancer","intro":"Cancer insurance built on GTL's partnership with TGen, a leading nonprofit medical research institute, giving policyholders access to genomic sequencing technology beyond what most cancer plans offer.","sections":[
-    {"label":"How it works","items":["Upon approval, GTL pays a lump-sum benefit of up to $50,000","TGen coordinates biopsy shipment and genomic sequencing at its research laboratories","TGen oncology experts explain results and provide treatment recommendations based on the tumor's unique genetic markers"]},
-    {"label":"Optional riders","items":["Cancer Benefit Builder Rider","Child Coverage Rider","Return of Premium (ROP) Rider"]}
+  "Precision Care Cancer": {"title":{"en":"Precision Care™ Cancer","es":"Precision Care™ Cáncer"},"intro":{"en":"Cancer insurance built on GTL's partnership with TGen, a leading nonprofit medical research institute, giving policyholders access to genomic sequencing technology beyond what most cancer plans offer.","es":"Seguro de cáncer basado en la alianza de GTL con TGen, un instituto de investigación médica sin fines de lucro líder, que da a los asegurados acceso a tecnología de secuenciación genómica más allá de lo que ofrecen la mayoría de los planes de cáncer."},"sections":[
+    {"label":{"en":"How it works","es":"Cómo funciona"},"items":[
+      {"en":"Upon approval, GTL pays a lump-sum benefit of up to $50,000","es":"Tras la aprobación, GTL paga un beneficio de suma global de hasta $50,000"},
+      {"en":"TGen coordinates biopsy shipment and genomic sequencing at its research laboratories","es":"TGen coordina el envío de la biopsia y la secuenciación genómica en sus laboratorios de investigación"},
+      {"en":"TGen oncology experts explain results and provide treatment recommendations based on the tumor's unique genetic markers","es":"Los expertos en oncología de TGen explican los resultados y brindan recomendaciones de tratamiento basadas en los marcadores genéticos únicos del tumor"}
+    ]},
+    {"label":{"en":"Optional riders","es":"Beneficios adicionales opcionales"},"items":[{"en":"Cancer Benefit Builder Rider","es":"Beneficio Constructor de Beneficios de Cáncer"},{"en":"Child Coverage Rider","es":"Beneficio de Cobertura Infantil"},{"en":"Return of Premium (ROP) Rider","es":"Beneficio de Devolución de Prima (ROP)"}]}
   ]},
-  "Recover Cash": {"title":"Recover Cash","intro":"Cash benefit plan addressing caregiver burnout — helps families cover the financial toll of caring for a loved one with a prolonged illness or disability.","sections":[
-    {"label":"Why it matters","items":["57% of family caregivers report high levels of stress, anxiety, and/or depression","Over 40 million people in the U.S. are family caregivers","Caregiver burnout can lead to unplanned costs of professional/nursing-home care"]}
+  "Recover Cash": {"title":{"en":"Recover Cash","es":"Recover Cash"},"intro":{"en":"Cash benefit plan addressing caregiver burnout — helps families cover the financial toll of caring for a loved one with a prolonged illness or disability.","es":"Plan de beneficio en efectivo que atiende el agotamiento del cuidador — ayuda a las familias a cubrir el costo financiero de cuidar a un ser querido con una enfermedad o discapacidad prolongada."},"sections":[
+    {"label":{"en":"Why it matters","es":"Por qué es importante"},"items":[
+      {"en":"57% of family caregivers report high levels of stress, anxiety, and/or depression","es":"57% de los cuidadores familiares reportan altos niveles de estrés, ansiedad y/o depresión"},
+      {"en":"Over 40 million people in the U.S. are family caregivers","es":"Más de 40 millones de personas en EE. UU. son cuidadores familiares"},
+      {"en":"Caregiver burnout can lead to unplanned costs of professional/nursing-home care","es":"El agotamiento del cuidador puede llevar a costos imprevistos de cuidado profesional o en hogar de ancianos"}
+    ]}
   ]},
-  "SBSA 24 Hour Accident": {"title":"SBSA 24-Hour Accident","intro":"Group Accident Only insurance paying benefits directly to clients after an accident for medical expense reimbursement.","sections":[
-    {"label":"Product type","items":["Group Accident Only Insurance","Requires SBSA (Select Benefit Services Association) membership to apply"]},
-    {"label":"Issue age","items":["18-69"]},
-    {"label":"Benefits","items":["Cash paid directly to the insured for accident-related medical expenses","Options available for accidental death and dismemberment"]}
+  "SBSA 24 Hour Accident": {"title":{"en":"SBSA 24-Hour Accident","es":"SBSA Accidente 24 Horas"},"intro":{"en":"Group Accident Only insurance paying benefits directly to clients after an accident for medical expense reimbursement.","es":"Seguro Grupal Solo de Accidentes que paga beneficios directamente a los clientes tras un accidente para reembolso de gastos médicos."},"sections":[
+    {"label":{"en":"Product type","es":"Tipo de producto"},"items":[{"en":"Group Accident Only Insurance","es":"Seguro Grupal Solo de Accidentes"},{"en":"Requires SBSA (Select Benefit Services Association) membership to apply","es":"Requiere membresía SBSA (Select Benefit Services Association) para aplicar"}]},
+    {"label":{"en":"Issue age","es":"Edad de emisión"},"items":[{"en":"18-69","es":"18-69"}]},
+    {"label":{"en":"Benefits","es":"Beneficios"},"items":[{"en":"Cash paid directly to the insured for accident-related medical expenses","es":"Efectivo pagado directamente al asegurado por gastos médicos relacionados con accidentes"},{"en":"Options available for accidental death and dismemberment","es":"Opciones disponibles para muerte accidental y desmembramiento"}]}
   ]},
-  "Short-Term Home Health Care for CO, KS, KY, MT, PA, TN Only": {"title":"Short-Term Home Health Care (CO, KS, KY, MT, PA, TN)","intro":"Short-term home health care plan that pays benefits directly to you regardless of any other insurance you have — more affordable than most plan-of-care policies.","sections":[
-    {"label":"Home Health Care Benefit","items":["Up to 360 payments for services including skilled nursing, physical therapy, and general nursing care","Plan A: $260/day maximum","Plan B: $520/day maximum","Plan C: $780/day maximum"]},
-    {"label":"Home Health Care Aide Benefit","items":["Up to 60 days of coverage","Plan A: $71/day","Plan B: $140/day","Plan C: $208/day","No hospitalization stay required"]},
-    {"label":"Underwriting","items":["Only 3 or 4 underwriting questions"]}
+  "Short-Term Home Health Care for CO, KS, KY, MT, PA, TN Only": {"title":{"en":"Short-Term Home Health Care (CO, KS, KY, MT, PA, TN)","es":"Cuidado de Salud en el Hogar a Corto Plazo (CO, KS, KY, MT, PA, TN)"},"intro":{"en":"Short-term home health care plan that pays benefits directly to you regardless of any other insurance you have — more affordable than most plan-of-care policies.","es":"Plan de cuidado de salud en el hogar a corto plazo que paga beneficios directamente a usted sin importar otro seguro que tenga — más económico que la mayoría de las pólizas de plan de cuidado."},"sections":[
+    {"label":{"en":"Home Health Care Benefit","es":"Beneficio de Cuidado de Salud en el Hogar"},"items":[
+      {"en":"Up to 360 payments for services including skilled nursing, physical therapy, and general nursing care","es":"Hasta 360 pagos por servicios que incluyen enfermería especializada, fisioterapia y cuidado general de enfermería"},
+      {"en":"Plan A: $260/day maximum","es":"Plan A: máximo $260/día"},
+      {"en":"Plan B: $520/day maximum","es":"Plan B: máximo $520/día"},
+      {"en":"Plan C: $780/day maximum","es":"Plan C: máximo $780/día"}
+    ]},
+    {"label":{"en":"Home Health Care Aide Benefit","es":"Beneficio de Auxiliar de Cuidado de Salud en el Hogar"},"items":[
+      {"en":"Up to 60 days of coverage","es":"Hasta 60 días de cobertura"},
+      {"en":"Plan A: $71/day","es":"Plan A: $71/día"},
+      {"en":"Plan B: $140/day","es":"Plan B: $140/día"},
+      {"en":"Plan C: $208/day","es":"Plan C: $208/día"},
+      {"en":"No hospitalization stay required","es":"No requiere estadía hospitalaria"}
+    ]},
+    {"label":{"en":"Underwriting","es":"Suscripción"},"items":[{"en":"Only 3 or 4 underwriting questions","es":"Solo 3 o 4 preguntas de suscripción"}]}
   ]},
-  "Short-Term Home Health Care with New TCARE": {"title":"Short-Term Home Health Care with TCARE","intro":"Short-term home health care plan addressing caregiver burnout, now integrated with TCARE assessment tools to support families caring for a loved one at home.","sections":[
-    {"label":"Why it matters","items":["57% of family caregivers report high levels of stress, anxiety, and/or depression","Over 40 million people in the U.S. are family caregivers"]},
-    {"label":"What's different","items":["Integrated with TCARE, a caregiver assessment and support tool, alongside GTL's standard short-term home health care benefits"]}
+  "Short-Term Home Health Care with New TCARE": {"title":{"en":"Short-Term Home Health Care with TCARE","es":"Cuidado de Salud en el Hogar a Corto Plazo con TCARE"},"intro":{"en":"Short-term home health care plan addressing caregiver burnout, now integrated with TCARE assessment tools to support families caring for a loved one at home.","es":"Plan de cuidado de salud en el hogar a corto plazo que atiende el agotamiento del cuidador, ahora integrado con las herramientas de evaluación TCARE para apoyar a las familias que cuidan a un ser querido en casa."},"sections":[
+    {"label":{"en":"Why it matters","es":"Por qué es importante"},"items":[{"en":"57% of family caregivers report high levels of stress, anxiety, and/or depression","es":"57% de los cuidadores familiares reportan altos niveles de estrés, ansiedad y/o depresión"},{"en":"Over 40 million people in the U.S. are family caregivers","es":"Más de 40 millones de personas en EE. UU. son cuidadores familiares"}]},
+    {"label":{"en":"What's different","es":"Qué es diferente"},"items":[{"en":"Integrated with TCARE, a caregiver assessment and support tool, alongside GTL's standard short-term home health care benefits","es":"Integrado con TCARE, una herramienta de evaluación y apoyo para cuidadores, junto con los beneficios estándar de cuidado de salud en el hogar a corto plazo de GTL"}]}
   ]}
 };
 function gtlProdbookEsc(s){ var d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
+function gtlProdbookLang(){ return (typeof window.LANG!=='undefined'&&window.LANG==='es')?'es':'en'; }
 function openGtlProductBook(key){
   var d=GTL_PRODUCT_BOOKS[key];
   if(!d) return;
-  var titleEl=document.getElementById('prodbook-title'); if(titleEl) titleEl.textContent=d.title;
-  var html='<div class="prodbook-intro">'+gtlProdbookEsc(d.intro)+'</div>';
+  document.getElementById('prodbook-overlay').setAttribute('data-book-key',key);
+  gtlRenderProductBook(d, gtlProdbookLang());
+  var ov=document.getElementById('prodbook-overlay'); if(ov){ ov.classList.add('active'); }
+  document.body.style.overflow='hidden';
+}
+function gtlRenderProductBook(d, lang){
+  var titleEl=document.getElementById('prodbook-title'); if(titleEl) titleEl.textContent=d.title[lang]||d.title.en;
+  var html='<div class="prodbook-intro">'+gtlProdbookEsc(d.intro[lang]||d.intro.en)+'</div>';
   (d.sections||[]).forEach(function(s){
-    html+='<h2>'+gtlProdbookEsc(s.label)+'</h2>';
-    if(s.items.length>1){
-      html+='<ul>'+s.items.map(function(it){return '<li>'+gtlProdbookEsc(it)+'</li>';}).join('')+'</ul>';
-    } else if(s.items.length===1){
-      html+='<p>'+gtlProdbookEsc(s.items[0])+'</p>';
+    html+='<h2>'+gtlProdbookEsc(s.label[lang]||s.label.en)+'</h2>';
+    var texts=s.items.map(function(it){return it[lang]||it.en;});
+    if(texts.length>1){
+      html+='<ul>'+texts.map(function(t){return '<li>'+gtlProdbookEsc(t)+'</li>';}).join('')+'</ul>';
+    } else if(texts.length===1){
+      html+='<p>'+gtlProdbookEsc(texts[0])+'</p>';
     }
   });
   var bodyEl=document.getElementById('prodbook-body'); if(bodyEl) bodyEl.innerHTML=html;
-  var ov=document.getElementById('prodbook-overlay'); if(ov){ ov.classList.add('active'); }
-  document.body.style.overflow='hidden';
 }
 function closeGtlProductBook(){
   var ov=document.getElementById('prodbook-overlay'); if(ov){ ov.classList.remove('active'); }
@@ -5723,6 +5776,20 @@ document.addEventListener('keydown', function(e){
     if(ov && ov.classList.contains('active')) closeGtlProductBook();
   }
 });
+(function(){
+  var prevSetLang=window.setLang;
+  if(typeof prevSetLang==='function'){
+    window.setLang=function(l){
+      prevSetLang(l);
+      var ov=document.getElementById('prodbook-overlay');
+      if(ov && ov.classList.contains('active')){
+        var key=ov.getAttribute('data-book-key');
+        var d=key&&GTL_PRODUCT_BOOKS[key];
+        if(d) gtlRenderProductBook(d, gtlProdbookLang());
+      }
+    };
+  }
+})();
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../../shared/supabase-config.js"></script>
