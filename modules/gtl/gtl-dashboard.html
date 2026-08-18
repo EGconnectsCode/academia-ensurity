@@ -191,6 +191,26 @@ body.is-admin .page.admin-only.active{display:block!important}
       .cm-card-title{font-size:12px;font-weight:700;color:var(--tx);line-height:1.3;}
       .cm-card-bar{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;margin-top:8px;}
       .cm-product-desc{background:linear-gradient(135deg,var(--gtl-navy) 0%,var(--gtl-blue) 100%);color:#fff;border-radius:8px;padding:14px 16px;margin-bottom:14px;font-size:12px;line-height:1.6;}
+      .cm-product-desc-link{display:inline-flex;align-items:center;gap:4px;margin-top:10px;font-size:11.5px;font-weight:700;color:#fff;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.4);border-radius:20px;padding:5px 12px;cursor:pointer;}
+      .cm-product-desc-link:hover{background:rgba(255,255,255,.3);}
+      .prodbook-overlay{display:none;position:fixed;inset:0;background:rgba(27,34,73,.62);z-index:9999;align-items:center;justify-content:center;padding:24px}
+      .prodbook-overlay.active{display:flex}
+      .prodbook-modal{background:var(--sur);border-radius:14px;max-width:760px;width:100%;max-height:88vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,.4)}
+      .prodbook-header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 26px;background:linear-gradient(135deg,var(--gtl-navy) 0%,var(--gtl-blue) 100%);color:#fff;flex-shrink:0}
+      .prodbook-header-title{font-size:17px;font-weight:700}
+      .prodbook-header-sub{font-size:11px;opacity:.85;margin-top:2px}
+      .prodbook-close{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.45);color:#fff;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;white-space:nowrap;transition:background .15s}
+      .prodbook-close:hover{background:rgba(255,255,255,.3)}
+      .prodbook-body{padding:30px 34px;overflow-y:auto;font-family:Georgia,'Times New Roman',serif;color:var(--tx);line-height:1.7;background:var(--sur)}
+      .prodbook-intro{font-size:14.5px;font-style:italic;color:var(--tx2);margin:0 0 20px;padding-bottom:16px;border-bottom:1px solid var(--bdr)}
+      .prodbook-body h2{font-size:14.5px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:var(--gtl-blue-tx);border-bottom:2px solid var(--bdr);padding-bottom:6px;margin:22px 0 10px;letter-spacing:.2px}
+      .prodbook-body h2:first-of-type{margin-top:0}
+      .prodbook-body p{font-size:13.5px;margin:0 0 10px}
+      .prodbook-body ul{margin:0 0 4px 20px;padding:0;font-size:13.5px}
+      .prodbook-body li{margin-bottom:7px}
+      .prodbook-footer{padding:14px 26px;border-top:1px solid var(--bdr);background:var(--sur2);flex-shrink:0;display:flex;justify-content:flex-end}
+      .prodbook-footer .prodbook-close{background:var(--gtl-blue);border-color:var(--gtl-blue);color:#fff}
+      .prodbook-footer .prodbook-close:hover{background:var(--gtl-navy)}
       .cm-bar-dl{background:#1565c0;}
       .cm-bar-play{background:#1565c0;}
       .cm-bar-label{font-size:11px;font-weight:700;color:#fff;}
@@ -4812,7 +4832,18 @@ function cmLoad(product){
   document.getElementById('cm-product-title').textContent=product;
   var descEl=document.getElementById('cm-product-desc');
   var desc=GTL_PRODUCT_DESC[product];
-  if(desc){descEl.style.display='block';descEl.textContent=window.LANG==='es'?desc.es:desc.en;}else{descEl.style.display='none';}
+  if(desc){
+    descEl.style.display='block';
+    descEl.textContent=window.LANG==='es'?desc.es:desc.en;
+    if(GTL_PRODUCT_BOOKS[product]){
+      var readBtn=document.createElement('span');
+      readBtn.className='cm-product-desc-link';
+      readBtn.setAttribute('onclick',"openGtlProductBook('"+product.replace(/'/g,"\\'")+"')");
+      readBtn.textContent=window.LANG==='es'?'📖 Leer Detalles Completos':'📖 Read Full Details';
+      descEl.appendChild(document.createElement('br'));
+      descEl.appendChild(readBtn);
+    }
+  }else{descEl.style.display='none';}
   var grid=document.getElementById('cm-grid');
   if(!items||!items.length){grid.innerHTML='<p style="color:var(--tx2);font-size:12px;">No materials found.</p>';return;}
   var es=window.LANG==='es';
@@ -5598,6 +5629,101 @@ function openVerifPdf(){
 </script>
 
 <!-- GTL Contact Modal -->
+<div id="prodbook-overlay" class="prodbook-overlay" onclick="if(event.target===this) closeGtlProductBook()">
+  <div class="prodbook-modal">
+    <div class="prodbook-header">
+      <div>
+        <div class="prodbook-header-title" id="prodbook-title"></div>
+        <div class="prodbook-header-sub"><span class="en">Product details</span><span class="es">Detalles del producto</span></div>
+      </div>
+      <button class="prodbook-close" onclick="closeGtlProductBook()">✕ <span class="en">Exit</span><span class="es">Salir</span></button>
+    </div>
+    <div class="prodbook-body" id="prodbook-body"></div>
+    <div class="prodbook-footer">
+      <button class="prodbook-close" onclick="closeGtlProductBook()"><span class="en">Close</span><span class="es">Cerrar</span></button>
+    </div>
+  </div>
+</div>
+<script>
+var GTL_PRODUCT_BOOKS = {
+  "Advantage Plus - DE, ID, MA, ME, NJ, OR, WA": {"title":"Advantage Plus","intro":"Hospital Confinement Indemnity plan designed to fill the co-payments, deductibles, and coverage limits of today's most popular health insurance plans.","sections":[
+    {"label":"Product type","items":["Hospital Confinement Indemnity Insurance"]},
+    {"label":"Issue age","items":["40-85","65-85 in MA"]},
+    {"label":"Available in","items":["DE, ID, MA, ME, NJ, OR, WA"]},
+    {"label":"Benefits","items":["Cash benefits paid directly to the insured","Covers hospital confinement, ambulance trips, and skilled nursing care expenses"]}
+  ]},
+  "Advantage Plus Elite": {"title":"Advantage Plus Elite","intro":"Hospital Indemnity coverage designed to help cover out-of-pocket expenses in your Medicare Advantage plan — pays cash benefits regardless of any other insurance coverage you have.","sections":[
+    {"label":"Product type","items":["Hospital Confinement Indemnity Insurance, underwritten by Guarantee Trust Life Insurance Company (GTL)"]},
+    {"label":"Optional riders","items":["Ambulance Benefit Rider (lifetime maximum of 12 trips)","Skilled Nursing Facility Benefit Rider (pays $100-$300/day)","Outpatient Therapy Benefit Rider ($50 daily benefit, limited to 15 or 30 days)","Cancer Lump Sum Benefit Rider ($2,500 / $5,000 / $7,500 / $10,000, 30-day waiting period) with a Recurrence Benefit Rider option","Emergency Room Benefit Rider ($250 / $500 / $750 / $1,000 lump sum)","Guaranteed Purchase Option Rider","Wellness Rider"]}
+  ]},
+  "Advantage Plus Elite with GPO Rider": {"title":"Advantage Plus Elite with GPO Rider","intro":"Advantage Plus Elite built around its Guaranteed Purchase Option (GPO) Rider, letting clients increase their coverage at set future dates without new underwriting.","sections":[
+    {"label":"Product type","items":["Hospital Confinement Indemnity Insurance, underwritten by Guarantee Trust Life Insurance Company (GTL)"]},
+    {"label":"Included/optional riders","items":["Guaranteed Purchase Option Rider (featured)","Ambulance Benefit Rider (lifetime maximum of 12 trips)","Skilled Nursing Facility Benefit Rider","Outpatient Therapy Benefit Rider","Cancer Lump Sum Benefit Rider with Recurrence Benefit Rider option","Emergency Room Benefit Rider","Wellness Rider"]}
+  ]},
+  "Cancer Heart Attack Stroke": {"title":"Cancer Heart Attack Stroke","intro":"Lump-sum cash benefit plan letting clients design coverage for multiple types of cancer, plus heart attack and stroke.","sections":[
+    {"label":"Coverage options","items":["Covers Invasive Cancer, Late Stage Cancer, Cancer In-Situ, and Skin Cancer","Choose a lump-sum benefit from $2,500 to $50,000"]},
+    {"label":"Additional benefit","items":["Experimental Treatment Benefit included — pays an additional 25% of the chosen benefit"]}
+  ]},
+  "Critical Provider Plus Critical Illness": {"title":"Critical Provider Plus","intro":"Critical Illness insurance letting clients select coverage ranging from $10,000 to $100,000, with the option to boost overall cash benefits.","sections":[
+    {"label":"Coverage","items":["Coverage from $10,000 to $100,000","Certificate pays up to 2 times for 2 separate critical illness categories, up to a 250% lifetime maximum","Benefits reduce by 50% on the insured's 65th birthday"]},
+    {"label":"Issue age","items":["18-64","Guaranteed Renewable for Life"]},
+    {"label":"Optional riders","items":["Accidents","Hospitalizations","Cancer genomic sequencing"]}
+  ]},
+  "Indemnity Plus Elite - Florida": {"title":"Indemnity Plus Elite (Florida)","intro":"Florida-specific Hospital Indemnity coverage designed to help cover out-of-pocket expenses in your Medicare Advantage plan.","sections":[
+    {"label":"Product type","items":["Hospital Confinement Indemnity Insurance, underwritten by Guarantee Trust Life Insurance Company (GTL)","Florida only"]},
+    {"label":"Optional riders","items":["Skilled Nursing Facility Benefit Rider (pays $100-$220/day, Florida-specific range)","Cancer Lump Sum Benefit Rider ($2,500 / $5,000 / $7,500 / $10,000, 30-day waiting period) with a Recurrence Benefit Rider option","Outpatient Therapy Benefit Rider","Ambulance Benefit Rider"]}
+  ]},
+  "Precision Care Cancer": {"title":"Precision Care™ Cancer","intro":"Cancer insurance built on GTL's partnership with TGen, a leading nonprofit medical research institute, giving policyholders access to genomic sequencing technology beyond what most cancer plans offer.","sections":[
+    {"label":"How it works","items":["Upon approval, GTL pays a lump-sum benefit of up to $50,000","TGen coordinates biopsy shipment and genomic sequencing at its research laboratories","TGen oncology experts explain results and provide treatment recommendations based on the tumor's unique genetic markers"]},
+    {"label":"Optional riders","items":["Cancer Benefit Builder Rider","Child Coverage Rider","Return of Premium (ROP) Rider"]}
+  ]},
+  "Recover Cash": {"title":"Recover Cash","intro":"Cash benefit plan addressing caregiver burnout — helps families cover the financial toll of caring for a loved one with a prolonged illness or disability.","sections":[
+    {"label":"Why it matters","items":["57% of family caregivers report high levels of stress, anxiety, and/or depression","Over 40 million people in the U.S. are family caregivers","Caregiver burnout can lead to unplanned costs of professional/nursing-home care"]}
+  ]},
+  "SBSA 24 Hour Accident": {"title":"SBSA 24-Hour Accident","intro":"Group Accident Only insurance paying benefits directly to clients after an accident for medical expense reimbursement.","sections":[
+    {"label":"Product type","items":["Group Accident Only Insurance","Requires SBSA (Select Benefit Services Association) membership to apply"]},
+    {"label":"Issue age","items":["18-69"]},
+    {"label":"Benefits","items":["Cash paid directly to the insured for accident-related medical expenses","Options available for accidental death and dismemberment"]}
+  ]},
+  "Short-Term Home Health Care for CO, KS, KY, MT, PA, TN Only": {"title":"Short-Term Home Health Care (CO, KS, KY, MT, PA, TN)","intro":"Short-term home health care plan that pays benefits directly to you regardless of any other insurance you have — more affordable than most plan-of-care policies.","sections":[
+    {"label":"Home Health Care Benefit","items":["Up to 360 payments for services including skilled nursing, physical therapy, and general nursing care","Plan A: $260/day maximum","Plan B: $520/day maximum","Plan C: $780/day maximum"]},
+    {"label":"Home Health Care Aide Benefit","items":["Up to 60 days of coverage","Plan A: $71/day","Plan B: $140/day","Plan C: $208/day","No hospitalization stay required"]},
+    {"label":"Underwriting","items":["Only 3 or 4 underwriting questions"]}
+  ]},
+  "Short-Term Home Health Care with New TCARE": {"title":"Short-Term Home Health Care with TCARE","intro":"Short-term home health care plan addressing caregiver burnout, now integrated with TCARE assessment tools to support families caring for a loved one at home.","sections":[
+    {"label":"Why it matters","items":["57% of family caregivers report high levels of stress, anxiety, and/or depression","Over 40 million people in the U.S. are family caregivers"]},
+    {"label":"What's different","items":["Integrated with TCARE, a caregiver assessment and support tool, alongside GTL's standard short-term home health care benefits"]}
+  ]}
+};
+function gtlProdbookEsc(s){ var d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
+function openGtlProductBook(key){
+  var d=GTL_PRODUCT_BOOKS[key];
+  if(!d) return;
+  var titleEl=document.getElementById('prodbook-title'); if(titleEl) titleEl.textContent=d.title;
+  var html='<div class="prodbook-intro">'+gtlProdbookEsc(d.intro)+'</div>';
+  (d.sections||[]).forEach(function(s){
+    html+='<h2>'+gtlProdbookEsc(s.label)+'</h2>';
+    if(s.items.length>1){
+      html+='<ul>'+s.items.map(function(it){return '<li>'+gtlProdbookEsc(it)+'</li>';}).join('')+'</ul>';
+    } else if(s.items.length===1){
+      html+='<p>'+gtlProdbookEsc(s.items[0])+'</p>';
+    }
+  });
+  var bodyEl=document.getElementById('prodbook-body'); if(bodyEl) bodyEl.innerHTML=html;
+  var ov=document.getElementById('prodbook-overlay'); if(ov){ ov.classList.add('active'); }
+  document.body.style.overflow='hidden';
+}
+function closeGtlProductBook(){
+  var ov=document.getElementById('prodbook-overlay'); if(ov){ ov.classList.remove('active'); }
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown', function(e){
+  if(e.key==='Escape'){
+    var ov=document.getElementById('prodbook-overlay');
+    if(ov && ov.classList.contains('active')) closeGtlProductBook();
+  }
+});
+</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../../shared/supabase-config.js"></script>
 <script src="gtl-patch.js"></script>
