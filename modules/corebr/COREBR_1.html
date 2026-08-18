@@ -1846,39 +1846,92 @@ function openVideo(url, title) {
 </div>
 <script>
 var COREBR_PRODUCT_BOOKS = {
-  "giwl": {"title":"Guaranteed Issue Whole Life (GIWL)","intro":"Guaranteed Issue Whole Life for final expense needs — no health questions, no medical exam, guaranteed acceptance for ages 50-80.","sections":[
-    {"label":"Coverage","items":["Coverage amounts from $5,000 to $25,000","Premiums never increase","Total aggregate cap of $25,000 across all AGL Guaranteed Issue Whole Life policies on one person"]},
-    {"label":"Underwriting","items":["No health questions to answer","No medical tests","Acceptance is guaranteed","Required premium payments stop at or before age 90"]},
-    {"label":"Death benefit","items":["Full death benefit paid once the insured has been covered for the first two policy years","If death occurs in the first two years (other than accidental), the benefit paid is 110% of premiums paid to date"]},
-    {"label":"Riders","items":["Chronic Illness Accelerated Death Benefit Rider (included)","Critical Illness Accelerated Death Benefit Rider","Terminal Illness Accelerated Death Benefit Rider","Rider benefits can help pay medical expenses or supplement other needs; limited to the total premiums paid"]},
-    {"label":"Issuer","items":["Policies issued by American General Life Insurance Company (AGL), Houston, TX","Not available in New York","Guarantees are backed by the claims-paying ability of the issuing insurance company"]}
+  "giwl": {"title":{"en":"Guaranteed Issue Whole Life (GIWL)","es":"Vida Entera de Emisión Garantizada (GIWL)"},"intro":{"en":"Guaranteed Issue Whole Life for final expense needs — no health questions, no medical exam, guaranteed acceptance for ages 50-80.","es":"Vida Entera de Emisión Garantizada para necesidades de gastos finales — sin preguntas de salud, sin examen médico, aceptación garantizada para edades 50-80."},"sections":[
+    {"label":{"en":"Coverage","es":"Cobertura"},"items":[
+      {"en":"Coverage amounts from $5,000 to $25,000","es":"Montos de cobertura de $5,000 a $25,000"},
+      {"en":"Premiums never increase","es":"Las primas nunca aumentan"},
+      {"en":"Total aggregate cap of $25,000 across all AGL Guaranteed Issue Whole Life policies on one person","es":"Tope agregado total de $25,000 entre todas las pólizas de Vida Entera de Emisión Garantizada de AGL sobre una misma persona"}
+    ]},
+    {"label":{"en":"Underwriting","es":"Suscripción"},"items":[
+      {"en":"No health questions to answer","es":"Sin preguntas de salud que responder"},
+      {"en":"No medical tests","es":"Sin exámenes médicos"},
+      {"en":"Acceptance is guaranteed","es":"La aceptación está garantizada"},
+      {"en":"Required premium payments stop at or before age 90","es":"Los pagos de prima requeridos se detienen en o antes de los 90 años"}
+    ]},
+    {"label":{"en":"Death benefit","es":"Beneficio por fallecimiento"},"items":[
+      {"en":"Full death benefit paid once the insured has been covered for the first two policy years","es":"Se paga el beneficio completo por fallecimiento una vez que el asegurado ha estado cubierto los primeros dos años de la póliza"},
+      {"en":"If death occurs in the first two years (other than accidental), the benefit paid is 110% of premiums paid to date","es":"Si el fallecimiento ocurre en los primeros dos años (que no sea accidental), el beneficio pagado es el 110% de las primas pagadas hasta la fecha"}
+    ]},
+    {"label":{"en":"Riders","es":"Beneficios adicionales"},"items":[
+      {"en":"Chronic Illness Accelerated Death Benefit Rider (included)","es":"Beneficio Acelerado por Enfermedad Crónica (incluido)"},
+      {"en":"Critical Illness Accelerated Death Benefit Rider","es":"Beneficio Acelerado por Enfermedad Crítica"},
+      {"en":"Terminal Illness Accelerated Death Benefit Rider","es":"Beneficio Acelerado por Enfermedad Terminal"},
+      {"en":"Rider benefits can help pay medical expenses or supplement other needs; limited to the total premiums paid","es":"Los beneficios adicionales pueden ayudar a pagar gastos médicos u otras necesidades; limitados al total de primas pagadas"}
+    ]},
+    {"label":{"en":"Issuer","es":"Emisor"},"items":[
+      {"en":"Policies issued by American General Life Insurance Company (AGL), Houston, TX","es":"Pólizas emitidas por American General Life Insurance Company (AGL), Houston, TX"},
+      {"en":"Not available in New York","es":"No disponible en Nueva York"},
+      {"en":"Guarantees are backed by the claims-paying ability of the issuing insurance company","es":"Las garantías están respaldadas por la capacidad de pago de reclamos de la compañía aseguradora emisora"}
+    ]}
   ]},
-  "siwl": {"title":"SimpliNow Legacy (SIWL)","intro":"Simplified Issue Whole Life for final expense needs — a fast eApp decision with just a few health questions, no medical exam.","sections":[
-    {"label":"Coverage","items":["Coverage ranging from $5,000 to $35,000","2 products: SimpliNow Legacy Max (Level) and SimpliNow Legacy (Graded)"]},
-    {"label":"Application process","items":["Agent helps determine the eligible coverage amount","A few short health questions, no medical exam","Agent submits the application electronically","Eligibility verified in seconds","Policy issued and sent electronically in minutes"]},
-    {"label":"Death benefit","items":["SimpliNow Legacy Max (Level): 100% of the face amount payable from policy day one, once inforce","SimpliNow Legacy (Graded): limited death benefit in the first two years — if death occurs in that period, the benefit equals 110% of premiums paid; after two years, the full face amount applies","In the event of suicide, the death benefit is limited to a refund of premiums paid"]},
-    {"label":"Riders (Max only)","items":["Accidental Death Benefit Rider","Nursing Home Confinement Rider — accelerates the death benefit if chronically ill and confined to an eligible nursing home","Terminal Illness Rider — accelerates the death benefit if certified terminally ill","Nursing Home Confinement and Terminal Illness riders cannot be used at the same time; not available in California"]},
-    {"label":"Payment options","items":["Social Security debit (Direct Express)","Credit cards","Debit cards","Bank drafts"]},
-    {"label":"Issuer","items":["Policies issued by American General Life Insurance Company (AGL), Houston, TX, a Corebridge Financial company","Premiums paid may exceed the amount of coverage — divide the face amount by the annual premium for an estimate of when that could occur"]}
+  "siwl": {"title":{"en":"SimpliNow Legacy (SIWL)","es":"SimpliNow Legacy (SIWL)"},"intro":{"en":"Simplified Issue Whole Life for final expense needs — a fast eApp decision with just a few health questions, no medical exam.","es":"Vida Entera de Emisión Simplificada para necesidades de gastos finales — decisión rápida en la solicitud electrónica con solo unas pocas preguntas de salud, sin examen médico."},"sections":[
+    {"label":{"en":"Coverage","es":"Cobertura"},"items":[
+      {"en":"Coverage ranging from $5,000 to $35,000","es":"Cobertura desde $5,000 hasta $35,000"},
+      {"en":"2 products: SimpliNow Legacy Max (Level) and SimpliNow Legacy (Graded)","es":"2 productos: SimpliNow Legacy Max (Nivelado) y SimpliNow Legacy (Graduado)"}
+    ]},
+    {"label":{"en":"Application process","es":"Proceso de solicitud"},"items":[
+      {"en":"Agent helps determine the eligible coverage amount","es":"El agente ayuda a determinar el monto de cobertura elegible"},
+      {"en":"A few short health questions, no medical exam","es":"Unas pocas preguntas breves de salud, sin examen médico"},
+      {"en":"Agent submits the application electronically","es":"El agente envía la solicitud electrónicamente"},
+      {"en":"Eligibility verified in seconds","es":"La elegibilidad se verifica en segundos"},
+      {"en":"Policy issued and sent electronically in minutes","es":"La póliza se emite y se envía electrónicamente en minutos"}
+    ]},
+    {"label":{"en":"Death benefit","es":"Beneficio por fallecimiento"},"items":[
+      {"en":"SimpliNow Legacy Max (Level): 100% of the face amount payable from policy day one, once inforce","es":"SimpliNow Legacy Max (Nivelado): 100% del monto asegurado pagadero desde el primer día de la póliza, una vez vigente"},
+      {"en":"SimpliNow Legacy (Graded): limited death benefit in the first two years — if death occurs in that period, the benefit equals 110% of premiums paid; after two years, the full face amount applies","es":"SimpliNow Legacy (Graduado): beneficio por fallecimiento limitado en los primeros dos años — si el fallecimiento ocurre en ese período, el beneficio equivale al 110% de las primas pagadas; después de dos años, aplica el monto asegurado completo"},
+      {"en":"In the event of suicide, the death benefit is limited to a refund of premiums paid","es":"En caso de suicidio, el beneficio por fallecimiento se limita a un reembolso de las primas pagadas"}
+    ]},
+    {"label":{"en":"Riders (Max only)","es":"Beneficios adicionales (solo Max)"},"items":[
+      {"en":"Accidental Death Benefit Rider","es":"Beneficio por Muerte Accidental"},
+      {"en":"Nursing Home Confinement Rider — accelerates the death benefit if chronically ill and confined to an eligible nursing home","es":"Beneficio por Confinamiento en Hogar de Ancianos — acelera el beneficio por fallecimiento si está crónicamente enfermo y confinado en un hogar de ancianos elegible"},
+      {"en":"Terminal Illness Rider — accelerates the death benefit if certified terminally ill","es":"Beneficio por Enfermedad Terminal — acelera el beneficio por fallecimiento si es certificado como terminalmente enfermo"},
+      {"en":"Nursing Home Confinement and Terminal Illness riders cannot be used at the same time; not available in California","es":"Los beneficios de Confinamiento en Hogar de Ancianos y Enfermedad Terminal no pueden usarse al mismo tiempo; no disponibles en California"}
+    ]},
+    {"label":{"en":"Payment options","es":"Opciones de pago"},"items":[
+      {"en":"Social Security debit (Direct Express)","es":"Débito del Seguro Social (Direct Express)"},
+      {"en":"Credit cards","es":"Tarjetas de crédito"},
+      {"en":"Debit cards","es":"Tarjetas de débito"},
+      {"en":"Bank drafts","es":"Débitos bancarios"}
+    ]},
+    {"label":{"en":"Issuer","es":"Emisor"},"items":[
+      {"en":"Policies issued by American General Life Insurance Company (AGL), Houston, TX, a Corebridge Financial company","es":"Pólizas emitidas por American General Life Insurance Company (AGL), Houston, TX, una compañía de Corebridge Financial"},
+      {"en":"Premiums paid may exceed the amount of coverage — divide the face amount by the annual premium for an estimate of when that could occur","es":"Las primas pagadas pueden superar el monto de cobertura — divida el monto asegurado entre la prima anual para estimar cuándo podría ocurrir esto"}
+    ]}
   ]}
 };
 function corebrProdbookEsc(s){ var d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
+function corebrProdbookLang(){ return (typeof window.LANG!=='undefined'&&window.LANG==='es')?'es':'en'; }
 function openCorebrProductBook(key){
   var d=COREBR_PRODUCT_BOOKS[key];
   if(!d) return;
-  var titleEl=document.getElementById('prodbook-title'); if(titleEl) titleEl.textContent=d.title;
-  var html='<div class="prodbook-intro">'+corebrProdbookEsc(d.intro)+'</div>';
+  document.getElementById('prodbook-overlay').setAttribute('data-book-key',key);
+  corebrRenderProductBook(d, corebrProdbookLang());
+  var ov=document.getElementById('prodbook-overlay'); if(ov){ ov.classList.add('active'); }
+  document.body.style.overflow='hidden';
+}
+function corebrRenderProductBook(d, lang){
+  var titleEl=document.getElementById('prodbook-title'); if(titleEl) titleEl.textContent=d.title[lang]||d.title.en;
+  var html='<div class="prodbook-intro">'+corebrProdbookEsc(d.intro[lang]||d.intro.en)+'</div>';
   (d.sections||[]).forEach(function(s){
-    html+='<h2>'+corebrProdbookEsc(s.label)+'</h2>';
-    if(s.items.length>1){
-      html+='<ul>'+s.items.map(function(it){return '<li>'+corebrProdbookEsc(it)+'</li>';}).join('')+'</ul>';
-    } else if(s.items.length===1){
-      html+='<p>'+corebrProdbookEsc(s.items[0])+'</p>';
+    html+='<h2>'+corebrProdbookEsc(s.label[lang]||s.label.en)+'</h2>';
+    var texts=s.items.map(function(it){return it[lang]||it.en;});
+    if(texts.length>1){
+      html+='<ul>'+texts.map(function(t){return '<li>'+corebrProdbookEsc(t)+'</li>';}).join('')+'</ul>';
+    } else if(texts.length===1){
+      html+='<p>'+corebrProdbookEsc(texts[0])+'</p>';
     }
   });
   var bodyEl=document.getElementById('prodbook-body'); if(bodyEl) bodyEl.innerHTML=html;
-  var ov=document.getElementById('prodbook-overlay'); if(ov){ ov.classList.add('active'); }
-  document.body.style.overflow='hidden';
 }
 function closeCorebrProductBook(){
   var ov=document.getElementById('prodbook-overlay'); if(ov){ ov.classList.remove('active'); }
@@ -1890,6 +1943,20 @@ document.addEventListener('keydown', function(e){
     if(ov && ov.classList.contains('active')) closeCorebrProductBook();
   }
 });
+(function(){
+  var prevSetLang=window.setLang;
+  if(typeof prevSetLang==='function'){
+    window.setLang=function(l){
+      prevSetLang(l);
+      var ov=document.getElementById('prodbook-overlay');
+      if(ov && ov.classList.contains('active')){
+        var key=ov.getAttribute('data-book-key');
+        var d=key&&COREBR_PRODUCT_BOOKS[key];
+        if(d) corebrRenderProductBook(d, corebrProdbookLang());
+      }
+    };
+  }
+})();
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../../shared/supabase-config.js"></script>
