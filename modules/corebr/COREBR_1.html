@@ -127,6 +127,24 @@ body.is-admin .admin-only.sb-section{display:block!important}
 .moprod-card-title{font-size:13px;font-weight:700;color:var(--tx)}
 .moprod-card-desc{font-size:11.5px;color:var(--tx2,var(--tx));line-height:1.5;flex:1}
 .moprod-card-link{font-size:11px;font-weight:700;color:var(--cb-blue-tx);display:inline-flex;align-items:center;gap:4px}
+.prodbook-overlay{display:none;position:fixed;inset:0;background:rgba(0,43,92,.62);z-index:9999;align-items:center;justify-content:center;padding:24px}
+.prodbook-overlay.active{display:flex}
+.prodbook-modal{background:var(--sur);border-radius:14px;max-width:760px;width:100%;max-height:88vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,.4)}
+.prodbook-header{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 26px;background:linear-gradient(135deg,var(--cb-navy) 0%,var(--cb-blue) 55%,var(--cb-teal) 100%);color:#fff;flex-shrink:0}
+.prodbook-header-title{font-size:17px;font-weight:700}
+.prodbook-header-sub{font-size:11px;opacity:.85;margin-top:2px}
+.prodbook-close{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.45);color:#fff;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;white-space:nowrap;transition:background .15s}
+.prodbook-close:hover{background:rgba(255,255,255,.3)}
+.prodbook-body{padding:30px 34px;overflow-y:auto;font-family:Georgia,'Times New Roman',serif;color:var(--tx);line-height:1.7;background:var(--sur)}
+.prodbook-intro{font-size:14.5px;font-style:italic;color:var(--tx2,var(--tx));margin:0 0 20px;padding-bottom:16px;border-bottom:1px solid var(--bdr)}
+.prodbook-body h2{font-size:14.5px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:var(--cb-blue-tx);border-bottom:2px solid var(--bdr);padding-bottom:6px;margin:22px 0 10px;letter-spacing:.2px}
+.prodbook-body h2:first-of-type{margin-top:0}
+.prodbook-body p{font-size:13.5px;margin:0 0 10px}
+.prodbook-body ul{margin:0 0 4px 20px;padding:0;font-size:13.5px}
+.prodbook-body li{margin-bottom:7px}
+.prodbook-footer{padding:14px 26px;border-top:1px solid var(--bdr);background:var(--sur2);flex-shrink:0;display:flex;justify-content:flex-end}
+.prodbook-footer .prodbook-close{background:var(--cb-blue);border-color:var(--cb-blue);color:#fff}
+.prodbook-footer .prodbook-close:hover{background:var(--cb-navy)}
 /* ── Home cards ── */
 .home-hero{background:linear-gradient(135deg,var(--cb-navy) 0%,var(--cb-blue) 50%,var(--cb-teal) 100%);border-radius:var(--rad);padding:28px;color:#fff;margin-bottom:18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
 .hero-title{font-size:26px;font-weight:900;margin:0 0 6px}
@@ -456,8 +474,8 @@ td{padding:6px 10px;border-bottom:1px solid var(--bdr);color:var(--tx)}
 <div class="page" id="page-products">
 <div class="ph"><div class="ph-row"><div class="ph-ico">📦</div><div><h1>📦 <span class="en">Products</span><span class="es">Productos</span></h1><p><span class="en">Download and review training materials</span><span class="es">Descarga y revisa los materiales de entrenamiento</span></p></div></div></div>
 <div class="section-wrap"><div class="moprod-grid">
-<div class="moprod-card" onclick="dl('Guaranteed Issue Life','guaranteed_issue_life','guaranteed_issue_life.pdf')"><div class="moprod-card-bar"></div><div class="moprod-card-body"><div class="moprod-card-title">📄 Guaranteed Issue Whole Life (GIWL)</div><div class="moprod-card-desc"><span class="en">Final expense whole life for clients ages 50-80 — no health questions, no medical tests, guaranteed acceptance, fixed premiums, and living benefit riders at no additional charge. eApp completed in minutes.</span><span class="es">Seguro de vida entera para gastos finales, clientes de 50 a 80 años — sin preguntas de salud, sin exámenes médicos, aceptación garantizada, primas fijas, y beneficios en vida incluidos sin costo adicional. Solicitud electrónica en minutos.</span></div><span class="moprod-card-link">📄 <span class="en">View PDF</span><span class="es">Ver PDF</span></span></div></div>
-<div class="moprod-card" onclick="dl('Simplified Issue Life','simplified_issue_life','simplified_issue_life.pdf')"><div class="moprod-card-bar"></div><div class="moprod-card-body"><div class="moprod-card-title">📄 SimpliNow Legacy (SIWL)</div><div class="moprod-card-desc"><span class="en">Final expense solution for ages 50-80 with eligibility-based Level and Graded death benefit options. Instant underwriting decisions in the eApp, a limited-pay feature, and living benefits based on eligibility.</span><span class="es">Solución de gastos finales para edades 50-80 con opciones de beneficio por fallecimiento Nivelado y Graduado según elegibilidad. Decisiones de suscripción instantáneas en la solicitud electrónica, opción de pago limitado, y beneficios en vida según elegibilidad.</span></div><span class="moprod-card-link">📄 <span class="en">View PDF</span><span class="es">Ver PDF</span></span></div></div>
+<div class="moprod-card" onclick="openCorebrProductBook('giwl')"><div class="moprod-card-bar"></div><div class="moprod-card-body"><div class="moprod-card-title">📄 Guaranteed Issue Whole Life (GIWL)</div><div class="moprod-card-desc"><span class="en">Final expense whole life for clients ages 50-80 — no health questions, no medical tests, guaranteed acceptance, fixed premiums, and living benefit riders at no additional charge. eApp completed in minutes.</span><span class="es">Seguro de vida entera para gastos finales, clientes de 50 a 80 años — sin preguntas de salud, sin exámenes médicos, aceptación garantizada, primas fijas, y beneficios en vida incluidos sin costo adicional. Solicitud electrónica en minutos.</span></div><span class="moprod-card-link">📖 <span class="en">Read Full Details</span><span class="es">Leer Detalles Completos</span></span></div></div>
+<div class="moprod-card" onclick="openCorebrProductBook('siwl')"><div class="moprod-card-bar"></div><div class="moprod-card-body"><div class="moprod-card-title">📄 SimpliNow Legacy (SIWL)</div><div class="moprod-card-desc"><span class="en">Final expense solution for ages 50-80 with eligibility-based Level and Graded death benefit options. Instant underwriting decisions in the eApp, a limited-pay feature, and living benefits based on eligibility.</span><span class="es">Solución de gastos finales para edades 50-80 con opciones de beneficio por fallecimiento Nivelado y Graduado según elegibilidad. Decisiones de suscripción instantáneas en la solicitud electrónica, opción de pago limitado, y beneficios en vida según elegibilidad.</span></div><span class="moprod-card-link">📖 <span class="en">Read Full Details</span><span class="es">Leer Detalles Completos</span></span></div></div>
 </div></div>
 </div>
 <div class="page" id="page-marketing">
@@ -1811,6 +1829,68 @@ function openVideo(url, title) {
 })();
 </script>
 
+<div id="prodbook-overlay" class="prodbook-overlay" onclick="if(event.target===this) closeCorebrProductBook()">
+  <div class="prodbook-modal">
+    <div class="prodbook-header">
+      <div>
+        <div class="prodbook-header-title" id="prodbook-title"></div>
+        <div class="prodbook-header-sub"><span class="en">Product details</span><span class="es">Detalles del producto</span></div>
+      </div>
+      <button class="prodbook-close" onclick="closeCorebrProductBook()">✕ <span class="en">Exit</span><span class="es">Salir</span></button>
+    </div>
+    <div class="prodbook-body" id="prodbook-body"></div>
+    <div class="prodbook-footer">
+      <button class="prodbook-close" onclick="closeCorebrProductBook()"><span class="en">Close</span><span class="es">Cerrar</span></button>
+    </div>
+  </div>
+</div>
+<script>
+var COREBR_PRODUCT_BOOKS = {
+  "giwl": {"title":"Guaranteed Issue Whole Life (GIWL)","intro":"Guaranteed Issue Whole Life for final expense needs — no health questions, no medical exam, guaranteed acceptance for ages 50-80.","sections":[
+    {"label":"Coverage","items":["Coverage amounts from $5,000 to $25,000","Premiums never increase","Total aggregate cap of $25,000 across all AGL Guaranteed Issue Whole Life policies on one person"]},
+    {"label":"Underwriting","items":["No health questions to answer","No medical tests","Acceptance is guaranteed","Required premium payments stop at or before age 90"]},
+    {"label":"Death benefit","items":["Full death benefit paid once the insured has been covered for the first two policy years","If death occurs in the first two years (other than accidental), the benefit paid is 110% of premiums paid to date"]},
+    {"label":"Riders","items":["Chronic Illness Accelerated Death Benefit Rider (included)","Critical Illness Accelerated Death Benefit Rider","Terminal Illness Accelerated Death Benefit Rider","Rider benefits can help pay medical expenses or supplement other needs; limited to the total premiums paid"]},
+    {"label":"Issuer","items":["Policies issued by American General Life Insurance Company (AGL), Houston, TX","Not available in New York","Guarantees are backed by the claims-paying ability of the issuing insurance company"]}
+  ]},
+  "siwl": {"title":"SimpliNow Legacy (SIWL)","intro":"Simplified Issue Whole Life for final expense needs — a fast eApp decision with just a few health questions, no medical exam.","sections":[
+    {"label":"Coverage","items":["Coverage ranging from $5,000 to $35,000","2 products: SimpliNow Legacy Max (Level) and SimpliNow Legacy (Graded)"]},
+    {"label":"Application process","items":["Agent helps determine the eligible coverage amount","A few short health questions, no medical exam","Agent submits the application electronically","Eligibility verified in seconds","Policy issued and sent electronically in minutes"]},
+    {"label":"Death benefit","items":["SimpliNow Legacy Max (Level): 100% of the face amount payable from policy day one, once inforce","SimpliNow Legacy (Graded): limited death benefit in the first two years — if death occurs in that period, the benefit equals 110% of premiums paid; after two years, the full face amount applies","In the event of suicide, the death benefit is limited to a refund of premiums paid"]},
+    {"label":"Riders (Max only)","items":["Accidental Death Benefit Rider","Nursing Home Confinement Rider — accelerates the death benefit if chronically ill and confined to an eligible nursing home","Terminal Illness Rider — accelerates the death benefit if certified terminally ill","Nursing Home Confinement and Terminal Illness riders cannot be used at the same time; not available in California"]},
+    {"label":"Payment options","items":["Social Security debit (Direct Express)","Credit cards","Debit cards","Bank drafts"]},
+    {"label":"Issuer","items":["Policies issued by American General Life Insurance Company (AGL), Houston, TX, a Corebridge Financial company","Premiums paid may exceed the amount of coverage — divide the face amount by the annual premium for an estimate of when that could occur"]}
+  ]}
+};
+function corebrProdbookEsc(s){ var d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
+function openCorebrProductBook(key){
+  var d=COREBR_PRODUCT_BOOKS[key];
+  if(!d) return;
+  var titleEl=document.getElementById('prodbook-title'); if(titleEl) titleEl.textContent=d.title;
+  var html='<div class="prodbook-intro">'+corebrProdbookEsc(d.intro)+'</div>';
+  (d.sections||[]).forEach(function(s){
+    html+='<h2>'+corebrProdbookEsc(s.label)+'</h2>';
+    if(s.items.length>1){
+      html+='<ul>'+s.items.map(function(it){return '<li>'+corebrProdbookEsc(it)+'</li>';}).join('')+'</ul>';
+    } else if(s.items.length===1){
+      html+='<p>'+corebrProdbookEsc(s.items[0])+'</p>';
+    }
+  });
+  var bodyEl=document.getElementById('prodbook-body'); if(bodyEl) bodyEl.innerHTML=html;
+  var ov=document.getElementById('prodbook-overlay'); if(ov){ ov.classList.add('active'); }
+  document.body.style.overflow='hidden';
+}
+function closeCorebrProductBook(){
+  var ov=document.getElementById('prodbook-overlay'); if(ov){ ov.classList.remove('active'); }
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown', function(e){
+  if(e.key==='Escape'){
+    var ov=document.getElementById('prodbook-overlay');
+    if(ov && ov.classList.contains('active')) closeCorebrProductBook();
+  }
+});
+</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../../shared/supabase-config.js"></script>
 <script src="corebr-patch.js"></script>
