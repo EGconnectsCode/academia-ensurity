@@ -37,7 +37,7 @@ const ALLOWED_BITRIX_EMAILS = [
   'aliana.perez@ensuritygroup.com', // Eliana Altagracia Perez Sanchez — Bitrix email spells it "aliana"
   'teodairin.rodriguez@ensuritygroup.com', // Teodairin Rodriguez Matos
   'yeremy.calzado@ensuritygroup.com', // Yeremy Jorge Calzado Tejeda
-  'Mayely.Then@myhealthprograms.com', // Mayely Nicole Then Añazco — Bitrix first name shows as "Mayelin N."
+  'mayely.then@myhealthprograms.com', // Mayely Nicole Then Añazco — Bitrix first name shows as "Mayelin N."
 ];
 
 function admin(path, opts = {}) {
