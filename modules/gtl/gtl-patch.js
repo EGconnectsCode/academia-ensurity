@@ -14,6 +14,11 @@
     if (nav) nav.style.display = 'none';
     var page = document.getElementById('page-forms');
     if (page) page.style.display = 'none';
+    // The home page's own quick-access tile links to the same page and was
+    // left showing its title/description even with the above hidden.
+    document.querySelectorAll('[onclick*="navTo(\'forms\')"]').forEach(function (el) {
+      el.style.display = 'none';
+    });
   }
 
   // ── Design system + UI overrides ──

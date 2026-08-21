@@ -177,11 +177,19 @@
       .sb-item[data-page="order-supply"],
       .sb-item[data-page="illustrations"],
       #page-order-supply,
-      #page-illustrations { display:none!important; }
+      #page-illustrations,
+      [onclick*="navTo('order-supply')"],
+      [onclick*="navTo('illustrations')"] { display:none!important; }
       body.is-eg-member .sb-item[data-page="order-supply"],
-      body.is-eg-member .sb-item[data-page="illustrations"] { display:flex!important; }
+      body.is-eg-member .sb-item[data-page="illustrations"],
+      body.is-eg-member [onclick*="navTo('order-supply')"],
+      body.is-eg-member [onclick*="navTo('illustrations')"] { display:flex!important; }
       body.is-eg-member #page-order-supply.active,
       body.is-eg-member #page-illustrations.active { display:block!important; }
+      /* the hero CTA buttons are plain <button>s (inline-block), not flex like
+         the sb-items/dash-cards matched by the same selector above */
+      body.is-eg-member .hero-cta [onclick*="navTo('order-supply')"],
+      body.is-eg-member .hero-cta [onclick*="navTo('illustrations')"] { display:inline-block!important; }
       #dark-btn { display:none!important; }
       button[onclick*="toggleDark"] { display:none!important; }
       .admin-only { display:none!important; }

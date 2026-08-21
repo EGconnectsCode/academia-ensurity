@@ -18,6 +18,11 @@
       if (nav) nav.style.display = 'none';
       var page = document.getElementById('page-' + pageId);
       if (page) page.style.display = 'none';
+      // The home page's own quick-access rows link to the same pages and
+      // were left showing their title/description even with the above hidden.
+      document.querySelectorAll('[onclick*="navTo(\'' + pageId + '\')"]').forEach(function (el) {
+        el.style.display = 'none';
+      });
     });
   }
 
