@@ -872,8 +872,25 @@ function renderUsers(users) {
           title="${u.status==='suspended'?t('Restore access','Restaurar acceso'):t('Block access — signs them out immediately, including Bitrix','Bloquear acceso — los desconecta al instante, incluso desde Bitrix')}">
           ${u.status==='suspended'?t('Blocked','Bloqueado'):t('Block','Bloquear')}
         </button>
+        <button class="btn-sm" onclick="toggleLicensed('${u.id}', ${u.licensed===true?'true':(u.licensed===false?'false':'null')})"
+          style="background:${u.licensed===true?'#22c55e20':(u.licensed===false?'#ef444420':'var(--surface2)')};border:1px solid ${u.licensed===true?'#22c55e':(u.licensed===false?'#ef4444':'var(--border)')};color:${u.licensed===true?'#16a34a':(u.licensed===false?'#dc2626':'var(--text2)')}"
+          title="${t('License status for agents with no Bitrix record — click to cycle: unset → licensed → not licensed → unset. Controls whether they see \'Become an AOR\'.','Estado de licencia para agentes sin registro en Bitrix — clic para rotar: sin definir → con licencia → sin licencia → sin definir. Controla si ven \'Conviértete en AOR\'.')}">
+          ${u.licensed===true?t('Licensed ✓','Con licencia ✓'):(u.licensed===false?t('No license','Sin licencia'):t('License: —','Licencia: —'))}
+        </button>
       </td>
     </tr>`).join('') || `<tr><td colspan="6" class="loading-row">${t('No users found.','Sin usuarios encontrados.')}</td></tr>`;
+}
+
+// Manual override for agents with no Bitrix presence — the automatic
+// has_license check can't find them there, so an admin records it directly.
+// Cycles null (unset, falls back to the automatic check) -> true -> false -> null.
+async function toggleLicensed(userId, current) {
+  const next = current === null ? true : (current === true ? false : null);
+  try {
+    await AZ.Admin.setLicensed(userId, next);
+    allUsers = [];
+    loadUsers();
+  } catch(e) { alert('Error: ' + e.message); }
 }
 
 async function toggleFullAccess(userId, current) {

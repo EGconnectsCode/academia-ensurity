@@ -60,6 +60,14 @@ CREATE TABLE IF NOT EXISTS profiles (
 -- (e.g. the Become-AOR guide) a given profile should see.
 ALTER TABLE profiles ADD COLUMN IF NOT EXISTS agent_source TEXT NOT NULL DEFAULT 'external' CHECK (agent_source IN ('external','internal'));
 
+-- Manual admin override for agents with no Bitrix presence, whose license
+-- status can't be looked up automatically (see has_license in
+-- supabase/functions/bitrix-sync). NULL = not set by an admin yet (falls back
+-- to the Bitrix check); TRUE/FALSE = admin has explicitly recorded it. Read by
+-- hideAorBannerIfLicensed() in academia-ensurity.html to decide whether to
+-- show the Become-AOR flow.
+ALTER TABLE profiles ADD COLUMN IF NOT EXISTS licensed BOOLEAN;
+
 -- Auto-create profile on auth.users insert
 CREATE OR REPLACE FUNCTION handle_new_user()
 RETURNS TRIGGER LANGUAGE plpgsql SECURITY DEFINER AS $$

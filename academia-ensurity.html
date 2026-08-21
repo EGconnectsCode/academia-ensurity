@@ -1546,7 +1546,7 @@ async function showModules(profile) {
   let moduleIds = [];
   const isAdmin = ['admin','super_admin'].includes(profile.role);
 
-  hideAorBannerIfLicensed(isInternal, isAdmin);
+  hideAorBannerIfLicensed(isInternal, isAdmin, profile.licensed);
 
   const grid = document.getElementById('modules-grid');
   grid.innerHTML = '';
@@ -1688,7 +1688,7 @@ document.getElementById('pasos-overlay').addEventListener('click', function(e) {
 
 const EDGE_FN_URL = 'https://qvamdopwbjlccazchoer.supabase.co/functions/v1/bitrix-sync';
 let _aorBannerChecked = false;
-async function hideAorBannerIfLicensed(isInternal, isAdmin) {
+async function hideAorBannerIfLicensed(isInternal, isAdmin, manualLicensed) {
   if (_aorBannerChecked) return;
   _aorBannerChecked = true;
   // Admins get full access to every module and section regardless of Bitrix
@@ -1701,6 +1701,16 @@ async function hideAorBannerIfLicensed(isInternal, isAdmin) {
     document.querySelectorAll('.aor-flow-item').forEach(el => { el.style.display = 'none'; });
     return;
   }
+  // Agents with no Bitrix presence can't be found by the has_license lookup
+  // below, so it would always come back empty for them even if they really
+  // are licensed. An admin can record that manually from the Users panel —
+  // profiles.licensed === true/false short-circuits the Bitrix check;
+  // leaving it unset (null) falls through to the automatic lookup as before.
+  if (manualLicensed === true) {
+    document.querySelectorAll('.aor-flow-item').forEach(el => { el.style.display = 'none'; });
+    return;
+  }
+  if (manualLicensed === false) return;
   try {
     const session = await AZ.Auth.getSession();
     if (!session) return;
